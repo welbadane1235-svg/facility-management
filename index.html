@@ -5647,19 +5647,178 @@ initAll();
   function getPermissionsFromForm(){ const perms = {}; ALL_TABS.filter(t => t !== 'usersTab').forEach(tabId => { const checked = document.querySelector(`input[name="perm_${tabId}"]:checked`); perms[tabId] = checked ? checked.value : 'edit'; }); perms.usersTab = 'hidden'; return perms; }
   function setPermissionsToForm(perms){ const all = {...DEFAULT_TAB_PERMS, usersTab:'hidden', ...(perms || {})}; ALL_TABS.filter(t => t !== 'usersTab').forEach(tabId => { const radio = document.querySelector(`input[name="perm_${tabId}"][value="${all[tabId] || 'edit'}"]`); if (radio) radio.checked = true; }); }
   let editingUserId = null;
-  function clearUserForm(){ editingUserId = null; const map = {userFullName:'', userUsername:'', userPassword:'123456', userRole:'admin', userLinkedSupervisor:'', userActive:'1'}; Object.entries(map).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.value = val; }); setPermissionsToForm(DEFAULT_TAB_PERMS); const err = document.getElementById('userFormError'); if (err) { err.style.display='none'; err.textContent=''; } const title = document.getElementById('userFormTitle'); if (title) title.textContent = 'إضافة / تعديل مستخدم'; toggleUserFormByRole(); }
-  function fillAutoUsername(){ const full = document.getElementById('userFullName'); const username = document.getElementById('userUsername'); if (!full || !username) return; const taken = getUsers().map(u => norm(u.username).toLowerCase()); let base = slugifyArabic(full.value), i=1, candidate = base; while (taken.includes(candidate.toLowerCase())) { i += 1; candidate = base + String(i).padStart(2,'0'); } username.value = candidate; }
-  function toggleUserFormByRole(){ const role = norm(document.getElementById('userRole')?.value); const permsBox = document.getElementById('userPermissionsBox'); if (role === 'supervisor') { setPermissionsToForm({dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'}); if (permsBox) permsBox.style.opacity = '.65'; } else if (role === 'viewer') { setPermissionsToForm({dashboardTab:'view', entriesTab:'view', peopleTab:'view', projectsTab:'view', distributionTab:'view', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'}); if (permsBox) permsBox.style.opacity = '1'; } else { if (permsBox) permsBox.style.opacity = '1'; } }
-  function saveUserAccount(){
-    if (!canEditTab('usersTab')) { if (window.showToast) showToast('ليس لديك صلاحية تعديل إدارة المستخدمين'); return; } ensureUsersState(); const fullName = norm(document.getElementById('userFullName')?.value); const username = norm(document.getElementById('userUsername')?.value).toLowerCase(); const password = norm(document.getElementById('userPassword')?.value); const role = norm(document.getElementById('userRole')?.value) || 'admin'; const linkedSupervisor = norm(document.getElementById('userLinkedSupervisor')?.value); const isActive = document.getElementById('userActive')?.value === '1'; const err = document.getElementById('userFormError'); if (err) { err.style.display='none'; err.textContent=''; } if (!fullName || !username || !password) { if (err) { err.textContent = 'الاسم واسم المستخدم وكلمة المرور مطلوبة.'; err.style.display='block'; } return; } if (role === 'supervisor' && !linkedSupervisor) { if (err) { err.textContent = 'اختر المشرف المرتبط لهذا الحساب.'; err.style.display='block'; } return; } const exists = getUsers().find(u => norm(u.username).toLowerCase() === username && u.id !== editingUserId); if (exists) { if (err) { err.textContent = 'اسم المستخدم موجود مسبقًا.'; err.style.display='block'; } return; } const perms = role === 'supervisor' ? {dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'} : getPermissionsFromForm(); if (editingUserId) { const user = getUsers().find(u => u.id === editingUserId); if (!user) return; Object.assign(user, { fullName, username, password, role, linkedSupervisor, isActive, permissions: perms }); } else { getUsers().push({ id:'u-'+Date.now(), fullName, username, password, role, linkedSupervisor, isActive, permissions: perms, createdAt:new Date().toISOString() }); } if (window.saveState) saveState(true); renderUsersTable(); clearUserForm(); if (window.showToast) showToast('تم حفظ المستخدم'); }
-  function editUserAccount(id){ const user = getUsers().find(u => u.id === id); if (!user) return; editingUserId = id; const map = {userFullName:user.fullName || '', userUsername:user.username || '', userPassword:user.password || '', userRole:user.role || 'admin', userLinkedSupervisor:user.linkedSupervisor || '', userActive:user.isActive ? '1' : '0'}; Object.entries(map).forEach(([k,v]) => { const el = document.getElementById(k); if (el) el.value = v; }); setPermissionsToForm(user.permissions || DEFAULT_TAB_PERMS); const title = document.getElementById('userFormTitle'); if (title) title.textContent = 'تعديل المستخدم: ' + user.fullName; toggleUserFormByRole(); const btn = document.querySelector('[data-tab="usersTab"]'); if (btn && window.showTab) showTab('usersTab', btn); }
+  function clearUserForm(){ editingUserId = null; const map = {userFullName:'', userUsername:'', userPassword:'123456', userRole:'admin', userLinkedSupervisor:'', userActive:'1'}; Object.entries(map).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.value = val; }); setPermissionsToForm(DEFAULT_TAB_PERMS); const err = document.getElementById('userFormError'); if (err) { err.style.display='none'; err.textContent=''; } const title = document.getElementById('userFormTitle'); if (title) title.textContent = 'إضافة / تعديل مستخدم'; refreshLinkedSupervisorOptions(); toggleUserFormByRole(); }
+  
+function fillAutoUsername(){ const full = document.getElementById('userFullName'); const username = document.getElementById('userUsername'); if (!full || !username) return; const taken = getUsers().map(u => norm(u.username).toLowerCase()); let base = slugifyArabic(full.value), i=1, candidate = base; while (taken.includes(candidate.toLowerCase())) { i += 1; candidate = base + String(i).padStart(2,'0'); } username.value = candidate; }
+
+  function collectSupervisorNames(){
+    const names = [];
+    const pushName = (val) => {
+      const clean = norm(val);
+      if (!clean) return;
+      if (!names.some(n => norm(n) === clean)) names.push(clean);
+    };
+    (state.supervisors || []).forEach(pushName);
+    Object.keys(state.supervisorProfiles || {}).forEach(pushName);
+    Object.values(state.projectSupervisorRules || {}).forEach(pushName);
+    (state.entries || []).forEach(e => pushName(e.supervisor));
+    (getUsers() || []).forEach(u => {
+      if (norm(u.role) === 'supervisor') {
+        pushName(u.linkedSupervisor || u.fullName);
+        pushName(u.fullName);
+      }
+    });
+    return names;
+  }
+
+  function refreshLinkedSupervisorOptions(selectedValue=''){
+    const select = document.getElementById('userLinkedSupervisor');
+    if (!select) return;
+    const current = norm(selectedValue || select.value);
+    const names = collectSupervisorNames();
+    const options = ['<option value="">-</option>'].concat(names.map(name => `<option value="${esc(name)}">${esc(name)}</option>`));
+    select.innerHTML = options.join('');
+    if (current && names.some(name => norm(name) === current)) select.value = current;
+    else if (current && norm(document.getElementById('userRole')?.value) === 'supervisor') select.value = current;
+    else select.value = '';
+  }
+
+  function toggleUserFormByRole(){
+    const role = norm(document.getElementById('userRole')?.value);
+    const permsBox = document.getElementById('userPermissionsBox');
+    const wrap = document.getElementById('linkedSupervisorWrap');
+    const select = document.getElementById('userLinkedSupervisor');
+    const fullName = norm(document.getElementById('userFullName')?.value);
+    refreshLinkedSupervisorOptions(fullName || (select ? select.value : ''));
+    if (role === 'supervisor') {
+      setPermissionsToForm({dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'});
+      if (permsBox) permsBox.style.opacity = '.65';
+      if (wrap) wrap.style.opacity = '.65';
+      if (select) {
+        select.disabled = true;
+        select.value = fullName || select.value || '';
+      }
+    } else if (role === 'viewer') {
+      setPermissionsToForm({dashboardTab:'view', entriesTab:'view', peopleTab:'view', projectsTab:'view', distributionTab:'view', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'});
+      if (permsBox) permsBox.style.opacity = '1';
+      if (wrap) wrap.style.opacity = '1';
+      if (select) select.disabled = false;
+    } else {
+      if (permsBox) permsBox.style.opacity = '1';
+      if (wrap) wrap.style.opacity = '1';
+      if (select) select.disabled = false;
+    }
+  }
+  
+function saveUserAccount(){
+    if (!canEditTab('usersTab')) { if (window.showToast) showToast('ليس لديك صلاحية تعديل إدارة المستخدمين'); return; }
+    ensureUsersState();
+    const fullName = norm(document.getElementById('userFullName')?.value);
+    const username = norm(document.getElementById('userUsername')?.value).toLowerCase();
+    const password = norm(document.getElementById('userPassword')?.value);
+    const role = norm(document.getElementById('userRole')?.value) || 'admin';
+    const linkedSupervisorInput = norm(document.getElementById('userLinkedSupervisor')?.value);
+    const linkedSupervisor = role === 'supervisor' ? (fullName || linkedSupervisorInput) : linkedSupervisorInput;
+    const isActive = document.getElementById('userActive')?.value === '1';
+    const err = document.getElementById('userFormError');
+    if (err) { err.style.display='none'; err.textContent=''; }
+    if (!fullName || !username || !password) {
+      if (err) { err.textContent = 'الاسم واسم المستخدم وكلمة المرور مطلوبة.'; err.style.display='block'; }
+      return;
+    }
+    if (role === 'supervisor' && !linkedSupervisor) {
+      if (err) { err.textContent = 'اكتب اسم المشرف أولاً وسيتم ربط الحساب به تلقائيًا.'; err.style.display='block'; }
+      return;
+    }
+    const exists = getUsers().find(u => norm(u.username).toLowerCase() === username && u.id !== editingUserId);
+    if (exists) {
+      if (err) { err.textContent = 'اسم المستخدم موجود مسبقًا.'; err.style.display='block'; }
+      return;
+    }
+    const perms = role === 'supervisor'
+      ? {dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'}
+      : getPermissionsFromForm();
+
+    if (role === 'supervisor') {
+      if (!Array.isArray(state.supervisors)) state.supervisors = [];
+      if (!state.supervisors.some(name => norm(name) === linkedSupervisor)) state.supervisors.push(linkedSupervisor);
+      if (!state.supervisorProfiles || typeof state.supervisorProfiles !== 'object') state.supervisorProfiles = {};
+      if (!state.supervisorProfiles[linkedSupervisor] || typeof state.supervisorProfiles[linkedSupervisor] !== 'object') {
+        state.supervisorProfiles[linkedSupervisor] = { workers:[], projects:[] };
+      }
+    }
+
+    if (editingUserId) {
+      const user = getUsers().find(u => u.id === editingUserId);
+      if (!user) return;
+      Object.assign(user, { fullName, username, password, role, linkedSupervisor, isActive, permissions: perms });
+    } else {
+      getUsers().push({ id:'u-'+Date.now(), fullName, username, password, role, linkedSupervisor, isActive, permissions: perms, createdAt:new Date().toISOString() });
+    }
+    refreshLinkedSupervisorOptions(linkedSupervisor);
+    if (window.saveState) saveState(true);
+    renderUsersTable();
+    clearUserForm();
+    if (window.showToast) showToast('تم حفظ المستخدم');
+  }
+  
+function editUserAccount(id){
+    const user = getUsers().find(u => u.id === id);
+    if (!user) return;
+    editingUserId = id;
+    refreshLinkedSupervisorOptions(user.linkedSupervisor || user.fullName || '');
+    const map = {
+      userFullName:user.fullName || '',
+      userUsername:user.username || '',
+      userPassword:user.password || '',
+      userRole:user.role || 'admin',
+      userLinkedSupervisor:user.linkedSupervisor || '',
+      userActive:user.isActive ? '1' : '0'
+    };
+    Object.entries(map).forEach(([k,v]) => { const el = document.getElementById(k); if (el) el.value = v; });
+    setPermissionsToForm(user.permissions || DEFAULT_TAB_PERMS);
+    const title = document.getElementById('userFormTitle');
+    if (title) title.textContent = 'تعديل المستخدم: ' + user.fullName;
+    toggleUserFormByRole();
+    const btn = document.querySelector('[data-tab="usersTab"]');
+    if (btn && window.showTab) showTab('usersTab', btn);
+  }
   function toggleUserActive(id){
     if (!canEditTab('usersTab')) { if (window.showToast) showToast('ليس لديك صلاحية تعديل إدارة المستخدمين'); return; } const user = getUsers().find(u => u.id === id); if (!user) return; user.isActive = !user.isActive; if (window.saveState) saveState(true); renderUsersTable(); }
   function deleteUserAccount(id){
     if (!canEditTab('usersTab')) { if (window.showToast) showToast('ليس لديك صلاحية تعديل إدارة المستخدمين'); return; } if (!confirm('حذف هذا المستخدم؟')) return; state.users = getUsers().filter(u => u.id !== id); if (window.saveState) saveState(true); renderUsersTable(); clearUserForm(); }
-  function generateUsersFromSupervisors(){ ensureUsersState(); const existing = getUsers().map(u => norm(u.username).toLowerCase()); (state.supervisors || []).forEach((sup, idx) => { const linked = norm(sup); if (!linked) return; const already = getUsers().some(u => u.role === 'supervisor' && norm(u.linkedSupervisor) === linked); if (already) return; let base = slugifyArabic(linked), i=1, username = base; while (existing.includes(username.toLowerCase())) { i += 1; username = base + String(i).padStart(2,'0'); } existing.push(username.toLowerCase()); getUsers().push({ id:'u-auto-'+Date.now()+'-'+idx, fullName:linked, username, password:'123456', role:'supervisor', linkedSupervisor:linked, isActive:true, permissions:{dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'}, createdAt:new Date().toISOString() }); }); if (window.saveState) saveState(true); renderUsersTable(); if (window.showToast) showToast('تم إنشاء حسابات المشرفين غير الموجودين'); }
+  
+function generateUsersFromSupervisors(){
+    ensureUsersState();
+    const sourceNames = collectSupervisorNames();
+    const existing = getUsers().map(u => norm(u.username).toLowerCase());
+    sourceNames.forEach((sup, idx) => {
+      const linked = norm(sup);
+      if (!linked) return;
+      const already = getUsers().some(u => u.role === 'supervisor' && norm(u.linkedSupervisor || u.fullName) === linked);
+      if (already) return;
+      let base = slugifyArabic(linked), i=1, username = base;
+      while (existing.includes(username.toLowerCase())) { i += 1; username = base + String(i).padStart(2,'0'); }
+      existing.push(username.toLowerCase());
+      getUsers().push({
+        id:'u-auto-'+Date.now()+'-'+idx,
+        fullName:linked,
+        username,
+        password:'123456',
+        role:'supervisor',
+        linkedSupervisor:linked,
+        isActive:true,
+        permissions:{dashboardTab:'view', entriesTab:'edit', peopleTab:'hidden', projectsTab:'hidden', distributionTab:'hidden', monthlyTab:'view', alertsTab:'view', exportTab:'view', usersTab:'hidden'},
+        createdAt:new Date().toISOString()
+      });
+    });
+    refreshLinkedSupervisorOptions();
+    if (window.saveState) saveState(true);
+    renderUsersTable();
+    if (window.showToast) showToast('تم إنشاء حسابات المشرفين غير الموجودين');
+  }
   function permissionSummary(user){ const perms = user.permissions || {}; const edit = Object.entries(perms).filter(([k,v]) => v === 'edit' && k !== 'usersTab').length; const view = Object.entries(perms).filter(([k,v]) => v === 'view').length; return `تعديل ${edit} / مشاهدة ${view}`; }
-  function renderUsersTable(){ const body = document.getElementById('usersTableBody'); if (!body) return; const q = norm(document.getElementById('userSearch')?.value).toLowerCase(); const roleFilter = norm(document.getElementById('userRoleFilter')?.value); const statusFilter = norm(document.getElementById('userStatusFilter')?.value); let rows = [...getUsers()]; if (q) rows = rows.filter(u => [u.fullName,u.username,u.linkedSupervisor].join(' ').toLowerCase().includes(q)); if (roleFilter) rows = rows.filter(u => norm(u.role) === roleFilter); if (statusFilter) rows = rows.filter(u => (u.isActive ? '1' : '0') === statusFilter); body.innerHTML = rows.map(u => `<tr><td>${esc(u.fullName)}</td><td>${esc(u.username)}</td><td><span class="user-role-badge">${u.role === 'admin' ? 'إداري' : u.role === 'viewer' ? 'مشاهدة فقط' : 'مشرف'}</span></td><td>${esc(u.linkedSupervisor || '-')}</td><td><span class="user-role-badge ${u.isActive ? '' : 'user-status-off'}">${u.isActive ? 'نشط' : 'موقوف'}</span></td><td>${esc(permissionSummary(u))}</td><td><button class="small light" onclick="editUserAccount('${u.id}')">تعديل</button><button class="small light" onclick="toggleUserActive('${u.id}')">${u.isActive ? 'إيقاف' : 'تفعيل'}</button>${norm(u.id) === 'u-admin' ? '' : `<button class="small danger" onclick="deleteUserAccount('${u.id}')">حذف</button>`}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا توجد حسابات</td></tr>'; }
+  function renderUsersTable(){ refreshLinkedSupervisorOptions(); const body = document.getElementById('usersTableBody'); if (!body) return; const q = norm(document.getElementById('userSearch')?.value).toLowerCase(); const roleFilter = norm(document.getElementById('userRoleFilter')?.value); const statusFilter = norm(document.getElementById('userStatusFilter')?.value); let rows = [...getUsers()]; if (q) rows = rows.filter(u => [u.fullName,u.username,u.linkedSupervisor].join(' ').toLowerCase().includes(q)); if (roleFilter) rows = rows.filter(u => norm(u.role) === roleFilter); if (statusFilter) rows = rows.filter(u => (u.isActive ? '1' : '0') === statusFilter); body.innerHTML = rows.map(u => `<tr><td>${esc(u.fullName)}</td><td>${esc(u.username)}</td><td><span class="user-role-badge">${u.role === 'admin' ? 'إداري' : u.role === 'viewer' ? 'مشاهدة فقط' : 'مشرف'}</span></td><td>${esc(u.linkedSupervisor || '-')}</td><td><span class="user-role-badge ${u.isActive ? '' : 'user-status-off'}">${u.isActive ? 'نشط' : 'موقوف'}</span></td><td>${esc(permissionSummary(u))}</td><td><button class="small light" onclick="editUserAccount('${u.id}')">تعديل</button><button class="small light" onclick="toggleUserActive('${u.id}')">${u.isActive ? 'إيقاف' : 'تفعيل'}</button>${norm(u.id) === 'u-admin' ? '' : `<button class="small danger" onclick="deleteUserAccount('${u.id}')">حذف</button>`}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا توجد حسابات</td></tr>'; }
   function exportUsersCsv(){ const rows = [['الاسم','اسم المستخدم','الدور','المشرف المرتبط','الحالة']].concat(getUsers().map(u => [u.fullName,u.username,u.role,u.linkedSupervisor || '',u.isActive ? 'نشط' : 'موقوف'])); const csv = rows.map(r => r.map(v => '"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n'); const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'users.csv'; a.click(); }
   function fillDefaultAdminCredentials(){ const admin = getSystemAdmin(); const u = document.getElementById('loginUsername'); const p = document.getElementById('loginPassword'); if (u) u.value = admin?.username || 'admin'; if (p) p.value = admin?.password || '123456'; }
   function openLoginOverlay(force=false){ const ov = document.getElementById('loginOverlay'); if (!ov) return; if (force || !getCurrentUser()) ov.classList.add('show'); const err = document.getElementById('loginErrorBox'); if (err) { err.style.display='none'; err.textContent=''; } }
