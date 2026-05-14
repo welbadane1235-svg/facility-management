@@ -3,48 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صالون النخبة - سبا</title>
+    <title>LUMIÈRE SPA | الفخامة في كل تفصيل</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .hero-gradient { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&q=80&w=1600'); background-size: cover; background-position: center; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-[#FDFCFB]">
 
-    <!-- Header -->
-    <header class="bg-indigo-900 text-white p-6 text-center shadow-lg">
-        <h1 class="text-3xl font-bold">صالون وسبا النخبة</h1>
-        <p class="mt-2 text-indigo-200">احجز جلستك القادمة بضغطة زر</p>
-    </header>
-
-    <!-- Services Section -->
-    <main class="max-w-4xl mx-auto p-6">
-        <h2 class="text-2xl font-semibold mb-6 border-b-2 border-indigo-500 pb-2">خدماتنا</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Service Item 1 -->
-            <div class="bg-white p-4 rounded-xl shadow-md flex justify-between items-center border hover:border-indigo-400 transition">
-                <div>
-                    <h3 class="font-bold text-lg">قص شعر عصري</h3>
-                    <p class="text-sm text-gray-500">يشمل غسيل وتصفيف</p>
-                    <span class="text-indigo-600 font-bold block mt-2">100 ريال</span>
-                </div>
-                <button onclick="bookService('قص شعر')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">حجز</button>
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-widest text-gold-700">LUMIÈRE</div>
+            <div class="hidden md:flex space-x-8 space-x-reverse text-gray-600">
+                <a href="#" class="hover:text-black">الرئيسية</a>
+                <a href="#" class="hover:text-black">الخدمات</a>
+                <a href="#" class="hover:text-black">المشغل</a>
+                <a href="#" class="hover:text-black">اتصل بنا</a>
             </div>
+            <button class="bg-black text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl hover:scale-105 transition">احجز الآن</button>
+        </div>
+    </nav>
 
-            <!-- Service Item 2 -->
-            <div class="bg-white p-4 rounded-xl shadow-md flex justify-between items-center border hover:border-indigo-400 transition">
-                <div>
-                    <h3 class="font-bold text-lg">جلسة مساج (60 دقيقة)</h3>
-                    <p class="text-sm text-gray-500">استرخاء كامل للجسم</p>
-                    <span class="text-indigo-600 font-bold block mt-2">250 ريال</span>
-                </div>
-                <button onclick="bookService('مساج')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">حجز</button>
+    <!-- Hero Section -->
+    <section class="h-[80vh] hero-gradient flex items-center justify-center text-center text-white px-4">
+        <div class="max-w-3xl">
+            <h2 class="text-5xl md:text-7xl font-bold mb-6">جمالك يستحق الأفضل</h2>
+            <p class="text-xl text-gray-200 mb-8 font-light italic">تجربة سبا فاخرة تأخذك إلى عالم من الاسترخاء</p>
+            <div class="flex justify-center gap-4">
+                <button class="bg-white text-black px-8 py-3 rounded-md font-bold">تصفح الخدمات</button>
             </div>
         </div>
-    </main>
+    </section>
 
-    <script>
-        function bookService(serviceName) {
-            alert("تم اختيار خدمة: " + serviceName + ". سيتم توجيهك لصفحة المواعيد!");
-        }
-    </script>
+    <!-- Gallery & Showcase (المشاغل) -->
+    <section class="py-20 max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <span class="text-indigo-600 font-bold uppercase tracking-widest text-sm">الجولة البصرية</span>
+                <h3 class="text-4xl font-bold mt-2">داخل مراكزنا</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="h-80 rounded-2xl overflow-hidden shadow-2xl relative group">
+                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                <div class="absolute inset-0 bg-black/40 flex items-end p-6 opacity-0 group-hover:opacity-100 transition">
+                    <p class="text-white font-bold">قسم العناية بالشعر</p>
+                </div>
+            </div>
+            <div class="h-80 rounded-2xl overflow-hidden shadow-2xl relative group">
+                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                <div class="absolute inset-0 bg-black/40 flex items-end p-6 opacity-0 group-hover:opacity-100 transition">
+                    <p class="text-white font-bold">غرفة المساج والسبا</p>
+                </div>
+            </div>
+            <div class="h-80 rounded-2xl overflow-hidden shadow-2xl relative group">
+                <img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                <div class="absolute inset-0 bg-black/40 flex items-end p-6 opacity-0 group-hover:opacity-100 transition">
+                    <p class="text-white font-bold">ركن المكياج</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="bg-gray-100 py-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold mb-16">قائمة الخدمات المختارة</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Service Card -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-2xl transition group text-right">
+                    <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-indigo-600 transition">
+                        <span class="group-hover:text-white">✨</span>
+                    </div>
+                    <h4 class="font-bold text-xl mb-2">تنظيف بشرة ملكي</h4>
+                    <p class="text-gray-500 text-sm mb-4">استخدام أجود المواد الطبيعية لبشرة متألقة.</p>
+                    <span class="text-indigo-600 font-bold italic">350 ر.س</span>
+                </div>
+                <!-- ... تكرار الكروت الأخرى ... -->
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>
