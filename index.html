@@ -1,200 +1,149 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMIÈRE | صالون وسبا الفخامة</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .hero-bg { 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-            url('https://images.unsplash.com/photo-1600607687940-467f5b637a51?q=80&w=2070'); 
-            background-size: cover; background-position: center; 
-        }
-    </style>
-</head>
-<body class="bg-[#FAF9F6]">
+export default function ModernTrainingPlatform() {
+  return (
+    <div className="min-h-screen bg-[#070B14] text-white overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#3b82f620,transparent_25%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,#8b5cf620,transparent_25%)]" />
 
-    <!-- القائمة العلوية -->
-    <nav class="fixed w-full z-50 glass border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-        <div class="text-2xl font-bold tracking-[0.2em] text-gray-800">LUMIÈRE</div>
-        <div class="hidden md:flex space-x-8 space-x-reverse font-medium text-gray-600">
-            <a href="#services" class="hover:text-indigo-600 transition">الخدمات</a>
-            <a href="#gallery" class="hover:text-indigo-600 transition">المشاغل</a>
-            <a href="#booking" class="hover:text-indigo-600 transition">الحجز المباشر</a>
+      {/* Navbar */}
+      <header className="relative z-20 px-8 py-6 flex items-center justify-between backdrop-blur-xl border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-2xl" />
+          <h1 className="text-2xl font-bold tracking-wide">ACADEMIA AI</h1>
         </div>
-        <button onclick="document.getElementById('booking').scrollIntoView()" class="bg-indigo-600 text-white px-6 py-2 rounded-full shadow-lg hover:bg-indigo-700 transition">ابدأ التجربة</button>
-    </nav>
 
-    <!-- الواجهة الرئيسية -->
-    <header class="h-screen hero-bg flex items-center justify-center text-center text-white">
-        <div class="max-w-4xl px-4">
-            <span class="uppercase tracking-[0.3em] text-sm mb-4 block text-indigo-300">نعتني بجمالك كفن</span>
-            <h1 class="text-5xl md:text-7xl font-bold mb-6">ملاذك الفاخر للاسترخاء</h1>
-            <p class="text-lg md:text-xl font-light mb-10 opacity-90">استمتع بأرقى خدمات العناية بالبشرة والشعر في أجواء مفعمة بالهدوء</p>
-            <a href="#services" class="border-2 border-white px-10 py-3 rounded-full hover:bg-white hover:text-black transition font-bold">اكتشف خدماتنا</a>
-        </div>
-    </header>
+        <nav className="hidden md:flex gap-8 text-sm text-white/70">
+          <a href="#" className="hover:text-white transition">الرئيسية</a>
+          <a href="#" className="hover:text-white transition">الدورات</a>
+          <a href="#" className="hover:text-white transition">المدربين</a>
+          <a href="#" className="hover:text-white transition">الاشتراكات</a>
+        </nav>
 
-    <!-- معرض المشاغل -->
-    <section id="gallery" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 italic">مرافقنا</h2>
-            <div class="h-1 w-20 bg-indigo-600 mt-2"></div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="md:col-span-2 h-80 rounded-3xl overflow-hidden relative group">
-                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                    <span class="text-white font-bold border-b-2">جناح العناية الملكية</span>
-                </div>
-            </div>
-            <div class="h-80 rounded-3xl overflow-hidden group">
-                <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1000" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-            </div>
-            <div class="h-80 rounded-3xl overflow-hidden group">
-                <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1000" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-            </div>
-        </div>
-    </section>
+        <button className="px-5 py-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl hover:bg-white/20 transition">
+          تسجيل الدخول
+        </button>
+      </header>
 
-    <!-- قسم الخدمات -->
-    <section id="services" class="py-20 bg-gray-50 px-6">
-        <div class="max-w-7xl mx-auto text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">قائمة التميز</h2>
-            <p class="text-gray-500 italic">خدمات مصممة خصيصاً لتناسب احتياجاتك</p>
-        </div>
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- كرت خدمة 1 -->
-            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
-                <div class="text-4xl mb-6 group-hover:scale-110 transition">💆‍♂️</div>
-                <h3 class="text-2xl font-bold mb-3">مساج الأحجار الدافئة</h3>
-                <p class="text-gray-500 mb-6 leading-relaxed">تخلص من ضغوط العمل مع جلسة استرخاء عميقة تستهدف العضلات.</p>
-                <div class="flex justify-between items-center border-t pt-6">
-                    <span class="text-xl font-bold text-indigo-600">280 ر.س</span>
-                    <button onclick="document.getElementById('booking').scrollIntoView()" class="text-sm font-bold text-gray-800 underline">حجز الآن</button>
-                </div>
-            </div>
-            <!-- كرت خدمة 2 -->
-            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
-                <div class="text-4xl mb-6 group-hover:scale-110 transition">✂️</div>
-                <h3 class="text-2xl font-bold mb-3">قص وتصفيف ملكي</h3>
-                <p class="text-gray-500 mb-6 leading-relaxed">أحدث الصيحات العالمية بأيدي خبراء متخصصين للحصول على إطلالة مثالية.</p>
-                <div class="flex justify-between items-center border-t pt-6">
-                    <span class="text-xl font-bold text-indigo-600">150 ر.س</span>
-                    <button onclick="document.getElementById('booking').scrollIntoView()" class="text-sm font-bold text-gray-800 underline">حجز الآن</button>
-                </div>
-            </div>
-            <!-- كرت خدمة 3 -->
-            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
-                <div class="text-4xl mb-6 group-hover:scale-110 transition">🧴</div>
-                <h3 class="text-2xl font-bold mb-3">علاج البشرة المتقدم</h3>
-                <p class="text-gray-500 mb-6 leading-relaxed">استعادة نضارة البشرة باستخدام تقنيات الهيدرافيشال ومنتجات عضوية.</p>
-                <div class="flex justify-between items-center border-t pt-6">
-                    <span class="text-xl font-bold text-indigo-600">400 ر.س</span>
-                    <button onclick="document.getElementById('booking').scrollIntoView()" class="text-sm font-bold text-gray-800 underline">حجز الآن</button>
-                </div>
-            </div>
-        </div>
-    </section>
+      {/* Hero Section */}
+      <section className="relative z-10 px-8 pt-24 pb-32 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 text-cyan-300 text-sm mb-8 backdrop-blur-xl">
+            منصة تدريب ذكية بتجربة مستقبلية
+          </div>
 
-    <!-- نظام الحجز -->
-    <section id="booking" class="py-20 px-6 max-w-5xl mx-auto">
-        <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row">
-            <div class="md:w-1/3 bg-indigo-900 text-white p-12">
-                <h3 class="text-3xl font-bold mb-6">احجز وقتك</h3>
-                <p class="opacity-70 mb-10 leading-relaxed">اختر الموعد الذي يناسبك وسنقوم بتجهيز كل شيء لاستقبالك.</p>
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <span class="w-8 h-8 rounded-full bg-indigo-800 flex items-center justify-center">1</span>
-                        <span>اختيار الخدمة</span>
-                    </div>
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <span class="w-8 h-8 rounded-full bg-indigo-800 flex items-center justify-center">2</span>
-                        <span>اختيار المختص</span>
-                    </div>
-                    <div class="flex items-center space-x-4 space-x-reverse text-indigo-300">
-                        <span class="w-8 h-8 rounded-full bg-indigo-400 text-indigo-900 flex items-center justify-center">3</span>
-                        <span>تأكيد الموعد</span>
-                    </div>
-                </div>
-            </div>
-            <div class="md:w-2/3 p-12">
-                <div class="grid grid-cols-1 gap-8">
-                    <div>
-                        <label class="block font-bold mb-4 text-gray-700 underline decoration-indigo-300">1. المختص المفضل</label>
-                        <div class="flex gap-4 overflow-x-auto pb-4">
-                            <label class="flex-shrink-0 cursor-pointer">
-                                <input type="radio" name="staff" class="hidden peer">
-                                <div class="p-2 border-2 rounded-2xl peer-checked:border-indigo-600 transition text-center w-24">
-                                    <img src="https://i.pravatar.cc/100?u=a" class="rounded-xl mb-2">
-                                    <span class="text-xs font-bold">سمير</span>
-                                </div>
-                            </label>
-                            <label class="flex-shrink-0 cursor-pointer">
-                                <input type="radio" name="staff" class="hidden peer" checked>
-                                <div class="p-2 border-2 rounded-2xl peer-checked:border-indigo-600 transition text-center w-24">
-                                    <img src="https://i.pravatar.cc/100?u=b" class="rounded-xl mb-2">
-                                    <span class="text-xs font-bold">فهد</span>
-                                </div>
-                            </label>
-                            <label class="flex-shrink-0 cursor-pointer">
-                                <input type="radio" name="staff" class="hidden peer">
-                                <div class="p-2 border-2 rounded-2xl peer-checked:border-indigo-600 transition text-center w-24">
-                                    <img src="https://i.pravatar.cc/100?u=c" class="rounded-xl mb-2">
-                                    <span class="text-xs font-bold">خالد</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-4 text-gray-700">2. الوقت المتاح</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button class="py-2 border rounded-xl hover:bg-indigo-600 hover:text-white transition">09:00 ص</button>
-                            <button class="py-2 border rounded-xl bg-indigo-600 text-white">01:00 م</button>
-                            <button class="py-2 border rounded-xl hover:bg-indigo-600 hover:text-white transition">05:00 م</button>
-                        </div>
-                    </div>
-                    <button class="w-full bg-black text-white py-5 rounded-2xl font-bold text-lg hover:shadow-2xl transition transform hover:-translate-y-1">تأكيد الموعد الآن</button>
-                </div>
-            </div>
+          <h2 className="text-6xl leading-tight font-black mb-8">
+            تعلم بطريقة
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> حديثة </span>
+            وذكية
+          </h2>
+
+          <p className="text-lg text-white/60 leading-8 mb-10 max-w-xl">
+            منصة تدريب احترافية بتصميم زجاجي متطور، حركات ديناميكية، ولوحات ذكية تمنح المستخدم تجربة تشبه تطبيقات الشركات العالمية الحديثة.
+          </p>
+
+          <div className="flex gap-4">
+            <button className="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold shadow-2xl hover:scale-105 transition duration-300">
+              ابدأ الآن
+            </button>
+
+            <button className="px-8 py-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl hover:bg-white/20 transition">
+              مشاهدة المنصة
+            </button>
+          </div>
         </div>
-    </section>
 
-    <!-- لوحة التحكم (لصاحب المشغل) - كنسخة توضيحية -->
-    <section class="bg-indigo-50 py-10 border-t border-indigo-100">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center space-x-3 space-x-reverse mb-8">
-                <div class="w-3 h-3 bg-red-500 animate-pulse rounded-full"></div>
-                <h4 class="font-bold text-indigo-900">نظرة سريعة (لوحة الإدارة)</h4>
+        {/* Smart Glass Dashboard */}
+        <div className="relative">
+          <div className="absolute -top-10 -left-10 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
+
+          <div className="relative backdrop-blur-2xl bg-white/5 border border-white/10 rounded-[32px] p-6 shadow-2xl">
+            {/* Top Bar */}
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <p className="text-white/50 text-sm">مرحبا وائل 👋</p>
+                <h3 className="text-2xl font-bold">لوحة الطالب الذكية</h3>
+              </div>
+
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400" />
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-100">
-                    <p class="text-gray-500 text-sm">حجوزات اليوم</p>
-                    <p class="text-2xl font-bold">12</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-100">
-                    <p class="text-gray-500 text-sm">إجمالي الدخل</p>
-                    <p class="text-2xl font-bold">2,450 ر.س</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-100">
-                    <p class="text-gray-500 text-sm">الموظفين المتاحين</p>
-                    <p class="text-2xl font-bold">4</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-100">
-                    <p class="text-gray-500 text-sm">تقييم العملاء</p>
-                    <p class="text-2xl font-bold">4.9/5</p>
-                </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl">
+                <p className="text-white/50 text-sm mb-2">الدورات النشطة</p>
+                <h4 className="text-4xl font-black">12</h4>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl">
+                <p className="text-white/50 text-sm mb-2">نسبة الإنجاز</p>
+                <h4 className="text-4xl font-black">87%</h4>
+              </div>
             </div>
+
+            {/* Courses */}
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/20 rounded-3xl p-5 backdrop-blur-xl hover:scale-[1.02] transition duration-300 cursor-pointer">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h5 className="text-lg font-bold">إدارة المشاريع الحديثة</h5>
+                    <p className="text-white/50 text-sm">12 درس • 4 ساعات</p>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 flex items-center justify-center">
+                    ▶
+                  </div>
+                </div>
+
+                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div className="w-[75%] h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" />
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl hover:bg-white/10 transition duration-300 cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h5 className="text-lg font-bold">الذكاء الاصطناعي للأعمال</h5>
+                    <p className="text-white/50 text-sm">8 دروس • جاري التعلم</p>
+                  </div>
+
+                  <div className="text-cyan-300">↗</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <footer class="bg-white py-10 text-center border-t text-gray-400 text-sm">
-        <p>© 2026 LUMIÈRE SPA. جميع الحقوق محفوظة.</p>
-    </footer>
+      {/* Smart Features */}
+      <section className="relative z-10 px-8 pb-32 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <p className="text-cyan-300 mb-4">خصائص مستقبلية</p>
+          <h3 className="text-5xl font-black">تجربة تدريب مختلفة بالكامل</h3>
+        </div>
 
-</body>
-</html>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            'شرائح زجاجية ذكية',
+            'لوحة تحكم تفاعلية',
+            'حركات وانيميشن احترافية',
+            'شهادات رقمية ذكية',
+            'تحليلات فورية',
+            'تجربة تشبه تطبيقات AI الحديثة',
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="group bg-white/5 border border-white/10 rounded-[28px] p-8 backdrop-blur-2xl hover:bg-white/10 hover:-translate-y-2 transition duration-500"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-white/10 mb-6" />
+              <h4 className="text-xl font-bold mb-4">{item}</h4>
+              <p className="text-white/50 leading-7">
+                تصميم احترافي يمنح المستخدم تجربة سلسة، حديثة، وسريعة مع إحساس Premium.
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
