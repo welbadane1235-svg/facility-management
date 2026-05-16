@@ -1,149 +1,554 @@
-export default function ModernTrainingPlatform() {
-  return (
-    <div className="min-h-screen bg-[#070B14] text-white overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#3b82f620,transparent_25%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,#8b5cf620,transparent_25%)]" />
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACADEMIA AI</title>
 
-      {/* Navbar */}
-      <header className="relative z-20 px-8 py-6 flex items-center justify-between backdrop-blur-xl border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-2xl" />
-          <h1 className="text-2xl font-bold tracking-wide">ACADEMIA AI</h1>
-        </div>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-        <nav className="hidden md:flex gap-8 text-sm text-white/70">
-          <a href="#" className="hover:text-white transition">الرئيسية</a>
-          <a href="#" className="hover:text-white transition">الدورات</a>
-          <a href="#" className="hover:text-white transition">المدربين</a>
-          <a href="#" className="hover:text-white transition">الاشتراكات</a>
-        </nav>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
 
-        <button className="px-5 py-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl hover:bg-white/20 transition">
-          تسجيل الدخول
-        </button>
-      </header>
+    body {
+      background: #070b14;
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
 
-      {/* Hero Section */}
-      <section className="relative z-10 px-8 pt-24 pb-32 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 text-cyan-300 text-sm mb-8 backdrop-blur-xl">
-            منصة تدريب ذكية بتجربة مستقبلية
-          </div>
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: rgba(0, 183, 255, 0.15);
+      filter: blur(120px);
+      top: -200px;
+      right: -200px;
+      z-index: -1;
+    }
 
-          <h2 className="text-6xl leading-tight font-black mb-8">
-            تعلم بطريقة
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> حديثة </span>
-            وذكية
-          </h2>
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      background: rgba(140, 0, 255, 0.15);
+      filter: blur(120px);
+      bottom: -200px;
+      left: -200px;
+      z-index: -1;
+    }
 
-          <p className="text-lg text-white/60 leading-8 mb-10 max-w-xl">
-            منصة تدريب احترافية بتصميم زجاجي متطور، حركات ديناميكية، ولوحات ذكية تمنح المستخدم تجربة تشبه تطبيقات الشركات العالمية الحديثة.
-          </p>
+    .navbar {
+      width: 100%;
+      padding: 25px 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.03);
+    }
 
-          <div className="flex gap-4">
-            <button className="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold shadow-2xl hover:scale-105 transition duration-300">
-              ابدأ الآن
-            </button>
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
 
-            <button className="px-8 py-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl hover:bg-white/20 transition">
-              مشاهدة المنصة
-            </button>
-          </div>
-        </div>
+    .logo-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      box-shadow: 0 0 30px rgba(0,183,255,0.5);
+    }
 
-        {/* Smart Glass Dashboard */}
-        <div className="relative">
-          <div className="absolute -top-10 -left-10 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
+    .logo h1 {
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
 
-          <div className="relative backdrop-blur-2xl bg-white/5 border border-white/10 rounded-[32px] p-6 shadow-2xl">
-            {/* Top Bar */}
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <p className="text-white/50 text-sm">مرحبا وائل 👋</p>
-                <h3 className="text-2xl font-bold">لوحة الطالب الذكية</h3>
-              </div>
+    .nav-links {
+      display: flex;
+      gap: 40px;
+    }
 
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400" />
-            </div>
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: .3s;
+      font-size: 15px;
+    }
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl">
-                <p className="text-white/50 text-sm mb-2">الدورات النشطة</p>
-                <h4 className="text-4xl font-black">12</h4>
-              </div>
+    .nav-links a:hover {
+      color: white;
+    }
 
-              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl">
-                <p className="text-white/50 text-sm mb-2">نسبة الإنجاز</p>
-                <h4 className="text-4xl font-black">87%</h4>
-              </div>
-            </div>
+    .login-btn {
+      padding: 12px 25px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      transition: .3s;
+    }
 
-            {/* Courses */}
-            <div className="space-y-4">
-              <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/20 rounded-3xl p-5 backdrop-blur-xl hover:scale-[1.02] transition duration-300 cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h5 className="text-lg font-bold">إدارة المشاريع الحديثة</h5>
-                    <p className="text-white/50 text-sm">12 درس • 4 ساعات</p>
-                  </div>
+    .login-btn:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
 
-                  <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 flex items-center justify-center">
-                    ▶
-                  </div>
-                </div>
+    .hero {
+      width: 100%;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 70px;
+      gap: 80px;
+    }
 
-                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div className="w-[75%] h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" />
-                </div>
-              </div>
+    .hero-content {
+      width: 50%;
+    }
 
-              <div className="bg-white/5 border border-white/10 rounded-3xl p-5 backdrop-blur-xl hover:bg-white/10 transition duration-300 cursor-pointer">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h5 className="text-lg font-bold">الذكاء الاصطناعي للأعمال</h5>
-                    <p className="text-white/50 text-sm">8 دروس • جاري التعلم</p>
-                  </div>
+    .tag {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 50px;
+      background: rgba(0, 183, 255, 0.08);
+      border: 1px solid rgba(0,183,255,0.2);
+      color: #73d7ff;
+      margin-bottom: 30px;
+      backdrop-filter: blur(20px);
+    }
 
-                  <div className="text-cyan-300">↗</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    .hero-content h2 {
+      font-size: 75px;
+      line-height: 1.2;
+      margin-bottom: 30px;
+      font-weight: 900;
+    }
 
-      {/* Smart Features */}
-      <section className="relative z-10 px-8 pb-32 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-cyan-300 mb-4">خصائص مستقبلية</p>
-          <h3 className="text-5xl font-black">تجربة تدريب مختلفة بالكامل</h3>
-        </div>
+    .gradient-text {
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            'شرائح زجاجية ذكية',
-            'لوحة تحكم تفاعلية',
-            'حركات وانيميشن احترافية',
-            'شهادات رقمية ذكية',
-            'تحليلات فورية',
-            'تجربة تشبه تطبيقات AI الحديثة',
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="group bg-white/5 border border-white/10 rounded-[28px] p-8 backdrop-blur-2xl hover:bg-white/10 hover:-translate-y-2 transition duration-500"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-white/10 mb-6" />
-              <h4 className="text-xl font-bold mb-4">{item}</h4>
-              <p className="text-white/50 leading-7">
-                تصميم احترافي يمنح المستخدم تجربة سلسة، حديثة، وسريعة مع إحساس Premium.
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+    .hero-content p {
+      color: rgba(255,255,255,0.65);
+      line-height: 2;
+      font-size: 18px;
+      margin-bottom: 40px;
+      max-width: 650px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .primary-btn {
+      padding: 18px 35px;
+      border-radius: 22px;
+      border: none;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .4s;
+      box-shadow: 0 0 35px rgba(0,183,255,0.35);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-5px) scale(1.03);
+    }
+
+    .secondary-btn {
+      padding: 18px 35px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      transition: .3s;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .dashboard {
+      width: 460px;
+      padding: 30px;
+      border-radius: 35px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(30px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      position: relative;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .dashboard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+    }
+
+    .dashboard-top h3 {
+      font-size: 30px;
+      margin-top: 5px;
+    }
+
+    .dashboard-top p {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .profile {
+      width: 60px;
+      height: 60px;
+      border-radius: 22px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 25px;
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+    }
+
+    .stat-card p {
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+    }
+
+    .stat-card h4 {
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .course-card {
+      padding: 25px;
+      border-radius: 30px;
+      background: linear-gradient(135deg,rgba(0,198,255,0.15),rgba(0,114,255,0.15));
+      border: 1px solid rgba(0,198,255,0.15);
+      margin-bottom: 20px;
+      transition: .4s;
+      cursor: pointer;
+    }
+
+    .course-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,183,255,0.15);
+    }
+
+    .course-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .course-top h5 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .course-top p {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .play {
+      width: 55px;
+      height: 55px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 75%;
+      height: 100%;
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+      border-radius: 20px;
+    }
+
+    .features {
+      padding: 100px 70px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .section-title p {
+      color: #73d7ff;
+      margin-bottom: 15px;
+    }
+
+    .section-title h2 {
+      font-size: 55px;
+      font-weight: 900;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 30px;
+    }
+
+    .feature-card {
+      padding: 35px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+      transition: .4s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .feature-icon {
+      width: 65px;
+      height: 65px;
+      border-radius: 24px;
+      background: linear-gradient(135deg,rgba(0,198,255,0.2),rgba(0,114,255,0.2));
+      margin-bottom: 25px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .feature-card p {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.9;
+    }
+
+    @media(max-width:1100px){
+      .hero {
+        flex-direction: column;
+      }
+
+      .hero-content {
+        width: 100%;
+      }
+
+      .dashboard {
+        width: 100%;
+      }
+
+      .hero-content h2 {
+        font-size: 55px;
+      }
+    }
+
+    @media(max-width:700px){
+      .navbar,
+      .hero,
+      .features {
+        padding-right: 25px;
+        padding-left: 25px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero-content h2 {
+        font-size: 42px;
+      }
+
+      .section-title h2 {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <div class="logo-box"></div>
+      <h1>ACADEMIA AI</h1>
     </div>
-  )
-}
+
+    <div class="nav-links">
+      <a href="#">الرئيسية</a>
+      <a href="#">الدورات</a>
+      <a href="#">المدربين</a>
+      <a href="#">الاشتراكات</a>
+    </div>
+
+    <button class="login-btn">تسجيل الدخول</button>
+  </nav>
+
+  <section class="hero">
+
+    <div class="hero-content">
+      <div class="tag">منصة تدريب ذكية بتجربة مستقبلية</div>
+
+      <h2>
+        تعلم بطريقة
+        <span class="gradient-text"> حديثة </span>
+        وذكية
+      </h2>
+
+      <p>
+        منصة تدريب احترافية بتصميم زجاجي متطور، حركات ديناميكية، ولوحات ذكية تمنح المستخدم تجربة تشبه تطبيقات الشركات العالمية الحديثة.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="primary-btn">ابدأ الآن</button>
+        <button class="secondary-btn">استعراض المنصة</button>
+      </div>
+    </div>
+
+    <div class="dashboard">
+
+      <div class="dashboard-top">
+        <div>
+          <p>مرحبا وائل 👋</p>
+          <h3>لوحة الطالب الذكية</h3>
+        </div>
+
+        <div class="profile"></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <p>الدورات النشطة</p>
+          <h4>12</h4>
+        </div>
+
+        <div class="stat-card">
+          <p>نسبة الإنجاز</p>
+          <h4>87%</h4>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-top">
+          <div>
+            <h5>إدارة المشاريع الحديثة</h5>
+            <p>12 درس • 4 ساعات</p>
+          </div>
+
+          <div class="play">▶</div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-top">
+          <div>
+            <h5>الذكاء الاصطناعي للأعمال</h5>
+            <p>8 دروس • جاري التعلم</p>
+          </div>
+
+          <div class="play">↗</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="features">
+
+    <div class="section-title">
+      <p>خصائص مستقبلية</p>
+      <h2>تجربة تدريب مختلفة بالكامل</h2>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h3>شرائح زجاجية ذكية</h3>
+        <p>
+          تصميم عصري بواجهة شفافة وتأثيرات ضوئية تمنح المستخدم إحساس Premium.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h3>لوحة تحكم تفاعلية</h3>
+        <p>
+          إحصائيات مباشرة وتجربة استخدام سلسة تشبه تطبيقات الذكاء الاصطناعي الحديثة.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"></div>
+        <h3>انيميشن احترافي</h3>
+        <p>
+          حركات ناعمة وتأثيرات انتقالية تجعل المنصة حية وليست واجهة جامدة.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+</body>
+</html>
