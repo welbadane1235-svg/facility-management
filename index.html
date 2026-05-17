@@ -324,6 +324,129 @@
       border-radius: 20px;
     }
 
+    
+    .smart-slider-section {
+      padding: 40px 70px 100px;
+      overflow: hidden;
+    }
+
+    .smart-slider {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slider-track {
+      display: flex;
+      gap: 30px;
+      animation: autoSlide 18s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes autoSlide {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-40%);
+      }
+    }
+
+    .slide-card {
+      width: 420px;
+      min-height: 300px;
+      border-radius: 38px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(30px);
+      transition: .5s;
+      flex-shrink: 0;
+    }
+
+    .slide-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0,183,255,0.18);
+    }
+
+    .active-slide {
+      background: linear-gradient(135deg,rgba(0,198,255,0.12),rgba(0,114,255,0.12));
+      border: 1px solid rgba(0,198,255,0.2);
+    }
+
+    .slide-glow {
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      background: rgba(0,183,255,0.18);
+      border-radius: 50%;
+      filter: blur(100px);
+      top: -80px;
+      left: -80px;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 5;
+      padding: 40px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide-tag {
+      display: inline-block;
+      width: fit-content;
+      padding: 10px 18px;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.08);
+      color: #73d7ff;
+      font-size: 13px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .slide-content h3 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .slide-content p {
+      color: rgba(255,255,255,0.6);
+      line-height: 2;
+      margin-bottom: 40px;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .slide-footer button {
+      padding: 14px 24px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: .3s;
+    }
+
+    .slide-footer button:hover {
+      transform: scale(1.05);
+    }
+
+    .slide-footer span {
+      color: #73d7ff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
     .features {
       padding: 100px 70px;
     }
@@ -593,6 +716,19 @@
         padding-left: 25px;
       }
 
+      .smart-slider-section {
+        padding-right: 25px;
+        padding-left: 25px;
+      }
+
+      .slide-card {
+        width: 320px;
+      }
+
+      .slide-content h3 {
+        font-size: 26px;
+      }
+
       .nav-links {
         display: none;
       }
@@ -637,7 +773,7 @@
       </h2>
 
       <p>
-        منصة احترافية قوية تدير طرقك نحو المسقبل 
+        منصة تدريب احترافية بتصميم زجاجي متطور، حركات ديناميكية، ولوحات ذكية تمنح المستخدم تجربة تشبه تطبيقات الشركات العالمية الحديثة.
       </p>
 
       <div class="hero-buttons">
@@ -650,7 +786,7 @@
 
       <div class="dashboard-top">
         <div>
-          <p>مرحبا عزيزي  👋</p>
+          <p>مرحبا وائل 👋</p>
           <h3>لوحة الطالب الذكية</h3>
         </div>
 
@@ -687,12 +823,81 @@
       <div class="course-card">
         <div class="course-top">
           <div>
-            <h5>االمنصة الذكية للاعمال للأعمال</h5>
+            <h5>الذكاء الاصطناعي للأعمال</h5>
             <p>8 دروس • جاري التعلم</p>
           </div>
 
           <div class="play">↗</div>
         </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SMART SLIDER -->
+  <section class="smart-slider-section">
+
+    <div class="section-title">
+      <p>دورات احترافية</p>
+      <h2>تجربة عرض حديثة وذكية</h2>
+    </div>
+
+    <div class="smart-slider">
+
+      <div class="slider-track">
+
+        <div class="slide-card active-slide">
+          <div class="slide-glow"></div>
+
+          <div class="slide-content">
+            <span class="slide-tag">AI COURSE</span>
+            <h3>الذكاء الاصطناعي للأعمال</h3>
+            <p>
+              تعلم كيف تستخدم تقنيات الذكاء الاصطناعي لتطوير الأعمال، التحليل، والأتمتة الحديثة.
+            </p>
+
+            <div class="slide-footer">
+              <button>ابدأ الدورة</button>
+              <span>4.9 ★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-card">
+          <div class="slide-glow"></div>
+
+          <div class="slide-content">
+            <span class="slide-tag">BUSINESS</span>
+            <h3>إدارة المشاريع الحديثة</h3>
+            <p>
+              نظام تدريبي متكامل لتعلم إدارة المشاريع بأساليب احترافية وعملية.
+            </p>
+
+            <div class="slide-footer">
+              <button>استعراض</button>
+              <span>4.8 ★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-card">
+          <div class="slide-glow"></div>
+
+          <div class="slide-content">
+            <span class="slide-tag">PREMIUM</span>
+            <h3>التسويق الرقمي الذكي</h3>
+            <p>
+              تعلم بناء الحملات التسويقية وتحليل البيانات باستخدام أدوات حديثة.
+            </p>
+
+            <div class="slide-footer">
+              <button>ابدأ التعلم</button>
+              <span>5.0 ★</span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -710,9 +915,9 @@
 
       <div class="feature-card">
         <div class="feature-icon"></div>
-        <h3>المدربين</h3>
+        <h3>شرائح زجاجية ذكية</h3>
         <p>
-         كادر تدربي عالي الخبرة حاصل على شهادات دولية .
+          تصميم عصري بواجهة شفافة وتأثيرات ضوئية تمنح المستخدم إحساس Premium.
         </p>
       </div>
 
@@ -726,9 +931,9 @@
 
       <div class="feature-card">
         <div class="feature-icon"></div>
-        <h3> سياسات المنصة وشروطها </h3>
+        <h3>انيميشن احترافي</h3>
         <p>
-..............
+          حركات ناعمة وتأثيرات انتقالية تجعل المنصة حية وليست واجهة جامدة.
         </p>
       </div>
 
