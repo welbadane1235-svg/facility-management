@@ -17,7 +17,7 @@
       font-family: 'Cairo', sans-serif;
     }
 
-    body {
+    
       background: #070b14;
       color: white;
       overflow-x: hidden;
@@ -37,10 +37,173 @@
       z-index: -1;
     }
 
-    body::after {
-      content: '';
+    body::.loader {
       position: fixed;
-      width: 500px;
+      inset: 0;
+      background: #050816;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 99999;
+      transition: .8s;
+    }
+
+    .hide-loader {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-ring {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 5px solid rgba(255,255,255,0.08);
+      border-top: 5px solid #00c6ff;
+      animation: spin 1s linear infinite;
+      margin-bottom: 25px;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      animation: floatParticle linear infinite;
+    }
+
+    @keyframes floatParticle {
+      100% {
+        transform: translateY(-120vh);
+        opacity: 0;
+      }
+    }
+
+    .cursor-glow {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      position: fixed;
+      background: radial-gradient(circle,rgba(0,183,255,0.18),transparent 70%);
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .smart-sidebar {
+      position: fixed;
+      top: 50%;
+      left: 25px;
+      transform: translateY(-50%);
+      width: 85px;
+      padding: 20px 0;
+      border-radius: 35px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      z-index: 999;
+    }
+
+    .sidebar-logo-box,
+    .ai-button {
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+    }
+
+    .sidebar-logo-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+    }
+
+    .sidebar-links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar-item,
+    .theme-toggle {
+      width: 55px;
+      height: 55px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .active-item,
+    .sidebar-item:hover,
+    .theme-toggle:hover {
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+    }
+
+    .ai-button {
+      position: fixed;
+      bottom: 35px;
+      left: 35px;
+      width: 80px;
+      height: 80px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      z-index: 999;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 40px rgba(0,183,255,0.35);
+    }
+
+    @keyframes pulse {
+      50% { transform: scale(1.08); }
+    }
+
+    .notifications-center {
+      position: fixed;
+      top: 30px;
+      left: 120px;
+      width: 60px;
+      height: 60px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 999;
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #00c6ff;
+    }
+
+    body::after { content: '';
+      position: fidth: 500px;
       height: 500px;
       background: rgba(140, 0, 255, 0.15);
       filter: blur(120px);
@@ -745,6 +908,39 @@
 </head>
 <body>
 
+  <!-- LOAD<body>
+
+  <div class="loader" id="loader">
+    <div class="loader-ring"></div>
+    <h2>ACADEMIA AI</h2>
+  </div>
+
+  <div id="particles"></div>
+  <div class="cursor-glow"></div>
+
+  <aside class="smart-sidebar">
+    <div class="sidebar-logo-box"></div>
+
+    <div class="sidebar-links">
+      <div class="sidebar-item active-item">🏠</div>
+      <div class="sidebar-item">📚</div>
+      <div class="sidebar-item">🎥</div>
+      <div class="sidebar-item">📊</div>
+      <div class="sidebar-item">⚙️</div>
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()">☀️</div>
+  </aside>
+
+  <div class="ai-button">✦</div>
+
+  <div class="notifications-center">
+    <div class="notification-dot"></div>
+    🔔
+  </div>
+  <div class="loader" id="loader">
+    <div class="loader-ri
+
   <nav class="navbar">
     <div class="logo">
       <div class="logo-box"></div>
@@ -1019,10 +1215,90 @@
         const rotateY = ((x / rect.width) - 0.5) * 10;
         const rotateX = ((y / rect.height) - 0.5) * -10;
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}<script>
+  window.addEventListener('load', ()=>{
+    setTimeout(()=>{
+      document.getElementById('loader').classList.add('hide-loader');
+    },1500)
+  })
+
+  const particles = document.getElementById('particles');
+
+  for(let i=0;i<35;i++){
+    const span = document.createElement('span');
+    span.classList.add('particle');
+
+    span.style.left = Math.random()*100 + '%';
+    span.style.animationDuration = (Math.random()*10)+10+'s';
+    span.style.width = span.style.height = (Math.random()*6)+3+'px';
+
+    particles.appendChild(span);
+  }
+
+  const cursorGlow = document.querySelector('.cursor-glow');
+
+  document.addEventListener('mousemove',(e)=>{
+    cursorGlow.style.left = e.clientX + 'px';
+    cursorGlow.style.top = e.clientY + 'px';
+  })
+
+  function toggleTheme(){
+    document.body.classList.toggle('light-mode');
+  }
+</script>
+</body>tateY(${rotateY}deg)`;
       });
     });
 
   </script>
+
+
+<script>
+
+  // DARK MODE
+  const body = document.body;
+  let darkMode = true;
+
+  function toggleTheme(){
+    darkMode = !darkMode;
+
+    if(!darkMode){
+      body.classList.add('light-mode');
+    } else {
+      body.classList.remove('light-mode');
+    }
+  }
+
+  // LOADER
+  window.addEventListener('load', ()=>{
+    setTimeout(()=>{
+      document.getElementById('loader').classList.add('hide-loader');
+    },1500)
+  })
+
+  // PARTICLES
+  const particles = document.getElementById('particles');
+
+  for(let i=0;i<35;i++){
+    const span = document.createElement('span');
+    span.classList.add('particle');
+
+    span.style.left = Math.random()*100 + '%';
+    span.style.animationDuration = (Math.random()*10)+10+'s';
+    span.style.animationDelay = Math.random()*5+'s';
+    span.style.width = span.style.height = (Math.random()*6)+3+'px';
+
+    particles.appendChild(span);
+  }
+
+  // CURSOR EFFECT
+  const cursorGlow = document.querySelector('.cursor-glow');
+
+  document.addEventListener('mousemove',(e)=>{
+    cursorGlow.style.left = e.clientX + 'px';
+    cursorGlow.style.top = e.clientY + 'px';
+  })
+
+</script>
 </body>
 </html>
