@@ -17,7 +17,7 @@
       font-family: 'Cairo', sans-serif;
     }
 
-    
+    body {
       background: #070b14;
       color: white;
       overflow-x: hidden;
@@ -37,7 +37,7 @@
       z-index: -1;
     }
 
-    body::.loader {
+    .loader {
       position: fixed;
       inset: 0;
       background: #050816;
@@ -202,8 +202,10 @@
       background: #00c6ff;
     }
 
-    body::after { content: '';
-      position: fidth: 500px;
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px;
       height: 500px;
       background: rgba(140, 0, 255, 0.15);
       filter: blur(120px);
@@ -515,6 +517,19 @@
       }
     }
 
+    
+    .light-mode .analytics-card,
+    .light-mode .smart-sidebar,
+    .light-mode .notifications-center {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .light-mode .circle-inner {
+      background: white;
+      color: black;
+    }
+
     .slide-card {
       width: 420px;
       min-height: 300px;
@@ -608,6 +623,244 @@
       color: #73d7ff;
       font-weight: bold;
       font-size: 18px;
+    }
+
+    
+    .advanced-dashboard-section {
+      padding: 100px 70px;
+    }
+
+    .advanced-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12,1fr);
+      gap: 25px;
+    }
+
+    .analytics-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+      border-radius: 35px;
+      padding: 30px;
+      overflow: hidden;
+      position: relative;
+      transition: .4s;
+    }
+
+    .analytics-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0,183,255,0.12);
+    }
+
+    .large-card {
+      grid-column: span 8;
+      min-height: 420px;
+    }
+
+    .small-card {
+      grid-column: span 4;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .video-dashboard {
+      grid-column: span 7;
+    }
+
+    .ai-chat-card {
+      grid-column: span 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .analytics-header,
+    .video-header,
+    .ai-chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .analytics-header p,
+    .video-header p,
+    .ai-chat-header p {
+      color: rgba(255,255,255,0.55);
+      margin-top: 8px;
+    }
+
+    .analytics-badge,
+    .video-live {
+      padding: 10px 16px;
+      border-radius: 50px;
+      background: rgba(0,198,255,0.12);
+      color: #73d7ff;
+      border: 1px solid rgba(0,198,255,0.15);
+      font-size: 13px;
+    }
+
+    .chart-area {
+      position: relative;
+      height: 260px;
+      display: flex;
+      align-items: end;
+    }
+
+    .chart-line {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,transparent,rgba(0,183,255,0.08));
+      border-radius: 25px;
+    }
+
+    .chart-bars {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: end;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .chart-bars span {
+      flex: 1;
+      border-radius: 20px 20px 8px 8px;
+      background: linear-gradient(to top,#0072ff,#00c6ff);
+      animation: barsUp 2s ease;
+    }
+
+    @keyframes barsUp {
+      from {
+        height: 0;
+      }
+    }
+
+    .circle-progress {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: conic-gradient(#00c6ff 0 84%,rgba(255,255,255,0.08) 84%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
+
+    .circle-inner {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      background: #070b14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .certificate-preview {
+      width: 100%;
+      height: 120px;
+      border-radius: 28px;
+      background: linear-gradient(135deg,rgba(0,198,255,0.12),rgba(0,114,255,0.12));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 55px;
+    }
+
+    .video-screen-pro {
+      width: 100%;
+      height: 320px;
+      border-radius: 28px;
+      background: linear-gradient(135deg,#0f172a,#111827);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .video-overlay-glow {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: rgba(0,183,255,0.12);
+      filter: blur(120px);
+    }
+
+    .video-controls-pro {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .video-controls-pro button {
+      width: 60px;
+      height: 60px;
+      border-radius: 22px;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .play-main {
+      background: linear-gradient(135deg,#00c6ff,#0072ff) !important;
+      box-shadow: 0 0 30px rgba(0,183,255,0.3);
+    }
+
+    .ai-mini-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 22px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .ai-message {
+      padding: 25px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.05);
+      line-height: 2;
+      margin-bottom: 25px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .ai-input {
+      display: flex;
+      gap: 15px;
+    }
+
+    .ai-input input {
+      flex: 1;
+      height: 60px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      padding: 0 20px;
+      color: white;
+      outline: none;
+    }
+
+    .ai-input button {
+      width: 65px;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
     }
 
     .features {
@@ -908,8 +1161,6 @@
 </head>
 <body>
 
-  <!-- LOAD<body>
-
   <div class="loader" id="loader">
     <div class="loader-ring"></div>
     <h2>ACADEMIA AI</h2>
@@ -938,8 +1189,6 @@
     <div class="notification-dot"></div>
     🔔
   </div>
-  <div class="loader" id="loader">
-    <div class="loader-ri
 
   <nav class="navbar">
     <div class="logo">
@@ -1137,7 +1386,102 @@
 
   </section>
 
+  <!-- ADVANCED DASHBOARD -->
+  <section class="advanced-dashboard-section">
 
+    <div class="section-title">
+      <p>لوحة تحكم ذكية</p>
+      <h2>Dashboard احترافي تفاعلي</h2>
+    </div>
+
+    <div class="advanced-dashboard-grid">
+
+      <div class="analytics-card large-card">
+        <div class="analytics-header">
+          <div>
+            <h3>تحليل تقدم التعلم</h3>
+            <p>إحصائيات مباشرة وتفاعلية</p>
+          </div>
+
+          <div class="analytics-badge">LIVE</div>
+        </div>
+
+        <div class="chart-area">
+          <div class="chart-line"></div>
+          <div class="chart-bars">
+            <span style="height:40%"></span>
+            <span style="height:65%"></span>
+            <span style="height:80%"></span>
+            <span style="height:55%"></span>
+            <span style="height:95%"></span>
+            <span style="height:70%"></span>
+            <span style="height:88%"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analytics-card small-card">
+        <h3>ساعات التعلم</h3>
+        <div class="circle-progress">
+          <div class="circle-inner">84%</div>
+        </div>
+      </div>
+
+      <div class="analytics-card small-card">
+        <h3>الشهادات</h3>
+        <div class="certificate-preview">
+          🏆
+        </div>
+      </div>
+
+      <div class="analytics-card video-dashboard">
+
+        <div class="video-header">
+          <div>
+            <h3>مشغل الدورة</h3>
+            <p>تجربة مشاهدة مستقبلية</p>
+          </div>
+
+          <div class="video-live">● LIVE</div>
+        </div>
+
+        <div class="video-screen-pro">
+          <div class="video-overlay-glow"></div>
+          ▶
+        </div>
+
+        <div class="video-controls-pro">
+          <button>⏮</button>
+          <button class="play-main">⏸</button>
+          <button>⏭</button>
+        </div>
+
+      </div>
+
+      <div class="analytics-card ai-chat-card">
+
+        <div class="ai-chat-header">
+          <div class="ai-mini-icon">✦</div>
+          <div>
+            <h3>AI Assistant</h3>
+            <p>مساعد ذكي داخل المنصة</p>
+          </div>
+        </div>
+
+        <div class="ai-message">
+          مرحبًا وائل 👋 كيف يمكنني مساعدتك في التعلم اليوم؟
+        </div>
+
+        <div class="ai-input">
+          <input type="text" placeholder="اسأل الذكاء الاصطناعي...">
+          <button>➜</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
   <!-- LOGIN MODAL -->
   <div class="login-overlay" id="loginModal">
@@ -1215,7 +1559,12 @@
         const rotateY = ((x / rect.width) - 0.5) * 10;
         const rotateX = ((y / rect.height) - 0.5) * -10;
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}<script>
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+    });
+
+  </script>
+<script>
   window.addEventListener('load', ()=>{
     setTimeout(()=>{
       document.getElementById('loader').classList.add('hide-loader');
@@ -1245,60 +1594,6 @@
   function toggleTheme(){
     document.body.classList.toggle('light-mode');
   }
-</script>
-</body>tateY(${rotateY}deg)`;
-      });
-    });
-
-  </script>
-
-
-<script>
-
-  // DARK MODE
-  const body = document.body;
-  let darkMode = true;
-
-  function toggleTheme(){
-    darkMode = !darkMode;
-
-    if(!darkMode){
-      body.classList.add('light-mode');
-    } else {
-      body.classList.remove('light-mode');
-    }
-  }
-
-  // LOADER
-  window.addEventListener('load', ()=>{
-    setTimeout(()=>{
-      document.getElementById('loader').classList.add('hide-loader');
-    },1500)
-  })
-
-  // PARTICLES
-  const particles = document.getElementById('particles');
-
-  for(let i=0;i<35;i++){
-    const span = document.createElement('span');
-    span.classList.add('particle');
-
-    span.style.left = Math.random()*100 + '%';
-    span.style.animationDuration = (Math.random()*10)+10+'s';
-    span.style.animationDelay = Math.random()*5+'s';
-    span.style.width = span.style.height = (Math.random()*6)+3+'px';
-
-    particles.appendChild(span);
-  }
-
-  // CURSOR EFFECT
-  const cursorGlow = document.querySelector('.cursor-glow');
-
-  document.addEventListener('mousemove',(e)=>{
-    cursorGlow.style.left = e.clientX + 'px';
-    cursorGlow.style.top = e.clientY + 'px';
-  })
-
 </script>
 </body>
 </html>
