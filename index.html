@@ -626,6 +626,78 @@
     }
 
     
+    
+    .top-search-bar {
+      width: calc(100% - 180px);
+      margin-right: 120px;
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+      padding: 0 70px;
+    }
+
+    .search-box {
+      flex: 1;
+      height: 75px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    }
+
+    .search-box span {
+      font-size: 24px;
+      color: #73d7ff;
+    }
+
+    .search-box input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      color: white;
+      font-size: 17px;
+    }
+
+    .profile-menu {
+      min-width: 280px;
+      height: 75px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 22px;
+    }
+
+    .profile-avatar {
+      width: 55px;
+      height: 55px;
+      border-radius: 20px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      box-shadow: 0 0 25px rgba(0,183,255,0.25);
+    }
+
+    .profile-menu h4 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .profile-menu p {
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+    }
+
     .advanced-dashboard-section {
       padding: 100px 70px;
     }
@@ -861,6 +933,149 @@
       color: white;
       font-size: 22px;
       cursor: pointer;
+    }
+
+    
+    .course-viewer-section {
+      padding: 100px 70px;
+    }
+
+    .course-viewer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .6fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .main-course-player {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 40px;
+      padding: 30px;
+      backdrop-filter: blur(25px);
+    }
+
+    .course-video-large {
+      width: 100%;
+      height: 500px;
+      border-radius: 32px;
+      background: linear-gradient(135deg,#111827,#0f172a);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      margin-bottom: 30px;
+    }
+
+    .course-video-large::before {
+      content: '';
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      background: rgba(0,183,255,0.15);
+      filter: blur(120px);
+    }
+
+    .course-title-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .course-title-box p {
+      color: rgba(255,255,255,0.55);
+      margin-top: 8px;
+    }
+
+    .course-tags {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .course-tags span {
+      padding: 10px 18px;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #73d7ff;
+      font-size: 13px;
+    }
+
+    .timeline-progress {
+      width: 100%;
+      height: 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .timeline-progress span {
+      display: block;
+      width: 68%;
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+    }
+
+    .lesson-sidebar {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 40px;
+      padding: 25px;
+      backdrop-filter: blur(25px);
+    }
+
+    .lesson-sidebar h3 {
+      margin-bottom: 25px;
+    }
+
+    .lesson-item {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      transition: .3s;
+      cursor: pointer;
+    }
+
+    .lesson-item:hover,
+    .active-lesson {
+      background: linear-gradient(135deg,rgba(0,198,255,0.14),rgba(0,114,255,0.14));
+      border: 1px solid rgba(0,198,255,0.18);
+      transform: translateY(-4px);
+    }
+
+    .lesson-item p {
+      color: rgba(255,255,255,0.55);
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .lesson-play {
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .light-mode .search-box,
+    .light-mode .profile-menu,
+    .light-mode .main-course-player,
+    .light-mode .lesson-sidebar {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(0,0,0,0.06);
     }
 
     .features {
@@ -1386,6 +1601,25 @@
 
   </section>
 
+  <!-- TOP SEARCH BAR -->
+  <div class="top-search-bar">
+
+    <div class="search-box">
+      <span>⌕</span>
+      <input type="text" placeholder="ابحث عن دورة، مدرب، أو درس...">
+    </div>
+
+    <div class="profile-menu">
+      <div class="profile-avatar"></div>
+
+      <div>
+        <h4>وائل شاكر</h4>
+        <p>Premium Member</p>
+      </div>
+    </div>
+
+  </div>
+
   <!-- ADVANCED DASHBOARD -->
   <section class="advanced-dashboard-section">
 
@@ -1475,6 +1709,91 @@
         <div class="ai-input">
           <input type="text" placeholder="اسأل الذكاء الاصطناعي...">
           <button>➜</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- COURSE VIEWER -->
+  <section class="course-viewer-section">
+
+    <div class="section-title">
+      <p>مشاهدة الدورة</p>
+      <h2>تجربة تعلم سينمائية</h2>
+    </div>
+
+    <div class="course-viewer-grid">
+
+      <div class="main-course-player">
+
+        <div class="course-video-large">
+          ▶
+        </div>
+
+        <div class="course-title-box">
+          <div>
+            <h2>دورة الذكاء الاصطناعي للأعمال</h2>
+            <p>تعلم أحدث تقنيات الذكاء الاصطناعي بطريقة عملية واحترافية</p>
+          </div>
+
+          <div class="analytics-badge">PREMIUM</div>
+        </div>
+
+        <div class="course-tags">
+          <span>AI</span>
+          <span>BUSINESS</span>
+          <span>AUTOMATION</span>
+        </div>
+
+        <div class="timeline-progress">
+          <span></span>
+        </div>
+
+        <p>مدة المشاهدة الحالية: 18:45 / 32:00</p>
+
+      </div>
+
+      <div class="lesson-sidebar">
+
+        <h3>محتوى الدورة</h3>
+
+        <div class="lesson-item active-lesson">
+          <div>
+            <h4>مقدمة الذكاء الاصطناعي</h4>
+            <p>12 دقيقة</p>
+          </div>
+
+          <div class="lesson-play">▶</div>
+        </div>
+
+        <div class="lesson-item">
+          <div>
+            <h4>أتمتة الأعمال</h4>
+            <p>18 دقيقة</p>
+          </div>
+
+          <div class="lesson-play">▶</div>
+        </div>
+
+        <div class="lesson-item">
+          <div>
+            <h4>تحليل البيانات الذكي</h4>
+            <p>22 دقيقة</p>
+          </div>
+
+          <div class="lesson-play">▶</div>
+        </div>
+
+        <div class="lesson-item">
+          <div>
+            <h4>بناء أدوات AI</h4>
+            <p>35 دقيقة</p>
+          </div>
+
+          <div class="lesson-play">▶</div>
         </div>
 
       </div>
