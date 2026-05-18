@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- FIREBASE SDK -->
+  <script type="module">
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: 'YOUR_API_KEY',
+      authDomain: 'YOUR_PROJECT.firebaseapp.com',
+      projectId: 'YOUR_PROJECT_ID',
+      storageBucket: 'YOUR_PROJECT.appspot.com',
+      messagingSenderId: 'XXXX',
+      appId: 'XXXX'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.firebaseAuth = auth;
+    window.firebaseFunctions = {
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup
+    };
+
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ACADEMIA AI</title>
@@ -627,6 +660,104 @@
 
     
     
+    
+    .mobile-nav {
+      position: fixed;
+      bottom: 20px;
+      right: 50%;
+      transform: translateX(50%);
+      width: 90%;
+      max-width: 450px;
+      height: 80px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(30px);
+      display: none;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 9999;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+
+    .mobile-nav div {
+      width: 55px;
+      height: 55px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: .3s;
+    }
+
+    .mobile-nav div:hover {
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+    }
+
+    .floating-music-player {
+      position: fixed;
+      bottom: 35px;
+      right: 35px;
+      width: 320px;
+      height: 95px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(30px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .music-wave {
+      display: flex;
+      align-items: end;
+      gap: 4px;
+      height: 40px;
+    }
+
+    .music-wave span {
+      width: 5px;
+      border-radius: 20px;
+      background: #00c6ff;
+      animation: wave 1s infinite ease-in-out;
+    }
+
+    .music-wave span:nth-child(1){height:15px;animation-delay:.1s}
+    .music-wave span:nth-child(2){height:28px;animation-delay:.2s}
+    .music-wave span:nth-child(3){height:20px;animation-delay:.3s}
+    .music-wave span:nth-child(4){height:35px;animation-delay:.4s}
+
+    @keyframes wave {
+      50% {
+        transform: scaleY(1.8);
+      }
+    }
+
+    .floating-music-player h4 {
+      margin-bottom: 5px;
+    }
+
+    .floating-music-player p {
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+    }
+
+    .floating-music-player button {
+      width: 55px;
+      height: 55px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      color: white;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
     .top-search-bar {
       width: calc(100% - 180px);
       margin-right: 120px;
@@ -1339,6 +1470,46 @@
       outline: none;
     }
 
+    @media(max-width:900px){
+
+      .smart-sidebar,
+      .floating-music-player {
+        display:none;
+      }
+
+      .mobile-nav {
+        display:flex;
+      }
+
+      .top-search-bar {
+        width: 100%;
+        margin-right: 0;
+        padding: 0 20px;
+        flex-direction: column;
+      }
+
+      .profile-menu {
+        width: 100%;
+      }
+
+      .advanced-dashboard-grid,
+      .course-viewer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .large-card,
+      .small-card,
+      .video-dashboard,
+      .ai-chat-card {
+        grid-column: span 12;
+      }
+
+      .course-video-large {
+        height: 300px;
+      }
+
+    }
+
     @media(max-width:700px){
       .navbar,
       .hero,
@@ -1600,6 +1771,34 @@
     </div>
 
   </section>
+
+  <!-- MOBILE NAVIGATION -->
+  <div class="mobile-nav">
+    <div>🏠</div>
+    <div>📚</div>
+    <div>🎥</div>
+    <div>🤖</div>
+    <div>👤</div>
+  </div>
+
+  <!-- FLOATING MUSIC -->
+  <div class="floating-music-player">
+
+    <div class="music-wave">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div>
+      <h4>Focus Ambient</h4>
+      <p>Deep Learning Mode</p>
+    </div>
+
+    <button>▶</button>
+
+  </div>
 
   <!-- TOP SEARCH BAR -->
   <div class="top-search-bar">
