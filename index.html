@@ -247,6 +247,91 @@
       z-index: -1;
     }
 
+    .app-layout-mode .hero,
+    .app-layout-mode .features,
+    .app-layout-mode .smart-slider-section,
+    .app-layout-mode .advanced-dashboard-section,
+    .app-layout-mode .course-viewer-section {
+      width: calc(100% - 180px);
+      margin-right: 120px;
+      padding: 70px;
+      border-radius: 45px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(28px);
+      box-shadow: 0 20px 70px rgba(0,0,0,0.22);
+      margin-bottom: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-layout-mode .hero::before,
+    .app-layout-mode .features::before,
+    .app-layout-mode .smart-slider-section::before,
+    .app-layout-mode .advanced-dashboard-section::before,
+    .app-layout-mode .course-viewer-section::before {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(0,183,255,0.08);
+      filter: blur(90px);
+      top: -90px;
+      left: -90px;
+      pointer-events: none;
+    }
+
+    .app-windows {
+      padding-top: 35px;
+    }
+
+    .window-panel {
+      width: calc(100% - 180px);
+      margin-right: 120px;
+      margin-bottom: 25px;
+      padding: 28px 35px;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+    }
+
+    .window-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .window-header p {
+      color: #73d7ff;
+      margin-bottom: 5px;
+    }
+
+    .window-header h2 {
+      font-size: 30px;
+    }
+
+    .window-header span {
+      width: 55px;
+      height: 55px;
+      border-radius: 20px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 0 0 30px rgba(0,183,255,0.25);
+    }
+
+    .app-layout-mode .section-title {
+      padding: 25px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 45px !important;
+    }
+
     .navbar {
       width: 100%;
       padding: 25px 70px;
@@ -1472,6 +1557,24 @@
 
     @media(max-width:900px){
 
+      .app-layout-mode .hero,
+      .app-layout-mode .features,
+      .app-layout-mode .smart-slider-section,
+      .app-layout-mode .advanced-dashboard-section,
+      .app-layout-mode .course-viewer-section,
+      .window-panel {
+        width: calc(100% - 40px);
+        margin-right: 20px;
+        margin-left: 20px;
+        padding: 35px 20px;
+        border-radius: 32px;
+      }
+
+      .app-windows {
+        padding-bottom: 100px;
+      }
+
+
       .smart-sidebar,
       .floating-music-player {
         display:none;
@@ -1545,7 +1648,7 @@
     }
   </style>
 </head>
-<body>
+<body class="app-layout-mode">
 
   <div class="loader" id="loader">
     <div class="loader-ring"></div>
@@ -1800,6 +1903,19 @@
 
   </div>
 
+  <!-- MAIN APP WINDOWS WRAPPER -->
+  <main class="app-windows">
+
+    <section class="window-panel hero-window">
+      <div class="window-header">
+        <div>
+          <p>الرئيسية</p>
+          <h2>نظام نوافذ المنصة</h2>
+        </div>
+        <span>01</span>
+      </div>
+    </section>
+
   <!-- TOP SEARCH BAR -->
   <div class="top-search-bar">
 
@@ -2000,6 +2116,8 @@
     </div>
 
   </section>
+
+    </main>
 
   <!-- LOGIN MODAL -->
   <div class="login-overlay" id="loginModal">
