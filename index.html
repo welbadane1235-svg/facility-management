@@ -251,7 +251,139 @@
     .app-layout-mode .features,
     .app-layout-mode .smart-slider-section,
     .app-layout-mode .advanced-dashboard-section,
-    .app-layout-mode .course-viewer-section {
+    .app-layout-mode .admin-permissions-section {
+      width: calc(100% - 180px);
+      margin-right: 120px;
+      padding: 70px;
+      border-radius: 45px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(28px);
+      box-shadow: 0 20px 70px rgba(0,0,0,0.22);
+      margin-bottom: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .permissions-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .6fr;
+      gap: 28px;
+    }
+
+    .permissions-panel {
+      padding: 32px;
+      border-radius: 35px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(25px);
+    }
+
+    .permissions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .permissions-header p,
+    .permission-row p,
+    .role-card p {
+      color: rgba(255,255,255,0.55);
+      margin-top: 6px;
+      line-height: 1.8;
+    }
+
+    .admin-badge {
+      padding: 10px 18px;
+      border-radius: 50px;
+      background: rgba(0,198,255,0.12);
+      color: #73d7ff;
+      border: 1px solid rgba(0,198,255,0.18);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .permission-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 18px;
+    }
+
+    .switch {
+      position: relative;
+      width: 68px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .switch input { display: none; }
+
+    .switch span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.12);
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .switch span::before {
+      content: '';
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: white;
+      top: 5px;
+      right: 5px;
+      transition: .3s;
+    }
+
+    .switch input:checked + span {
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      box-shadow: 0 0 20px rgba(0,183,255,0.25);
+    }
+
+    .switch input:checked + span::before { right: 35px; }
+
+    .role-card {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-top: 18px;
+      transition: .3s;
+    }
+
+    .role-card:hover,
+    .active-role {
+      background: linear-gradient(135deg,rgba(0,198,255,0.14),rgba(0,114,255,0.14));
+      border: 1px solid rgba(0,198,255,0.18);
+      transform: translateY(-4px);
+    }
+
+    .role-card span {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      background: linear-gradient(135deg,#00c6ff,#0072ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .course-viewer-section {
       width: calc(100% - 180px);
       margin-right: 120px;
       padding: 70px;
@@ -2030,6 +2162,86 @@
 
     </div>
 
+  </section>
+
+  <!-- ADMIN PERMISSIONS CENTER -->
+  <section class="admin-permissions-section">
+    <div class="section-title">
+      <p>صلاحيات الإدارة</p>
+      <h2>مركز التحكم الكامل بالمنصة</h2>
+    </div>
+
+    <div class="permissions-grid">
+      <div class="permissions-panel main-permission-panel">
+        <div class="permissions-header">
+          <div>
+            <h3>إدارة ظهور أقسام المنصة</h3>
+            <p>تحكم كامل بما يظهر للطالب والمدرب والزائر</p>
+          </div>
+          <span class="admin-badge">ADMIN</span>
+        </div>
+
+        <div class="permission-row">
+          <div>
+            <h4>صفحة الطالب</h4>
+            <p>إظهار أو إخفاء الدورات، الشهادات، الاختبارات، والمساعد الذكي</p>
+          </div>
+          <label class="switch"><input type="checkbox" checked><span></span></label>
+        </div>
+
+        <div class="permission-row">
+          <div>
+            <h4>صفحة المدرب</h4>
+            <p>السماح برفع الدورات، تعديل الدروس، ومشاهدة الطلاب والتقارير</p>
+          </div>
+          <label class="switch"><input type="checkbox" checked><span></span></label>
+        </div>
+
+        <div class="permission-row">
+          <div>
+            <h4>صفحة تقديم المنصة</h4>
+            <p>تعديل البانر، المميزات، الأسعار، النصوص، وأقسام العرض</p>
+          </div>
+          <label class="switch"><input type="checkbox" checked><span></span></label>
+        </div>
+
+        <div class="permission-row">
+          <div>
+            <h4>نظام الاشتراكات</h4>
+            <p>إظهار الأسعار أو إخفاؤها وتحديد الباقات المتاحة</p>
+          </div>
+          <label class="switch"><input type="checkbox"><span></span></label>
+        </div>
+      </div>
+
+      <div class="permissions-panel role-panel">
+        <h3>أنواع المستخدمين</h3>
+
+        <div class="role-card active-role">
+          <span>01</span>
+          <div>
+            <h4>طالب</h4>
+            <p>مشاهدة الدورات والاختبارات والشهادات</p>
+          </div>
+        </div>
+
+        <div class="role-card">
+          <span>02</span>
+          <div>
+            <h4>مدرب</h4>
+            <p>إنشاء وإدارة المحتوى التدريبي</p>
+          </div>
+        </div>
+
+        <div class="role-card">
+          <span>03</span>
+          <div>
+            <h4>إدارة</h4>
+            <p>تحكم كامل بجميع أقسام المنصة</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- COURSE VIEWER -->
