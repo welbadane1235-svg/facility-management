@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HireX | Local Prototype</title>
+  <title>HireX | منصة توظيف ذكية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
     html{scroll-behavior:smooth}
@@ -15,202 +16,134 @@
     body::after{content:'';position:fixed;width:580px;height:580px;border-radius:50%;background:rgba(124,58,237,.16);filter:blur(130px);bottom:-240px;left:-210px;z-index:-2}
     a{text-decoration:none;color:inherit} button,input,select{font-family:inherit}.hidden{display:none!important}
     .glass{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(28px);box-shadow:0 20px 70px rgba(0,0,0,.23)}
-    .btn-primary{border:0;border-radius:22px;padding:15px 28px;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 0 35px rgba(0,183,255,.28);transition:.3s}
-    .btn-primary:hover{transform:translateY(-3px) scale(1.02)}
-    .btn-ghost{border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:15px 28px;background:rgba(255,255,255,.055);color:#fff;cursor:pointer;transition:.3s}
-    .btn-ghost:hover{background:rgba(255,255,255,.12)}
-    .badge,.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;background:rgba(0,198,255,.1);border:1px solid rgba(0,198,255,.18);color:#75dfff;font-size:14px}
+    .btn-primary{border:0;border-radius:22px;padding:15px 28px;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 0 35px rgba(0,183,255,.28);transition:.3s}.btn-primary:hover{transform:translateY(-3px) scale(1.02)}
+    .btn-ghost{border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:15px 28px;background:rgba(255,255,255,.055);color:#fff;cursor:pointer;transition:.3s}.btn-ghost:hover{background:rgba(255,255,255,.12)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;background:rgba(0,198,255,.1);border:1px solid rgba(0,198,255,.18);color:#75dfff;font-size:14px}
     .gradient-text{background:linear-gradient(90deg,#00c6ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
+    /* Landing */
     .nav{position:sticky;top:0;z-index:50;padding:20px 7%;display:flex;align-items:center;justify-content:space-between;background:rgba(6,10,19,.68);border-bottom:1px solid rgba(255,255,255,.07);backdrop-filter:blur(24px)}
-    .brand{display:flex;align-items:center;gap:14px}.brand-icon{width:48px;height:48px;border-radius:18px;background:linear-gradient(135deg,#00c6ff,#0072ff);box-shadow:0 0 35px rgba(0,183,255,.35);display:grid;place-items:center;font-weight:900}
-    .brand h1{font-size:27px;font-weight:900}.brand small{display:block;color:rgba(255,255,255,.5);font-size:11px;margin-top:-3px}
-    .links{display:flex;gap:28px;color:rgba(255,255,255,.66);font-size:15px}.links a:hover{color:#fff}
-    .hero{min-height:86vh;padding:90px 7%;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
-    .hero h2{font-size:72px;line-height:1.18;font-weight:900;margin:24px 0}.hero p{color:rgba(255,255,255,.66);font-size:18px;line-height:2;max-width:680px;margin-bottom:30px}
-    .hero-actions{display:flex;gap:15px;flex-wrap:wrap}
-    .search-panel{border-radius:38px;padding:22px;margin-top:30px;display:grid;grid-template-columns:1.2fr 1fr .8fr auto;gap:12px}
-    input,select{height:58px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.055);color:#fff;outline:0;padding:0 16px}
-    select option{color:#111}
-    .hero-visual{border-radius:44px;padding:28px;position:relative;overflow:hidden;animation:float 5s ease-in-out infinite}@keyframes float{50%{transform:translateY(-12px)}}
-    .match-score{width:130px;height:130px;border-radius:50%;background:conic-gradient(#00c6ff 0 86%,rgba(255,255,255,.1) 86%);display:grid;place-items:center;margin:20px auto}
-    .match-score span{width:92px;height:92px;border-radius:50%;background:#070b14;display:grid;place-items:center;font-weight:900;font-size:25px}
-    .job-mini{border-radius:28px;padding:22px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);margin-top:16px;display:flex;justify-content:space-between;align-items:center}
-    .job-mini p{margin-top:4px;color:rgba(255,255,255,.55);font-size:13px}
-    .section{padding:80px 7%}.section-title{text-align:center;margin-bottom:42px}.section-title p{color:#75dfff;margin-bottom:10px}.section-title h2{font-size:43px;font-weight:900}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-    .card{border-radius:34px;padding:28px;transition:.35s;position:relative;overflow:hidden}.card:hover{transform:translateY(-8px);background:rgba(255,255,255,.075)}
-    .card h3{font-size:23px;margin-bottom:10px}.card p{color:rgba(255,255,255,.58);line-height:1.85}
-    .icon{width:60px;height:60px;border-radius:22px;background:linear-gradient(135deg,rgba(0,198,255,.24),rgba(0,114,255,.16));margin-bottom:18px;display:grid;place-items:center;font-size:26px}
-    .job-card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:20px}.company-logo{width:54px;height:54px;border-radius:20px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900}
-    .job-meta{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.job-meta span{padding:8px 12px;border-radius:50px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);font-size:12px}
-    .salary{font-size:20px;font-weight:900;color:#75dfff;margin-bottom:16px}.job-card button{width:100%}
+    .brand{display:flex;align-items:center;gap:14px}.brand-icon{width:48px;height:48px;border-radius:18px;background:linear-gradient(135deg,#00c6ff,#0072ff);box-shadow:0 0 35px rgba(0,183,255,.35);display:grid;place-items:center;font-weight:900}.brand h1{font-size:27px;font-weight:900;letter-spacing:.5px}.brand small{display:block;color:rgba(255,255,255,.5);font-size:11px;margin-top:-3px}.links{display:flex;gap:28px;color:rgba(255,255,255,.66);font-size:15px}.links a:hover{color:#fff}
+    .hero{min-height:86vh;padding:90px 7%;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}.hero h2{font-size:72px;line-height:1.18;font-weight:900;margin:24px 0}.hero p{color:rgba(255,255,255,.66);font-size:18px;line-height:2;max-width:680px;margin-bottom:30px}.hero-actions{display:flex;gap:15px;flex-wrap:wrap}
+    .search-panel{border-radius:38px;padding:22px;margin-top:30px;display:grid;grid-template-columns:1.2fr 1fr .8fr auto;gap:12px}.search-panel input,.search-panel select{height:58px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.055);color:#fff;outline:0;padding:0 16px}.search-panel select option{color:#111}
+    .hero-visual{border-radius:44px;padding:28px;position:relative;overflow:hidden;animation:float 5s ease-in-out infinite}@keyframes float{50%{transform:translateY(-12px)}}.hero-visual::before{content:'';position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(0,198,255,.14);filter:blur(90px);top:-120px;left:-90px}.visual-head{position:relative;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.match-score{width:120px;height:120px;border-radius:50%;background:conic-gradient(#00c6ff 0 86%,rgba(255,255,255,.1) 86%);display:grid;place-items:center;margin:auto}.match-score span{width:88px;height:88px;border-radius:50%;background:#070b14;display:grid;place-items:center;font-weight:900;font-size:24px}.job-mini{position:relative;border-radius:28px;padding:22px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);margin-top:16px;display:flex;justify-content:space-between;align-items:center}.job-mini p{margin:4px 0 0;color:rgba(255,255,255,.55);font-size:13px}.pill{padding:8px 13px;border-radius:50px;background:rgba(0,198,255,.12);color:#75dfff;font-size:12px;border:1px solid rgba(0,198,255,.18)}
+    .section{padding:80px 7%}.section-title{text-align:center;margin-bottom:42px}.section-title p{color:#75dfff;margin-bottom:10px}.section-title h2{font-size:43px;font-weight:900}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{border-radius:34px;padding:28px;transition:.35s;position:relative;overflow:hidden}.card:hover{transform:translateY(-8px);background:rgba(255,255,255,.075)}.card h3{font-size:23px;margin-bottom:10px}.card p{color:rgba(255,255,255,.58);line-height:1.85}.icon{width:60px;height:60px;border-radius:22px;background:linear-gradient(135deg,rgba(0,198,255,.24),rgba(0,114,255,.16));margin-bottom:18px;display:grid;place-items:center;font-size:26px}
+    .job-card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:20px}.company-logo{width:54px;height:54px;border-radius:20px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900}.job-meta{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.job-meta span{padding:8px 12px;border-radius:50px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);font-size:12px}.salary{font-size:20px;font-weight:900;color:#75dfff;margin-bottom:16px}.job-card button{width:100%}
+    .category-card button{width:100%;margin-top:20px}.category-card{min-height:260px}
     .companies{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}.company-box{height:90px;border-radius:28px;display:grid;place-items:center;color:rgba(255,255,255,.72);font-weight:900;font-size:20px;transition:.3s}.company-box:hover{transform:translateY(-5px);color:#fff}
-    .ai-section{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}.ai-panel{border-radius:40px;padding:30px}.ai-row{display:flex;align-items:center;justify-content:space-between;padding:18px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
-    .ai-bar{height:10px;border-radius:20px;background:rgba(255,255,255,.08);overflow:hidden;width:45%}.ai-bar span{display:block;height:100%;background:linear-gradient(90deg,#00c6ff,#8b5cf6);border-radius:20px}
-    .footer{padding:35px 7%;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:20px;color:rgba(255,255,255,.55)}
+    .ai-section{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}.ai-panel{border-radius:40px;padding:30px}.ai-row{display:flex;align-items:center;justify-content:space-between;padding:18px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}.ai-bar{height:10px;border-radius:20px;background:rgba(255,255,255,.08);overflow:hidden;width:45%}.ai-bar span{display:block;height:100%;background:linear-gradient(90deg,#00c6ff,#8b5cf6);border-radius:20px}.pricing .card{display:flex;flex-direction:column;gap:14px}.price{font-size:38px;font-weight:900}.price small{font-size:14px;color:rgba(255,255,255,.5)}.footer{padding:35px 7%;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:20px;color:rgba(255,255,255,.55)}
 
-    .auth-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:.35s}
-    .auth-modal.active{opacity:1;pointer-events:auto}.auth-box{width:440px;border-radius:38px;padding:34px;position:relative}.close{position:absolute;top:18px;left:18px;width:40px;height:40px;border-radius:15px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer}
-    .auth-box h2{text-align:center;font-size:34px;margin-bottom:8px}.auth-box>p{text-align:center;color:rgba(255,255,255,.58);margin-bottom:25px}.input-group{margin-bottom:16px}.input-group label{display:block;margin-bottom:8px;color:rgba(255,255,255,.72)}
-    .otp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.otp-row input{text-align:center;font-size:26px;height:60px}
+    /* Auth */
+    .auth-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:.35s}.auth-modal.active{opacity:1;pointer-events:auto}.auth-box{width:440px;border-radius:38px;padding:34px;position:relative}.close{position:absolute;top:18px;left:18px;width:40px;height:40px;border-radius:15px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer}.auth-box h2{text-align:center;font-size:34px;margin-bottom:8px}.auth-box>p{text-align:center;color:rgba(255,255,255,.58);margin-bottom:25px}.input-group{margin-bottom:16px}.input-group label{display:block;margin-bottom:8px;color:rgba(255,255,255,.72)}.input-group input,.input-group select{width:100%;height:58px;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:#fff;padding:0 18px;outline:0;font-size:16px}.input-group select option{color:#111}.otp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.otp-row input{text-align:center;font-size:26px;height:60px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:#fff}
 
-    .app{display:none;min-height:100vh}.app.active{display:block}.app-sidebar{position:fixed;top:25px;right:25px;bottom:25px;width:270px;border-radius:38px;padding:24px;z-index:90}
-    .app-main{margin-right:320px;padding:25px 25px 60px}.app-logo{display:flex;align-items:center;gap:12px;margin-bottom:30px}.app-logo .brand-icon{width:44px;height:44px}.app-logo h2{font-size:20px}
-    .side-menu{display:flex;flex-direction:column;gap:12px}.side-menu button{height:56px;border:0;border-radius:20px;background:rgba(255,255,255,.045);color:rgba(255,255,255,.7);cursor:pointer;text-align:right;padding:0 18px;font-size:15px;transition:.3s}
-    .side-menu button.active,.side-menu button:hover{background:linear-gradient(135deg,rgba(0,198,255,.22),rgba(0,114,255,.16));color:#fff}.logout{position:absolute;bottom:24px;right:24px;left:24px}
-    .topbar{min-height:82px;border-radius:30px;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.search{height:54px;width:50%}
-    .user-chip{display:flex;align-items:center;gap:12px}.avatar{width:52px;height:52px;border-radius:19px;background:linear-gradient(135deg,#00c6ff,#0072ff)}
-    .page-panel{border-radius:38px;padding:30px;margin-bottom:25px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.panel-title p{color:rgba(255,255,255,.55);margin-top:6px}
-    .dashboard-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}.metric{grid-column:span 3;border-radius:30px;padding:25px}.metric h3{font-size:34px}.metric p{color:rgba(255,255,255,.58)}
-    .wide{grid-column:span 8}.small{grid-column:span 4}.full{grid-column:span 12}
-    .list-item{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);margin-bottom:12px}.list-item p{color:rgba(255,255,255,.55);margin-top:4px}
-    .status{padding:8px 13px;border-radius:50px;font-size:12px}.green{background:rgba(34,197,94,.14);color:#86efac}.yellow{background:rgba(245,158,11,.14);color:#fcd34d}.red{background:rgba(239,68,68,.14);color:#fca5a5}
-    .chart{height:250px;display:flex;align-items:end;gap:12px}.chart span{flex:1;border-radius:18px 18px 6px 6px;background:linear-gradient(to top,#0072ff,#00c6ff);animation:bar 1.3s ease}@keyframes bar{from{height:0}}
-    .company-job-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px}
-    .company-job-form input,.company-job-form select{height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:#fff;padding:0 16px;outline:0}
-    .toast{position:fixed;bottom:25px;left:25px;z-index:999;background:rgba(34,197,94,.16);border:1px solid rgba(34,197,94,.3);color:#86efac;border-radius:20px;padding:16px 22px;display:none}
+    /* App */
+    .app{display:none;min-height:100vh}.app.active{display:block}.app-sidebar{position:fixed;top:25px;right:25px;bottom:25px;width:270px;border-radius:38px;padding:24px;z-index:90}.app-main{margin-right:320px;padding:25px 25px 60px}.app-logo{display:flex;align-items:center;gap:12px;margin-bottom:30px}.app-logo .brand-icon{width:44px;height:44px}.app-logo h2{font-size:20px}.side-menu{display:flex;flex-direction:column;gap:12px}.side-menu button{height:56px;border:0;border-radius:20px;background:rgba(255,255,255,.045);color:rgba(255,255,255,.7);cursor:pointer;text-align:right;padding:0 18px;font-size:15px;transition:.3s}.side-menu button.active,.side-menu button:hover{background:linear-gradient(135deg,rgba(0,198,255,.22),rgba(0,114,255,.16));color:#fff}.logout{position:absolute;bottom:24px;right:24px;left:24px}.topbar{min-height:82px;border-radius:30px;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.search{height:54px;width:50%;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);color:#fff;padding:0 18px;outline:0}.user-chip{display:flex;align-items:center;gap:12px}.avatar{width:52px;height:52px;border-radius:19px;background:linear-gradient(135deg,#00c6ff,#0072ff)}.page-panel{border-radius:38px;padding:30px;margin-bottom:25px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.panel-title p{color:rgba(255,255,255,.55);margin-top:6px}.dashboard-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}.metric{grid-column:span 3;border-radius:30px;padding:25px}.metric h3{font-size:34px}.metric p{color:rgba(255,255,255,.58)}.wide{grid-column:span 8}.small{grid-column:span 4}.full{grid-column:span 12}.list-item{display:flex;justify-content:space-between;align-items:center;padding:18px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);margin-bottom:12px}.list-item p{color:rgba(255,255,255,.55);margin-top:4px}.status{padding:8px 13px;border-radius:50px;font-size:12px}.green{background:rgba(34,197,94,.14);color:#86efac}.yellow{background:rgba(245,158,11,.14);color:#fcd34d}.red{background:rgba(239,68,68,.14);color:#fca5a5}.chart{height:250px;display:flex;align-items:end;gap:12px}.chart span{flex:1;border-radius:18px 18px 6px 6px;background:linear-gradient(to top,#0072ff,#00c6ff);animation:bar 1.3s ease}@keyframes bar{from{height:0}}.company-job-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px}.company-job-form input,.company-job-form select{height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:#fff;padding:0 16px;outline:0}.company-job-form select option{color:#111}
+    .permission-row{display:flex;align-items:center;justify-content:space-between;padding:20px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}.switch{position:relative;width:66px;height:36px}.switch input{display:none}.switch span{position:absolute;inset:0;border-radius:50px;background:rgba(255,255,255,.15);cursor:pointer}.switch span::before{content:'';position:absolute;width:26px;height:26px;top:5px;right:5px;border-radius:50%;background:#fff;transition:.3s}.switch input:checked+span{background:linear-gradient(135deg,#00c6ff,#0072ff)}.switch input:checked+span::before{right:35px}
 
-    @media(max-width:1050px){.hero,.ai-section{grid-template-columns:1fr}.grid-3,.grid-4,.companies{grid-template-columns:1fr}.links{display:none}.search-panel,.company-job-form{grid-template-columns:1fr}.hero{padding:55px 22px;min-height:auto}.hero h2{font-size:42px}.section{padding:55px 22px}.section-title h2{font-size:30px}.nav{padding:16px 20px}.brand h1{font-size:22px}.hero-actions{display:grid;grid-template-columns:1fr}.hero-actions button{width:100%}.footer{flex-direction:column}.auth-box{width:calc(100% - 34px);padding:28px 20px;border-radius:30px}.app-sidebar{position:fixed;right:12px;left:12px;bottom:12px;top:auto;width:auto;height:78px;margin:0;border-radius:28px;padding:10px;display:flex;align-items:center;z-index:100}.app-logo,.logout{display:none}.side-menu{width:100%;display:flex;flex-direction:row;gap:8px;overflow-x:auto}.side-menu button{min-width:96px;height:54px;text-align:center;font-size:13px;padding:0 12px;flex-shrink:0}.app-main{margin:0;padding:16px 14px 115px}.topbar{height:auto;gap:12px;flex-direction:column;align-items:stretch;border-radius:26px}.search{width:100%}.panel-title{flex-direction:column;align-items:flex-start;gap:12px}.dashboard-grid{grid-template-columns:1fr}.metric,.wide,.small,.full{grid-column:auto}.page-panel{border-radius:28px;padding:18px}.chart{height:210px}.list-item{gap:15px;padding:15px}.job-mini{flex-direction:column;align-items:flex-start}}
+    @media(max-width:1050px){.company-job-form{grid-template-columns:1fr}.hero,.ai-section{grid-template-columns:1fr}.grid-3,.grid-4,.companies{grid-template-columns:1fr}.links{display:none}.search-panel{grid-template-columns:1fr}.hero{padding:55px 22px;min-height:auto}.hero h2{font-size:42px}.section{padding:55px 22px}.section-title h2{font-size:30px}.nav{padding:16px 20px}.brand h1{font-size:22px}.hero-actions{display:grid;grid-template-columns:1fr}.hero-actions button{width:100%}.footer{flex-direction:column}.auth-box{width:calc(100% - 34px);padding:28px 20px;border-radius:30px}.app-sidebar{position:fixed;right:12px;left:12px;bottom:12px;top:auto;width:auto;height:78px;margin:0;border-radius:28px;padding:10px;display:flex;align-items:center;z-index:100}.app-logo,.logout{display:none}.side-menu{width:100%;display:flex;flex-direction:row;gap:8px;overflow-x:auto}.side-menu button{min-width:96px;height:54px;text-align:center;font-size:13px;padding:0 12px;flex-shrink:0}.app-main{margin:0;padding:16px 14px 115px}.topbar{height:auto;gap:12px;flex-direction:column;align-items:stretch;border-radius:26px}.search{width:100%}.panel-title{flex-direction:column;align-items:flex-start;gap:12px}.dashboard-grid{grid-template-columns:1fr}.metric,.wide,.small,.full{grid-column:auto}.page-panel{border-radius:28px;padding:18px}.chart{height:210px}.permission-row{gap:15px;padding:15px}.job-mini{flex-direction:column;align-items:flex-start}}
     @media(max-width:480px){.hero h2{font-size:34px}.hero p{font-size:15px}.brand small{display:none}.nav .btn-primary{padding:11px 14px;font-size:13px}.hero-visual{padding:20px;border-radius:30px}.section-title h2{font-size:26px}.card{padding:22px;border-radius:28px}.auth-box h2{font-size:28px}.side-menu button{min-width:86px;font-size:12px}.topbar h3{font-size:18px}.metric h3{font-size:30px}}
   </style>
 </head>
 <body>
-  <div class="toast" id="toast">تم نشر الوظيفة في الصفحة الرئيسية</div>
 
   <div id="landingPage">
     <nav class="nav">
-      <div class="brand"><div class="brand-icon">X</div><div><h1>HireX</h1><small>AI Recruitment + Company OS</small></div></div>
-      <div class="links"><a href="#jobs">الوظائف</a><a href="#companies">الشركات</a><a href="#ai">AI Matching</a><a href="#operations">تشغيل الشركات</a></div>
+      <div class="brand"><div class="brand-icon">X</div><div><h1>HireX</h1><small>AI Recruitment Platform</small></div></div>
+      <div class="links"><a href="#jobs">الوظائف</a><a href="#companies">الشركات</a><a href="#ai">AI Matching</a><a href="#operations">تشغيل الشركات</a><a href="#pricing">الباقات</a></div>
       <button class="btn-primary" onclick="openAuth()">دخول</button>
     </nav>
 
     <section class="hero">
       <div>
-        <span class="badge">⚡ توظيف ذكي + نظام تشغيل للشركات</span>
+        <span class="badge">⚡ توظيف ذكي مدعوم بالذكاء الاصطناعي</span>
         <h2>وظيفتك القادمة تبدأ مع <span class="gradient-text">HireX</span></h2>
-        <p>منصة تجمع بين نشر الوظائف، مطابقة المرشحين بالذكاء الاصطناعي، ونظام تشغيلي متكامل للشركات لإدارة الموظفين والعملاء والتوظيف.</p>
-        <div class="hero-actions"><button class="btn-primary" onclick="openAuth()">ابحث عن وظيفة</button><button class="btn-ghost" onclick="openAuth()">دخول شركة</button></div>
-        <div class="search-panel glass"><input id="searchTitle" placeholder="المسمى الوظيفي"><input id="searchCity" placeholder="المدينة"><select id="searchType"><option>كل الأنواع</option><option>دوام كامل</option><option>عن بعد</option><option>جزئي</option></select><button class="btn-primary" onclick="renderJobs()">بحث</button></div>
+        <p>منصة توظيف مستقبلية تربط الباحثين عن عمل بالشركات عبر تحليل المهارات، فرز السير الذاتية، واقتراح الوظائف المناسبة بدقة وسرعة.</p>
+        <div class="hero-actions"><button class="btn-primary" onclick="openAuth()">ابحث عن وظيفة</button><button class="btn-ghost" onclick="openAuth()">أنا شركة</button></div>
+        <div class="search-panel glass"><input placeholder="المسمى الوظيفي"><input placeholder="المدينة"><select><option>كل الأنواع</option><option>دوام كامل</option><option>عن بعد</option><option>جزئي</option></select><button class="btn-primary">بحث</button></div>
       </div>
       <div class="hero-visual glass">
-        <div style="display:flex;justify-content:space-between;align-items:center"><div><h3>AI Matching Score</h3><p style="color:rgba(255,255,255,.55);margin-top:5px">تحليل فوري لمطابقة المرشح</p></div><span class="pill">LIVE</span></div>
+        <div class="visual-head"><div><h3>AI Matching Score</h3><p style="color:rgba(255,255,255,.55);margin-top:5px">تحليل فوري لمطابقة المرشح</p></div><span class="pill">LIVE</span></div>
         <div class="match-score"><span>86%</span></div>
         <div class="job-mini"><div><h3>Frontend Developer</h3><p>Riyadh • Full Time • 12K - 18K SAR</p></div><span class="pill">Perfect Match</span></div>
         <div class="job-mini"><div><h3>HR Specialist</h3><p>Jeddah • Hybrid • 8K - 11K SAR</p></div><span class="pill">New</span></div>
       </div>
     </section>
 
+    <section class="section" id="categories">
+      <div class="section-title"><p>تصنيفات الوظائف</p><h2>اختر مجال العمل المناسب لك</h2></div>
+      <div class="grid-4">
+        <div class="card glass category-card"><div class="icon">🏢</div><h3>إدارة</h3><p>وظائف إدارية، مشرفين، مدراء تشغيل، ومساعدين إداريين.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">🍽️</div><h3>مطاعم</h3><p>طهاة، كاشير، خدمة عملاء، مشرفين، وعمال تشغيل مطاعم.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">📣</div><h3>تسويق</h3><p>تسويق رقمي، مبيعات، إدارة حسابات، وصناعة محتوى.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">💻</div><h3>برمجة</h3><p>مطوري مواقع، تطبيقات، ذكاء اصطناعي، وتحليل بيانات.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">🤝</div><h3>شراكة</h3><p>فرص شراكة، مشاريع ناشئة، وشراكات تشغيلية وتجارية.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">🚗</div><h3>سائق</h3><p>سائقين، توصيل، نقل، ومندوبين ميدانيين.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">🛠️</div><h3>مهندسين</h3><p>هندسة مدنية، كهرباء، ميكانيكا، ومهندسي مشاريع.</p><button class="btn-ghost">استعراض</button></div>
+        <div class="card glass category-card"><div class="icon">👥</div><h3>موارد بشرية</h3><p>توظيف، شؤون موظفين، رواتب، وتطوير تنظيمي.</p><button class="btn-ghost">استعراض</button></div>
+      </div>
+    </section>
+
     <section class="section" id="jobs">
-      <div class="section-title"><p>وظائف مباشرة</p><h2>كل إعلان من الشركة يظهر هنا فورًا</h2></div>
-      <div class="grid-4" id="jobsGrid"></div>
+      <div class="section-title"><p>وظائف مميزة</p><h2>فرص حديثة تناسب مهاراتك</h2></div>
+      <div class="grid-4">
+        <div class="card glass job-card"><div class="top"><div><h3>UI/UX Designer</h3><p>Pixel Studio</p></div><div class="company-logo">P</div></div><div class="job-meta"><span>Remote</span><span>Full Time</span><span>Riyadh</span></div><div class="salary">10K - 15K SAR</div><button class="btn-primary">تقديم</button></div>
+        <div class="card glass job-card"><div class="top"><div><h3>AI Engineer</h3><p>DataMind</p></div><div class="company-logo">D</div></div><div class="job-meta"><span>Hybrid</span><span>Full Time</span><span>Jeddah</span></div><div class="salary">18K - 25K SAR</div><button class="btn-primary">تقديم</button></div>
+        <div class="card glass job-card"><div class="top"><div><h3>HR Specialist</h3><p>TalentGate</p></div><div class="company-logo">T</div></div><div class="job-meta"><span>On Site</span><span>Full Time</span><span>Dammam</span></div><div class="salary">7K - 10K SAR</div><button class="btn-primary">تقديم</button></div>
+        <div class="card glass job-card"><div class="top"><div><h3>Frontend Developer</h3><p>CloudTech</p></div><div class="company-logo">C</div></div><div class="job-meta"><span>Remote</span><span>Contract</span><span>Saudi</span></div><div class="salary">12K - 18K SAR</div><button class="btn-primary">تقديم</button></div>
+      </div>
     </section>
 
     <section class="section" id="companies">
-      <div class="section-title"><p>شركات موثقة</p><h2>شركات تستخدم HireX للتوظيف والتشغيل</h2></div>
+      <div class="section-title"><p>شركات موثقة</p><h2>شركات تبحث عن كفاءات الآن</h2></div>
       <div class="companies"><div class="company-box glass">NOVA</div><div class="company-box glass">PIXEL</div><div class="company-box glass">CLOUD</div><div class="company-box glass">DATA</div><div class="company-box glass">TALENT</div><div class="company-box glass">VISION</div></div>
-    </section>
-
-    <section class="section" id="operations">
-      <div class="section-title"><p>خدمة الشركات</p><h2>Company OS داخل HireX</h2></div>
-      <div class="grid-3">
-        <div class="card glass"><div class="icon">📊</div><h3>صفحة الإدارة</h3><p>تقارير، صلاحيات، مؤشرات، ومتابعة تشغيلية كاملة.</p></div>
-        <div class="card glass"><div class="icon">👷</div><h3>صفحة الموظف</h3><p>ملف الموظف، المهام، الحضور، التقييمات، والتعاميم.</p></div>
-        <div class="card glass"><div class="icon">🤝</div><h3>صفحة العميل</h3><p>طلبات العملاء، الشكاوى، العقود، والمتابعة.</p></div>
-      </div>
     </section>
 
     <section class="section" id="ai">
       <div class="ai-section">
-        <div><span class="badge">🤖 HireX AI</span><h2 style="font-size:44px;margin:22px 0">مطابقة ذكية بين الوظيفة والمرشح</h2><p style="color:rgba(255,255,255,.63);line-height:2">تحليل السيرة الذاتية والمهارات والخبرة، ثم مقارنة المتقدم مع متطلبات الوظائف.</p></div>
-        <div class="ai-panel glass"><div class="ai-row"><div><h3>تحليل CV</h3><p>CV Analysis</p></div><div class="ai-bar"><span style="width:92%"></span></div></div><div class="ai-row"><div><h3>مطابقة المهارات</h3><p>Skill Matching</p></div><div class="ai-bar"><span style="width:86%"></span></div></div><div class="ai-row"><div><h3>درجة التوظيف</h3><p>Hiring Score</p></div><div class="ai-bar"><span style="width:78%"></span></div></div></div>
+        <div><span class="badge">🤖 HireX AI</span><h2 style="font-size:44px;margin:22px 0">مطابقة ذكية بين الوظيفة والمرشح</h2><p style="color:rgba(255,255,255,.63);line-height:2">يقوم HireX بتحليل السيرة الذاتية والمهارات والخبرة، ثم يقارنها مع متطلبات الوظائف ويعطي درجة مطابقة واضحة للشركات والباحثين عن عمل.</p></div>
+        <div class="ai-panel glass"><div class="ai-row"><div><h3>تحليل السيرة الذاتية</h3><p>CV Analysis</p></div><div class="ai-bar"><span style="width:92%"></span></div></div><div class="ai-row"><div><h3>مطابقة المهارات</h3><p>Skill Matching</p></div><div class="ai-bar"><span style="width:86%"></span></div></div><div class="ai-row"><div><h3>درجة التوظيف</h3><p>Hiring Score</p></div><div class="ai-bar"><span style="width:78%"></span></div></div></div>
       </div>
     </section>
 
-    <footer class="footer"><div>© 2026 HireX — Local Prototype</div><div>الشروط • الخصوصية • الدعم</div></footer>
+    <section class="section" id="operations">
+      <div class="section-title"><p>خدمة الشركات</p><h2>نظام تشغيلي متكامل لكل شركة</h2></div>
+      <div class="grid-3">
+        <div class="card glass"><div class="icon">🏢</div><h3>داش بورد للشركة</h3><p>لوحة مستقلة لكل شركة تحتوي على مؤشرات التشغيل، الموظفين، العملاء، والمهام اليومية.</p></div>
+        <div class="card glass"><div class="icon">👥</div><h3>إدارة الموظفين والعملاء</h3><p>صفحات داخلية لإدارة الموظفين، العملاء، الصلاحيات، الحضور، والمهام.</p></div>
+        <div class="card glass"><div class="icon">📢</div><h3>نشر وظائف مباشر</h3><p>عند إنشاء إعلان توظيف من لوحة الشركة يظهر مباشرة في منصة HireX للباحثين عن عمل.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><p>قصص نجاح</p><h2>تجارب من الباحثين والشركات</h2></div>
+      <div class="grid-3"><div class="card glass"><div class="icon">★</div><h3>توظفت خلال أسبوع</h3><p>المطابقة الذكية اختصرت علي البحث ووصلتني للوظيفة المناسبة بسرعة.</p></div><div class="card glass"><div class="icon">✓</div><h3>فرز أسرع للمتقدمين</h3><p>لوحة الشركة ساعدتنا نراجع المرشحين ونحدد الأفضل خلال دقائق.</p></div><div class="card glass"><div class="icon">⚡</div><h3>تجربة حديثة</h3><p>HireX يعطي إحساس منصة عالمية وسهولة في التقديم والمتابعة.</p></div></div>
+    </section>
+
+    <section class="section pricing" id="pricing">
+      <div class="section-title"><p>باقات الشركات</p><h2>اختر الخطة المناسبة للتوظيف</h2></div>
+      <div class="grid-3"><div class="card glass"><h3>Starter</h3><div class="price">Free</div><p>نشر وظيفة واحدة وتجربة المنصة.</p><button class="btn-ghost">ابدأ</button></div><div class="card glass"><h3>Pro</h3><div class="price">299 <small>/ شهر</small></div><p>وظائف متعددة وفرز ذكي للمتقدمين.</p><button class="btn-primary">الأفضل</button></div><div class="card glass"><h3>Enterprise</h3><div class="price">Custom</div><p>حلول مخصصة للشركات الكبيرة.</p><button class="btn-ghost">تواصل معنا</button></div></div>
+    </section>
+
+    <footer class="footer"><div>© 2026 HireX — AI Recruitment Platform</div><div>الشروط • الخصوصية • الدعم</div></footer>
   </div>
 
   <div class="auth-modal" id="authModal">
-    <div class="auth-box glass"><div class="close" onclick="closeAuth()">✕</div><h2>دخول HireX</h2><p>تسجيل تجريبي محلي بدون Firebase</p><div class="input-group"><label>رقم الجوال</label><input type="tel" placeholder="05XXXXXXXX"></div><div class="input-group"><label>نوع الحساب</label><select id="roleSelect"><option value="candidate">باحث عن عمل</option><option value="company">شركة</option><option value="admin">إدارة</option></select></div><button class="btn-primary" style="width:100%" onclick="showOtp()">إرسال رمز التحقق</button><div id="otpArea" class="hidden"><div class="otp-row"><input maxlength="1"><input maxlength="1"><input maxlength="1"><input maxlength="1"></div><button class="btn-primary" style="width:100%" onclick="loginByRole()">دخول</button></div></div>
+    <div class="auth-box glass"><div class="close" onclick="closeAuth()">✕</div><h2>دخول HireX</h2><p>اختر نوع الحساب للانتقال إلى الواجهة الخاصة به</p><div class="input-group"><label>رقم الجوال</label><input type="tel" placeholder="05XXXXXXXX"></div><div class="input-group"><label>نوع الحساب</label><select id="roleSelect"><option value="candidate">باحث عن عمل</option><option value="company">شركة</option><option value="admin">إدارة</option></select></div><button class="btn-primary" style="width:100%" onclick="showOtp()">إرسال رمز التحقق</button><div id="otpArea" class="hidden"><div class="otp-row"><input maxlength="1"><input maxlength="1"><input maxlength="1"><input maxlength="1"></div><button class="btn-primary" style="width:100%" onclick="loginByRole()">دخول</button></div></div>
   </div>
 
-  <div class="app" id="candidateApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>الباحث عن عمل</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>الوظائف</button><button>طلباتي</button><button>السيرة الذاتية</button><button>المقابلات</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="ابحث عن وظيفة مناسبة..."><div class="user-chip"><div><h3>باحث عن عمل</h3><p>Candidate Account</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>لوحة الباحث عن عمل</h2><p>تابع الوظائف المناسبة وطلباتك ومقابلاتك</p></div><span class="pill">AI Match 86%</span></div><div class="dashboard-grid"><div class="metric glass"><h3 id="candidateJobsCount">0</h3><p>وظائف متاحة</p></div><div class="metric glass"><h3>8</h3><p>طلبات مرسلة</p></div><div class="metric glass"><h3>3</h3><p>مقابلات</p></div><div class="metric glass"><h3>92%</h3><p>قوة CV</p></div><div class="wide glass page-panel"><h3>وظائف مقترحة</h3><div id="candidateJobsList"></div></div><div class="small glass page-panel"><h3>AI CV Analyzer</h3><p style="color:rgba(255,255,255,.6);line-height:1.8">سيرتك قوية، أضف إنجازات رقمية لتحسين فرصك.</p><button class="btn-primary" style="width:100%;margin-top:18px">تحسين CV</button></div></div></section></main></div>
+  <div class="app" id="candidateApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>الباحث عن عمل</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>الوظائف</button><button>طلباتي</button><button>السيرة الذاتية</button><button>المقابلات</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="ابحث عن وظيفة مناسبة..."><div class="user-chip"><div><h3>باحث عن عمل</h3><p>Candidate Account</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>لوحة الباحث عن عمل</h2><p>تابع الوظائف المناسبة وطلباتك ومقابلاتك</p></div><span class="pill">AI Match 86%</span></div><div class="dashboard-grid"><div class="metric glass"><h3>24</h3><p>وظائف مناسبة</p></div><div class="metric glass"><h3>8</h3><p>طلبات مرسلة</p></div><div class="metric glass"><h3>3</h3><p>مقابلات</p></div><div class="metric glass"><h3>92%</h3><p>قوة CV</p></div><div class="wide glass page-panel"><h3>وظائف مقترحة</h3><div class="list-item"><div><h4>Frontend Developer</h4><p>CloudTech • Riyadh</p></div><span class="status green">مطابق</span></div><div class="list-item"><div><h4>UI/UX Designer</h4><p>Pixel Studio • Remote</p></div><span class="status yellow">جيد</span></div></div><div class="small glass page-panel"><h3>AI CV Analyzer</h3><p style="color:rgba(255,255,255,.6);line-height:1.8">سيرتك قوية، أضف إنجازات رقمية لتحسين فرصك.</p><button class="btn-primary" style="width:100%;margin-top:18px">تحسين CV</button></div></div></section></main></div>
 
-  <div class="app" id="companyApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>Company OS</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>الإدارة</button><button>الموظفين</button><button>العملاء</button><button>التوظيف</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="ابحث في التشغيل أو التوظيف..."><div class="user-chip"><div><h3>شركة</h3><p>Company Operating System</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>داش بورد الشركة المتكامل</h2><p>إدارة التشغيل والموظفين والعملاء والتوظيف من مكان واحد</p></div><button class="btn-primary" onclick="document.getElementById('jobTitle').focus()">إضافة إعلان</button></div><div class="dashboard-grid"><div class="metric glass"><h3 id="companyJobsCount">0</h3><p>وظائف منشورة</p></div><div class="metric glass"><h3>340</h3><p>متقدم</p></div><div class="metric glass"><h3>86</h3><p>موظف</p></div><div class="metric glass"><h3>24</h3><p>عميل</p></div><div class="full glass page-panel"><div class="panel-title"><div><h2>النظام التشغيلي للشركة</h2><p>صفحات مستقلة للادارة والموظف والعميل والتوظيف</p></div><span class="pill">Company OS</span></div><div class="grid-4"><div class="card glass"><div class="icon">📊</div><h3>الإدارة</h3><p>صلاحيات، مؤشرات، تقارير، قرارات.</p></div><div class="card glass"><div class="icon">👷</div><h3>الموظف</h3><p>مهام، حضور، تقييمات، إشعارات.</p></div><div class="card glass"><div class="icon">🤝</div><h3>العميل</h3><p>طلبات، شكاوى، عقود، متابعة.</p></div><div class="card glass"><div class="icon">📢</div><h3>التوظيف</h3><p>نشر إعلان يظهر في الرئيسية مباشرة.</p></div></div></div><div class="full glass page-panel"><div class="panel-title"><div><h2>نشر إعلان توظيف مباشر</h2><p>سيظهر الإعلان فورًا في قسم الوظائف بالصفحة الرئيسية</p></div><span class="status green">Local Publish</span></div><div class="company-job-form"><input id="jobTitle" placeholder="المسمى الوظيفي"><input id="jobCompany" placeholder="اسم الشركة" value="HireX Company"><input id="jobCity" placeholder="المدينة"><select id="jobType"><option>دوام كامل</option><option>عن بعد</option><option>جزئي</option><option>هجين</option></select><input id="jobSalary" placeholder="الراتب"><button class="btn-primary" onclick="publishJob()">نشر في HireX</button></div></div><div class="full glass page-panel"><h3>وظائف الشركة المنشورة</h3><div id="companyJobsList"></div></div></div></section></main></div>
+  <div class="app" id="companyApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>لوحة الشركة</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>التشغيل</button><button>الموظفين</button><button>العملاء</button><button>التوظيف</button><button>المتقدمين</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="ابحث عن متقدم أو وظيفة..."><div class="user-chip"><div><h3>شركة</h3><p>Employer Account</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>داش بورد الشركة المتكامل</h2><p>تشغيل الشركة، الموظفين، العملاء، والتوظيف من مكان واحد</p></div><button class="btn-primary">إضافة إعلان توظيف</button></div><div class="dashboard-grid"><div class="metric glass"><h3>12</h3><p>وظائف نشطة</p></div><div class="metric glass"><h3>340</h3><p>متقدم</p></div><div class="metric glass"><h3>86</h3><p>موظف</p></div><div class="metric glass"><h3>24</h3><p>عميل</p></div><div class="wide glass page-panel"><h3>مؤشرات التشغيل</h3><div class="chart"><span style="height:45%"></span><span style="height:72%"></span><span style="height:58%"></span><span style="height:90%"></span><span style="height:74%"></span></div></div><div class="small glass page-panel"><h3>أفضل المرشحين</h3><div class="list-item"><div><h4>Ahmed Ali</h4><p>AI Match 94%</p></div><span class="status green">قوي</span></div></div><div class="full glass page-panel"><div class="panel-title"><div><h2>نظام التشغيل الداخلي</h2><p>صفحات مستقلة داخل حساب الشركة</p></div><span class="pill">Company OS</span></div><div class="grid-4"><div class="card glass"><div class="icon">📊</div><h3>الإدارة</h3><p>قرارات، صلاحيات، تقارير، مؤشرات أداء.</p></div><div class="card glass"><div class="icon">👷</div><h3>الموظفين</h3><p>ملفات الموظفين، الحضور، المهام، التقييمات.</p></div><div class="card glass"><div class="icon">🤝</div><h3>العملاء</h3><p>إدارة العملاء، العقود، الطلبات، المتابعة.</p></div><div class="card glass"><div class="icon">📢</div><h3>التوظيف</h3><p>إنشاء إعلان يظهر مباشرة في منصة HireX.</p></div></div></div><div class="full glass page-panel"><div class="panel-title"><div><h2>إنشاء إعلان توظيف مباشر</h2><p>أي إعلان تضيفه الشركة يظهر مباشرة في قسم الوظائف بالمنصة</p></div><span class="status green">Live Publish</span></div><div class="company-job-form"><input placeholder="المسمى الوظيفي"><input placeholder="المدينة"><select><option>دوام كامل</option><option>عن بعد</option><option>جزئي</option></select><input placeholder="الراتب المتوقع"><button class="btn-primary">نشر في HireX</button></div></div></div></section></main></div>
 
-  <div class="app" id="adminApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>إدارة HireX</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>المستخدمين</button><button>الشركات</button><button>الصلاحيات</button><button>التقارير</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="بحث إداري شامل..."><div class="user-chip"><div><h3>إدارة</h3><p>Admin Control</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>مركز تحكم الإدارة</h2><p>تحكم كامل بالإظهار والتعديل والصلاحيات</p></div><span class="pill">ADMIN</span></div><div class="dashboard-grid"><div class="metric glass"><h3>2.4K</h3><p>مستخدم</p></div><div class="metric glass"><h3>168</h3><p>شركة</p></div><div class="metric glass"><h3 id="adminJobsCount">0</h3><p>وظيفة منشورة</p></div><div class="metric glass"><h3>99%</h3><p>حالة النظام</p></div><div class="wide glass page-panel"><h3>آخر الوظائف المنشورة</h3><div id="adminJobsList"></div></div><div class="small glass page-panel"><h3>إجراءات سريعة</h3><button class="btn-primary" style="width:100%;margin-bottom:12px">اعتماد شركة</button><button class="btn-ghost" style="width:100%">تعديل الشروط</button></div></div></section></main></div>
+  <div class="app" id="adminApp"><aside class="app-sidebar glass"><div class="app-logo"><div class="brand-icon">X</div><h2>إدارة HireX</h2></div><div class="side-menu"><button class="active">الرئيسية</button><button>المستخدمين</button><button>الشركات</button><button>الصلاحيات</button><button>التقارير</button></div><button class="btn-ghost logout" onclick="logout()">خروج</button></aside><main class="app-main"><div class="topbar glass"><input class="search" placeholder="بحث إداري شامل..."><div class="user-chip"><div><h3>إدارة</h3><p>Admin Control</p></div><div class="avatar"></div></div></div><section class="page-panel glass"><div class="panel-title"><div><h2>مركز تحكم الإدارة</h2><p>تحكم كامل بالإظهار والتعديل والصلاحيات</p></div><span class="pill">ADMIN</span></div><div class="dashboard-grid"><div class="metric glass"><h3>2.4K</h3><p>مستخدم</p></div><div class="metric glass"><h3>168</h3><p>شركة</p></div><div class="metric glass"><h3>520</h3><p>وظيفة</p></div><div class="metric glass"><h3>99%</h3><p>حالة النظام</p></div><div class="wide glass page-panel"><h3>صلاحيات الإظهار والتعديل</h3><div class="permission-row"><div><h4>تعديل الصفحة التقديمية</h4><p>العرض، الوظائف، التقييمات، الشروط، والباقات</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div><div class="permission-row"><div><h4>إظهار لوحة الباحث</h4><p>الوظائف، الطلبات، CV، المقابلات</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div><div class="permission-row"><div><h4>إظهار لوحة الشركات</h4><p>إضافة وظائف، متقدمين، مقابلات، Pipeline</p></div><label class="switch"><input type="checkbox" checked><span></span></label></div></div><div class="small glass page-panel"><h3>إجراءات سريعة</h3><button class="btn-primary" style="width:100%;margin-bottom:12px">اعتماد شركة</button><button class="btn-ghost" style="width:100%">تعديل الشروط</button></div></div></section></main></div>
 
   <script>
-    let jobs = [
-      {title:'Frontend Developer', company:'CloudTech', city:'Riyadh', type:'عن بعد', salary:'12K - 18K SAR'},
-      {title:'HR Specialist', company:'TalentGate', city:'Jeddah', type:'دوام كامل', salary:'7K - 10K SAR'},
-      {title:'AI Engineer', company:'DataMind', city:'Riyadh', type:'هجين', salary:'18K - 25K SAR'},
-      {title:'UI/UX Designer', company:'Pixel Studio', city:'Remote', type:'عن بعد', salary:'10K - 15K SAR'}
-    ];
-
     const authModal=document.getElementById('authModal');
     function openAuth(){authModal.classList.add('active')}
     function closeAuth(){authModal.classList.remove('active')}
     function showOtp(){document.getElementById('otpArea').classList.remove('hidden')}
-    function loginByRole(){
-      const role=document.getElementById('roleSelect').value;
-      document.getElementById('landingPage').classList.add('hidden');
-      closeAuth();
-      document.querySelectorAll('.app').forEach(app=>app.classList.remove('active'));
-      if(role==='candidate')document.getElementById('candidateApp').classList.add('active');
-      if(role==='company')document.getElementById('companyApp').classList.add('active');
-      if(role==='admin')document.getElementById('adminApp').classList.add('active');
-      renderAll();
-    }
-    function logout(){
-      document.querySelectorAll('.app').forEach(app=>app.classList.remove('active'));
-      document.getElementById('landingPage').classList.remove('hidden');
-      renderJobs();
-    }
-    function jobCard(job){
-      return `<div class="card glass job-card"><div class="top"><div><h3>${job.title}</h3><p>${job.company}</p></div><div class="company-logo">${job.company[0] || 'X'}</div></div><div class="job-meta"><span>${job.type}</span><span>${job.city}</span></div><div class="salary">${job.salary || 'حسب المقابلة'}</div><button class="btn-primary">تقديم</button></div>`;
-    }
-    function jobListItem(job, status='منشور'){
-      return `<div class="list-item"><div><h4>${job.title}</h4><p>${job.company} • ${job.city} • ${job.type}</p></div><span class="status green">${status}</span></div>`;
-    }
-    function renderJobs(){
-      const title = (document.getElementById('searchTitle')?.value || '').toLowerCase();
-      const city = (document.getElementById('searchCity')?.value || '').toLowerCase();
-      const filtered = jobs.filter(j => 
-        j.title.toLowerCase().includes(title) &&
-        j.city.toLowerCase().includes(city)
-      );
-      document.getElementById('jobsGrid').innerHTML = filtered.map(jobCard).join('') || '<p>لا توجد وظائف مطابقة.</p>';
-    }
-    function renderAll(){
-      renderJobs();
-      document.getElementById('candidateJobsCount').innerText = jobs.length;
-      document.getElementById('companyJobsCount').innerText = jobs.length;
-      document.getElementById('adminJobsCount').innerText = jobs.length;
-      document.getElementById('candidateJobsList').innerHTML = jobs.slice(0,4).map(j=>jobListItem(j,'مطابق')).join('');
-      document.getElementById('companyJobsList').innerHTML = jobs.map(j=>jobListItem(j)).join('');
-      document.getElementById('adminJobsList').innerHTML = jobs.map(j=>jobListItem(j,'معتمد')).join('');
-    }
-    function publishJob(){
-      const title = document.getElementById('jobTitle').value.trim();
-      const company = document.getElementById('jobCompany').value.trim() || 'HireX Company';
-      const city = document.getElementById('jobCity').value.trim();
-      const type = document.getElementById('jobType').value;
-      const salary = document.getElementById('jobSalary').value.trim();
-      if(!title || !city){
-        alert('اكتب المسمى الوظيفي والمدينة على الأقل');
-        return;
-      }
-      jobs.unshift({title, company, city, type, salary});
-      document.getElementById('jobTitle').value='';
-      document.getElementById('jobCity').value='';
-      document.getElementById('jobSalary').value='';
-      renderAll();
-      const toast = document.getElementById('toast');
-      toast.style.display='block';
-      setTimeout(()=>toast.style.display='none',2500);
-    }
-    renderJobs();
+    function loginByRole(){const role=document.getElementById('roleSelect').value;document.getElementById('landingPage').classList.add('hidden');closeAuth();document.querySelectorAll('.app').forEach(app=>app.classList.remove('active'));if(role==='candidate')document.getElementById('candidateApp').classList.add('active');if(role==='company')document.getElementById('companyApp').classList.add('active');if(role==='admin')document.getElementById('adminApp').classList.add('active')}
+    function logout(){document.querySelectorAll('.app').forEach(app=>app.classList.remove('active'));document.getElementById('landingPage').classList.remove('hidden')}
   </script>
 </body>
 </html>
