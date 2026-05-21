@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HireX - Prototype 01</title>
+  <title>HireX - Prototype 03</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -11,99 +11,228 @@
     *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
     body{min-height:100vh;background:#050914;color:#fff;overflow-x:hidden}
     body:before{content:"";position:fixed;inset:-30%;background:radial-gradient(circle at 80% 10%,rgba(0,198,255,.16),transparent 25%),radial-gradient(circle at 10% 85%,rgba(139,92,246,.16),transparent 25%);z-index:-2}
-    a{text-decoration:none;color:inherit}button,input{font-family:inherit}
+    a{text-decoration:none;color:inherit}button,input,select{font-family:inherit}
+    .hidden{display:none!important}
     .glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(24px);box-shadow:0 20px 70px rgba(0,0,0,.25)}
     .btn{border:0;border-radius:20px;padding:14px 24px;color:#fff;font-weight:800;cursor:pointer;transition:.3s}
     .btn-primary{background:linear-gradient(135deg,#00c6ff,#0072ff);box-shadow:0 0 30px rgba(0,198,255,.25)}
     .btn-ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+    .btn-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
     .btn:hover{transform:translateY(-3px)}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;background:rgba(0,198,255,.12);border:1px solid rgba(0,198,255,.22);color:#80e8ff;font-size:14px}
+    .badge,.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;background:rgba(0,198,255,.12);border:1px solid rgba(0,198,255,.22);color:#80e8ff;font-size:14px}
     .gradient{background:linear-gradient(90deg,#00c6ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
     nav{position:sticky;top:0;z-index:20;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;background:rgba(5,9,20,.65);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
     .brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:18px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900}.brand h1{font-size:28px;font-weight:900}.brand small{display:block;color:rgba(255,255,255,.55);font-size:11px;margin-top:-4px}
     .nav-links{display:flex;gap:28px;color:rgba(255,255,255,.65);font-size:15px}.nav-links a:hover{color:#fff}
+
     .hero{padding:86px 7% 55px;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
-    .hero h2{font-size:72px;line-height:1.16;font-weight:900;margin:22px 0}
-    .hero p{font-size:18px;line-height:2;color:rgba(255,255,255,.65);max-width:680px;margin-bottom:28px}
+    .hero h2{font-size:72px;line-height:1.16;font-weight:900;margin:22px 0}.hero p{font-size:18px;line-height:2;color:rgba(255,255,255,.65);max-width:680px;margin-bottom:28px}
     .actions{display:flex;gap:14px;flex-wrap:wrap}
     .search{margin-top:28px;border-radius:34px;padding:18px;display:grid;grid-template-columns:1fr 1fr auto;gap:12px}
-    .search input{height:58px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.06);color:#fff;outline:0;padding:0 18px;font-size:15px}
+    input,select,textarea{border-radius:18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.06);color:#fff;outline:0;padding:0 16px;font-size:15px}
+    input,select{height:58px} textarea{padding-top:14px;min-height:110px;resize:vertical}
+    select option{color:#111}
     .preview{border-radius:42px;padding:28px;animation:float 5s ease-in-out infinite;overflow:hidden;position:relative}@keyframes float{50%{transform:translateY(-12px)}}
     .match{width:150px;height:150px;margin:20px auto;border-radius:50%;background:conic-gradient(#00c6ff 0 88%,rgba(255,255,255,.11) 88%);display:grid;place-items:center}.match span{width:108px;height:108px;border-radius:50%;background:#070b16;display:grid;place-items:center;font-size:28px;font-weight:900}
-    .mini-card{margin-top:14px;border-radius:26px;padding:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:12px}.mini-card p{font-size:13px;margin:4px 0 0;color:rgba(255,255,255,.55)}.pill{padding:7px 12px;border-radius:50px;background:rgba(0,198,255,.12);color:#80e8ff;font-size:12px;white-space:nowrap}
+    .mini-card{margin-top:14px;border-radius:26px;padding:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:12px}.mini-card p{font-size:13px;margin:4px 0 0;color:rgba(255,255,255,.55)}
+
     section{padding:62px 7%}.section-title{text-align:center;margin-bottom:34px}.section-title p{color:#80e8ff;margin-bottom:8px}.section-title h2{font-size:42px;font-weight:900}
     .categories{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
     .category{border-radius:30px;padding:24px;min-height:210px;cursor:pointer;transition:.35s;position:relative;overflow:hidden}
     .category:hover{transform:translateY(-8px) scale(1.01);background:rgba(255,255,255,.085)}
     .icon{width:60px;height:60px;border-radius:22px;background:linear-gradient(135deg,rgba(0,198,255,.24),rgba(0,114,255,.18));display:grid;place-items:center;font-size:28px;margin-bottom:18px}
     .category h3{font-size:23px;margin-bottom:8px}.category p{color:rgba(255,255,255,.58);line-height:1.7;font-size:14px}.counts{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}.count{font-size:12px;padding:7px 11px;border-radius:50px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.72)}
+
     .results{display:none}.results.active{display:block}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .card{border-radius:30px;padding:24px;transition:.3s}.card:hover{transform:translateY(-6px);background:rgba(255,255,255,.08)}
     .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.avatar{width:56px;height:56px;border-radius:20px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.meta span{padding:7px 11px;border-radius:50px;background:rgba(255,255,255,.07);font-size:12px;color:rgba(255,255,255,.72)}.salary{color:#80e8ff;font-weight:900;font-size:19px;margin-bottom:16px}.card .btn{width:100%}
     .empty{border-radius:24px;padding:24px;color:rgba(255,255,255,.6);text-align:center}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(14px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;padding:18px}.modal.active{opacity:1;pointer-events:auto}
-    .modal-box{width:620px;border-radius:38px;padding:30px;position:relative}.close{position:absolute;top:18px;left:18px;width:42px;height:42px;border-radius:16px;background:rgba(255,255,255,.09);display:grid;place-items:center;cursor:pointer}
+
+    .modal,.login-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(14px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;padding:18px}.modal.active,.login-modal.active{opacity:1;pointer-events:auto}
+    .modal-box,.login-box{width:640px;border-radius:38px;padding:30px;position:relative;max-height:92vh;overflow:auto}.login-box{width:500px}
+    .close{position:absolute;top:18px;left:18px;width:42px;height:42px;border-radius:16px;background:rgba(255,255,255,.09);display:grid;place-items:center;cursor:pointer}
     .modal-title{text-align:center;margin-bottom:26px}.modal-title h2{font-size:34px}.modal-title p{color:rgba(255,255,255,.58);margin-top:8px}
     .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.choice{border-radius:28px;padding:26px;cursor:pointer;transition:.3s}.choice:hover{transform:translateY(-6px);background:rgba(255,255,255,.09)}.choice h3{font-size:24px;margin-bottom:8px}.choice p{color:rgba(255,255,255,.58);line-height:1.7}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}
+    .toast{position:fixed;bottom:24px;left:24px;z-index:300;border-radius:20px;padding:15px 20px;background:rgba(34,197,94,.16);border:1px solid rgba(34,197,94,.3);color:#86efac;display:none}
+
+    .app-screen{display:none;min-height:100vh}.app-screen.active{display:block}
+    .app-layout{display:grid;grid-template-columns:270px 1fr;gap:22px;padding:25px}
+    .app-sidebar{border-radius:34px;padding:22px;min-height:calc(100vh - 50px);position:sticky;top:25px}
+    .app-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}.app-logo .logo{width:42px;height:42px}
+    .side-btn{width:100%;height:54px;border:0;border-radius:18px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);margin-bottom:10px;cursor:pointer;text-align:right;padding:0 16px}
+    .side-btn.active,.side-btn:hover{background:linear-gradient(135deg,rgba(0,198,255,.22),rgba(0,114,255,.16));color:#fff}
+    .app-main{min-width:0}.topbar{border-radius:30px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:14px}.topbar p{color:rgba(255,255,255,.55)}
+    .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.dash-card{border-radius:28px;padding:22px}.dash-card h3{font-size:32px}.dash-card p{color:rgba(255,255,255,.58)}
+    .wide-panel{border-radius:34px;padding:24px;margin-top:18px}
     footer{padding:32px 7%;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;color:rgba(255,255,255,.55);gap:15px}
-    @media(max-width:1000px){.hero{grid-template-columns:1fr;padding:54px 22px}.hero h2{font-size:42px}.nav-links{display:none}.search{grid-template-columns:1fr}.categories,.cards{grid-template-columns:1fr}.section-title h2{font-size:30px}section{padding:50px 22px}.choice-grid{grid-template-columns:1fr}.modal-box{width:100%}footer{flex-direction:column}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}}
+
+    @media(max-width:1000px){.hero{grid-template-columns:1fr;padding:54px 22px}.hero h2{font-size:42px}.nav-links{display:none}.search,.form-grid{grid-template-columns:1fr}.categories,.cards{grid-template-columns:1fr}.section-title h2{font-size:30px}section{padding:50px 22px}.choice-grid{grid-template-columns:1fr}.modal-box,.login-box{width:100%}footer{flex-direction:column}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.app-layout{grid-template-columns:1fr;padding:14px}.app-sidebar{position:fixed;right:12px;left:12px;bottom:12px;top:auto;min-height:auto;z-index:90;display:flex;overflow-x:auto;gap:8px;padding:10px}.app-logo{display:none}.side-btn{min-width:95px;margin:0;text-align:center}.app-main{padding-bottom:105px}.dash-grid{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}}
     @media(max-width:480px){.hero h2{font-size:34px}.hero p{font-size:15px}.brand small{display:none}.brand h1{font-size:23px}.logo{width:42px;height:42px}.category{min-height:auto}.modal-title h2{font-size:27px}}
   </style>
 </head>
 <body>
-  <nav>
-    <div class="brand"><div class="logo">X</div><div><h1>HireX</h1><small>Marketplace Prototype</small></div></div>
-    <div class="nav-links"><a href="#categories">التصنيفات</a><a href="#results">النتائج</a><a href="#">الشركات</a><a href="#">الدخول</a></div>
-    <button class="btn btn-primary" onclick="scrollToCategories()">ابدأ الآن</button>
+  <div class="toast" id="toast">تم الحفظ بنجاح</div>
+
+  <nav id="navBar">
+    <div class="brand"><div class="logo">X</div><div><h1>HireX</h1><small>Prototype 03</small></div></div>
+    <div class="nav-links"><a href="#categories">التصنيفات</a><a href="#results">النتائج</a><a href="#" onclick="openLogin()">الدخول</a></div>
+    <button class="btn btn-primary" onclick="openLogin()">تسجيل الدخول</button>
   </nav>
-  <main>
+
+  <main id="publicMain">
     <section class="hero">
       <div>
-        <span class="badge">⚡ منصة توظيف ذكية ثنائية الاتجاه</span>
-        <h2>ابحث عن <span class="gradient">عمل</span> أو عن <span class="gradient">موظف</span> حسب المجال</h2>
-        <p>اختر التصنيف المناسب، ثم حدد هل تريد مشاهدة الباحثين عن عمل أو الشركات الباحثة عن موظفين. هذا هو الشكل الأول الحقيقي لفكرة HireX.</p>
+        <span class="badge">⚡ منصة توظيف ديناميكية محلية</span>
+        <h2>انشر <span class="gradient">وظيفة</span> أو انشر <span class="gradient">ملفك</span> حسب التصنيف</h2>
+        <p>هذه النسخة تحفظ الوظائف والباحثين في المتصفح محليًا، وتعرض كل شيء داخل التصنيف الصحيح بدون Firebase أو سيرفر.</p>
         <div class="actions">
           <button class="btn btn-primary" onclick="scrollToCategories()">استعراض التصنيفات</button>
-          <button class="btn btn-ghost" onclick="openCategoryModal('برمجة')">جرب نافذة الاختيار</button>
+          <button class="btn btn-ghost" onclick="openLogin()">تسجيل تجريبي</button>
         </div>
         <div class="search glass">
-          <input id="searchInput" placeholder="ابحث عن تخصص مثل: محاسب، سائق، React">
+          <input id="searchInput" placeholder="ابحث عن تخصص أو شركة أو اسم">
           <input id="cityInput" placeholder="المدينة">
           <button class="btn btn-primary" onclick="renderCurrentResults()">بحث</button>
         </div>
       </div>
       <div class="preview glass">
-        <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
-          <div><h3>HireX Matching</h3><p style="color:rgba(255,255,255,.55);margin-top:5px">عرض مزدوج للباحثين والشركات</p></div>
-          <span class="pill">LIVE</span>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><h3>Live Local Data</h3><p style="color:rgba(255,255,255,.55);margin-top:5px">كل منشور يظهر في مكانه الصحيح</p></div>
+          <span class="pill">LocalStorage</span>
         </div>
-        <div class="match"><span>88%</span></div>
-        <div class="mini-card"><div><h3>شركة تبحث عن موظف</h3><p>Frontend Developer • الرياض</p></div><span class="pill">باحث عن موظف</span></div>
-        <div class="mini-card"><div><h3>فرد يبحث عن عمل</h3><p>محاسب • خبرة 4 سنوات</p></div><span class="pill">باحث عن عمل</span></div>
+        <div class="match"><span id="totalCount">0</span></div>
+        <div class="mini-card"><div><h3>شركة تنشر وظيفة</h3><p>تظهر في باحث عن موظف</p></div><span class="pill">Company</span></div>
+        <div class="mini-card"><div><h3>فرد ينشر ملفه</h3><p>يظهر في باحث عن عمل</p></div><span class="pill">Seeker</span></div>
       </div>
     </section>
+
     <section id="categories">
       <div class="section-title"><p>التصنيفات الرئيسية</p><h2>اختر مجال العمل</h2></div>
       <div class="categories" id="categoriesGrid"></div>
     </section>
+
     <section id="results" class="results">
       <div class="section-title"><p id="resultLabel">النتائج</p><h2 id="resultTitle">اختر تصنيفًا للعرض</h2></div>
       <div class="cards" id="resultsGrid"></div>
     </section>
   </main>
+
   <div class="modal" id="categoryModal">
     <div class="modal-box glass">
       <div class="close" onclick="closeModal()">✕</div>
-      <div class="modal-title"><h2 id="modalCategory">التصنيف</h2><p>اختر نوع العرض الذي تريد فتحه داخل هذا التصنيف</p></div>
+      <div class="modal-title"><h2 id="modalCategory">التصنيف</h2><p>اختر نوع العرض داخل هذا التصنيف</p></div>
       <div class="choice-grid">
-        <div class="choice glass" onclick="selectMode('seekers')"><div class="icon">👤</div><h3>باحث عن عمل</h3><p>اعرض الأفراد الذين يبحثون عن فرصة عمل في هذا المجال.</p></div>
-        <div class="choice glass" onclick="selectMode('jobs')"><div class="icon">🏢</div><h3>باحث عن موظف</h3><p>اعرض الشركات والوظائف المنشورة في هذا المجال.</p></div>
+        <div class="choice glass" onclick="selectMode('seekers')"><div class="icon">👤</div><h3>باحث عن عمل</h3><p>عرض الأفراد الذين يبحثون عن فرصة في هذا المجال.</p></div>
+        <div class="choice glass" onclick="selectMode('jobs')"><div class="icon">🏢</div><h3>باحث عن موظف</h3><p>عرض الشركات والوظائف المنشورة في هذا المجال.</p></div>
       </div>
     </div>
   </div>
-  <footer><div>© 2026 HireX Prototype 01</div><div>باحث عن عمل • باحث عن موظف • تصنيفات ذكية</div></footer>
+
+  <div class="login-modal" id="loginModal">
+    <div class="login-box glass">
+      <div class="close" onclick="closeLogin()">✕</div>
+      <div class="modal-title"><h2>تسجيل الدخول</h2><p>نسخة محلية للتجربة</p></div>
+      <div class="form-grid">
+        <input id="phoneInput" class="full" placeholder="رقم الجوال">
+        <select id="roleSelect" class="full">
+          <option value="candidate">باحث عن عمل</option>
+          <option value="company">باحث عن موظف / شركة</option>
+          <option value="admin">إدارة</option>
+        </select>
+        <button class="btn btn-primary full" onclick="loginByRole()">دخول تجريبي</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-screen" id="candidateApp">
+    <div class="app-layout">
+      <aside class="app-sidebar glass">
+        <div class="app-logo"><div class="logo">X</div><h3>باحث عن عمل</h3></div>
+        <button class="side-btn active">الرئيسية</button><button class="side-btn">ملفي</button><button class="side-btn">طلباتي</button><button class="side-btn" onclick="logout()">خروج</button>
+      </aside>
+      <main class="app-main">
+        <div class="topbar glass"><div><h2>لوحة الباحث عن عمل</h2><p>انشر ملفك ليظهر للشركات حسب التصنيف</p></div><span class="pill">Candidate</span></div>
+        <div class="dash-grid">
+          <div class="dash-card glass"><h3 id="candidateSeekersCount">0</h3><p>باحثين منشورين</p></div>
+          <div class="dash-card glass"><h3 id="candidateJobsCount">0</h3><p>وظائف متاحة</p></div>
+          <div class="dash-card glass"><h3>0</h3><p>طلبات</p></div>
+          <div class="dash-card glass"><h3>Local</h3><p>حفظ محلي</p></div>
+        </div>
+        <div class="wide-panel glass">
+          <h3>نشر ملف باحث عن عمل</h3>
+          <div class="form-grid" style="margin-top:16px">
+            <input id="seekerName" placeholder="الاسم">
+            <input id="seekerTitle" placeholder="التخصص">
+            <input id="seekerCity" placeholder="المدينة">
+            <select id="seekerCategory"></select>
+            <input id="seekerExp" placeholder="الخبرة مثل: 3 سنوات">
+            <input id="seekerSkills" placeholder="المهارات مفصولة بفواصل">
+            <button class="btn btn-primary full" onclick="publishSeeker()">نشر ملفي</button>
+          </div>
+        </div>
+        <div class="wide-panel glass"><h3>ملفاتي المنشورة</h3><div id="candidateOwnList"></div></div>
+      </main>
+    </div>
+  </div>
+
+  <div class="app-screen" id="companyApp">
+    <div class="app-layout">
+      <aside class="app-sidebar glass">
+        <div class="app-logo"><div class="logo">X</div><h3>الشركة</h3></div>
+        <button class="side-btn active">الرئيسية</button><button class="side-btn">التوظيف</button><button class="side-btn">المتقدمين</button><button class="side-btn" onclick="logout()">خروج</button>
+      </aside>
+      <main class="app-main">
+        <div class="topbar glass"><div><h2>لوحة باحث عن موظف</h2><p>انشر وظيفة لتظهر للباحثين حسب التصنيف</p></div><span class="pill">Company</span></div>
+        <div class="dash-grid">
+          <div class="dash-card glass"><h3 id="companyJobsCount">0</h3><p>وظائف منشورة</p></div>
+          <div class="dash-card glass"><h3 id="companySeekersCount">0</h3><p>باحثين متاحين</p></div>
+          <div class="dash-card glass"><h3>0</h3><p>متقدمين</p></div>
+          <div class="dash-card glass"><h3>Local</h3><p>حفظ محلي</p></div>
+        </div>
+        <div class="wide-panel glass">
+          <h3>نشر وظيفة</h3>
+          <div class="form-grid" style="margin-top:16px">
+            <input id="jobTitle" placeholder="المسمى الوظيفي">
+            <input id="jobCompany" placeholder="اسم الشركة" value="شركة تجريبية">
+            <input id="jobCity" placeholder="المدينة">
+            <select id="jobCategory"></select>
+            <input id="jobType" placeholder="نوع الدوام">
+            <input id="jobSalary" placeholder="الراتب">
+            <button class="btn btn-primary full" onclick="publishJob()">نشر الوظيفة</button>
+          </div>
+        </div>
+        <div class="wide-panel glass"><h3>وظائفي المنشورة</h3><div id="companyOwnList"></div></div>
+      </main>
+    </div>
+  </div>
+
+  <div class="app-screen" id="adminApp">
+    <div class="app-layout">
+      <aside class="app-sidebar glass">
+        <div class="app-logo"><div class="logo">X</div><h3>الإدارة</h3></div>
+        <button class="side-btn active">الرئيسية</button><button class="side-btn">الوظائف</button><button class="side-btn">الباحثين</button><button class="side-btn" onclick="logout()">خروج</button>
+      </aside>
+      <main class="app-main">
+        <div class="topbar glass"><div><h2>لوحة الإدارة</h2><p>مراقبة البيانات المحلية للنسخة التجريبية</p></div><span class="pill">Admin</span></div>
+        <div class="dash-grid">
+          <div class="dash-card glass"><h3 id="adminJobsCount">0</h3><p>وظائف</p></div>
+          <div class="dash-card glass"><h3 id="adminSeekersCount">0</h3><p>باحثين</p></div>
+          <div class="dash-card glass"><h3 id="adminCategoriesCount">0</h3><p>تصنيفات</p></div>
+          <div class="dash-card glass"><h3>V03</h3><p>Prototype</p></div>
+        </div>
+        <div class="wide-panel glass"><h3>آخر الوظائف</h3><div id="adminJobsList"></div></div>
+        <div class="wide-panel glass"><h3>آخر الباحثين عن عمل</h3><div id="adminSeekersList"></div></div>
+        <div class="wide-panel glass"><button class="btn btn-danger" onclick="resetLocalData()">مسح البيانات المحلية وإعادة الافتراضي</button></div>
+      </main>
+    </div>
+  </div>
+
+  <footer id="footer"><div>© 2026 HireX Prototype 03</div><div>LocalStorage • Dynamic Categories • Jobs & Seekers</div></footer>
+
   <script>
-    const categories = [
+    const defaultCategories = [
       {name:'إدارة', icon:'🏢', desc:'مدراء، مشرفين، سكرتارية، تشغيل إداري'},
       {name:'مطاعم', icon:'🍽️', desc:'شيف، كاشير، باريستا، ويتر، مشرف مطعم'},
       {name:'تسويق', icon:'📣', desc:'تسويق رقمي، مبيعات، محتوى، سوشال ميديا'},
@@ -117,58 +246,212 @@
       {name:'صحي وطبي', icon:'🏥', desc:'تمريض، مختبر، استقبال، عيادات'},
       {name:'خدمات وتشغيل', icon:'🧹', desc:'نظافة، حراس، تشغيل مرافق، مشرفين'}
     ];
-    const jobs = [
+
+    const defaultJobs = [
       {category:'برمجة', title:'Frontend Developer', company:'CloudTech', city:'الرياض', type:'دوام كامل', salary:'12K - 18K'},
-      {category:'برمجة', title:'AI Engineer', company:'DataMind', city:'جدة', type:'هجين', salary:'18K - 25K'},
       {category:'إدارة', title:'مدير تشغيل', company:'Tasneef Ops', city:'الرياض', type:'دوام كامل', salary:'10K - 15K'},
-      {category:'مطاعم', title:'كاشير مطعم', company:'FoodHub', city:'جدة', type:'دوام كامل', salary:'4K - 5K'},
-      {category:'سائق', title:'سائق توصيل', company:'FastLine', city:'الدمام', type:'جزئي', salary:'حسب الطلب'},
-      {category:'موارد بشرية', title:'HR Specialist', company:'TalentGate', city:'الرياض', type:'دوام كامل', salary:'7K - 10K'},
-      {category:'فنيين وصيانة', title:'فني كهرباء', company:'MaintainPro', city:'الرياض', type:'دوام كامل', salary:'3.5K - 5K'},
-      {category:'خدمات وتشغيل', title:'مشرف نظافة', company:'FacilityPlus', city:'جدة', type:'دوام كامل', salary:'4K - 6K'}
+      {category:'مطاعم', title:'كاشير مطعم', company:'FoodHub', city:'جدة', type:'دوام كامل', salary:'4K - 5K'}
     ];
-    const seekers = [
+
+    const defaultSeekers = [
       {category:'برمجة', name:'أحمد علي', title:'React Developer', city:'الرياض', exp:'3 سنوات', skills:['React','JavaScript','UI']},
       {category:'إدارة', name:'سارة محمد', title:'مساعدة إدارية', city:'جدة', exp:'4 سنوات', skills:['تنظيم','تقارير','Excel']},
-      {category:'مطاعم', name:'محمد حسن', title:'باريستا', city:'الرياض', exp:'2 سنوات', skills:['قهوة','خدمة عملاء']},
-      {category:'سائق', name:'خالد ناصر', title:'سائق خاص', city:'الدمام', exp:'6 سنوات', skills:['رخصة','التزام','معرفة طرق']},
-      {category:'موارد بشرية', name:'ريم عبدالله', title:'HR Coordinator', city:'الرياض', exp:'3 سنوات', skills:['توظيف','رواتب','ملفات']},
-      {category:'فنيين وصيانة', name:'مازن شريف', title:'فني تكييف', city:'جدة', exp:'5 سنوات', skills:['تكييف','صيانة','تشخيص']},
-      {category:'خدمات وتشغيل', name:'فهد سالم', title:'مشرف تشغيل', city:'الرياض', exp:'7 سنوات', skills:['فرق','جداول','متابعة']},
-      {category:'تسويق', name:'نورة خالد', title:'مسوقة رقمية', city:'عن بعد', exp:'3 سنوات', skills:['إعلانات','محتوى','تحليل']}
+      {category:'فنيين وصيانة', name:'مازن شريف', title:'فني تكييف', city:'جدة', exp:'5 سنوات', skills:['تكييف','صيانة','تشخيص']}
     ];
+
+    const storage = {
+      get(key, fallback){ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); },
+      set(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+    };
+
+    let categories = storage.get('hirex_categories', defaultCategories);
+    let jobs = storage.get('hirex_jobs', defaultJobs);
+    let seekers = storage.get('hirex_seekers', defaultSeekers);
     let selectedCategory = '', selectedMode = '';
+
+    function saveAll(){
+      storage.set('hirex_categories', categories);
+      storage.set('hirex_jobs', jobs);
+      storage.set('hirex_seekers', seekers);
+    }
+
+    function toast(msg='تم الحفظ بنجاح'){
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(()=> t.style.display = 'none', 2200);
+    }
+
+    function populateCategorySelects(){
+      const options = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      ['seekerCategory','jobCategory'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.innerHTML = options;
+      });
+    }
+
     function scrollToCategories(){ document.getElementById('categories').scrollIntoView({behavior:'smooth'}); }
+
     function renderCategories(){
       document.getElementById('categoriesGrid').innerHTML = categories.map(cat => {
         const jobCount = jobs.filter(j => j.category === cat.name).length;
         const seekerCount = seekers.filter(s => s.category === cat.name).length;
         return `<div class="category glass" onclick="openCategoryModal('${cat.name}')"><div class="icon">${cat.icon}</div><h3>${cat.name}</h3><p>${cat.desc}</p><div class="counts"><span class="count">${jobCount} باحث عن موظف</span><span class="count">${seekerCount} باحث عن عمل</span></div></div>`;
       }).join('');
+      document.getElementById('totalCount').innerText = jobs.length + seekers.length;
     }
-    function openCategoryModal(category){ selectedCategory = category; document.getElementById('modalCategory').innerText = category; document.getElementById('categoryModal').classList.add('active'); }
+
+    function openCategoryModal(category){
+      selectedCategory = category;
+      document.getElementById('modalCategory').innerText = category;
+      document.getElementById('categoryModal').classList.add('active');
+    }
     function closeModal(){ document.getElementById('categoryModal').classList.remove('active'); }
-    function selectMode(mode){ selectedMode = mode; closeModal(); renderCurrentResults(); document.getElementById('results').scrollIntoView({behavior:'smooth'}); }
+    function selectMode(mode){
+      selectedMode = mode;
+      closeModal();
+      renderCurrentResults();
+      document.getElementById('results').scrollIntoView({behavior:'smooth'});
+    }
+
     function renderCurrentResults(){
-      if(!selectedCategory){ selectedCategory='برمجة'; selectedMode='jobs'; }
-      const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
-      const city=(document.getElementById('cityInput').value||'').trim().toLowerCase();
-      const grid=document.getElementById('resultsGrid'); document.getElementById('results').classList.add('active');
-      if(selectedMode==='seekers'){
-        document.getElementById('resultLabel').innerText='باحث عن عمل';
-        document.getElementById('resultTitle').innerText=`أفراد يبحثون عن عمل في ${selectedCategory}`;
-        const data=seekers.filter(s=>s.category===selectedCategory && (!q || s.name.toLowerCase().includes(q)||s.title.toLowerCase().includes(q)||s.skills.join(' ').toLowerCase().includes(q)) && (!city || s.city.toLowerCase().includes(city)));
-        grid.innerHTML=data.length?data.map(seekerCard).join(''):`<div class="empty glass">لا يوجد باحثون عن عمل في هذا التصنيف حاليًا.</div>`;
+      if(!selectedCategory){ selectedCategory = 'برمجة'; selectedMode = 'jobs'; }
+      const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const city = (document.getElementById('cityInput').value || '').trim().toLowerCase();
+      const grid = document.getElementById('resultsGrid');
+      document.getElementById('results').classList.add('active');
+
+      if(selectedMode === 'seekers'){
+        document.getElementById('resultLabel').innerText = 'باحث عن عمل';
+        document.getElementById('resultTitle').innerText = `أفراد يبحثون عن عمل في ${selectedCategory}`;
+        const data = seekers.filter(s =>
+          s.category === selectedCategory &&
+          (!q || s.name.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.skills.join(' ').toLowerCase().includes(q)) &&
+          (!city || s.city.toLowerCase().includes(city))
+        );
+        grid.innerHTML = data.length ? data.map(seekerCard).join('') : `<div class="empty glass">لا يوجد باحثون عن عمل في هذا التصنيف حاليًا.</div>`;
       } else {
-        document.getElementById('resultLabel').innerText='باحث عن موظف';
-        document.getElementById('resultTitle').innerText=`شركات تبحث عن موظفين في ${selectedCategory}`;
-        const data=jobs.filter(j=>j.category===selectedCategory && (!q || j.title.toLowerCase().includes(q)||j.company.toLowerCase().includes(q)) && (!city || j.city.toLowerCase().includes(city)));
-        grid.innerHTML=data.length?data.map(jobCard).join(''):`<div class="empty glass">لا توجد وظائف في هذا التصنيف حاليًا.</div>`;
+        document.getElementById('resultLabel').innerText = 'باحث عن موظف';
+        document.getElementById('resultTitle').innerText = `شركات تبحث عن موظفين في ${selectedCategory}`;
+        const data = jobs.filter(j =>
+          j.category === selectedCategory &&
+          (!q || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q)) &&
+          (!city || j.city.toLowerCase().includes(city))
+        );
+        grid.innerHTML = data.length ? data.map(jobCard).join('') : `<div class="empty glass">لا توجد وظائف في هذا التصنيف حاليًا.</div>`;
       }
     }
-    function jobCard(job){return `<div class="card glass"><div class="card-top"><div><h3>${job.title}</h3><p>${job.company}</p></div><div class="avatar">${job.company[0]}</div></div><div class="meta"><span>${job.city}</span><span>${job.type}</span><span>${job.category}</span></div><div class="salary">${job.salary}</div><button class="btn btn-primary">تقديم على الوظيفة</button></div>`;}
-    function seekerCard(seeker){return `<div class="card glass"><div class="card-top"><div><h3>${seeker.name}</h3><p>${seeker.title}</p></div><div class="avatar">${seeker.name[0]}</div></div><div class="meta"><span>${seeker.city}</span><span>${seeker.exp}</span><span>${seeker.category}</span></div><p style="color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:16px">${seeker.skills.join(' • ')}</p><button class="btn btn-primary">تواصل مع الباحث</button></div>`;}
-    renderCategories();
+
+    function jobCard(job){
+      return `<div class="card glass"><div class="card-top"><div><h3>${job.title}</h3><p>${job.company}</p></div><div class="avatar">${job.company[0] || 'X'}</div></div><div class="meta"><span>${job.city}</span><span>${job.type}</span><span>${job.category}</span></div><div class="salary">${job.salary || 'حسب الاتفاق'}</div><button class="btn btn-primary">تقديم على الوظيفة</button></div>`;
+    }
+    function seekerCard(seeker){
+      return `<div class="card glass"><div class="card-top"><div><h3>${seeker.name}</h3><p>${seeker.title}</p></div><div class="avatar">${seeker.name[0] || 'X'}</div></div><div class="meta"><span>${seeker.city}</span><span>${seeker.exp}</span><span>${seeker.category}</span></div><p style="color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:16px">${seeker.skills.join(' • ')}</p><button class="btn btn-primary">تواصل مع الباحث</button></div>`;
+    }
+    function listItem(title, sub, label){
+      return `<div class="mini-card"><div><h3>${title}</h3><p>${sub}</p></div><span class="pill">${label}</span></div>`;
+    }
+
+    function openLogin(){ document.getElementById('loginModal').classList.add('active'); }
+    function closeLogin(){ document.getElementById('loginModal').classList.remove('active'); }
+    function loginByRole(){
+      const role = document.getElementById('roleSelect').value;
+      document.getElementById('publicMain').style.display = 'none';
+      document.getElementById('navBar').style.display = 'none';
+      document.getElementById('footer').style.display = 'none';
+      closeLogin();
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      if(role === 'candidate') document.getElementById('candidateApp').classList.add('active');
+      if(role === 'company') document.getElementById('companyApp').classList.add('active');
+      if(role === 'admin') document.getElementById('adminApp').classList.add('active');
+      renderDashboard();
+    }
+    function logout(){
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('publicMain').style.display = 'block';
+      document.getElementById('navBar').style.display = 'flex';
+      document.getElementById('footer').style.display = 'flex';
+      renderAll();
+    }
+
+    function publishJob(){
+      const title = document.getElementById('jobTitle').value.trim();
+      const company = document.getElementById('jobCompany').value.trim() || 'شركة';
+      const city = document.getElementById('jobCity').value.trim();
+      const category = document.getElementById('jobCategory').value;
+      const type = document.getElementById('jobType').value.trim() || 'دوام كامل';
+      const salary = document.getElementById('jobSalary').value.trim() || 'حسب الاتفاق';
+      if(!title || !city){ alert('اكتب المسمى والمدينة'); return; }
+      jobs.unshift({category,title,company,city,type,salary});
+      saveAll();
+      clearInputs(['jobTitle','jobCity','jobType','jobSalary']);
+      renderAll();
+      renderDashboard();
+      toast('تم نشر الوظيفة وحفظها محليًا');
+    }
+
+    function publishSeeker(){
+      const name = document.getElementById('seekerName').value.trim();
+      const title = document.getElementById('seekerTitle').value.trim();
+      const city = document.getElementById('seekerCity').value.trim();
+      const category = document.getElementById('seekerCategory').value;
+      const exp = document.getElementById('seekerExp').value.trim() || 'غير محدد';
+      const skills = document.getElementById('seekerSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+      if(!name || !title || !city){ alert('اكتب الاسم والتخصص والمدينة'); return; }
+      seekers.unshift({category,name,title,city,exp,skills: skills.length ? skills : ['مهارة عامة']});
+      saveAll();
+      clearInputs(['seekerName','seekerTitle','seekerCity','seekerExp','seekerSkills']);
+      renderAll();
+      renderDashboard();
+      toast('تم نشر ملفك وحفظه محليًا');
+    }
+
+    function clearInputs(ids){ ids.forEach(id => document.getElementById(id).value = ''); }
+
+    function renderDashboard(){
+      setText('candidateSeekersCount', seekers.length);
+      setText('candidateJobsCount', jobs.length);
+      setText('companyJobsCount', jobs.length);
+      setText('companySeekersCount', seekers.length);
+      setText('adminJobsCount', jobs.length);
+      setText('adminSeekersCount', seekers.length);
+      setText('adminCategoriesCount', categories.length);
+
+      const ownSeekers = document.getElementById('candidateOwnList');
+      if(ownSeekers) ownSeekers.innerHTML = seekers.slice(0,5).map(s => listItem(s.name, `${s.title} • ${s.city}`, s.category)).join('') || '<p>لا توجد بيانات.</p>';
+
+      const ownJobs = document.getElementById('companyOwnList');
+      if(ownJobs) ownJobs.innerHTML = jobs.slice(0,5).map(j => listItem(j.title, `${j.company} • ${j.city}`, j.category)).join('') || '<p>لا توجد بيانات.</p>';
+
+      const adminJobs = document.getElementById('adminJobsList');
+      if(adminJobs) adminJobs.innerHTML = jobs.slice(0,8).map(j => listItem(j.title, `${j.company} • ${j.city}`, j.category)).join('');
+
+      const adminSeekers = document.getElementById('adminSeekersList');
+      if(adminSeekers) adminSeekers.innerHTML = seekers.slice(0,8).map(s => listItem(s.name, `${s.title} • ${s.city}`, s.category)).join('');
+    }
+    function setText(id,val){ const el = document.getElementById(id); if(el) el.innerText = val; }
+
+    function resetLocalData(){
+      if(!confirm('هل تريد مسح البيانات المحلية؟')) return;
+      localStorage.removeItem('hirex_categories');
+      localStorage.removeItem('hirex_jobs');
+      localStorage.removeItem('hirex_seekers');
+      categories = [...defaultCategories];
+      jobs = [...defaultJobs];
+      seekers = [...defaultSeekers];
+      saveAll();
+      renderAll();
+      renderDashboard();
+      toast('تمت إعادة البيانات الافتراضية');
+    }
+
+    function renderAll(){
+      populateCategorySelects();
+      renderCategories();
+      if(document.getElementById('results').classList.contains('active')) renderCurrentResults();
+    }
+
+    renderAll();
   </script>
 </body>
 </html>
