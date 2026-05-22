@@ -63,6 +63,23 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
 .storage-note{border-radius:18px;padding:12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.22);color:#fcd34d;margin:10px 0}
 @media(max-width:950px){.searchbar,.company-profile{grid-template-columns:1fr}}
 
+
+.profile-cover{border-radius:28px;padding:0;overflow:hidden}
+.cover-gradient{height:150px;background:linear-gradient(135deg,rgba(0,198,255,.45),rgba(139,92,246,.35));}
+.profile-main{padding:20px;margin-top:-52px}
+.public-avatar{width:104px;height:104px;border-radius:32px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-size:38px;font-weight:900;border:4px solid #050914;overflow:hidden}
+.public-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.progress-wrap{height:14px;border-radius:30px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+.progress-bar{height:100%;background:linear-gradient(90deg,#00c6ff,#8b5cf6);width:0%}
+.suggestion{border-radius:18px;padding:12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.22);color:#fcd34d;margin-top:8px}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.portfolio-card{border-radius:18px;background:rgba(255,255,255,.07);padding:14px;color:rgba(255,255,255,.75)}
+.preview-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.preview-box{width:min(820px,100%);max-height:92vh;overflow:auto;border-radius:30px;padding:20px}
+.close-preview{float:left}
+@media(max-width:950px){.portfolio-grid{grid-template-columns:1fr}.profile-main{margin-top:-40px}}
+
 </style>
 </head>
 <body>
@@ -119,6 +136,8 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
       <div class="logo" style="margin-bottom:18px"><div class="x">X</div><h3 id="roleTitle">باحث</h3></div>
       <button class="btn active" data-page="home" onclick="showPage('home')">الرئيسية</button>
       <button class="btn" data-page="jobs" onclick="showPage('jobs')">الوظائف</button>
+      <button class="btn" data-page="publicProfile" onclick="showPage('publicProfile')">ملفي العام</button>
+      <button class="btn" data-page="myApplications" onclick="showPage('myApplications')">طلباتي</button>
       <button class="btn" data-page="publish" onclick="showPage('publish')">النشر</button>
       <button class="btn" data-page="profile" onclick="showPage('profile')">البيانات الشخصية</button>
       <button class="btn" data-page="notifications" onclick="showPage('notifications')">الإشعارات</button>
@@ -144,7 +163,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
           <div class="kpi glass"><h3 id="appsCount">0</h3><p>طلبات تقديم</p></div>
           <div class="kpi glass"><h3 id="notifCount">0</h3><p>إشعارات</p></div>
         </div>
-        <div class="panel glass"><h3>ملخص ملفك</h3><div id="candidateSummary"></div></div>
+        <div class="panel glass"><h3>قوة الملف</h3><div class="progress-wrap"><div class="progress-bar" id="profilePowerBar"></div></div><div id="profileSuggestions"></div></div><div class="panel glass"><h3>ملخص ملفك</h3><div id="candidateSummary"></div></div>
       </div>
 
 
@@ -165,6 +184,23 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
         </div>
       </div>
 
+
+      <div id="page-publicProfile" class="page">
+        <div class="panel glass">
+          <h3>ملف الباحث العام</h3>
+          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">هذا هو الشكل الذي تراه الشركات عند فتح ملفك.</p>
+          <div id="publicProfileView"></div>
+        </div>
+      </div>
+
+      <div id="page-myApplications" class="page">
+        <div class="panel glass">
+          <h3>طلباتي</h3>
+          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">كل الوظائف التي قدمت عليها وحالة كل طلب.</p>
+          <div id="myApplicationsList"></div>
+        </div>
+      </div>
+
       <div id="page-publish" class="page">
         <div class="panel glass">
           <h3>نشر منشور باحث عن عمل</h3>
@@ -178,8 +214,10 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
             <select id="seekerLevel"><option value="Junior">Junior</option><option value="Mid">Mid</option><option value="Senior">Senior</option><option value="Expert">Expert</option></select>
             <select id="seekerLastSeen"><option value="متاح الآن">متاح الآن</option><option value="متاح خلال أسبوع">متاح خلال أسبوع</option><option value="غير متاح حاليًا">غير متاح حاليًا</option></select>
             <select id="seekerAvailable"><option value="true">متاح للعمل</option><option value="false">غير متاح حاليًا</option></select>
+            <select id="seekerWorkPreference"><option value="دوام كامل">دوام كامل</option><option value="دوام جزئي">دوام جزئي</option><option value="عمل حر">عمل حر</option><option value="تدريب">تدريب</option></select>
             <input id="seekerSkills" placeholder="المهارات مفصولة بفواصل">
             <textarea id="seekerBio" class="full" placeholder="نبذة تعريفية مختصرة"></textarea>
+            <textarea id="seekerPortfolio" class="full" placeholder="معرض أعمال / شهادات / روابط، كل عنصر في سطر"></textarea>
             <div class="full">
               <label>صورة المنشور</label>
               <input id="seekerAvatarFile" type="file" accept="image/*" onchange="previewAvatar(event)">
@@ -190,7 +228,8 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
               <input id="seekerCvFile" type="file" accept="application/pdf" onchange="previewCv(event)">
               <div class="file-preview" id="cvPreview">لم يتم اختيار ملف CV</div>
             </div>
-            <button class="btn p full" onclick="publishSeeker()">نشر منشوري كباحث عن عمل</button>
+            <button class="btn full" onclick="previewSeekerPost()">معاينة قبل الحفظ</button>
+            <button class="btn p full" onclick="saveSeekerPost()">حفظ / تحديث منشوري كباحث عن عمل</button>
           </div>
         </div>
       </div>
@@ -239,6 +278,15 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
   </div>
 </section>
 
+
+<div class="preview-modal" id="previewModal">
+  <div class="preview-box glass">
+    <button class="btn no close-preview" onclick="closePreview()">إغلاق</button>
+    <div style="clear:both"></div>
+    <div id="previewContent"></div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL='https://odfcsexotylhsstybiju.supabase.co';
 const SUPABASE_KEY='sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH';
@@ -255,6 +303,7 @@ let jobs=[];
 let companies=[];
 let selectedCompanyName='';
 let selectedJobCategory='';
+let applications=[];
 let selectedAvatarName='';
 let selectedCvName='';
 let selectedProfileAvatarName='';
@@ -346,6 +395,8 @@ async function loadAll(){
  await ensureCategories();
  let publicJobsRes=await db.from('jobs').select('*').order('created_at',{ascending:false});
  jobs=publicJobsRes.data||[];
+ let appsRes=await db.from('applications').select('*').order('created_at',{ascending:false});
+ applications=appsRes.data||[];
  let companiesRes=await db.from('companies').select('*').order('created_at',{ascending:false});
  companies=companiesRes.data||[];
  if(currentUser){
@@ -355,9 +406,12 @@ async function loadAll(){
    notifications=n.data||[];
    let j=await db.from('jobs').select('*').order('created_at',{ascending:false});
    jobs=j.data||[];
+   let a=await db.from('applications').select('*').order('created_at',{ascending:false});
+   applications=a.data||[];
    let c=await db.from('companies').select('*').order('created_at',{ascending:false});
    companies=c.data||[];
  }
+ if(page==='publish') fillSeekerFormForEdit();
  renderAll();
 }
 
@@ -388,6 +442,8 @@ function renderAll(){
  renderDashboardJobCategories();
  renderCompanies();
  renderCompanySeekers();
+ renderPublicProfile();
+ renderMyApplications();
 }
 
 function renderSummary(){
@@ -457,40 +513,7 @@ function previewProfileAvatar(e){
  reader.readAsDataURL(f);
 }
 
-async function publishSeeker(){
- if(!currentUser)return msg('سجل دخول أولاً',true);
- const skills=seekerSkills.value.split(',').map(x=>x.trim()).filter(Boolean);
- const postImageFile=seekerAvatarFile.files[0];
- const cvFile=seekerCvFile.files[0];
- const postImageUrl=await uploadToStorage('candidate-posts',postImageFile);
- const cvUrl=await uploadToStorage('candidate-cvs',cvFile);
- const payload={
-   owner_id:currentUser.id,
-   full_name:seekerName.value.trim()||profile.full_name,
-   title:seekerTitle.value.trim(),
-   city:seekerCity.value.trim(),
-   category:seekerCategory.value,
-   experience:seekerExperience.value.trim(),
-   skills:skills.length?skills:['مهارة عامة'],
-   bio:seekerBio.value.trim(),
-   post_image_name:selectedAvatarName,
-   post_image_url:postImageUrl,
-   cv_file_name:selectedCvName,
-   cv_url:cvUrl,
-   cv_viewed_count:0,
-   is_available: seekerAvailable.value === 'true',
-   experience_level: seekerLevel.value,
-   last_seen: seekerLastSeen.value
- };
- if(!payload.full_name||!payload.title||!payload.city)return msg('أكمل الاسم والتخصص والمدينة',true);
- const {error}=await db.from('seekers').insert(payload);
- if(error)return msg(error.message,true);
- await createNotification('تم نشر ملفك بنجاح','أصبح منشورك كباحث عن عمل ظاهرًا للشركات.');
- msg('تم نشر منشور الباحث بنجاح');
- clearPublish();
- await loadAll();
- showPage('home');
-}
+async function publishSeeker(){ return saveSeekerPost(); }
 
 function clearPublish(){
  seekerName.value=seekerTitle.value=seekerCity.value=seekerExperience.value=seekerSkills.value=seekerBio.value='';
@@ -653,6 +676,167 @@ async function applyToJob(jobId){
  await loadAll();
 }
 
+
+
+
+function candidatePostPayload(){
+ const skills=seekerSkills.value.split(',').map(x=>x.trim()).filter(Boolean);
+ const portfolio=seekerPortfolio.value.split('\n').map(x=>x.trim()).filter(Boolean);
+ return {
+   owner_id:currentUser.id,
+   full_name:seekerName.value.trim()||profile.full_name,
+   title:seekerTitle.value.trim(),
+   city:seekerCity.value.trim(),
+   category:seekerCategory.value,
+   experience:seekerExperience.value.trim(),
+   skills:skills.length?skills:['مهارة عامة'],
+   bio:seekerBio.value.trim(),
+   post_image_name:selectedAvatarName,
+   cv_file_name:selectedCvName,
+   cv_viewed_count:seekerProfile?.cv_viewed_count||0,
+   is_available: seekerAvailable.value === 'true',
+   experience_level: seekerLevel.value,
+   last_seen: seekerLastSeen.value,
+   work_preference: seekerWorkPreference.value,
+   portfolio_items: portfolio,
+   updated_at: new Date().toISOString()
+ };
+}
+
+function profileCompleteness(){
+ const s=seekerProfile;
+ if(!s)return {percent:0,suggestions:['انشر منشورك كباحث عن عمل']};
+ const fields=[
+  s.full_name,s.title,s.city,s.category,s.experience,
+  s.skills&&s.skills.length,s.bio,s.post_image_name,s.cv_file_name,
+  s.experience_level,s.work_preference
+ ];
+ const percent=Math.round((fields.filter(Boolean).length/fields.length)*100);
+ const suggestions=[];
+ if(!s.post_image_name) suggestions.push('أضف صورة للمنشور');
+ if(!s.cv_file_name) suggestions.push('أرفق ملف CV');
+ if(!s.bio) suggestions.push('أضف نبذة تعريفية');
+ if(!s.skills || !s.skills.length) suggestions.push('أضف مهاراتك');
+ if(!s.portfolio_items || !s.portfolio_items.length) suggestions.push('أضف معرض أعمال أو شهادات');
+ return {percent,suggestions};
+}
+
+function publicProfileHtml(s){
+ if(!s)return `<p style="color:rgba(255,255,255,.6)">لم تنشر منشورك بعد.</p>`;
+ const skills=(s.skills||[]).map(x=>`<span class="tag">${x}</span>`).join('');
+ const portfolio=(s.portfolio_items||[]).map(x=>`<div class="portfolio-card">${x}</div>`).join('');
+ return `
+ <div class="profile-cover glass">
+   <div class="cover-gradient"></div>
+   <div class="profile-main">
+     <div class="public-avatar">${s.post_image_url?`<img src="${s.post_image_url}">`:(s.full_name||'ب')[0]}</div>
+     <h2 style="margin-top:10px">${s.full_name||''}</h2>
+     <p style="color:rgba(255,255,255,.65)">${s.title||''} • ${s.city||''}</p>
+     <div class="meta"><span>${s.category||''}</span><span>${s.experience_level||''}</span><span>${s.experience||''}</span><span>${s.work_preference||''}</span><span>${s.last_seen||''}</span><span>${s.is_available?'متاح للعمل':'غير متاح'}</span></div>
+     <p style="margin-top:12px;color:rgba(255,255,255,.72);line-height:1.9">${s.bio||''}</p>
+     <div style="margin-top:12px">${skills}</div>
+     <div class="profile-actions">
+       <button class="btn p" onclick="viewMyCv()">تحميل / مشاهدة CV</button>
+       <button class="btn" onclick="addDemoCvView()">تجربة مشاهدة شركة للملف</button>
+     </div>
+     <div class="meta"><span>مشاهدات الملف: ${s.profile_views||0}</span><span>مشاهدات CV: ${s.cv_viewed_count||0}</span><span>تحميلات CV: ${s.cv_downloads||0}</span></div>
+     <h3 style="margin-top:18px">معرض الأعمال والشهادات</h3>
+     <div class="portfolio-grid">${portfolio||'<p style="color:rgba(255,255,255,.6)">لا يوجد معرض أعمال بعد.</p>'}</div>
+   </div>
+ </div>`;
+}
+
+function renderPublicProfile(){
+ const el=document.getElementById('publicProfileView');
+ if(!el)return;
+ el.innerHTML=publicProfileHtml(seekerProfile);
+ const c=profileCompleteness();
+ profileStatus.textContent=c.percent+'%';
+ const bar=document.getElementById('profilePowerBar');
+ if(bar)bar.style.width=c.percent+'%';
+ const sug=document.getElementById('profileSuggestions');
+ if(sug)sug.innerHTML=c.suggestions.map(x=>`<div class="suggestion">${x}</div>`).join('');
+}
+
+function renderMyApplications(){
+ const el=document.getElementById('myApplicationsList');
+ if(!el)return;
+ const data=applications.filter(a=>a.applicant_user_id===currentUser?.id || a.applicant_name===profile?.full_name);
+ el.innerHTML=data.length?data.map(a=>`
+   <div class="item glass" style="margin-top:10px">
+     <h3>${a.job_title||''}</h3>
+     <p>${a.company_name||''}</p>
+     <span class="pill ${a.status||'pending'}">${a.status||'pending'}</span>
+     <span class="pill">${a.viewed_by_company?'تمت مشاهدة الطلب':'لم يشاهد بعد'}</span>
+     <span class="pill">${a.cv_downloaded?'تم تحميل CV':'لم يتم تحميل CV'}</span>
+     <p style="margin-top:8px">${formatDate(a.created_at)}</p>
+   </div>`).join(''):`<p style="color:rgba(255,255,255,.6)">لم تقدم على وظائف بعد.</p>`;
+}
+
+function fillSeekerFormForEdit(){
+ if(!seekerProfile)return;
+ seekerName.value=seekerProfile.full_name||'';
+ seekerTitle.value=seekerProfile.title||'';
+ seekerCity.value=seekerProfile.city||'';
+ seekerCategory.value=seekerProfile.category||seekerCategory.value;
+ seekerExperience.value=seekerProfile.experience||'';
+ seekerSkills.value=(seekerProfile.skills||[]).join(', ');
+ seekerBio.value=seekerProfile.bio||'';
+ if(document.getElementById('seekerLevel'))seekerLevel.value=seekerProfile.experience_level||'Junior';
+ if(document.getElementById('seekerLastSeen'))seekerLastSeen.value=seekerProfile.last_seen||'متاح الآن';
+ if(document.getElementById('seekerWorkPreference'))seekerWorkPreference.value=seekerProfile.work_preference||'دوام كامل';
+ if(document.getElementById('seekerPortfolio'))seekerPortfolio.value=(seekerProfile.portfolio_items||[]).join('\n');
+ if(document.getElementById('seekerAvailable'))seekerAvailable.value=seekerProfile.is_available?'true':'false';
+ avatarPreview.textContent='صورة المنشور الحالية: '+(seekerProfile.post_image_name||'غير مرفقة');
+ cvPreview.textContent='CV الحالي: '+(seekerProfile.cv_file_name||'غير مرفق');
+}
+
+function previewSeekerPost(){
+ if(!currentUser)return msg('سجل دخول أولاً',true);
+ const p=candidatePostPayload();
+ previewContent.innerHTML=publicProfileHtml(p);
+ previewModal.style.display='flex';
+}
+function closePreview(){previewModal.style.display='none'}
+
+async function saveSeekerPost(){
+ if(!currentUser)return msg('سجل دخول أولاً',true);
+ const payload=candidatePostPayload();
+ if(!payload.full_name||!payload.title||!payload.city)return msg('أكمل الاسم والتخصص والمدينة',true);
+ const postImageFile=seekerAvatarFile.files[0];
+ const cvFile=seekerCvFile.files[0];
+ const postImageUrl=await uploadToStorage('candidate-posts',postImageFile);
+ const cvUrl=await uploadToStorage('candidate-cvs',cvFile);
+ if(postImageUrl)payload.post_image_url=postImageUrl;
+ if(cvUrl)payload.cv_url=cvUrl;
+ let result;
+ if(seekerProfile?.id){
+   result=await db.from('seekers').update(payload).eq('id',seekerProfile.id);
+ }else{
+   result=await db.from('seekers').insert(payload);
+ }
+ if(result.error)return msg(result.error.message,true);
+ await createNotification('تم حفظ منشورك','تم حفظ أو تحديث منشور الباحث بنجاح.');
+ msg('تم حفظ منشور الباحث');
+ await loadAll();
+ fillSeekerFormForEdit();
+ showPage('publicProfile');
+}
+
+async function viewMyCv(){
+ if(!seekerProfile)return msg('لا يوجد CV',true);
+ await db.from('seekers').update({cv_downloads:(seekerProfile.cv_downloads||0)+1}).eq('id',seekerProfile.id);
+ if(seekerProfile.cv_url) window.open(seekerProfile.cv_url,'_blank');
+ else msg('تم تسجيل مشاهدة CV، لكن الملف غير مرفوع فعليًا بعد تفعيل Storage');
+ await loadAll();
+}
+
+async function incrementProfileView(){
+ if(!seekerProfile)return;
+ await db.from('seekers').update({profile_views:(seekerProfile.profile_views||0)+1}).eq('id',seekerProfile.id);
+ await createNotification('تمت مشاهدة ملفك','قامت شركة بمشاهدة ملفك العام.');
+ await loadAll();
+}
 
 
 function filterJobsList(data, searchId, cityId, statusId){
