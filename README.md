@@ -1,16 +1,20 @@
-# HireX Split Apps V1
+# HireX Split Apps V1 - Professional Landing
+
+## الجديد
+- الصفحة الرئيسية أصبحت Landing Page احترافية.
+- يظهر فقط:
+  - بوابة الباحث
+  - بوابة الشركات
+- الإدارة لا تظهر في الصفحة العامة نهائيًا.
+- دخول الإدارة عبر الرابط المخفي فقط:
+  admin.html
 
 ## الملفات
-- index.html: بوابة اختيار النظام
-- candidate.html: نظام الباحث
-- company.html: نظام الشركة
-- admin.html: لوحة الإدارة المنفصلة
+- index.html: الصفحة العامة الاحترافية
+- candidate.html: بوابة الباحث
+- company.html: بوابة الشركة
+- admin.html: لوحة الإدارة المخفية والمنفصلة
 - supabase-setup.sql: قاعدة البيانات
 
-## طريقة التشغيل
-1. شغل supabase-setup.sql في Supabase.
-2. ارفع كل الملفات إلى GitHub.
-3. افتح index.html من GitHub Pages.
-
-## ملاحظة
-الإدارة منفصلة بالكامل في admin.html.
+## مهم
+لا تضع رابط admin.html في الصفحة العامة.
