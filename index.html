@@ -141,7 +141,6 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
       <button class="btn" data-page="publish" onclick="showPage('publish')">النشر</button>
       <button class="btn" data-page="profile" onclick="showPage('profile')">البيانات الشخصية</button>
       <button class="btn" data-page="notifications" onclick="showPage('notifications')">الإشعارات</button>
-      <button class="btn" data-page="company" onclick="showPage('company')">الشركات</button>
       <button class="btn no" onclick="logout()">خروج</button>
     </aside>
 
@@ -163,7 +162,15 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
           <div class="kpi glass"><h3 id="appsCount">0</h3><p>طلبات تقديم</p></div>
           <div class="kpi glass"><h3 id="notifCount">0</h3><p>إشعارات</p></div>
         </div>
-        <div class="panel glass"><h3>قوة الملف</h3><div class="progress-wrap"><div class="progress-bar" id="profilePowerBar"></div></div><div id="profileSuggestions"></div></div><div class="panel glass"><h3>ملخص ملفك</h3><div id="candidateSummary"></div></div>
+        <div class="panel glass"><h3>قوة الملف</h3><div class="progress-wrap"><div class="progress-bar" id="profilePowerBar"></div></div><div id="profileSuggestions"></div></div>
+        <div class="panel glass" id="candidateNextSteps">
+          <h3>ماذا تطور الآن؟</h3>
+          <div class="grid">
+            <div class="item glass"><h3>📌 ملفي العام</h3><p>اجعل ملفك يظهر بشكل احترافي للشركات.</p></div>
+            <div class="item glass"><h3>📄 CV</h3><p>تأكد من رفع السيرة الذاتية وربطها بملفك.</p></div>
+            <div class="item glass"><h3>🧩 المهارات</h3><p>أضف مهارات واضحة ومقسمة حتى تظهر في البحث.</p></div>
+          </div>
+        </div><div class="panel glass"><h3>ملخص ملفك</h3><div id="candidateSummary"></div></div>
       </div>
 
 
@@ -251,22 +258,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
             <button class="btn p full" onclick="saveProfile()">حفظ البيانات الشخصية</button>
           </div>
         </div>
-      </div>
-
-
-      <div id="page-company" class="page">
-        <div class="panel glass">
-          <h3>صفحة الشركات</h3>
-          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">الشركات تستطيع مشاهدة الباحثين، الاطلاع على CV، وإرسال دعوة مقابلة.</p>
-          <div id="companiesList" class="grid"></div>
-        </div>
-        <div class="panel glass">
-          <h3>الباحثون المتاحون للشركات</h3>
-          <div id="companySeekersList" class="grid"></div>
-        </div>
-      </div>
-
-      <div id="page-notifications" class="page">
+      </div><div id="page-notifications" class="page">
         <div class="panel glass">
           <h3>الإشعارات</h3>
           <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">هنا تظهر إشعارات مثل: تم مشاهدة ملفك أو تم الاطلاع على CV.</p>
@@ -440,8 +432,6 @@ function renderAll(){
  renderNotifications();
  renderPublicJobCategories();
  renderDashboardJobCategories();
- renderCompanies();
- renderCompanySeekers();
  renderPublicProfile();
  renderMyApplications();
 }
@@ -863,50 +853,13 @@ function formatDate(d){
  try{return new Date(d).toLocaleDateString('ar-SA')}catch(e){return ''}
 }
 
-function renderCompanies(){
- const el=document.getElementById('companiesList');
- if(!el)return;
- el.innerHTML=companies.length?companies.map(c=>`
-   <div class="item glass">
-     <div class="company-profile">
-       <div class="company-big-logo">${c.logo_url?`<img src="${c.logo_url}">`:(c.company_name||'ش')[0]}</div>
-       <div>
-         <h3>${c.company_name||'شركة'}</h3>
-         <p>${c.industry||''} • ${c.city||''}</p>
-         <p>${c.description||''}</p>
-       </div>
-     </div>
-   </div>
- `).join(''):`<p style="color:rgba(255,255,255,.6)">لا توجد شركات مسجلة بعد.</p>`;
-}
+function renderCompanies(){}
 
-function renderCompanySeekers(){
- const el=document.getElementById('companySeekersList');
- if(!el)return;
- // We only have current user's seeker in this page, plus public companies can later fetch all seekers.
- const arr=seekerProfile?[seekerProfile]:[];
- el.innerHTML=arr.length?arr.map(s=>`
-   <div class="item glass">
-     <div class="post-img">${s.post_image_url?`<img src="${s.post_image_url}">`:'صورة المنشور'}</div>
-     <h3>${s.full_name||''}</h3>
-     <p>${s.title||''} • ${s.city||''}</p>
-     <span class="tag">${s.experience_level||''}</span>
-     <span class="tag">${s.last_seen||''}</span>
-     <p>${(s.skills||[]).map(x=>`<span class="tag">${x}</span>`).join('')}</p>
-     <button class="btn p" onclick="simulateCvView()">مشاهدة CV</button>
-     <button class="btn ok" onclick="sendInterviewInvite('${s.full_name||''}', ${s.id||0})">إرسال دعوة مقابلة</button>
-   </div>
- `).join(''):`<p style="color:rgba(255,255,255,.6)">لا يوجد باحثون متاحون بعد.</p>`;
-}
+function renderCompanySeekers(){}
 
-async function simulateCvView(){
- await addDemoCvView();
-}
+async function simulateCvView(){}
 
-async function sendInterviewInvite(name, seekerId){
- await createNotification('دعوة مقابلة','تم إرسال دعوة مقابلة إلى '+name);
- msg('تم إرسال دعوة مقابلة تجريبية');
-}
+async function sendInterviewInvite(name, seekerId){}
 
 async function uploadToStorage(bucket, file){
  if(!file) return '';
