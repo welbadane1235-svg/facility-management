@@ -1,14 +1,21 @@
-# HireX Security UI AI V1
+# HireX Launch Pack V1
 
 ## الجديد
-- حماية أدوار مبدئية في الواجهة.
-- admin.html محمي ولا يفتح إلا لحساب admin.
-- تحسينات UI/UX.
-- Bottom Navigation للموبايل.
-- AI Matching مبدئي للوظائف والباحثين.
-- ملف SECURITY_RLS_NOTES.md لتفعيل RLS لاحقًا.
+- Dashboard Analytics للباحث والشركة.
+- نظام توثيق للباحث والشركة.
+- صفحة إدارة طلبات التوثيق في admin.html.
+- Smart Search موسع.
+- PWA:
+  - manifest.json
+  - service-worker.js
+  - icons
+- دعم تثبيت الموقع كتطبيق.
 
 ## التشغيل
 1. شغل supabase-setup.sql.
-2. ارفع الملفات.
-3. تأكد أن حساب الإدارة role=admin في جدول users.
+2. ارفع كل الملفات.
+3. افتح الموقع من GitHub Pages.
+4. اختبر candidate/company/admin.
+
+## ملاحظة
+admin.html لا يظهر في الصفحة الرئيسية.
