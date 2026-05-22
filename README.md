@@ -1,20 +1,14 @@
-# HireX Realtime Chat Interviews V1
+# HireX Security UI AI V1
 
 ## الجديد
-- Realtime refresh للطلبات والإشعارات والرسائل والمقابلات.
-- Chat بين الباحث والشركة.
-- إنشاء محادثة تلقائيًا بعد التقديم.
-- نظام مقابلات:
-  - الشركة ترسل دعوة مقابلة
-  - الباحث يقبل أو يرفض
-  - رابط Meet أو موقع المقابلة
-- إشعار للباحث عند دعوة مقابلة.
+- حماية أدوار مبدئية في الواجهة.
+- admin.html محمي ولا يفتح إلا لحساب admin.
+- تحسينات UI/UX.
+- Bottom Navigation للموبايل.
+- AI Matching مبدئي للوظائف والباحثين.
+- ملف SECURITY_RLS_NOTES.md لتفعيل RLS لاحقًا.
 
-## مهم
-بعد تشغيل SQL، فعّل Realtime في Supabase:
-Database → Replication
-وفعّل الجداول:
-- notifications
-- applications
-- chat_messages
-- interviews
+## التشغيل
+1. شغل supabase-setup.sql.
+2. ارفع الملفات.
+3. تأكد أن حساب الإدارة role=admin في جدول users.
