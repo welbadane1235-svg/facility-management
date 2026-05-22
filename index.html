@@ -50,6 +50,19 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
 .meta span{padding:6px 10px;border-radius:30px;background:rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.75)}
 @media(max-width:950px){.jobs-public{padding:35px 20px}.title h2{font-size:30px}}
 
+
+.searchbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.tag{display:inline-flex;padding:6px 10px;border-radius:30px;background:rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.78);margin:3px}
+.company-logo{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900;overflow:hidden}
+.company-logo img,.post-img img{width:100%;height:100%;object-fit:cover}
+.job-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.post-img{height:150px;border-radius:20px;background:rgba(255,255,255,.07);overflow:hidden;margin-bottom:12px;display:grid;place-items:center;color:rgba(255,255,255,.45)}
+.company-profile{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center}
+.company-big-logo{width:110px;height:110px;border-radius:32px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-size:34px;font-weight:900;overflow:hidden}
+.company-big-logo img{width:100%;height:100%;object-fit:cover}
+.storage-note{border-radius:18px;padding:12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.22);color:#fcd34d;margin:10px 0}
+@media(max-width:950px){.searchbar,.company-profile{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -90,7 +103,12 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
     <p id="publicJobsLabel">الوظائف</p>
     <h2 id="publicJobsTitle">اختر قسمًا لعرض الوظائف</h2>
   </div>
-  <div id="publicJobsGrid" class="grid"></div>
+  <div class="searchbar">
+      <input id="jobSearchInput" placeholder="بحث بالوظيفة أو الشركة" oninput="rerenderPublicJobs()">
+      <input id="jobCityFilter" placeholder="المدينة" oninput="rerenderPublicJobs()">
+      <select id="jobStatusFilter" onchange="rerenderPublicJobs()"><option value="">كل الحالات</option><option value="published">منشورة</option><option value="closed">مغلقة</option></select>
+    </div>
+    <div id="publicJobsGrid" class="grid"></div>
 </section>
 
 </main>
@@ -104,6 +122,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
       <button class="btn" data-page="publish" onclick="showPage('publish')">النشر</button>
       <button class="btn" data-page="profile" onclick="showPage('profile')">البيانات الشخصية</button>
       <button class="btn" data-page="notifications" onclick="showPage('notifications')">الإشعارات</button>
+      <button class="btn" data-page="company" onclick="showPage('company')">الشركات</button>
       <button class="btn no" onclick="logout()">خروج</button>
     </aside>
 
@@ -137,20 +156,27 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
         </div>
         <div class="panel glass" id="dashboardJobsPanel" style="display:none">
           <h3 id="dashboardJobsTitle">الوظائف</h3>
-          <div id="dashboardJobsGrid" class="grid"></div>
+          <div class="searchbar">
+      <input id="dashJobSearchInput" placeholder="بحث بالوظيفة أو الشركة" oninput="rerenderDashboardJobs()">
+      <input id="dashJobCityFilter" placeholder="المدينة" oninput="rerenderDashboardJobs()">
+      <select id="dashJobStatusFilter" onchange="rerenderDashboardJobs()"><option value="">كل الحالات</option><option value="published">منشورة</option><option value="closed">مغلقة</option></select>
+    </div>
+    <div id="dashboardJobsGrid" class="grid"></div>
         </div>
       </div>
 
       <div id="page-publish" class="page">
         <div class="panel glass">
           <h3>نشر منشور باحث عن عمل</h3>
-          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">هذا القسم خاص بالباحث فقط ولا يظهر فيه نشر وظيفة.</p>
+          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">هذا القسم خاص بالباحث فقط ولا يظهر فيه نشر وظيفة.</p><div class="storage-note">الرفع الحقيقي للملفات يتطلب إنشاء Buckets في Supabase Storage. حاليًا نحفظ اسم الملف، ومع تفعيل Storage نحفظ الرابط الفعلي.</div>
           <div class="fg">
             <input id="seekerName" placeholder="الاسم الكامل">
             <input id="seekerTitle" placeholder="التخصص / المسمى المهني">
             <input id="seekerCity" placeholder="المدينة">
             <select id="seekerCategory"></select>
             <input id="seekerExperience" placeholder="سنوات الخبرة">
+            <select id="seekerLevel"><option value="Junior">Junior</option><option value="Mid">Mid</option><option value="Senior">Senior</option><option value="Expert">Expert</option></select>
+            <select id="seekerLastSeen"><option value="متاح الآن">متاح الآن</option><option value="متاح خلال أسبوع">متاح خلال أسبوع</option><option value="غير متاح حاليًا">غير متاح حاليًا</option></select>
             <select id="seekerAvailable"><option value="true">متاح للعمل</option><option value="false">غير متاح حاليًا</option></select>
             <input id="seekerSkills" placeholder="المهارات مفصولة بفواصل">
             <textarea id="seekerBio" class="full" placeholder="نبذة تعريفية مختصرة"></textarea>
@@ -188,6 +214,19 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
         </div>
       </div>
 
+
+      <div id="page-company" class="page">
+        <div class="panel glass">
+          <h3>صفحة الشركات</h3>
+          <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">الشركات تستطيع مشاهدة الباحثين، الاطلاع على CV، وإرسال دعوة مقابلة.</p>
+          <div id="companiesList" class="grid"></div>
+        </div>
+        <div class="panel glass">
+          <h3>الباحثون المتاحون للشركات</h3>
+          <div id="companySeekersList" class="grid"></div>
+        </div>
+      </div>
+
       <div id="page-notifications" class="page">
         <div class="panel glass">
           <h3>الإشعارات</h3>
@@ -213,6 +252,8 @@ let categories=[];
 let seekerProfile=null;
 let notifications=[];
 let jobs=[];
+let companies=[];
+let selectedCompanyName='';
 let selectedJobCategory='';
 let selectedAvatarName='';
 let selectedCvName='';
@@ -305,6 +346,8 @@ async function loadAll(){
  await ensureCategories();
  let publicJobsRes=await db.from('jobs').select('*').order('created_at',{ascending:false});
  jobs=publicJobsRes.data||[];
+ let companiesRes=await db.from('companies').select('*').order('created_at',{ascending:false});
+ companies=companiesRes.data||[];
  if(currentUser){
    let s=await db.from('seekers').select('*').eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(1);
    seekerProfile=(s.data&&s.data[0])||null;
@@ -312,6 +355,8 @@ async function loadAll(){
    notifications=n.data||[];
    let j=await db.from('jobs').select('*').order('created_at',{ascending:false});
    jobs=j.data||[];
+   let c=await db.from('companies').select('*').order('created_at',{ascending:false});
+   companies=c.data||[];
  }
  renderAll();
 }
@@ -341,6 +386,8 @@ function renderAll(){
  renderNotifications();
  renderPublicJobCategories();
  renderDashboardJobCategories();
+ renderCompanies();
+ renderCompanySeekers();
 }
 
 function renderSummary(){
@@ -370,7 +417,7 @@ function renderSummary(){
    <span class="pill">${seekerProfile.experience||''}</span>
    <span class="pill">${seekerProfile.is_available?'متاح للعمل':'غير متاح'}</span>
    <p style="margin-top:10px">${(seekerProfile.skills||[]).join(' • ')}</p>
-   <p>${seekerProfile.bio||''}</p>
+   <p>${seekerProfile.bio||''}</p><div><span class="tag">${seekerProfile.experience_level||''}</span><span class="tag">${seekerProfile.last_seen||''}</span></div>
    <div class="file-preview">صورة المنشور: ${seekerProfile.post_image_name||'غير مرفقة'}</div>
    <div class="file-preview">CV: ${seekerProfile.cv_file_name||'غير مرفق'}</div>
  </div>`:`<p style="color:rgba(255,255,255,.6);margin-top:12px">لم تنشر منشورك بعد. افتح قسم النشر وأكمل بياناتك.</p>`;
@@ -413,6 +460,10 @@ function previewProfileAvatar(e){
 async function publishSeeker(){
  if(!currentUser)return msg('سجل دخول أولاً',true);
  const skills=seekerSkills.value.split(',').map(x=>x.trim()).filter(Boolean);
+ const postImageFile=seekerAvatarFile.files[0];
+ const cvFile=seekerCvFile.files[0];
+ const postImageUrl=await uploadToStorage('candidate-posts',postImageFile);
+ const cvUrl=await uploadToStorage('candidate-cvs',cvFile);
  const payload={
    owner_id:currentUser.id,
    full_name:seekerName.value.trim()||profile.full_name,
@@ -423,9 +474,13 @@ async function publishSeeker(){
    skills:skills.length?skills:['مهارة عامة'],
    bio:seekerBio.value.trim(),
    post_image_name:selectedAvatarName,
+   post_image_url:postImageUrl,
    cv_file_name:selectedCvName,
+   cv_url:cvUrl,
    cv_viewed_count:0,
-   is_available: seekerAvailable.value === 'true'
+   is_available: seekerAvailable.value === 'true',
+   experience_level: seekerLevel.value,
+   last_seen: seekerLastSeen.value
  };
  if(!payload.full_name||!payload.title||!payload.city)return msg('أكمل الاسم والتخصص والمدينة',true);
  const {error}=await db.from('seekers').insert(payload);
@@ -447,11 +502,14 @@ function clearPublish(){
 
 async function saveProfile(){
  if(!currentUser)return msg('سجل دخول أولاً',true);
+ const avatarFile=profileAvatarFile.files[0];
+ const avatarUrl=await uploadToStorage('candidate-avatars',avatarFile);
  const payload={
    full_name:profileName.value.trim(),
    mobile:profileMobile.value.trim(),
    email:profileEmail.value.trim(),
-   avatar_name:selectedProfileAvatarName||profile.avatar_name||''
+   avatar_name:selectedProfileAvatarName||profile.avatar_name||'',
+   avatar_url:avatarUrl||profile.avatar_url||''
  };
  const {error}=await db.from('users').update(payload).eq('id',currentUser.id);
  if(error)return msg(error.message,true);
@@ -509,7 +567,7 @@ function renderPublicJobCategories(){
  }).join('');
 }
 
-function showPublicJobs(category){
+function showPublicJobs(category, doScroll=true){
  selectedJobCategory=category;
  const section=document.getElementById('publicJobsResults');
  const title=document.getElementById('publicJobsTitle');
@@ -517,18 +575,21 @@ function showPublicJobs(category){
  section.classList.add('active');
  section.style.display='block';
  title.textContent='وظائف قسم '+category;
- const data=jobs.filter(j=>j.category===category);
+ let data=jobs.filter(j=>j.category===category);
+ data=filterJobsList(data,'jobSearchInput','jobCityFilter','jobStatusFilter');
  grid.innerHTML=data.length?data.map(jobCardPublic).join(''):`<div class="job-card glass">لا توجد وظائف منشورة في هذا القسم حاليًا.</div>`;
- section.scrollIntoView({behavior:'smooth'});
+ if(doScroll)section.scrollIntoView({behavior:'smooth'});
 }
 
 function jobCardPublic(j){
+ const logo=renderCompanyLogo(j.company_name,j.company_logo_url);
+ const applicants=j.applicants_count||0;
  return `<div class="job-card glass">
-   <h3>${j.title||'وظيفة'}</h3>
-   <p>${j.company_name||'شركة'}</p>
-   <div class="meta"><span>${j.city||''}</span><span>${j.work_type||''}</span><span>${j.category||''}</span></div>
+   <div class="job-head"><div><h3>${j.title||'وظيفة'}</h3><p>${j.company_name||'شركة'}</p></div>${logo}</div>
+   <div class="meta"><span>${j.city||''}</span><span>${j.work_type||''}</span><span>${j.category||''}</span><span>${j.status||'published'}</span></div>
    <h3 class="grad">${j.salary||'حسب الاتفاق'}</h3>
    <p>${j.description||''}</p>
+   <span class="pill">${applicants} متقدم</span><span class="pill">${formatDate(j.created_at)}</span>
    <button class="btn p" onclick="msg('سجل دخول كباحث للتقديم على الوظيفة')">تقديم</button>
  </div>`;
 }
@@ -547,25 +608,27 @@ function renderDashboardJobCategories(){
  }).join('');
 }
 
-function showDashboardJobs(category){
+function showDashboardJobs(category, doScroll=true){
  selectedJobCategory=category;
  const panel=document.getElementById('dashboardJobsPanel');
  const title=document.getElementById('dashboardJobsTitle');
  const grid=document.getElementById('dashboardJobsGrid');
  panel.style.display='block';
  title.textContent='وظائف قسم '+category;
- const data=jobs.filter(j=>j.category===category);
+ let data=jobs.filter(j=>j.category===category);
+ data=filterJobsList(data,'dashJobSearchInput','dashJobCityFilter','dashJobStatusFilter');
  grid.innerHTML=data.length?data.map(jobCardDashboard).join(''):`<div class="job-card glass">لا توجد وظائف في هذا القسم.</div>`;
- panel.scrollIntoView({behavior:'smooth'});
+ if(doScroll)panel.scrollIntoView({behavior:'smooth'});
 }
 
 function jobCardDashboard(j){
+ const logo=renderCompanyLogo(j.company_name,j.company_logo_url);
  return `<div class="job-card glass">
-   <h3>${j.title||'وظيفة'}</h3>
-   <p>${j.company_name||'شركة'}</p>
-   <div class="meta"><span>${j.city||''}</span><span>${j.work_type||''}</span><span>${j.category||''}</span></div>
+   <div class="job-head"><div><h3>${j.title||'وظيفة'}</h3><p>${j.company_name||'شركة'}</p></div>${logo}</div>
+   <div class="meta"><span>${j.city||''}</span><span>${j.work_type||''}</span><span>${j.category||''}</span><span>${j.status||'published'}</span></div>
    <h3 class="grad">${j.salary||'حسب الاتفاق'}</h3>
    <p>${j.description||''}</p>
+   <span class="pill">${j.applicants_count||0} متقدم</span><span class="pill">${formatDate(j.created_at)}</span>
    <button class="btn p" onclick="applyToJob(${j.id})">تقديم على الوظيفة</button>
  </div>`;
 }
@@ -584,9 +647,95 @@ async function applyToJob(jobId){
    note:'تقديم من حساب الباحث'
  });
  if(error)return msg(error.message,true);
+ await db.from('jobs').update({applicants_count:(job.applicants_count||0)+1}).eq('id',job.id);
  await createNotification('تم التقديم على وظيفة','تم إرسال طلبك على وظيفة: '+job.title);
  msg('تم التقديم على الوظيفة');
  await loadAll();
+}
+
+
+
+function filterJobsList(data, searchId, cityId, statusId){
+ const q=(document.getElementById(searchId)?.value||'').toLowerCase().trim();
+ const city=(document.getElementById(cityId)?.value||'').toLowerCase().trim();
+ const status=(document.getElementById(statusId)?.value||'').trim();
+ return data.filter(j=>{
+   const matchQ=!q || String(j.title||'').toLowerCase().includes(q) || String(j.company_name||'').toLowerCase().includes(q);
+   const matchCity=!city || String(j.city||'').toLowerCase().includes(city);
+   const matchStatus=!status || String(j.status||'published')===status;
+   return matchQ && matchCity && matchStatus;
+ });
+}
+
+function rerenderPublicJobs(){ if(selectedJobCategory) showPublicJobs(selectedJobCategory,false); }
+function rerenderDashboardJobs(){ if(selectedJobCategory) showDashboardJobs(selectedJobCategory,false); }
+
+function renderCompanyLogo(name,url){
+ if(url) return `<div class="company-logo"><img src="${url}"></div>`;
+ return `<div class="company-logo">${(name||'X')[0]}</div>`;
+}
+
+function formatDate(d){
+ try{return new Date(d).toLocaleDateString('ar-SA')}catch(e){return ''}
+}
+
+function renderCompanies(){
+ const el=document.getElementById('companiesList');
+ if(!el)return;
+ el.innerHTML=companies.length?companies.map(c=>`
+   <div class="item glass">
+     <div class="company-profile">
+       <div class="company-big-logo">${c.logo_url?`<img src="${c.logo_url}">`:(c.company_name||'ش')[0]}</div>
+       <div>
+         <h3>${c.company_name||'شركة'}</h3>
+         <p>${c.industry||''} • ${c.city||''}</p>
+         <p>${c.description||''}</p>
+       </div>
+     </div>
+   </div>
+ `).join(''):`<p style="color:rgba(255,255,255,.6)">لا توجد شركات مسجلة بعد.</p>`;
+}
+
+function renderCompanySeekers(){
+ const el=document.getElementById('companySeekersList');
+ if(!el)return;
+ // We only have current user's seeker in this page, plus public companies can later fetch all seekers.
+ const arr=seekerProfile?[seekerProfile]:[];
+ el.innerHTML=arr.length?arr.map(s=>`
+   <div class="item glass">
+     <div class="post-img">${s.post_image_url?`<img src="${s.post_image_url}">`:'صورة المنشور'}</div>
+     <h3>${s.full_name||''}</h3>
+     <p>${s.title||''} • ${s.city||''}</p>
+     <span class="tag">${s.experience_level||''}</span>
+     <span class="tag">${s.last_seen||''}</span>
+     <p>${(s.skills||[]).map(x=>`<span class="tag">${x}</span>`).join('')}</p>
+     <button class="btn p" onclick="simulateCvView()">مشاهدة CV</button>
+     <button class="btn ok" onclick="sendInterviewInvite('${s.full_name||''}', ${s.id||0})">إرسال دعوة مقابلة</button>
+   </div>
+ `).join(''):`<p style="color:rgba(255,255,255,.6)">لا يوجد باحثون متاحون بعد.</p>`;
+}
+
+async function simulateCvView(){
+ await addDemoCvView();
+}
+
+async function sendInterviewInvite(name, seekerId){
+ await createNotification('دعوة مقابلة','تم إرسال دعوة مقابلة إلى '+name);
+ msg('تم إرسال دعوة مقابلة تجريبية');
+}
+
+async function uploadToStorage(bucket, file){
+ if(!file) return '';
+ try{
+   const filePath = `${Date.now()}-${file.name}`;
+   const {data,error}=await db.storage.from(bucket).upload(filePath,file,{upsert:true});
+   if(error){ console.warn(error.message); return ''; }
+   const {data:pub}=db.storage.from(bucket).getPublicUrl(filePath);
+   return pub.publicUrl || '';
+ }catch(e){
+   console.warn('Storage not ready', e);
+   return '';
+ }
 }
 
 
