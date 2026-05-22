@@ -52,7 +52,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
 <section class="hero">
   <div>
     <h2>ملف الباحث عن عمل <span class="grad">بشكل احترافي</span></h2>
-    <p>كل قسم أصبح صفحة مستقلة: الرئيسية، النشر، البيانات الشخصية، الإشعارات، والخروج. حساب الباحث يرى فقط نموذج نشر ملف باحث عن عمل.</p>
+    <p>كل قسم أصبح صفحة مستقلة: الرئيسية، النشر، البيانات الشخصية، الإشعارات، والخروج. حساب الباحث يرى فقط نموذج نشر منشور باحث عن عمل.</p>
     <div class="notice">ملاحظة: رفع الصورة والـ CV الآن كتجربة Frontend تحفظ اسم الملف وتعرض معاينة. لاحقًا نربط Supabase Storage لحفظ الملفات فعليًا.</div>
   </div>
 
@@ -100,7 +100,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
 
       <div id="page-publish" class="page">
         <div class="panel glass">
-          <h3>نشر ملف باحث عن عمل</h3>
+          <h3>نشر منشور باحث عن عمل</h3>
           <p style="color:rgba(255,255,255,.6);margin:8px 0 15px">هذا القسم خاص بالباحث فقط ولا يظهر فيه نشر وظيفة.</p>
           <div class="fg">
             <input id="seekerName" placeholder="الاسم الكامل">
@@ -108,10 +108,11 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
             <input id="seekerCity" placeholder="المدينة">
             <select id="seekerCategory"></select>
             <input id="seekerExperience" placeholder="سنوات الخبرة">
+            <select id="seekerAvailable"><option value="true">متاح للعمل</option><option value="false">غير متاح حاليًا</option></select>
             <input id="seekerSkills" placeholder="المهارات مفصولة بفواصل">
             <textarea id="seekerBio" class="full" placeholder="نبذة تعريفية مختصرة"></textarea>
             <div class="full">
-              <label>الصورة التعريفية</label>
+              <label>صورة المنشور</label>
               <input id="seekerAvatarFile" type="file" accept="image/*" onchange="previewAvatar(event)">
               <div class="file-preview" id="avatarPreview">لم يتم اختيار صورة</div>
             </div>
@@ -120,7 +121,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
               <input id="seekerCvFile" type="file" accept="application/pdf" onchange="previewCv(event)">
               <div class="file-preview" id="cvPreview">لم يتم اختيار ملف CV</div>
             </div>
-            <button class="btn p full" onclick="publishSeeker()">نشر ملفي كباحث عن عمل</button>
+            <button class="btn p full" onclick="publishSeeker()">نشر منشوري كباحث عن عمل</button>
           </div>
         </div>
       </div>
@@ -135,7 +136,7 @@ nav{position:sticky;top:0;z-index:20;padding:16px 6%;display:flex;justify-conten
             <input id="profileEmail" placeholder="الإيميل">
             <input id="profileRole" placeholder="نوع الحساب" disabled>
             <div class="full">
-              <label>صورة الحساب</label>
+              <label>صورة الحساب الشخصية</label>
               <input id="profileAvatarFile" type="file" accept="image/*" onchange="previewProfileAvatar(event)">
               <div class="file-preview" id="profileAvatarPreview">لم يتم اختيار صورة</div>
             </div>
@@ -300,7 +301,7 @@ function renderSummary(){
   seekerProfile?.experience,
   seekerProfile?.skills?.length,
   seekerProfile?.bio,
-  seekerProfile?.avatar_name,
+  seekerProfile?.post_image_name,
   seekerProfile?.cv_file_name
  ];
  const completed=fields.filter(Boolean).length;
@@ -316,11 +317,12 @@ function renderSummary(){
    <p>${seekerProfile.title||''} • ${seekerProfile.city||''}</p>
    <span class="pill">${seekerProfile.category||''}</span>
    <span class="pill">${seekerProfile.experience||''}</span>
+   <span class="pill">${seekerProfile.is_available?'متاح للعمل':'غير متاح'}</span>
    <p style="margin-top:10px">${(seekerProfile.skills||[]).join(' • ')}</p>
    <p>${seekerProfile.bio||''}</p>
-   <div class="file-preview">الصورة: ${seekerProfile.avatar_name||'غير مرفقة'}</div>
+   <div class="file-preview">صورة المنشور: ${seekerProfile.post_image_name||'غير مرفقة'}</div>
    <div class="file-preview">CV: ${seekerProfile.cv_file_name||'غير مرفق'}</div>
- </div>`:`<p style="color:rgba(255,255,255,.6);margin-top:12px">لم تنشر ملفك بعد. افتح قسم النشر وأكمل بياناتك.</p>`;
+ </div>`:`<p style="color:rgba(255,255,255,.6);margin-top:12px">لم تنشر منشورك بعد. افتح قسم النشر وأكمل بياناتك.</p>`;
 }
 
 function fillProfileForm(){
@@ -336,7 +338,7 @@ function previewAvatar(e){
  const f=e.target.files[0];
  if(!f)return;
  selectedAvatarName=f.name;
- avatarPreview.textContent='تم اختيار الصورة: '+f.name;
+ avatarPreview.textContent='تم اختيار صورة المنشور: '+f.name;
  const reader=new FileReader();
  reader.onload=()=>{selectedAvatarDataUrl=reader.result;topAvatar.innerHTML=`<img src="${reader.result}">`;};
  reader.readAsDataURL(f);
@@ -351,7 +353,7 @@ function previewProfileAvatar(e){
  const f=e.target.files[0];
  if(!f)return;
  selectedProfileAvatarName=f.name;
- profileAvatarPreview.textContent='تم اختيار الصورة: '+f.name;
+ profileAvatarPreview.textContent='تم اختيار صورة المنشور: '+f.name;
  const reader=new FileReader();
  reader.onload=()=>{topAvatar.innerHTML=`<img src="${reader.result}">`;};
  reader.readAsDataURL(f);
@@ -369,15 +371,16 @@ async function publishSeeker(){
    experience:seekerExperience.value.trim(),
    skills:skills.length?skills:['مهارة عامة'],
    bio:seekerBio.value.trim(),
-   avatar_name:selectedAvatarName,
+   post_image_name:selectedAvatarName,
    cv_file_name:selectedCvName,
-   cv_viewed_count:0
+   cv_viewed_count:0,
+   is_available: seekerAvailable.value === 'true'
  };
  if(!payload.full_name||!payload.title||!payload.city)return msg('أكمل الاسم والتخصص والمدينة',true);
  const {error}=await db.from('seekers').insert(payload);
  if(error)return msg(error.message,true);
- await createNotification('تم نشر ملفك بنجاح','أصبح ملفك كباحث عن عمل ظاهرًا للشركات.');
- msg('تم نشر ملف الباحث بنجاح');
+ await createNotification('تم نشر ملفك بنجاح','أصبح منشورك كباحث عن عمل ظاهرًا للشركات.');
+ msg('تم نشر منشور الباحث بنجاح');
  clearPublish();
  await loadAll();
  showPage('home');
