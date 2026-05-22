@@ -1,38 +1,37 @@
-# HireX Project
+# HireX - GitHub Pages Email Confirmation Ready
 
-## محتوى المشروع
+## ارفع الملفات على GitHub
+ارفع هذه الملفات في المستودع:
+- index.html
+- supabase-setup.sql
+- README.md
 
-- `index.html`  
-  ملف المنصة الرئيسي. افتحه مباشرة في المتصفح.
+## فعل GitHub Pages
+GitHub → Repository → Settings → Pages
 
-- `supabase-setup.sql`  
-  ملف تحديثات قاعدة البيانات. انسخه داخل Supabase SQL Editor واضغط Run.
+اختر:
+- Deploy from branch
+- Branch: main
+- Folder: /root
 
-## طريقة التشغيل
+الرابط المتوقع:
+https://welbadane1235-svg.github.io/facility-management/
 
-1. افتح Supabase.
-2. ادخل إلى SQL Editor.
-3. افتح ملف `supabase-setup.sql`.
-4. انسخ الكود كاملًا وشغله.
-5. افتح ملف `index.html` بالمتصفح.
+## إعداد Supabase المهم
+اذهب إلى:
+Authentication → URL Configuration
 
-## المميزات الحالية
+ضع:
 
-- تسجيل حساب عبر Supabase Auth.
-- أدوار المستخدمين:
-  - باحث عن عمل
-  - شركة / باحث عن موظف
-  - إدارة
-- نشر وظيفة.
-- نشر ملف باحث عن عمل.
-- عرض التصنيفات.
-- تقديم على وظيفة.
-- حفظ الطلبات في جدول applications.
-- قبول / رفض / تعليق الطلبات من لوحة الشركة أو الإدارة.
+Site URL:
+https://welbadane1235-svg.github.io/facility-management/
 
-## ملاحظات مهمة
+Redirect URLs:
+https://welbadane1235-svg.github.io/facility-management/
 
-- تأكد أن Email Provider مفعل في Supabase.
-- إذا ظهرت رسالة Email not confirmed، افتح البريد واضغط رابط التأكيد.
-- إذا ظهرت rate limit، انتظر قليلًا ثم جرّب مرة واحدة فقط.
-- المفاتيح المستخدمة في الواجهة هي مفاتيح عامة publishable/anon فقط، ولا تستخدم secret key داخل الواجهة.
+## SQL
+شغل ملف:
+supabase-setup.sql
+
+## ملاحظة
+بعد التسجيل سيصل رابط تأكيد للبريد. عند الضغط عليه يرجع المستخدم إلى رابط GitHub Pages.
