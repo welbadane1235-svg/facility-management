@@ -1,37 +1,10 @@
-# HireX - GitHub Pages Email Confirmation Ready
+# HireX Sidebar Fixed
 
-## ارفع الملفات على GitHub
-ارفع هذه الملفات في المستودع:
-- index.html
-- supabase-setup.sql
-- README.md
+تم تعديل الأزرار الجانبية لتعمل:
 
-## فعل GitHub Pages
-GitHub → Repository → Settings → Pages
+- الرئيسية
+- النشر
+- البيانات
+- خروج
 
-اختر:
-- Deploy from branch
-- Branch: main
-- Folder: /root
-
-الرابط المتوقع:
-https://welbadane1235-svg.github.io/facility-management/
-
-## إعداد Supabase المهم
-اذهب إلى:
-Authentication → URL Configuration
-
-ضع:
-
-Site URL:
-https://welbadane1235-svg.github.io/facility-management/
-
-Redirect URLs:
-https://welbadane1235-svg.github.io/facility-management/
-
-## SQL
-شغل ملف:
-supabase-setup.sql
-
-## ملاحظة
-بعد التسجيل سيصل رابط تأكيد للبريد. عند الضغط عليه يرجع المستخدم إلى رابط GitHub Pages.
+ارفع ملف `index.html` بدل الملف القديم في GitHub.

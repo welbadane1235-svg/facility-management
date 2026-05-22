@@ -390,5 +390,130 @@ window.addEventListener('load', async()=>{
   if(currentUser) openDashboard();
 });
 </script>
+
+<script>
+/* HireX Sidebar Navigation Fix */
+(function(){
+  function ready(fn){ document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+
+  ready(function(){
+    const appMain = document.querySelector('#app main, .dashboard main, .app main, main');
+    if(!appMain) return;
+
+    // Find sidebar buttons by text
+    const buttons = Array.from(document.querySelectorAll('.sidebtn, .side button, aside button'));
+    const byText = (txt) => buttons.find(b => (b.textContent || '').trim().includes(txt));
+
+    function ensureViews(){
+      let existing = document.getElementById('hx-view-home');
+      if(existing) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.id = 'hx-views';
+      wrapper.innerHTML = `
+        <div id="hx-view-home" class="hx-view active">
+          <div class="main-panel glass panel">
+            <h2>الرئيسية</h2>
+            <p style="color:rgba(255,255,255,.65)">ملخص سريع للوظائف والباحثين والطلبات.</p>
+          </div>
+        </div>
+        <div id="hx-view-publish" class="hx-view">
+          <div class="main-panel glass panel">
+            <h2>النشر</h2>
+            <p style="color:rgba(255,255,255,.65)">هنا تظهر نماذج نشر الوظائف أو نشر ملف الباحث.</p>
+          </div>
+        </div>
+        <div id="hx-view-data" class="hx-view">
+          <div class="main-panel glass panel">
+            <h2>البيانات</h2>
+            <p style="color:rgba(255,255,255,.65)">عرض البيانات والطلبات والرسائل حسب نوع الحساب.</p>
+            <div id="hx-data-list"></div>
+          </div>
+        </div>
+      `;
+      appMain.prepend(wrapper);
+
+      const style = document.createElement('style');
+      style.textContent = `
+        .hx-view{display:none}
+        .hx-view.active{display:block}
+        .sidebtn.active, .side button.active, aside button.active{
+          background:linear-gradient(135deg,rgba(0,198,255,.28),rgba(0,114,255,.20))!important;
+          color:#fff!important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function showView(name){
+      ensureViews();
+
+      document.querySelectorAll('.hx-view').forEach(v => v.classList.remove('active'));
+      const target = document.getElementById('hx-view-' + name);
+      if(target) target.classList.add('active');
+
+      // Hide/show existing publish sections when possible
+      const publishBlocks = [
+        document.getElementById('companyPublish'),
+        document.getElementById('candidatePublish'),
+        document.getElementById('companyForm'),
+        document.getElementById('seekerForm'),
+        document.getElementById('publishPanel')
+      ].filter(Boolean);
+
+      publishBlocks.forEach(el => {
+        el.style.display = name === 'publish' ? '' : 'none';
+      });
+
+      const dataBlocks = [
+        document.getElementById('applicationsPanel'),
+        document.getElementById('applicationsList'),
+        document.getElementById('dashboardList'),
+        document.getElementById('adminJobsList'),
+        document.getElementById('adminSeekersList')
+      ].filter(Boolean);
+
+      const dataList = document.getElementById('hx-data-list');
+      if(dataList){
+        dataList.innerHTML = '';
+        dataBlocks.forEach(el => {
+          const cloneWrap = document.createElement('div');
+          cloneWrap.className = 'item glass';
+          cloneWrap.style.marginTop = '12px';
+          cloneWrap.innerHTML = el.outerHTML;
+          dataList.appendChild(cloneWrap);
+        });
+      }
+
+      buttons.forEach(b => b.classList.remove('active'));
+      if(name === 'home' && byText('الرئيسية')) byText('الرئيسية').classList.add('active');
+      if(name === 'publish' && byText('النشر')) byText('النشر').classList.add('active');
+      if(name === 'data' && byText('البيانات')) byText('البيانات').classList.add('active');
+    }
+
+    const homeBtn = byText('الرئيسية');
+    const publishBtn = byText('النشر');
+    const dataBtn = byText('البيانات');
+    const logoutBtn = byText('خروج');
+
+    if(homeBtn) homeBtn.onclick = function(e){ e.preventDefault(); showView('home'); };
+    if(publishBtn) publishBtn.onclick = function(e){ e.preventDefault(); showView('publish'); };
+    if(dataBtn) dataBtn.onclick = function(e){ e.preventDefault(); showView('data'); };
+    if(logoutBtn) {
+      logoutBtn.onclick = function(e){
+        e.preventDefault();
+        if(typeof signOut === 'function') return signOut();
+        if(typeof logout === 'function') return logout();
+        location.reload();
+      };
+    }
+
+    // Keep publish hidden until user clicks النشر
+    setTimeout(function(){ showView('home'); }, 300);
+    window.hxShowView = showView;
+  });
+})();
+</script>
+
 </body>
 </html>
