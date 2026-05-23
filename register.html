@@ -16,7 +16,7 @@
 
 <header class="header"><div class="container"><nav class="nav">
   <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-  <div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="login.html">تسجيل الدخول</a><a href="register.html">إنشاء حساب</a></div>
+  <div class="links"><a href="index.html">الرئيسية</a><a href=>الوظائف</a><a href=>تسجيل الدخول</a><a href=>إنشاء حساب</a></div>
 </nav></div></header>
 
 <main class="page"><section class="container">
@@ -38,7 +38,7 @@
           <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="candidateConfirmPassword" type="password" required minlength="6" /></div>
           <div class="full"><label class="label">نبذة مختصرة</label><textarea class="textarea" id="candidateSummary"></textarea></div>
         </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a href="login.html">لديك حساب؟ تسجيل الدخول</a></div>
+        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a href=>لديك حساب؟ تسجيل الدخول</a></div>
       </form>
 
       <form class="form" id="companyForm">
@@ -53,7 +53,7 @@
           <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="companyConfirmPassword" type="password" required minlength="6" /></div>
           <div class="full"><label class="label">نبذة عن الشركة</label><textarea class="textarea" id="companyDescription"></textarea></div>
         </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a href="login.html">لديك حساب؟ تسجيل الدخول</a></div>
+        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a href=>لديك حساب؟ تسجيل الدخول</a></div>
       </form>
     </section>
   </div>
@@ -83,7 +83,7 @@ candidateForm.addEventListener("submit", async (e)=>{
   const full_name = candidateName.value.trim();
   const { data, error } = await client.auth.signUp({
     email, password,
-    options: { data: { role:"candidate", full_name }, emailRedirectTo: location.origin + location.pathname.replace("register.html","login.html") }
+    options: { data: { role:"candidate", full_name }, emailRedirectTo: location.origin + location.pathname.replace() }
   });
   if(error) return showToast(error.message);
   if(data.user) {
@@ -97,7 +97,7 @@ candidateForm.addEventListener("submit", async (e)=>{
     } catch(err) { return showToast("تم إنشاء الحساب، لكن حدث خطأ في حفظ الملف: " + err.message); }
   }
   showToast("تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجل الدخول.");
-  setTimeout(()=>location.href="verify-email.html",1200);
+  setTimeout(()=>location.href=1200);
 });
 companyForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
@@ -108,7 +108,7 @@ companyForm.addEventListener("submit", async (e)=>{
   const company_name = companyName.value.trim();
   const { data, error } = await client.auth.signUp({
     email, password,
-    options: { data: { role:"company", company_name }, emailRedirectTo: location.origin + location.pathname.replace("register.html","login.html") }
+    options: { data: { role:"company", company_name }, emailRedirectTo: location.origin + location.pathname.replace() }
   });
   if(error) return showToast(error.message);
   if(data.user) {
@@ -122,7 +122,7 @@ companyForm.addEventListener("submit", async (e)=>{
     } catch(err) { return showToast("تم إنشاء الحساب، لكن حدث خطأ في حفظ ملف الشركة: " + err.message); }
   }
   showToast("تم إنشاء حساب الشركة. تحقق من البريد ثم سجل الدخول.");
-  setTimeout(()=>location.href="verify-email.html",1200);
+  setTimeout(()=>location.href=1200);
 });
 </script>
 </body>

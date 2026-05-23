@@ -1,1 +1,1 @@
-HireX Supabase connected package.
+HireX complete candidate account - stable dashboard, save profile, browse jobs direct.

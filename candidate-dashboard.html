@@ -1,56 +1,111 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة المرشح | HireX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta name="description" content="لوحة المرشح في HireX لإدارة الحساب الشخصي، حفظ البيانات، رفع صورة الحساب والسيرة الذاتية، ومتابعة الطلبات." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  
   <style>
-    :root{--bg:#08111f;--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--card:rgba(255,255,255,.075);--shadow:0 24px 80px rgba(0,0,0,.34)}
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:"Tajawal",system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}.header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900;line-height:1}.brand-sub{font-size:12px;color:var(--muted2)}.links{display:flex;gap:28px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}.btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.page{padding:42px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;box-shadow:0 18px 52px rgba(0,0,0,.12);padding:24px}.title{font-size:clamp(34px,4vw,54px);line-height:1.15;font-weight:900;margin-bottom:12px}.desc{color:var(--muted);font-size:18px}.badge{display:inline-flex;width:fit-content;margin-bottom:16px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:68px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}.form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.file{width:100%;min-height:52px;border:1px dashed rgba(52,211,153,.34);border-radius:18px;background:rgba(52,211,153,.08);color:var(--muted);padding:13px;font-weight:800}.actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:420px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}@media(max-width:900px){.links{display:none}.grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.tabs{grid-template-columns:1fr}.actions .btn{width:100%}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
+    :root{--bg:#08111f;--card:rgba(255,255,255,.075);--card2:rgba(255,255,255,.11);--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--warning:#fbbf24;--danger:#fb7185;--shadow:0 24px 80px rgba(0,0,0,.34);--r:28px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Tajawal",system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),radial-gradient(circle at 50% 100%,rgba(96,165,250,.12),transparent 38%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}
+    .container{width:min(1180px,calc(100% - 32px));margin:auto}
+    .header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900;line-height:1}.brand-sub{font-size:12px;color:var(--muted2)}
+    .links{display:flex;gap:28px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}
+    .btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.btn-danger{background:rgba(251,113,133,.13);border:1px solid rgba(251,113,133,.25);color:#fecdd3}
+    .page{padding:36px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}
+    .dashboard{display:grid;grid-template-columns:315px 1fr;gap:18px;align-items:start}.card{border:1px solid var(--border);background:var(--card);border-radius:var(--r);box-shadow:0 18px 52px rgba(0,0,0,.12)}.side{padding:18px;position:sticky;top:98px;text-align:center}
+    .avatar-wrap{width:122px;height:122px;margin:0 auto 14px;position:relative}.avatar{width:122px;height:122px;border-radius:34px;background:linear-gradient(135deg,var(--green),var(--cyan));display:grid;place-items:center;color:#06111d;font-size:42px;font-weight:900;overflow:hidden;border:3px solid rgba(255,255,255,.12)}.avatar img{width:100%;height:100%;object-fit:cover}.avatar-btn{position:absolute;bottom:-6px;left:-6px;width:42px;height:42px;border-radius:16px;border:0;background:#fff;color:#06111d;display:grid;place-items:center;cursor:pointer;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.24)}
+    .profile-name{font-size:23px;font-weight:900}.profile-email{color:var(--muted);font-weight:800;font-size:14px;word-break:break-word}.profile-meta{color:#d1fae5;font-weight:900;margin-top:6px}.completion{margin:14px 0;text-align:right}.completion-head{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:900;margin-bottom:7px}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(135deg,var(--green),var(--cyan));transition:.2s}
+    .side-menu{display:grid;gap:8px;text-align:right}.side-btn{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);border-radius:16px;padding:12px;color:var(--muted);font-weight:900;display:flex;justify-content:space-between;cursor:pointer}.side-btn.active,.side-btn:hover{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}
+    .main-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px}.title{font-size:clamp(32px,4vw,52px);font-weight:900;line-height:1.15}.desc{color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{padding:18px}.icon{width:42px;height:42px;border-radius:16px;display:grid;place-items:center;background:rgba(52,211,153,.12);color:#d1fae5;font-size:22px;margin-bottom:12px}.val{font-size:28px;font-weight:900;line-height:1}.label{color:var(--muted);font-weight:800}
+    .panel{padding:22px}.panel h2{font-size:25px;font-weight:900;margin-bottom:8px}.panel p{color:var(--muted);margin-bottom:14px}.view{display:none}.view.active{display:block}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.form-label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}.file{width:100%;min-height:52px;border:1px dashed rgba(52,211,153,.34);border-radius:18px;background:rgba(52,211,153,.08);color:var(--muted);padding:13px;font-weight:800}option{background:#08111f}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.job{padding:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:20px;margin-top:10px}.job-top{display:flex;justify-content:space-between;gap:12px}.job-title{font-weight:900;font-size:18px}.job-company{color:var(--muted);font-weight:800}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.chip{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}.status{border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}.review{background:rgba(251,191,36,.12);color:#fde68a;border:1px solid rgba(251,191,36,.2)}.ok{background:rgba(52,211,153,.12);color:#d1fae5;border:1px solid rgba(52,211,153,.2)}
+    .account-box{display:grid;gap:10px;text-align:right;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}.account-row{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-weight:800}.account-row strong{color:#fff;text-align:left}
+    .toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:430px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}
+    .footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    @media(max-width:980px){.links{display:none}.dashboard,.grid2{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.container{width:min(100% - 22px,1180px)}.nav{height:72px}.logo{width:42px;height:42px;border-radius:15px}.brand-title{font-size:23px}.form-grid,.stats{grid-template-columns:1fr}.main-head{align-items:flex-start;flex-direction:column}.card{border-radius:24px}.panel,.side,.stat{padding:16px}.actions .btn{width:100%}.toast{right:12px;left:12px;bottom:14px}}
   </style>
-
-  <style>.dashboard{display:grid;grid-template-columns:300px 1fr;gap:18px}.avatar{width:120px;height:120px;border-radius:34px;background:linear-gradient(135deg,var(--green),var(--cyan));display:grid;place-items:center;color:#06111d;font-size:42px;font-weight:900;overflow:hidden;margin:auto}.avatar img{width:100%;height:100%;object-fit:cover}.side{text-align:center}.job{padding:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:20px;margin-top:10px}@media(max-width:900px){.dashboard{grid-template-columns:1fr}}</style>
 </head>
 <body>
-
 <header class="header"><div class="container"><nav class="nav">
   <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-  <div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="login.html">تسجيل الدخول</a><a href="register.html">إنشاء حساب</a></div>
+  <div class="links"><a href="index.html">الرئيسية</a><a href="./jobs.html">الوظائف</a><a class="active" href="candidate-dashboard.html">لوحة المرشح</a></div>
 </nav></div></header>
 
 <main class="page"><section class="container">
   <div class="crumb"><a href="index.html">الرئيسية</a> › لوحة المرشح</div>
   <div class="dashboard">
     <aside class="card side">
-      <div class="avatar" id="avatarBox">م</div>
-      <input class="file" id="avatarInput" type="file" accept="image/*" style="margin-top:14px" />
-      <h2 id="profileName" style="margin-top:14px">مرشح</h2>
-      <p id="profileMeta" class="desc">جاري تحميل البيانات...</p>
-      <button class="btn btn-ghost" id="logoutBtn" style="width:100%;margin-top:14px">تسجيل الخروج</button>
+      <div class="avatar-wrap"><div class="avatar" id="avatarBox">م</div><button class="avatar-btn" id="avatarButton" type="button">📷</button><input id="avatarInput" type="file" accept="image/*" hidden /></div>
+      <div class="profile-name" id="profileName">جاري التحميل...</div>
+      <div class="profile-email" id="profileEmail">...</div>
+      <div class="profile-meta" id="profileMeta">...</div>
+      <div class="completion"><div class="completion-head"><span>اكتمال الحساب</span><strong id="completionText">0%</strong></div><div class="bar"><span id="completionBar"></span></div></div>
+      <nav class="side-menu">
+        <button class="side-btn active" data-view="overview">الرئيسية <span>›</span></button>
+        <button class="side-btn" data-view="profile">تعديل البيانات <span>›</span></button>
+        <button class="side-btn" data-view="applications">طلباتي <span>›</span></button>
+        <button class="side-btn" data-view="saved">وظائف محفوظة <span>›</span></button>
+      </nav>
+      <div class="account-box">
+        <div class="account-row"><span>نوع الحساب</span><strong id="accountRole">مرشح</strong></div>
+        <div class="account-row"><span>حالة الدخول</span><strong>نشط</strong></div>
+      </div>
+      <button class="btn btn-danger" id="logoutBtn" style="width:100%;margin-top:14px">تسجيل الخروج</button>
     </aside>
-    <section class="card">
-      <h1 class="title">تعديل البيانات الشخصية</h1>
-      <p class="desc">البيانات هنا مربوطة بجدول profiles في Supabase.</p>
-      <form id="profileForm" style="margin-top:18px">
-        <div class="form-grid">
-          <div><label class="label">الاسم الكامل</label><input class="input" id="fullName" /></div>
-          <div><label class="label">رقم الجوال</label><input class="input" id="phone" /></div>
-          <div><label class="label">المدينة</label><select class="select" id="city"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div>
-          <div><label class="label">التخصص</label><select class="select" id="specialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div>
-          <div><label class="label">الخبرة</label><select class="select" id="experience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div>
-          <div><label class="label">السيرة الذاتية</label><input class="file" id="cvFile" type="file" accept=".pdf,.doc,.docx" /></div>
-          <div class="full"><label class="label">نبذة شخصية</label><textarea class="textarea" id="summary"></textarea></div>
+
+    <div>
+      <div class="main-head"><div><h1 class="title">مرحبًا، <span id="helloName">...</span></h1><p class="desc">حسابك متصل الآن بـ Supabase. يمكنك حفظ بياناتك واستعراض الوظائف بدون الخروج من الحساب.</p></div><a class="btn btn-primary" href="./jobs.html">استعراض الوظائف</a></div>
+      <div class="stats">
+        <div class="card stat"><div class="icon">📨</div><div class="val">3</div><div class="label">طلبات مقدمة</div></div>
+        <div class="card stat"><div class="icon">⭐</div><div class="val">5</div><div class="label">وظائف محفوظة</div></div>
+        <div class="card stat"><div class="icon">👁️</div><div class="val">18</div><div class="label">مشاهدة للملف</div></div>
+        <div class="card stat"><div class="icon">✅</div><div class="val" id="statCompletion">0%</div><div class="label">اكتمال الحساب</div></div>
+      </div>
+
+      <div class="view active" id="overview">
+        <div class="grid2">
+          <section class="card panel"><h2>ملخص الحساب</h2><p>هذه البيانات محفوظة من Supabase وتظهر للمرشح عند الدخول.</p><div class="job"><div class="job-title" id="overviewName">...</div><div class="job-company" id="overviewData">...</div><div class="chips"><span class="chip" id="overviewCity">...</span><span class="chip" id="overviewSpecialty">...</span><span class="chip" id="overviewExperience">...</span></div></div></section>
+          <section class="card panel"><h2>نصيحة</h2><p>لجعل حسابك متكاملًا: ارفع صورة شخصية، أضف رقم الجوال، المدينة، التخصص، الخبرة، النبذة، والسيرة الذاتية.</p><button class="btn btn-primary" data-go-profile>تعديل الملف الآن</button></section>
         </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">حفظ التعديلات</button><a class="btn btn-ghost" href="jobs.html">استعراض الوظائف</a></div>
-      </form>
-      <div style="margin-top:24px"><h2>طلباتي</h2><div class="job">محاسب عام — قيد المراجعة</div><div class="job">متدرب تحليل بيانات — مقابلة</div></div>
-    </section>
+      </div>
+
+      <div class="view" id="profile">
+        <section class="card panel"><h2>تعديل البيانات الشخصية</h2><p>أي تعديل هنا يتم حفظه في جدول profiles داخل Supabase.</p>
+          <form id="profileForm">
+            <div class="form-grid">
+              <div><label class="form-label">الاسم الكامل</label><input class="input" id="fullName" /></div>
+              <div><label class="form-label">البريد الإلكتروني</label><input class="input" id="email" disabled /></div>
+              <div><label class="form-label">رقم الجوال</label><input class="input" id="phone" /></div>
+              <div><label class="form-label">المدينة</label><select class="select" id="city"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>مكة</option><option>المدينة</option><option>عن بعد</option></select></div>
+              <div><label class="form-label">التخصص</label><select class="select" id="specialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div>
+              <div><label class="form-label">الخبرة</label><select class="select" id="experience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div>
+              <div class="full"><label class="form-label">السيرة الذاتية</label><input class="file" id="cvFile" type="file" accept=".pdf,.doc,.docx" /></div>
+              <div class="full"><label class="form-label">نبذة شخصية</label><textarea class="textarea" id="summary"></textarea></div>
+            </div>
+            <div class="actions"><button class="btn btn-primary" type="submit">حفظ التعديلات</button><a class="btn btn-ghost" href="./jobs.html">استعراض الوظائف</a></div>
+          </form>
+        </section>
+      </div>
+
+      <div class="view" id="applications"><section class="card panel"><h2>الطلبات المقدمة</h2><p>سيتم ربط الطلبات الحقيقية في المرحلة القادمة.</p><div class="job"><div class="job-top"><div><div class="job-title">محاسب عام</div><div class="job-company">شركة نمو الأعمال</div></div><span class="status review">قيد المراجعة</span></div></div><div class="job"><div class="job-top"><div><div class="job-title">متدرب تحليل بيانات</div><div class="job-company">Data Gate</div></div><span class="status ok">مقابلة</span></div></div></section></div>
+      <div class="view" id="saved"><section class="card panel"><h2>الوظائف المحفوظة</h2><p>وظائف محفوظة كنموذج أولي.</p><div class="job"><div class="job-top"><div><div class="job-title">ممرض / ممرضة</div><div class="job-company">مركز الرعاية الحديثة</div></div><a class="btn btn-ghost" href="job-details.html?id=8">عرض</a></div></div><div class="job"><div class="job-top"><div><div class="job-title">مبرمج Frontend</div><div class="job-company">Tech Vision</div></div><a class="btn btn-ghost" href="job-details.html?id=3">عرض</a></div></div></section></div>
+    </div>
   </div>
 </section></main>
+
 <footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Supabase Connected</div></div></footer>
 <div class="toast" id="toast"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script>
@@ -58,69 +113,102 @@ const client = window.hirexSupabase;
 const toast = document.getElementById("toast");
 let currentUser = null;
 let currentProfile = null;
+
 function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
-function fillProfile(p) {
-  profileName.textContent = p.full_name || "مرشح";
-  profileMeta.textContent = (p.specialty || "غير محدد") + " · " + (p.city || "غير محدد");
-  fullName.value = p.full_name || "";
-  phone.value = p.phone || "";
-  city.value = p.city || "الرياض";
-  specialty.value = p.specialty || "محاسبة";
-  experience.value = p.experience || "حديث تخرج";
-  summary.value = p.summary || "";
-  if(p.avatar_url) avatarBox.innerHTML = '<img src="'+p.avatar_url+'" alt="صورة الحساب" />';
+
+function safeValue(value, fallback="غير محدد"){return value && String(value).trim() ? value : fallback}
+
+function completionPercent(profile){
+  const fields = [profile.full_name, profile.email, profile.phone, profile.city, profile.specialty, profile.experience, profile.summary, profile.avatar_url, profile.cv_url];
+  const done = fields.filter(v => v && String(v).trim()).length;
+  return Math.round((done / fields.length) * 100);
 }
-async function loadProfile() {
-  const { data: authData } = await client.auth.getUser();
 
-  if (!authData.user) {
-    location.href = "login.html";
-    return;
+function setSelectValue(select, value, fallback){
+  const wanted = value || fallback;
+  if (![...select.options].some(o => o.value === wanted || o.textContent === wanted)) {
+    const option = document.createElement("option");
+    option.textContent = wanted;
+    option.value = wanted;
+    select.appendChild(option);
   }
-
-  currentUser = authData.user;
-
-  let { data, error } = await client
-    .from("profiles")
-    .select("*")
-    .eq("id", currentUser.id)
-    .maybeSingle();
-
-  if (error) {
-    showToast(error.message);
-    return;
-  }
-
-  if (!data) {
-    const fallbackProfile = {
-      id: currentUser.id,
-      role: currentUser.user_metadata?.role || "candidate",
-      full_name: currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "مرشح جديد",
-      email: currentUser.email,
-      city: "الرياض",
-      specialty: "محاسبة",
-      experience: "حديث تخرج",
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: createdProfile, error: insertError } = await client
-      .from("profiles")
-      .insert(fallbackProfile)
-      .select("*")
-      .single();
-
-    if (insertError) {
-      showToast(insertError.message);
-      return;
-    }
-
-    data = createdProfile;
-  }
-
-  currentProfile = data;
-  fillProfile(data);
+  select.value = wanted;
 }
-async function uploadAvatar() {
+
+function renderProfile(profile){
+  const name = safeValue(profile.full_name, currentUser.email?.split("@")[0] || "مرشح جديد");
+  const mail = safeValue(profile.email, currentUser.email);
+  const cityText = safeValue(profile.city, "الرياض");
+  const specialtyText = safeValue(profile.specialty, "محاسبة");
+  const expText = safeValue(profile.experience, "حديث تخرج");
+
+  profileName.textContent = name;
+  profileEmail.textContent = mail;
+  profileMeta.textContent = specialtyText + " · " + cityText;
+  helloName.textContent = name.split(" ")[0] || "مرشح";
+  accountRole.textContent = profile.role === "company" ? "شركة" : "مرشح";
+
+  overviewName.textContent = name;
+  overviewData.textContent = mail;
+  overviewCity.textContent = cityText;
+  overviewSpecialty.textContent = specialtyText;
+  overviewExperience.textContent = expText;
+
+  fullName.value = name;
+  email.value = mail;
+  phone.value = profile.phone || "";
+  setSelectValue(city, profile.city, "الرياض");
+  setSelectValue(specialty, profile.specialty, "محاسبة");
+  setSelectValue(experience, profile.experience, "حديث تخرج");
+  summary.value = profile.summary || "";
+
+  if(profile.avatar_url){
+    avatarBox.innerHTML = '<img src="' + profile.avatar_url + '" alt="صورة الحساب" />';
+  } else {
+    avatarBox.textContent = name.charAt(0) || "م";
+  }
+
+  const percent = completionPercent(profile);
+  completionText.textContent = percent + "%";
+  completionBar.style.width = percent + "%";
+  statCompletion.textContent = percent + "%";
+}
+
+async function getOrCreateProfile(user){
+  let { data, error } = await client.from("profiles").select("*").eq("id", user.id).maybeSingle();
+  if(error) throw error;
+  if(data) return data;
+
+  const fallbackProfile = {
+    id: user.id,
+    role: user.user_metadata?.role || "candidate",
+    full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "مرشح جديد",
+    email: user.email,
+    city: "الرياض",
+    specialty: "محاسبة",
+    experience: "حديث تخرج",
+    summary: "",
+    updated_at: new Date().toISOString()
+  };
+
+  const { data: created, error: insertError } = await client.from("profiles").insert(fallbackProfile).select("*").single();
+  if(insertError) throw insertError;
+  return created;
+}
+
+async function loadProfile(){
+  try{
+    const { data: authData } = await client.auth.getUser();
+    if(!authData.user){ location.href = "login.html"; return; }
+    currentUser = authData.user;
+    currentProfile = await getOrCreateProfile(currentUser);
+    renderProfile(currentProfile);
+  }catch(err){
+    showToast(err.message || "تعذر تحميل الحساب.");
+  }
+}
+
+async function uploadAvatar(){
   const file = avatarInput.files[0];
   if(!file) return currentProfile?.avatar_url || null;
   const ext = file.name.split(".").pop();
@@ -128,9 +216,10 @@ async function uploadAvatar() {
   const { error } = await client.storage.from("avatars").upload(path, file, { upsert: true });
   if(error) throw error;
   const { data } = client.storage.from("avatars").getPublicUrl(path);
-  return data.publicUrl;
+  return data.publicUrl + "?v=" + Date.now();
 }
-async function uploadCv() {
+
+async function uploadCv(){
   const file = cvFile.files[0];
   if(!file) return currentProfile?.cv_url || null;
   const ext = file.name.split(".").pop();
@@ -139,25 +228,65 @@ async function uploadCv() {
   if(error) throw error;
   return path;
 }
+
 profileForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
-  try {
+  try{
     showToast("جاري حفظ البيانات...");
     const avatar_url = await uploadAvatar();
     const cv_url = await uploadCv();
+
     const updates = {
-      full_name: fullName.value, phone: phone.value, city: city.value,
-      specialty: specialty.value, experience: experience.value,
-      summary: summary.value, avatar_url, cv_url, updated_at: new Date().toISOString()
+      full_name: fullName.value.trim(),
+      phone: phone.value.trim(),
+      city: city.value,
+      specialty: specialty.value,
+      experience: experience.value,
+      summary: summary.value.trim(),
+      avatar_url,
+      cv_url,
+      updated_at: new Date().toISOString()
     };
-    const { error } = await client.from("profiles").update(updates).eq("id", currentUser.id);
+
+    const { data, error } = await client.from("profiles").update(updates).eq("id", currentUser.id).select("*").single();
     if(error) throw error;
-    currentProfile = {...currentProfile, ...updates};
-    fillProfile(currentProfile);
-    showToast("تم حفظ البيانات بنجاح.");
-  } catch(err) { showToast(err.message); }
+
+    currentProfile = data;
+    renderProfile(data);
+    showToast("تم حفظ بيانات الحساب بنجاح.");
+  }catch(err){
+    showToast(err.message || "حدث خطأ أثناء الحفظ.");
+  }
 });
-logoutBtn.addEventListener("click", async()=>{ await client.auth.signOut(); location.href="login.html"; });
+
+avatarButton.addEventListener("click",()=>avatarInput.click());
+avatarInput.addEventListener("change",()=>{
+  const file = avatarInput.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => avatarBox.innerHTML = '<img src="' + e.target.result + '" alt="صورة الحساب" />';
+  reader.readAsDataURL(file);
+  showToast("تم اختيار الصورة، اضغط حفظ التعديلات لرفعها.");
+});
+
+document.querySelectorAll(".side-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".side-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    document.getElementById(btn.dataset.view).classList.add("active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+document.querySelectorAll("[data-go-profile]").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelector('[data-view="profile"]').click();
+}));
+
+logoutBtn.addEventListener("click", async()=>{
+  await client.auth.signOut();
+  location.href = "login.html";
+});
+
 loadProfile();
 </script>
 </body>
