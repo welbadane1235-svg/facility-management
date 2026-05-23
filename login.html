@@ -41,19 +41,78 @@
 <script>
 const client = window.hirexSupabase;
 const toast = document.getElementById("toast");
-function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
-loginForm.addEventListener("submit", async (e)=>{
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+async function getOrCreateProfile(user) {
+  let { data: profile, error } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!profile) {
+    const fallbackProfile = {
+      id: user.id,
+      role: user.user_metadata?.role || "candidate",
+      full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "مرشح جديد",
+      email: user.email,
+      city: "الرياض",
+      specialty: "محاسبة",
+      experience: "حديث تخرج",
+      updated_at: new Date().toISOString()
+    };
+
+    const { data: createdProfile, error: insertError } = await client
+      .from("profiles")
+      .insert(fallbackProfile)
+      .select("*")
+      .single();
+
+    if (insertError) throw insertError;
+    profile = createdProfile;
+  }
+
+  return profile;
+}
+
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  showToast("جاري تسجيل الدخول...");
-  const { data, error } = await client.auth.signInWithPassword({ email: email.value.trim(), password: password.value });
-  if(error) return showToast(error.message);
-  const { data: profile, error: profileError } = await client.from("profiles").select("*").eq("id", data.user.id).single();
-  if(profileError) return showToast("تم الدخول، لكن لم أجد الملف الشخصي: " + profileError.message);
-  showToast("تم تسجيل الدخول بنجاح.");
-  setTimeout(()=>{
-    if(profile.role === "company") location.href = "candidate-dashboard.html"; 
-    else location.href = "candidate-dashboard.html";
-  },800);
+
+  try {
+    showToast("جاري تسجيل الدخول...");
+
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email.value.trim(),
+      password: password.value
+    });
+
+    if (error) {
+      showToast(error.message);
+      return;
+    }
+
+    const profile = await getOrCreateProfile(data.user);
+
+    showToast("تم تسجيل الدخول بنجاح.");
+
+    setTimeout(() => {
+      if (profile.role === "company") {
+        location.href = "candidate-dashboard.html";
+      } else {
+        location.href = "candidate-dashboard.html";
+      }
+    }, 800);
+
+  } catch (err) {
+    showToast(err.message || "حدث خطأ أثناء تسجيل الدخول.");
+  }
 });
 </script>
 </body>

@@ -72,10 +72,51 @@ function fillProfile(p) {
 }
 async function loadProfile() {
   const { data: authData } = await client.auth.getUser();
-  if(!authData.user) { location.href = "login.html"; return; }
+
+  if (!authData.user) {
+    location.href = "login.html";
+    return;
+  }
+
   currentUser = authData.user;
-  const { data, error } = await client.from("profiles").select("*").eq("id", currentUser.id).single();
-  if(error) return showToast(error.message);
+
+  let { data, error } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    showToast(error.message);
+    return;
+  }
+
+  if (!data) {
+    const fallbackProfile = {
+      id: currentUser.id,
+      role: currentUser.user_metadata?.role || "candidate",
+      full_name: currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "مرشح جديد",
+      email: currentUser.email,
+      city: "الرياض",
+      specialty: "محاسبة",
+      experience: "حديث تخرج",
+      updated_at: new Date().toISOString()
+    };
+
+    const { data: createdProfile, error: insertError } = await client
+      .from("profiles")
+      .insert(fallbackProfile)
+      .select("*")
+      .single();
+
+    if (insertError) {
+      showToast(insertError.message);
+      return;
+    }
+
+    data = createdProfile;
+  }
+
   currentProfile = data;
   fillProfile(data);
 }
