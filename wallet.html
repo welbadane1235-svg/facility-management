@@ -39,7 +39,7 @@
   <div class="container">
     <nav class="nav">
       <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-      <div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="candidate-dashboard.html">لوحة المرشح</a><a class="active" href="wallet.html">المحفظة</a></div>
+      <div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href=>لوحة المرشح</a><a class="active" href="wallet.html">المحفظة</a></div>
     </nav>
   </div>
 </header>
@@ -199,7 +199,7 @@ async function loadTransactions(){
 async function init(){
   try{
     const {data:authData} = await client.auth.getUser();
-    if(!authData.user){location.href="login.html";return}
+    if(!authData.user){location.href=;return}
     currentUser = authData.user;
     await loadWallet();
     await loadPackages();

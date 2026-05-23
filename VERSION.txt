@@ -1,1 +1,1 @@
-HireX: candidate CV category selection added to resume tab and profiles.cv_category SQL added.
+Core pages fixed: jobs, candidates, login, register active and not blocked.

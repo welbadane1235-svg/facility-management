@@ -186,7 +186,7 @@
       <div class="links">
         <a href="index.html">الرئيسية</a>
         <a href="./jobs.html">الوظائف</a>
-        <a class="active" href="candidate-dashboard.html">لوحة المرشح</a>
+        <a class="active" href=>لوحة المرشح</a>
       </div>
     </nav>
   </div>
@@ -570,7 +570,7 @@ async function getOrCreateProfile(user){
 async function loadProfile(){
   try{
     const {data:authData}=await client.auth.getUser();
-    if(!authData.user){location.href="login.html";return}
+    if(!authData.user){location.href=;return}
     currentUser=authData.user;
     currentProfile=await getOrCreateProfile(currentUser);
     renderProfile(currentProfile);
@@ -729,7 +729,7 @@ async function loadWalletTransactions(){
 }
 
 
-logoutBtn.addEventListener("click",async()=>{await client.auth.signOut();location.href="login.html"});
+logoutBtn.addEventListener("click",async()=>{await client.auth.signOut();location.href=});
 loadProfile();
 </script>
 </body>
