@@ -1,1 +1,1 @@
-Final no broken links package. Login/register pages rebuilt cleanly. Core links fixed without destructive removal.
+HireX Candidate Pro services: CV boost purchase via coins, candidate_promotions table, RPC purchase function.

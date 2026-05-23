@@ -31,6 +31,26 @@
     .wallet-summary{display:grid;grid-template-columns:1fr 240px;gap:14px}.wallet-balance{border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.62);border-radius:24px;padding:18px;text-align:center}.wallet-balance strong{display:block;font-size:48px;color:#d1fae5}.packages{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.package{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:22px;padding:16px}.package h3{font-size:20px}.package .coins{font-size:34px;font-weight:900;color:#d1fae5}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:430px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.debug{margin-top:10px;border:1px solid rgba(251,113,133,.25);background:rgba(251,113,133,.08);color:#fecdd3;border-radius:16px;padding:12px;font-weight:800;display:none;white-space:pre-wrap;direction:ltr;text-align:left}
     .footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between}
     @media(max-width:980px){.links{display:none}.layout,.grid2,.wallet-summary{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.container{width:min(100% - 22px,1220px)}.hero{grid-template-columns:1fr}.form-grid,.stats,.packages{grid-template-columns:1fr}.card{border-radius:24px}.actions .btn{width:100%}}
+  
+    .pro-services{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+    .pro-card{position:relative;overflow:hidden;border:1px solid rgba(52,211,153,.22);background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(255,255,255,.045));border-radius:22px;padding:16px;display:grid;gap:10px}
+    .pro-card:before{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(34,211,238,.12);filter:blur(22px);top:-30px;left:-30px}
+    .pro-card>*{position:relative;z-index:1}
+    .pro-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .pro-title{font-size:19px;font-weight:900}
+    .pro-badge{border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.46);border-radius:999px;padding:5px 9px;font-weight:900;font-size:11px;color:#d1fae5;white-space:nowrap}
+    .pro-desc{color:var(--muted);font-weight:800;font-size:14px}
+    .pro-price{font-size:26px;font-weight:900;color:#d1fae5;line-height:1}
+    .pro-price span{font-size:13px;color:var(--muted);margin-right:5px}
+    .pro-row{display:flex;gap:8px;flex-wrap:wrap}
+    .pro-select{height:42px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(8,17,31,.72);color:#fff;padding:0 10px;font-weight:800;outline:none;flex:1;min-width:140px}
+    .active-promotions{display:grid;gap:10px;margin-top:12px}
+    .promotion-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.052);border-radius:18px;padding:13px}
+    .promotion-title{font-weight:900}
+    .promotion-meta{color:var(--muted2);font-size:12px;font-weight:800;margin-top:2px}
+    .promotion-status{border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;background:rgba(52,211,153,.12);color:#d1fae5;border:1px solid rgba(52,211,153,.2);white-space:nowrap}
+    @media(max-width:780px){.pro-services{grid-template-columns:1fr}.promotion-row{grid-template-columns:1fr}.pro-row{display:grid}.pro-select,.pro-card .btn{width:100%}}
+
   </style>
 </head>
 <body>
@@ -45,10 +65,78 @@
 <section class="view" id="applications"><div class="card panel"><h2>طلباتي</h2><div class="job"><div class="job-title">محاسب عام</div><div class="meta">قيد المراجعة</div></div><div class="job"><div class="job-title">متدرب تحليل بيانات</div><div class="meta">مقابلة</div></div></div></section>
 <section class="view" id="saved"><div class="card panel"><h2>المحفوظات</h2><div class="job"><div class="job-title">ممرض / ممرضة</div><a class="btn btn-ghost" href="job-details.html?id=8">عرض</a></div></div></section>
 <section class="view" id="wallet"><div class="wallet-summary"><div class="card panel"><h2>محفظة الكوينز</h2><p>رصيدك داخل HireX. استخدمه للخدمات الإضافية لاحقًا.</p><div class="packages" id="walletPackagesGrid"></div></div><div class="wallet-balance"><div class="meta">الرصيد الحالي</div><strong id="walletBalance">0</strong><div class="meta">كوينز متاحة</div></div></div><div class="grid2" style="margin-top:16px"><div class="card panel"><h2>طلبات الشحن</h2><div id="walletRequestsList"></div></div><div class="card panel"><h2>سجل العمليات</h2><div id="walletTransactionsList"></div></div></div></section>
+
+            <div class="card panel" style="margin-top:16px">
+              <h2>خدمات Pro بالكوينز</h2>
+              <p>اشترِ خدمات إضافية لحسابك باستخدام رصيد الكوينز. أول خدمة فعلية الآن: إبراز السيرة داخل القسم المختار.</p>
+
+              <div class="pro-services">
+                <div class="pro-card">
+                  <div class="pro-head">
+                    <div class="pro-title">إبراز السيرة الذاتية</div>
+                    <div class="pro-badge">7 أيام</div>
+                  </div>
+                  <div class="pro-desc">تظهر سيرتك أعلى المرشحين في القسم الذي تختاره لمدة 7 أيام.</div>
+                  <div class="pro-price">25<span>كوينز</span></div>
+                  <div class="pro-row">
+                    <select class="pro-select" id="proCvCategory">
+                      <option value="medical">طبي</option>
+                      <option value="technical">تقني</option>
+                      <option value="finance">محاسبة ومالية</option>
+                      <option value="hr">موارد بشرية</option>
+                      <option value="sales">مبيعات وتسويق</option>
+                      <option value="operations">تشغيل وإدارة مرافق</option>
+                      <option value="customer_service">خدمة عملاء</option>
+                      <option value="other">أخرى</option>
+                    </select>
+                    <button class="btn btn-primary" type="button" onclick="buyProCvPromotion()">شراء الخدمة</button>
+                  </div>
+                </div>
+
+                <div class="pro-card">
+                  <div class="pro-head">
+                    <div class="pro-title">تقديم مميز على وظيفة</div>
+                    <div class="pro-badge">قريبًا</div>
+                  </div>
+                  <div class="pro-desc">يجعل طلبك يظهر للشركة بشكل مميز عند التقديم على وظيفة محددة.</div>
+                  <div class="pro-price">10<span>كوينز</span></div>
+                  <button class="btn btn-ghost" type="button" onclick="showToast('سيتم تفعيل هذه الخدمة بعد ربط التقديم على الوظائف.')">قريبًا</button>
+                </div>
+
+                <div class="pro-card">
+                  <div class="pro-head">
+                    <div class="pro-title">رفع ظهور الملف</div>
+                    <div class="pro-badge">قريبًا</div>
+                  </div>
+                  <div class="pro-desc">يرفع ظهور حسابك في نتائج بحث الشركات عن المرشحين.</div>
+                  <div class="pro-price">20<span>كوينز</span></div>
+                  <button class="btn btn-ghost" type="button" onclick="showToast('سيتم تفعيل الخدمة لاحقًا بعد صفحة بحث المرشحين.')">قريبًا</button>
+                </div>
+
+                <div class="pro-card">
+                  <div class="pro-head">
+                    <div class="pro-title">تحليل السيرة الذاتية</div>
+                    <div class="pro-badge">قريبًا</div>
+                  </div>
+                  <div class="pro-desc">تحليل نقاط قوة وضعف السيرة الذاتية واقتراح تحسينات.</div>
+                  <div class="pro-price">15<span>كوينز</span></div>
+                  <button class="btn btn-ghost" type="button" onclick="showToast('سيتم تفعيل تحليل السيرة في مرحلة لاحقة.')">قريبًا</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card panel" style="margin-top:16px">
+              <h2>الخدمات المفعلة</h2>
+              <p>الخدمات التي اشتريتها وتعمل حاليًا ستظهر هنا.</p>
+              <div class="active-promotions" id="activePromotionsList"></div>
+            </div>
+
 <section class="view" id="notifications"><div class="card panel"><h2>الإشعارات</h2><div class="box"><strong>تم تحميل الحساب بنجاح</strong><div class="meta">ستظهر الإشعارات الحقيقية لاحقًا.</div></div></div></section>
 </div></div></section></main>
 <footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Dashboard loading fix</div></div></footer><div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+setTimeout(()=>{ if(typeof loadActivePromotions==='function') loadActivePromotions(); }, 1200);
+</script><script src="supabase-config.js"></script>
 <script>
 const client=window.hirexSupabase,toast=document.getElementById("toast");let currentUser=null,currentProfile=null;
 function showToast(m){toast.textContent=m;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
@@ -59,7 +147,7 @@ function percent(p){const fields=[p.full_name,p.email,p.phone,p.city,p.specialty
 function setSel(el,val,fb){if(!el)return;const wanted=val||fb;if(![...el.options].some(o=>o.value===wanted||o.textContent===wanted)){let op=document.createElement("option");op.value=wanted;op.textContent=wanted;el.appendChild(op)}el.value=wanted}
 function render(p){const name=safe(p.full_name,currentUser.email?.split("@")[0]||"مرشح جديد"),mail=safe(p.email,currentUser.email),cityV=safe(p.city,"الرياض"),spec=safe(p.specialty,"محاسبة"),exp=safe(p.experience,"حديث تخرج"),head=safe(p.headline,spec);profileName.textContent=name;profileTitle.textContent=head+" · "+cityV;profileEmail.textContent=mail;helloName.textContent=name.split(" ")[0]||"مرشح";accountRole.textContent=p.role==="company"?"شركة":"مرشح";overviewName.textContent=name;overviewData.textContent=mail;overviewCity.textContent=cityV;overviewSpecialty.textContent=spec;overviewExperience.textContent=exp;fullName.value=name;emailField.value=mail;phone.value=p.phone||"";headline.value=p.headline||"";setSel(city,p.city,"الرياض");setSel(specialty,p.specialty,"محاسبة");setSel(experience,p.experience,"حديث تخرج");skills.value=p.skills||"";summary.value=p.summary||"";setSel(cvCategory,p.cv_category,"finance");lastJobTitle.value=p.last_job_title||"";lastCompany.value=p.last_company||"";education.value=p.education||"";graduationYear.value=p.graduation_year||"";experienceDetails.value=p.experience_details||"";previewJobTitle.textContent=p.last_job_title||"المسمى الوظيفي";previewCompany.textContent=p.last_company||"الشركة";previewExperience.textContent=p.experience_details||"وصف الخبرة";previewCvCategory.textContent=labelCv(p.cv_category||"finance");previewEducation.textContent=(p.education||"المؤهل")+" "+(p.graduation_year||"");if(p.avatar_url){avatarBox.innerHTML='<img src="'+p.avatar_url+'" alt="صورة الحساب"><button class="avatar-btn" id="avatarButton2">📷</button>';document.getElementById("avatarButton2").onclick=()=>avatarInput.click()}else{avatarBox.firstChild.nodeValue=name.charAt(0)||"م"}const pc=percent(p);completionText.textContent=pc+"%";completionBar.style.width=pc+"%";statCompletion.textContent=pc+"%"}
 async function getOrCreate(user){let {data,error}=await client.from("profiles").select("*").eq("id",user.id).maybeSingle();if(error)throw error;if(data)return data;const fallback={id:user.id,role:user.user_metadata?.role||"candidate",full_name:user.user_metadata?.full_name||user.email?.split("@")[0]||"مرشح جديد",email:user.email,city:"الرياض",specialty:"محاسبة",experience:"حديث تخرج",cv_category:"finance",updated_at:new Date().toISOString()};let res=await client.from("profiles").insert(fallback).select("*").single();if(res.error)throw res.error;return res.data}
-async function load(){try{const {data}=await client.auth.getUser();if(!data.user){location.href="login.html";return}currentUser=data.user;currentProfile=await getOrCreate(currentUser);render(currentProfile);await loadWallet()}catch(e){showToast("تعذر تحميل الحساب");showDebug(e)}}
+async function load(){try{const {data}=await client.auth.getUser();if(!data.user){location.href="login.html";return}currentUser=data.user;currentProfile=await getOrCreate(currentUser);render(currentProfile);await loadWallet(); await loadActivePromotions()}catch(e){showToast("تعذر تحميل الحساب");showDebug(e)}}
 async function uploadAvatar(){const file=avatarInput.files[0];if(!file)return currentProfile?.avatar_url||null;const ext=file.name.split(".").pop(),path=currentUser.id+"/avatar."+ext;let {error}=await client.storage.from("avatars").upload(path,file,{upsert:true});if(error)throw error;let {data}=client.storage.from("avatars").getPublicUrl(path);return data.publicUrl+"?v="+Date.now()}
 async function uploadCv(){const file=cvFile.files[0];if(!file)return currentProfile?.cv_url||null;const ext=file.name.split(".").pop(),path=currentUser.id+"/cv."+ext;let {error}=await client.storage.from("cvs").upload(path,file,{upsert:true});if(error)throw error;return path}
 async function save(updates){let {data,error}=await client.from("profiles").update({...updates,updated_at:new Date().toISOString()}).eq("id",currentUser.id).select("*").single();if(error)throw error;currentProfile=data;render(data)}
