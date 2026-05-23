@@ -1,1 +1,1 @@
-Auth signup debug fix: register shows Supabase signUp errors visibly.
+HireX professional wallet UI improved inside candidate account. Prevents duplicated package display and SQL cleanup added.
