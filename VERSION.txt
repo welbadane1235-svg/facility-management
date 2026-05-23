@@ -1,1 +1,1 @@
-Repair package: jobs categories restored, register fixed, wallet inside account retained.
+Auth signup debug fix: register shows Supabase signUp errors visibly.
