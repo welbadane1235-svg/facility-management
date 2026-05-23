@@ -1,1 +1,1 @@
-HireX Candidate Pro services: CV boost purchase via coins, candidate_promotions table, RPC purchase function.
+Fix undefined loadActivePromotions by adding safe global Pro service functions.
