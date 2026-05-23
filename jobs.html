@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>الوظائف | HireX</title>
+  <!-- HireX jobs page: direct detail links enabled -->
   <meta name="description" content="استعرض أحدث الوظائف في HireX حسب الأقسام، وابحث حسب التخصص والمدينة ونوع الدوام للوصول للفرصة المناسبة." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1068,7 +1069,7 @@
               </div>
             </div>
             <div class="job-actions">
-              <button type="button" class="btn btn-primary" onclick="window.location.href=\'job-details.html?id=${job.id}\'">عرض التفاصيل</button>
+              <a class="btn btn-primary" href="job-details.html?id=${job.id}">عرض التفاصيل</a>
               <button class="save-btn" data-job-id="${job.id}">حفظ الوظيفة</button>
             </div>
           </div>
