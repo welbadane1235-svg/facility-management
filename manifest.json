@@ -1,0 +1,10 @@
+{
+  "name": "HireX",
+  "short_name": "HireX",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050914",
+  "theme_color": "#0072ff",
+  "description": "منصة التوظيف الذكية",
+  "icons": []
+}
