@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>الوظائف | HireX</title>
-  <meta name="description" content="استعرض أحدث الوظائف في HireX، وابحث حسب التخصص والمدينة ونوع الدوام للوصول للفرصة المناسبة." />
+  <meta name="description" content="استعرض أحدث الوظائف في HireX حسب الأقسام، وابحث حسب التخصص والمدينة ونوع الدوام للوصول للفرصة المناسبة." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,7 +13,6 @@
   <style>
     :root {
       --bg: #08111f;
-      --bg-soft: #0e1b2e;
       --card: rgba(255, 255, 255, 0.075);
       --card-strong: rgba(255, 255, 255, 0.11);
       --border: rgba(255, 255, 255, 0.12);
@@ -21,15 +20,9 @@
       --muted: #a8b3c7;
       --muted-2: #7c899e;
       --green: #34d399;
-      --green-2: #10b981;
       --cyan: #22d3ee;
-      --blue: #60a5fa;
-      --warning: #fbbf24;
-      --danger: #fb7185;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
       --radius-lg: 28px;
-      --radius-md: 20px;
-      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,12 +137,6 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .btn-ghost:hover { background: rgba(255, 255, 255, 0.11); }
-    .btn-dark { background: #ffffff; color: #08111f; }
-    .btn-soft {
-      background: rgba(52, 211, 153, 0.12);
-      color: #d1fae5;
-      border: 1px solid rgba(52, 211, 153, 0.22);
-    }
 
     .menu-btn {
       display: none;
@@ -335,7 +322,7 @@
 
     .category-tabs {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -372,6 +359,24 @@
       font-weight: 800;
     }
 
+    .active-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .chip {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .jobs-list { display: grid; gap: 14px; }
+
     .category-section {
       display: grid;
       gap: 14px;
@@ -400,23 +405,6 @@
       font-size: 13px;
     }
 
-    .active-filters {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .chip {
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    .jobs-list { display: grid; gap: 14px; }
     .job-card {
       padding: 20px;
       transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
@@ -646,8 +634,8 @@
 
           <div class="page-title-wrap">
             <div>
-              <h1 class="page-title">ابحث عن الوظيفة المناسبة لك</h1>
-              <p class="page-desc">استعرض فرصًا مهنية من شركات مختلفة، واستخدم الفلاتر للوصول بسرعة للوظائف الأقرب لتخصصك وخبرتك.</p>
+              <h1 class="page-title">ابحث عن الوظيفة المناسبة حسب القسم</h1>
+              <p class="page-desc">استعرض الوظائف الطبية، التقنية، المحاسبية، الإدارية، والميدانية داخل أقسام واضحة، ثم استخدم الفلاتر للوصول بسرعة للفرصة الأنسب.</p>
             </div>
             <div class="quick-card">
               <strong id="heroCount">0</strong>
@@ -687,10 +675,10 @@
             </div>
 
             <div class="filter-group">
-              <label class="filter-label" for="categoryFilter">المجال</label>
+              <label class="filter-label" for="categoryFilter">القسم</label>
               <div class="field">
                 <select id="categoryFilter">
-                  <option value="all">كل المجالات</option>
+                  <option value="all">كل الأقسام</option>
                   <option value="طبية">طبية</option>
                   <option value="تقنية">تقنية</option>
                   <option value="محاسبة">محاسبة</option>
@@ -725,14 +713,14 @@
 
             <div class="tips-card">
               <h3>نصيحة للمرشح</h3>
-              <p>حدّث سيرتك الذاتية قبل التقديم، واجعل المهارات الأساسية واضحة حتى تزيد فرصة ظهورك للشركات.</p>
+              <p>اختر القسم الأقرب لتخصصك أولًا، ثم استخدم فلتر المدينة ونوع الدوام لتقليل النتائج والوصول للوظيفة المناسبة بسرعة.</p>
             </div>
           </aside>
 
           <section class="results-panel" aria-label="نتائج الوظائف">
             <div class="results-head">
               <div>
-                <div class="results-title">الوظائف المتاحة</div>
+                <div class="results-title">الأقسام والوظائف المتاحة</div>
                 <div class="results-count" id="resultsCount">جاري عرض الوظائف...</div>
               </div>
               <select class="sort-select" id="sortSelect" aria-label="ترتيب النتائج">
@@ -743,14 +731,12 @@
             </div>
 
             <div class="category-tabs" id="categoryTabs"></div>
-
             <div class="active-filters" id="activeFilters"></div>
-
             <div class="jobs-list" id="jobsList"></div>
 
             <div class="empty-state" id="emptyState">
               <strong>لا توجد نتائج مطابقة</strong>
-              جرّب تغيير كلمة البحث أو توسيع نطاق الفلاتر.
+              جرّب تغيير القسم أو كلمة البحث أو توسيع نطاق الفلاتر.
             </div>
 
             <div class="cta-card">
@@ -970,7 +956,6 @@
     const emptyState = document.getElementById("emptyState");
 
     const nextPages = [
-      "job-details.html",
       "companies.html",
       "candidates.html",
       "login.html",
@@ -1032,7 +1017,7 @@
       const query = searchInput.value.trim();
       if (query) chips.push("بحث: " + query);
       if (cityFilter.value !== "all") chips.push("المدينة: " + cityFilter.value);
-      if (categoryFilter.value !== "all") chips.push("المجال: " + categoryFilter.value);
+      if (categoryFilter.value !== "all") chips.push("القسم: " + categoryFilter.value);
       if (experienceFilter.value !== "all") chips.push("الخبرة: " + experienceFilter.value);
       getSelectedTypes().forEach(type => chips.push("الدوام: " + type));
 
@@ -1083,7 +1068,7 @@
               </div>
             </div>
             <div class="job-actions">
-              <a class="btn btn-primary page-link" href="job-details.html?id=${job.id}">عرض التفاصيل</a>
+              <button type="button" class="btn btn-primary" onclick="window.location.href=\'job-details.html?id=${job.id}\'">عرض التفاصيل</button>
               <button class="save-btn" data-job-id="${job.id}">حفظ الوظيفة</button>
             </div>
           </div>
@@ -1136,6 +1121,7 @@
           button.textContent = button.classList.contains("saved") ? "تم الحفظ" : "حفظ الوظيفة";
         });
       });
+
     }
 
     [searchInput, cityFilter, categoryFilter, experienceFilter, sortSelect].forEach(element => {
