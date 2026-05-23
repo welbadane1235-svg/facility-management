@@ -1,1 +1,1 @@
-Fix undefined loadActivePromotions by adding safe global Pro service functions.
+HireX company dashboard phase 1: company profile, wallet, publish jobs with coins, feature jobs with coins.

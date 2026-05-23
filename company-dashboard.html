@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الشركة | HireX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#08111f;--card:rgba(255,255,255,.075);--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--danger:#fb7185;--warning:#fbbf24}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.20),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),#08111f;color:#fff;min-height:100vh;line-height:1.7}
+    a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}
+    .container{width:min(1240px,calc(100% - 32px));margin:auto}
+    .header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900}.brand-sub{font-size:12px;color:var(--muted2)}
+    .links{display:flex;gap:24px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}
+    .btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.btn-danger{background:rgba(251,113,133,.13);border:1px solid rgba(251,113,133,.25);color:#fecdd3}
+    .page{padding:34px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}
+    .layout{display:grid;grid-template-columns:315px 1fr;gap:18px;align-items:start}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;box-shadow:0 18px 52px rgba(0,0,0,.12)}
+    .side{padding:18px;text-align:center;position:sticky;top:98px}.company-logo{width:128px;height:128px;border-radius:36px;background:linear-gradient(135deg,var(--green),var(--cyan));display:grid;place-items:center;color:#06111d;font-size:46px;font-weight:900;margin:auto;overflow:hidden}.company-logo img{width:100%;height:100%;object-fit:cover}
+    .name{font-size:24px;font-weight:900;margin-top:14px}.meta{color:var(--muted);font-weight:800}.sector{color:#d1fae5;font-weight:900}
+    .menu{display:grid;gap:8px;text-align:right;margin-top:16px}.menu button{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);border-radius:16px;padding:12px;color:var(--muted);font-weight:900;display:flex;justify-content:space-between;cursor:pointer}.menu button.active,.menu button:hover{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}
+    .account{display:grid;gap:10px;text-align:right;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}.account-row{display:flex;justify-content:space-between;color:var(--muted);font-weight:800}.account-row strong{color:#fff}
+    .hero{padding:22px;margin-bottom:16px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(52,211,153,.14),rgba(34,211,238,.08)),var(--card)}.hero h1{font-size:clamp(32px,4vw,52px);line-height:1.15}.hero p{color:var(--muted);margin-top:8px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{padding:18px}.icon{width:42px;height:42px;border-radius:16px;display:grid;place-items:center;background:rgba(52,211,153,.12);color:#d1fae5;font-size:22px;margin-bottom:12px}.val{font-size:28px;font-weight:900}.label{color:var(--muted);font-weight:800}
+    .view{display:none}.view.active{display:block}.panel{padding:22px}.panel h2{font-size:26px;font-weight:900;margin-bottom:8px}.panel p{color:var(--muted);margin-bottom:14px}
+    .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label-form{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}
+    .input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:120px;padding-top:12px;resize:vertical}option{background:#08111f}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .box,.job{padding:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:20px;margin-top:10px}.job-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.job-title{font-size:18px;font-weight:900}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.chip{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}
+    .wallet-summary{display:grid;grid-template-columns:1fr 240px;gap:14px}.wallet-balance{border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.62);border-radius:24px;padding:18px;text-align:center}.wallet-balance strong{display:block;font-size:48px;color:#d1fae5}.packages{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.package{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:22px;padding:16px}.package h3{font-size:20px}.package .coins{font-size:34px;font-weight:900;color:#d1fae5}
+    .status{border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;white-space:nowrap}.published{background:rgba(52,211,153,.12);color:#d1fae5;border:1px solid rgba(52,211,153,.2)}.paused{background:rgba(251,191,36,.12);color:#fde68a;border:1px solid rgba(251,191,36,.2)}.featured{background:rgba(34,211,238,.12);color:#bae6fd;border:1px solid rgba(34,211,238,.2)}
+    .toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:430px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.debug{margin-top:10px;border:1px solid rgba(251,113,133,.25);background:rgba(251,113,133,.08);color:#fecdd3;border-radius:16px;padding:12px;font-weight:800;display:none;white-space:pre-wrap;direction:ltr;text-align:left}
+    .footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between}
+    @media(max-width:980px){.links{display:none}.layout,.grid2,.wallet-summary{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.container{width:min(100% - 22px,1240px)}.hero{grid-template-columns:1fr}.form-grid,.stats,.packages{grid-template-columns:1fr}.card{border-radius:24px}.actions .btn{width:100%}}
+  </style>
+</head>
+<body>
+<header class="header"><div class="container"><nav class="nav"><a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a><div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a class="active" href="company-dashboard.html">لوحة الشركة</a></div></nav></div></header>
+
+<main class="page"><section class="container"><div class="crumb"><a href="index.html">الرئيسية</a> › لوحة الشركة</div><div class="layout">
+<aside class="card side"><div class="company-logo" id="companyLogo">ش</div><div class="name" id="companyNameDisplay">جاري التحميل...</div><div class="sector" id="companySectorDisplay">...</div><div class="meta" id="companyEmailDisplay">...</div><nav class="menu"><button class="active" data-view="overview">الرئيسية <span>›</span></button><button data-view="company-profile">ملف الشركة <span>›</span></button><button data-view="post-job">نشر وظيفة <span>›</span></button><button data-view="jobs">الوظائف المنشورة <span>›</span></button><button data-view="applicants">المتقدمين <span>›</span></button><button data-view="wallet">محفظة الكوينز <span>›</span></button><button data-view="ads">إعلانات Pro <span>›</span></button><button data-view="notifications">الإشعارات <span>›</span></button></nav><div class="account"><div class="account-row"><span>نوع الحساب</span><strong>شركة</strong></div><div class="account-row"><span>حالة الدخول</span><strong>نشط</strong></div><div class="account-row"><span>الحفظ</span><strong>Supabase</strong></div></div><button class="btn btn-danger" id="logoutBtn" style="width:100%;margin-top:14px">تسجيل الخروج</button></aside>
+
+<div>
+<section class="card hero"><div><h1>مرحبًا، <span id="helloCompany">...</span></h1><p>لوحة الشركة لإدارة الوظائف، المتقدمين، محفظة الكوينز، وإعلانات Pro داخل HireX.</p><div class="debug" id="debugBox"></div></div><div class="actions"><button class="btn btn-primary" data-go="post-job">نشر وظيفة</button><button class="btn btn-ghost" data-go="wallet">شحن الكوينز</button><button class="btn btn-ghost" data-go="jobs">إدارة الوظائف</button></div></section>
+
+<div class="stats"><div class="card stat"><div class="icon">💼</div><div class="val" id="jobsCount">0</div><div class="label">وظائف منشورة</div></div><div class="card stat"><div class="icon">👥</div><div class="val" id="appsCount">0</div><div class="label">متقدمين</div></div><div class="card stat"><div class="icon">🪙</div><div class="val" id="walletStat">0</div><div class="label">رصيد كوينز</div></div><div class="card stat"><div class="icon">⭐</div><div class="val" id="featuredCount">0</div><div class="label">وظائف مميزة</div></div></div>
+
+<section class="view active" id="overview"><div class="grid2"><div class="card panel"><h2>ملخص الشركة</h2><p>نظرة عامة على حساب الشركة.</p><div class="box"><div class="job-title" id="overviewCompanyName">...</div><div class="meta" id="overviewCompanyData">...</div><div class="chips"><span class="chip" id="overviewCity">...</span><span class="chip" id="overviewSector">...</span><span class="chip" id="overviewSize">...</span></div></div></div><div class="card panel"><h2>خطوات مهمة</h2><div class="box"><strong>أكمل ملف الشركة</strong><div class="meta">الشركات المكتملة أكثر ثقة للمرشحين.</div></div><div class="box"><strong>اشحن المحفظة</strong><div class="meta">نشر وظيفة يكلف 20 كوينز.</div></div><div class="box"><strong>ميّز الوظائف المهمة</strong><div class="meta">تمييز وظيفة لمدة 7 أيام يكلف 30 كوينز.</div></div></div></div></section>
+
+<section class="view" id="company-profile"><div class="card panel"><h2>ملف الشركة</h2><form id="companyProfileForm"><div class="form-grid"><div><label class="label-form">اسم الشركة</label><input class="input" id="companyNameInput"></div><div><label class="label-form">البريد الإلكتروني</label><input class="input" id="companyEmailInput" disabled></div><div><label class="label-form">مسؤول التواصل</label><input class="input" id="contactNameInput"></div><div><label class="label-form">رقم التواصل</label><input class="input" id="phoneInput"></div><div><label class="label-form">المدينة</label><select class="select" id="cityInput"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>مكة</option><option>المدينة</option><option>عن بعد</option></select></div><div><label class="label-form">قطاع الشركة</label><select class="select" id="sectorInput"><option>تقني</option><option>طبي</option><option>تشغيلي</option><option>تجاري</option><option>تعليمي</option><option>إدارة مرافق</option><option>أخرى</option></select></div><div><label class="label-form">حجم الشركة</label><select class="select" id="sizeInput"><option>1 - 10</option><option>11 - 50</option><option>51 - 200</option><option>أكثر من 200</option></select></div><div><label class="label-form">الموقع الإلكتروني</label><input class="input" id="websiteInput" placeholder="https://example.com"></div><div class="full"><label class="label-form">نبذة عن الشركة</label><textarea class="textarea" id="descriptionInput"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">حفظ ملف الشركة</button></div></form></div></section>
+
+<section class="view" id="post-job"><div class="card panel"><h2>نشر وظيفة</h2><p>تكلفة نشر وظيفة عادية: 20 كوينز.</p><form id="postJobForm"><div class="form-grid"><div><label class="label-form">المسمى الوظيفي</label><input class="input" id="jobTitle" required></div><div><label class="label-form">القسم</label><select class="select" id="jobCategory"><option value="medical">طبي</option><option value="technical">تقني</option><option value="finance">محاسبة ومالية</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">تشغيل وإدارة مرافق</option><option value="customer_service">خدمة عملاء</option><option value="other">أخرى</option></select></div><div><label class="label-form">المدينة</label><select class="select" id="jobCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div><div><label class="label-form">نوع الدوام</label><select class="select" id="jobType"><option>دوام كامل</option><option>دوام جزئي</option><option>تدريب</option><option>مرن</option></select></div><div><label class="label-form">الراتب المتوقع</label><input class="input" id="salaryRange" placeholder="مثال: 5000 - 7000 ريال"></div><div><label class="label-form">مستوى الخبرة</label><select class="select" id="experienceLevel"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div><div class="full"><label class="label-form">وصف الوظيفة</label><textarea class="textarea" id="jobDescription" required></textarea></div><div class="full"><label class="label-form">المتطلبات</label><textarea class="textarea" id="jobRequirements"></textarea></div><div class="full"><label class="label-form">المزايا</label><textarea class="textarea" id="jobBenefits"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">نشر الوظيفة - 20 كوينز</button><button class="btn btn-ghost" type="button" data-go="wallet">شحن المحفظة</button></div></form></div></section>
+
+<section class="view" id="jobs"><div class="card panel"><h2>الوظائف المنشورة</h2><p>إدارة وظائف الشركة وتمييز الوظائف المهمة.</p><div id="companyJobsList"></div></div></section>
+
+<section class="view" id="applicants"><div class="card panel"><h2>المتقدمين</h2><p>المتقدمون على وظائف الشركة سيظهرون هنا.</p><div id="applicationsList"></div></div></section>
+
+<section class="view" id="wallet"><div class="wallet-summary"><div class="card panel"><h2>محفظة الكوينز</h2><p>استخدم الكوينز لنشر الوظائف وتمييزها وفتح خدمات Pro.</p><div class="packages" id="packagesGrid"></div></div><div class="wallet-balance"><div class="meta">الرصيد الحالي</div><strong id="walletBalance">0</strong><div class="meta">كوينز متاحة</div></div></div><div class="grid2" style="margin-top:16px"><div class="card panel"><h2>طلبات الشحن</h2><div id="purchaseRequestsList"></div></div><div class="card panel"><h2>سجل العمليات</h2><div id="transactionsList"></div></div></div></section>
+
+<section class="view" id="ads"><div class="card panel"><h2>إعلانات Pro للوظائف</h2><p>اختر وظيفة من الوظائف المنشورة ثم اضغط تمييز من قائمة الوظائف. تكلفة تمييز وظيفة 7 أيام: 30 كوينز.</p><div id="promotionsList"></div></div></section>
+
+<section class="view" id="notifications"><div class="card panel"><h2>الإشعارات</h2><div class="box"><strong>لوحة الشركة جاهزة</strong><div class="meta">ابدأ بإكمال ملف الشركة ثم اشحن المحفظة لنشر الوظائف.</div></div></div></section>
+</div></div></section></main>
+
+<footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Company Dashboard Phase 1</div></div></footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+const client = window.hirexSupabase;
+let currentUser = null;
+let currentProfile = null;
+const toast = document.getElementById("toast");
+
+function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
+function showDebug(err){debugBox.style.display="block";debugBox.textContent=typeof err==="string"?err:(err?.message||JSON.stringify(err,null,2))}
+function safe(v,f="غير محدد"){return v&&String(v).trim()?v:f}
+function categoryLabel(v){return {medical:"طبي",technical:"تقني",finance:"محاسبة ومالية",hr:"موارد بشرية",sales:"مبيعات وتسويق",operations:"تشغيل وإدارة مرافق",customer_service:"خدمة عملاء",other:"أخرى"}[v]||v||"غير محدد"}
+
+function openView(id){
+  document.querySelectorAll(".menu button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".menu button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openView(b.dataset.go));
+
+async function getOrCreateProfile(user){
+  let {data,error}=await client.from("profiles").select("*").eq("id",user.id).maybeSingle();
+  if(error) throw error;
+  if(data) return data;
+  const fallback={id:user.id,role:"company",company_name:user.user_metadata?.company_name||user.email?.split("@")[0]||"شركة جديدة",email:user.email,city:"الرياض",company_sector:"تقني",updated_at:new Date().toISOString()};
+  const res=await client.from("profiles").insert(fallback).select("*").single();
+  if(res.error) throw res.error;
+  return res.data;
+}
+
+function renderProfile(p){
+  const name=safe(p.company_name||p.full_name,p.email?.split("@")[0]||"شركة جديدة");
+  const email=safe(p.email,currentUser.email);
+  const sector=safe(p.company_sector,"تقني");
+  companyNameDisplay.textContent=name;
+  helloCompany.textContent=name;
+  companySectorDisplay.textContent=sector;
+  companyEmailDisplay.textContent=email;
+  overviewCompanyName.textContent=name;
+  overviewCompanyData.textContent=email;
+  overviewCity.textContent=safe(p.city,"الرياض");
+  overviewSector.textContent=sector;
+  overviewSize.textContent=safe(p.company_size,"غير محدد");
+  companyLogo.textContent=name.charAt(0)||"ش";
+  companyNameInput.value=name;
+  companyEmailInput.value=email;
+  contactNameInput.value=p.contact_name||"";
+  phoneInput.value=p.phone||"";
+  cityInput.value=p.city||"الرياض";
+  sectorInput.value=sector;
+  sizeInput.value=p.company_size||"1 - 10";
+  websiteInput.value=p.company_website||"";
+  descriptionInput.value=p.company_description||p.summary||"";
+}
+
+async function ensureWallet(){
+  const {data,error}=await client.from("wallets").select("*").eq("company_id",currentUser.id).maybeSingle();
+  if(error) throw error;
+  if(data) return data;
+  const res=await client.from("wallets").insert({company_id:currentUser.id,balance:0}).select("*").single();
+  if(res.error) throw res.error;
+  return res.data;
+}
+
+async function loadWallet(){
+  try{
+    const wallet=await ensureWallet();
+    walletBalance.textContent=wallet.balance||0;
+    walletStat.textContent=wallet.balance||0;
+
+    const pk=await client.from("coin_packages").select("*").eq("is_active",true).order("sort_order",{ascending:true});
+    const seen=new Set(), packages=[];
+    (pk.data||[]).forEach(p=>{const k=p.name+p.coins+p.price;if(!seen.has(k)){seen.add(k);packages.push(p)}});
+    packagesGrid.innerHTML=packages.slice(0,4).map(p=>`<div class="package"><h3>${p.name}</h3><div class="coins">${p.coins} كوينز</div><div class="meta">${p.price} ${p.currency}</div><button class="btn btn-primary" onclick="requestPackage('${p.id}',${p.coins},${p.price},'${p.currency}')">طلب شحن</button></div>`).join("")||'<div class="box">لا توجد باقات</div>';
+
+    const req=await client.from("coin_purchase_requests").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false}).limit(8);
+    purchaseRequestsList.innerHTML=(req.data||[]).map(r=>`<div class="box"><strong>${r.coins} كوينز</strong><div class="meta">${r.status} · ${r.price} ${r.currency}</div></div>`).join("")||'<div class="box">لا توجد طلبات شحن</div>';
+
+    const tx=await client.from("coin_transactions").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false}).limit(8);
+    transactionsList.innerHTML=(tx.data||[]).map(t=>`<div class="box"><strong>${t.reason}</strong><div class="meta">${t.transaction_type} · ${t.amount} كوينز</div></div>`).join("")||'<div class="box">لا توجد عمليات</div>';
+  }catch(e){console.warn(e)}
+}
+
+async function requestPackage(id,coins,price,currency){
+  try{
+    const {error}=await client.from("coin_purchase_requests").insert({company_id:currentUser.id,package_id:id,coins,price,currency,status:"pending"});
+    if(error) throw error;
+    showToast("تم إنشاء طلب الشحن. بانتظار تفعيل الإدارة.");
+    await loadWallet();
+  }catch(e){showToast(e.message)}
+}
+
+async function loadJobs(){
+  const {data,error}=await client.from("company_jobs").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false});
+  if(error){companyJobsList.innerHTML='<div class="box">شغّل supabase-setup.sql لتحميل الوظائف.</div>';return}
+  jobsCount.textContent=(data||[]).length;
+  featuredCount.textContent=(data||[]).filter(j=>j.is_featured).length;
+  companyJobsList.innerHTML=(data||[]).map(j=>`<div class="job"><div class="job-top"><div><div class="job-title">${j.title}</div><div class="meta">${categoryLabel(j.category)} · ${j.city} · ${j.job_type}</div><div class="chips"><span class="chip">${j.salary_range||"الراتب غير محدد"}</span><span class="chip">${j.experience_level||"الخبرة غير محددة"}</span>${j.is_featured?'<span class="chip">مميزة</span>':""}</div></div><span class="status ${j.status==='published'?'published':'paused'}">${j.status}</span></div><div class="actions"><button class="btn btn-primary" onclick="featureJob('${j.id}')">تمييز 30 كوينز</button><button class="btn btn-ghost" onclick="showToast('تعديل الوظيفة سيتم في المرحلة القادمة')">تعديل</button></div></div>`).join("")||'<div class="box">لا توجد وظائف منشورة بعد.</div>';
+}
+
+async function loadApplications(){
+  const {data,error}=await client.from("job_applications").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false}).limit(20);
+  if(error){applicationsList.innerHTML='<div class="box">شغّل supabase-setup.sql لتحميل المتقدمين.</div>';return}
+  appsCount.textContent=(data||[]).length;
+  applicationsList.innerHTML=(data||[]).map(a=>`<div class="box"><strong>${a.candidate_name||"مرشح"}</strong><div class="meta">${a.candidate_email||""} · ${a.cv_category||""} · ${a.status}</div></div>`).join("")||'<div class="box">لا يوجد متقدمون حتى الآن.</div>';
+}
+
+async function loadPromotions(){
+  const {data,error}=await client.from("company_job_promotions").select("*, company_jobs(title)").eq("company_id",currentUser.id).eq("status","active").order("created_at",{ascending:false}).limit(10);
+  if(error){promotionsList.innerHTML='<div class="box">شغّل supabase-setup.sql لتحميل الإعلانات.</div>';return}
+  promotionsList.innerHTML=(data||[]).map(p=>`<div class="box"><strong>${p.company_jobs?.title||"وظيفة مميزة"}</strong><div class="meta">ينتهي: ${new Date(p.ends_at).toLocaleDateString("ar-SA")} · ${p.coins_cost} كوينز</div></div>`).join("")||'<div class="box">لا توجد إعلانات Pro مفعلة حاليًا.</div>';
+}
+
+companyProfileForm.onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    const updates={company_name:companyNameInput.value.trim(),contact_name:contactNameInput.value.trim(),phone:phoneInput.value.trim(),city:cityInput.value,company_sector:sectorInput.value,company_size:sizeInput.value,company_website:websiteInput.value.trim(),company_description:descriptionInput.value.trim(),role:"company",updated_at:new Date().toISOString()};
+    const {data,error}=await client.from("profiles").update(updates).eq("id",currentUser.id).select("*").single();
+    if(error) throw error;
+    currentProfile=data;
+    renderProfile(data);
+    showToast("تم حفظ ملف الشركة");
+  }catch(e){showToast(e.message);showDebug(e)}
+};
+
+postJobForm.onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    showToast("جاري نشر الوظيفة...");
+    const {data,error}=await client.rpc("publish_company_job_with_coins",{
+      p_title:jobTitle.value.trim(),
+      p_category:jobCategory.value,
+      p_city:jobCity.value,
+      p_job_type:jobType.value,
+      p_salary_range:salaryRange.value.trim(),
+      p_experience_level:experienceLevel.value,
+      p_description:jobDescription.value.trim(),
+      p_requirements:jobRequirements.value.trim(),
+      p_benefits:jobBenefits.value.trim()
+    });
+    if(error) throw error;
+    if(!data || data.ok===false){showToast(data?.message||"تعذر نشر الوظيفة");return}
+    showToast(data.message);
+    postJobForm.reset();
+    await loadWallet(); await loadJobs();
+    openView("jobs");
+  }catch(e){showToast(e.message);showDebug(e)}
+};
+
+async function featureJob(jobId){
+  try{
+    showToast("جاري تمييز الوظيفة...");
+    const {data,error}=await client.rpc("buy_company_job_featured",{p_job_id:jobId,p_days:7});
+    if(error) throw error;
+    if(!data || data.ok===false){showToast(data?.message||"تعذر تمييز الوظيفة");return}
+    showToast(data.message);
+    await loadWallet(); await loadJobs(); await loadPromotions();
+  }catch(e){showToast(e.message);showDebug(e)}
+}
+
+async function init(){
+  try{
+    const {data}=await client.auth.getUser();
+    if(!data.user){location.href="login.html";return}
+    currentUser=data.user;
+    currentProfile=await getOrCreateProfile(currentUser);
+    renderProfile(currentProfile);
+    await loadWallet();
+    await loadJobs();
+    await loadApplications();
+    await loadPromotions();
+  }catch(e){showToast("تعذر تحميل لوحة الشركة");showDebug(e)}
+}
+logoutBtn.onclick=async()=>{await client.auth.signOut();location.href="login.html"};
+init();
+</script>
+</body>
+</html>
