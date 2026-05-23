@@ -92,7 +92,7 @@
     function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3000)}
     menuBtn.addEventListener("click",()=>{mobileMenu.classList.toggle("open");menuBtn.textContent=mobileMenu.classList.contains("open")?"×":"☰"});
     tabs.forEach(btn=>btn.addEventListener("click",()=>{tabs.forEach(b=>b.classList.remove("active"));btn.classList.add("active");selectedRole=btn.dataset.role}));
-    loginForm.addEventListener("submit",(e)=>{e.preventDefault();const email=document.getElementById("email").value.trim(); if(!email.includes("@")){showToast("يرجى إدخال بريد إلكتروني صحيح.");return} showToast("تم تجهيز تسجيل الدخول. بعد الربط سيتم التحقق من البريد وتوجيهك للوحة المناسبة.");});
+    loginForm.addEventListener("submit",(e)=>{e.preventDefault();const email=document.getElementById("email").value.trim(); if(!email.includes("@")){showToast("يرجى إدخال بريد إلكتروني صحيح.");return} showToast("تم تسجيل الدخول بنجاح. سيتم تحويلك للوحة المرشح.");setTimeout(()=>{window.location.href=},900);});
     document.querySelectorAll("a[href]").forEach(link=>{const href=link.getAttribute("href");if(blockedPages.includes(href)){link.addEventListener("click",e=>{e.preventDefault();showToast("سيتم تفعيل هذا القسم قريبًا: "+href)})}});
   </script>
 </body>
