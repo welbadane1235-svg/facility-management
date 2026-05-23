@@ -1,1 +1,1 @@
-HireX complete candidate account - stable dashboard, save profile, browse jobs direct.
+HireX professional candidate dashboard with profile, resume, applications, saved jobs, notifications.
