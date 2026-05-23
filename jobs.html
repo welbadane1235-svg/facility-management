@@ -1136,13 +1136,6 @@
           button.textContent = button.classList.contains("saved") ? "تم الحفظ" : "حفظ الوظيفة";
         });
       });
-
-      document.querySelectorAll(".page-link").forEach(link => {
-        link.addEventListener("click", event => {
-          event.preventDefault();
-          showToast("سيتم فتح صفحة تفاصيل الوظيفة عند اكتمال تفعيلها.");
-        });
-      });
     }
 
     [searchInput, cityFilter, categoryFilter, experienceFilter, sortSelect].forEach(element => {
