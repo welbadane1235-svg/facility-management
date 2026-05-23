@@ -1,1 +1,1 @@
-HireX company dashboard phase 1: company profile, wallet, publish jobs with coins, feature jobs with coins.
+Index links fixed: companies/register/login/jobs active, no blocker.
