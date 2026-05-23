@@ -54,12 +54,12 @@
       <div class="container">
         <nav class="navbar" aria-label="القائمة الرئيسية">
           <a class="brand" href="index.html"><div class="brand-icon">H</div><div><div class="brand-title">HireX</div><div class="brand-subtitle">منصة التوظيف والفرص المهنية</div></div></a>
-          <div class="nav-links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a></div>
+          <div class="nav-links"><a href="index.html">الرئيسية</a><a href=>الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a></div>
           <div class="nav-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary active" href="register.html">إنشاء حساب</a></div>
           <button class="menu-btn" id="menuBtn">☰</button>
         </nav>
         <div class="mobile-menu" id="mobileMenu">
-          <a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a>
+          <a href="index.html">الرئيسية</a><a href=>الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a>
           <div class="mobile-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href="register.html">إنشاء حساب</a></div>
         </div>
       </div>
@@ -114,14 +114,14 @@
   <div class="toast" id="toast"></div>
   <script>
     const menuBtn=document.getElementById("menuBtn"),mobileMenu=document.getElementById("mobileMenu"),toast=document.getElementById("toast"),switchButtons=document.querySelectorAll(".switch-btn"),candidateForm=document.getElementById("candidateForm"),companyForm=document.getElementById("companyForm"),candidatePassword=document.getElementById("candidatePassword"),companyPassword=document.getElementById("companyPassword"),candidateMeter=document.getElementById("candidateMeter"),companyMeter=document.getElementById("companyMeter");
-    const blockedPages=["companies.html","candidates.html","login.html","terms.html","privacy.html","support.html"];
+    const blockedPages=["companies.html","candidates.html","terms.html","privacy.html","support.html"];
     function showToast(message){toast.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3000)}
     menuBtn.addEventListener("click",()=>{mobileMenu.classList.toggle("open");menuBtn.textContent=mobileMenu.classList.contains("open")?"×":"☰"});
     switchButtons.forEach(button=>{button.addEventListener("click",()=>{switchButtons.forEach(btn=>btn.classList.remove("active"));button.classList.add("active");const type=button.dataset.account;candidateForm.classList.toggle("active",type==="candidate");companyForm.classList.toggle("active",type==="company")})});
     function updatePasswordMeter(input,meter){const v=input.value;let score=0;if(v.length>=6)score+=25;if(v.length>=10)score+=25;if(/[A-Z]/.test(v)||/[أ-ي]/.test(v))score+=15;if(/[0-9]/.test(v))score+=20;if(/[^A-Za-z0-9أ-ي]/.test(v))score+=15;meter.style.width=Math.min(score,100)+"%"}
     candidatePassword.addEventListener("input",()=>updatePasswordMeter(candidatePassword,candidateMeter));companyPassword.addEventListener("input",()=>updatePasswordMeter(companyPassword,companyMeter));
-    candidateForm.addEventListener("submit",event=>{event.preventDefault();const password=document.getElementById("candidatePassword").value;const confirm=document.getElementById("candidateConfirmPassword").value;if(password!==confirm){showToast("كلمة المرور وتأكيدها غير متطابقين.");return}showToast("تم تجهيز حساب المرشح بنجاح. سيتم ربط الحفظ الحقيقي بقاعدة البيانات في المرحلة القادمة.");candidateForm.reset();candidateMeter.style.width="0"});
-    companyForm.addEventListener("submit",event=>{event.preventDefault();const password=document.getElementById("companyPassword").value;const confirm=document.getElementById("companyConfirmPassword").value;if(password!==confirm){showToast("كلمة المرور وتأكيدها غير متطابقين.");return}showToast("تم تجهيز حساب الشركة بنجاح. سيتم ربط الحفظ الحقيقي بقاعدة البيانات في المرحلة القادمة.");companyForm.reset();companyMeter.style.width="0"});
+    candidateForm.addEventListener("submit",event=>{event.preventDefault();const password=document.getElementById("candidatePassword").value;const confirm=document.getElementById("candidateConfirmPassword").value;if(password!==confirm){showToast("كلمة المرور وتأكيدها غير متطابقين.");return}showToast("تم إنشاء حساب المرشح. سيتم تحويلك لصفحة التحقق عبر البريد.");setTimeout(()=>{window.location.href=},900)});
+    companyForm.addEventListener("submit",event=>{event.preventDefault();const password=document.getElementById("companyPassword").value;const confirm=document.getElementById("companyConfirmPassword").value;if(password!==confirm){showToast("كلمة المرور وتأكيدها غير متطابقين.");return}showToast("تم إنشاء حساب الشركة. سيتم تحويلك لصفحة التحقق عبر البريد.");setTimeout(()=>{window.location.href=},900)});
     document.querySelectorAll("a[href]").forEach(link=>{const href=link.getAttribute("href");if(blockedPages.includes(href)){link.addEventListener("click",event=>{event.preventDefault();showToast("سيتم تفعيل هذا القسم قريبًا: "+href)})}});
   </script>
 </body>

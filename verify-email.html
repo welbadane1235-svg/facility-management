@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التحقق من البريد | HireX</title>
+  <meta name="description" content="تحقق من بريدك الإلكتروني لتفعيل حسابك في HireX." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#08111f;--card:rgba(255,255,255,.075);--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted-2:#7c899e;--green:#34d399;--cyan:#22d3ee;--shadow:0 24px 80px rgba(0,0,0,.34)}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:"Tajawal",system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7}a{text-decoration:none;color:inherit}button,input{font-family:inherit}
+    .container{width:min(900px,calc(100% - 32px));margin:auto}.page{min-height:100vh;display:grid;place-items:center;padding:40px 0}.card{border:1px solid var(--border);background:rgba(255,255,255,.075);border-radius:34px;box-shadow:var(--shadow);padding:34px;text-align:center;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(52,211,153,.18),transparent 38%);pointer-events:none}.content{position:relative;z-index:1}.logo{width:70px;height:70px;border-radius:26px;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:28px}.badge{width:fit-content;margin:0 auto 16px;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(52,211,153,.24);background:rgba(52,211,153,.1);color:#d1fae5;border-radius:999px;font-weight:900;font-size:13px}
+    h1{font-size:clamp(34px,5vw,58px);line-height:1.15;font-weight:900;letter-spacing:-1px;margin-bottom:14px}p{color:var(--muted);font-size:18px;max-width:680px;margin:0 auto 20px}.mail-box{display:grid;grid-template-columns:1fr auto;gap:10px;margin:24px auto 14px;max-width:580px}.input{height:54px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.btn{min-height:54px;padding:0 22px;border:0;border-radius:18px;cursor:pointer;font-weight:900;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{color:var(--text);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;text-align:right}.step{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:20px;padding:14px;color:var(--muted);font-weight:800}.step strong{display:block;color:#fff;margin-bottom:4px}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:380px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}
+    @media(max-width:700px){.mail-box{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.card{padding:22px}.actions .btn{width:100%}.toast{right:12px;left:12px;bottom:14px}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="container card">
+      <div class="content">
+        <div class="logo">H</div>
+        <div class="badge">📩 تحقق من البريد</div>
+        <h1>تم إنشاء حسابك، بقي تأكيد البريد الإلكتروني.</h1>
+        <p>أرسلنا رابط تحقق إلى بريدك. افتح الرسالة واضغط رابط التفعيل حتى يتم تفعيل الحساب. إذا لم تصلك الرسالة يمكنك إعادة إرسال الرابط.</p>
+        <form class="mail-box" id="verifyForm">
+          <input class="input" id="email" type="email" placeholder="اكتب بريدك لإعادة إرسال رابط التحقق" required />
+          <button class="btn btn-primary" type="submit">إعادة إرسال الرابط</button>
+        </form>
+        <div class="actions">
+          <a class="btn btn-ghost" href=>العودة لتسجيل الدخول</a>
+          <a class="btn btn-ghost" href="index.html">الصفحة الرئيسية</a>
+        </div>
+        <div class="steps">
+          <div class="step"><strong>1. افتح البريد</strong>راجع صندوق الوارد أو الرسائل غير المرغوبة.</div>
+          <div class="step"><strong>2. اضغط رابط التفعيل</strong>بعد الضغط يتم اعتماد البريد للحساب.</div>
+          <div class="step"><strong>3. سجل الدخول</strong>بعد التفعيل تستطيع الدخول للوحة الحساب.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script>
+    const toast=document.getElementById("toast"),form=document.getElementById("verifyForm");
+    function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3000)}
+    form.addEventListener("submit",e=>{e.preventDefault();showToast("تم تجهيز إعادة إرسال رابط التحقق. سيتم ربطها بالبريد الحقيقي في مرحلة Supabase.")});
+  </script>
+</body>
+</html>

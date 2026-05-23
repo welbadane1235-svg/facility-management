@@ -1,0 +1,1 @@
+HireX fixed links: login/register/verify/details open directly from all pages.

@@ -137,7 +137,7 @@
 
           <div class="nav-links">
             <a href="index.html">الرئيسية</a>
-            <a class="active" href="jobs.html">الوظائف</a>
+            <a class="active" href=>الوظائف</a>
             <a href="companies.html">للشركات</a>
             <a href="candidates.html">للمرشحين</a>
             <a href="index.html#features">المميزات</a>
@@ -153,7 +153,7 @@
 
         <div class="mobile-menu" id="mobileMenu">
           <a href="index.html">الرئيسية</a>
-          <a href="jobs.html">الوظائف</a>
+          <a href=>الوظائف</a>
           <a href="companies.html">للشركات</a>
           <a href="candidates.html">للمرشحين</a>
           <a href="index.html#features">المميزات</a>
@@ -171,7 +171,7 @@
           <div class="breadcrumb">
             <a href="index.html">الرئيسية</a>
             <span>›</span>
-            <a href="jobs.html">الوظائف</a>
+            <a href=>الوظائف</a>
             <span>›</span>
             <span>تفاصيل الوظيفة</span>
           </div>
@@ -269,7 +269,7 @@
           <div class="apply-box">
             <button class="btn btn-primary" id="applyBtn">تقديم الآن</button>
             <button class="btn btn-ghost" id="saveBtn">حفظ الوظيفة</button>
-            <a class="btn btn-white" href="jobs.html">العودة للوظائف</a>
+            <a class="btn btn-white" href=>العودة للوظائف</a>
           </div>
 
           <div class="side-info">
@@ -285,7 +285,7 @@
     <section class="not-found container" id="notFound">
       <h1>الوظيفة غير موجودة</h1>
       <p>ربما تم حذف الوظيفة أو أن الرابط غير صحيح. يمكنك العودة إلى صفحة الوظائف واستعراض الفرص المتاحة.</p>
-      <a class="btn btn-primary" href="jobs.html">العودة إلى الوظائف</a>
+      <a class="btn btn-primary" href=>العودة إلى الوظائف</a>
     </section>
 
     <footer class="footer">
@@ -420,7 +420,7 @@
 
     document.querySelectorAll("a[href]").forEach((link)=>{
       const href=link.getAttribute("href");
-      const blocked=["companies.html","candidates.html","login.html","register.html","terms.html","privacy.html","support.html"];
+      const blocked=["companies.html","candidates.html","terms.html","privacy.html","support.html"];
       if(blocked.includes(href)){link.addEventListener("click",(event)=>{event.preventDefault();showToast("سيتم تفعيل هذا القسم قريبًا: "+href)})}
     });
 
