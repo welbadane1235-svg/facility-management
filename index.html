@@ -1,324 +1,1282 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HireX</title><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="manifest" href="manifest.json"><style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireX | منصة التوظيف الذكية</title>
+  <meta name="description" content="HireX منصة توظيف احترافية تربط الشركات بالمرشحين وتساعد على إدارة طلبات التوظيف بسهولة." />
 
-:root{
-  --bg:#070b15;
-  --bg2:#0b1220;
-  --panel:rgba(15,23,42,.72);
-  --panel2:rgba(30,41,59,.62);
-  --border:rgba(148,163,184,.16);
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --soft:#cbd5e1;
-  --primary:#0ea5e9;
-  --primary2:#2563eb;
-  --violet:#7c3aed;
-  --success:#22c55e;
-  --danger:#ef4444;
-  --warning:#f59e0b;
-  --radius:22px;
-  --shadow:0 24px 80px rgba(2,6,23,.35);
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:Cairo,Arial,sans-serif}
-html{scroll-behavior:smooth}
-body{
-  background:
-    radial-gradient(circle at 80% 5%,rgba(14,165,233,.16),transparent 28%),
-    radial-gradient(circle at 5% 90%,rgba(124,58,237,.14),transparent 28%),
-    linear-gradient(145deg,#050914,#07111f 58%,#050914);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-body:before{
-  content:"";
-  position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size:44px 44px;
-  mask-image:linear-gradient(to bottom,black,transparent 80%);
-  pointer-events:none;
-  z-index:-1;
-}
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-button{user-select:none}
-input,select,textarea{
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:rgba(15,23,42,.72);
-  color:var(--text);
-  padding:0 15px;
-  width:100%;
-  outline:none;
-  transition:.2s;
-}
-input:focus,select:focus,textarea:focus{
-  border-color:rgba(14,165,233,.65);
-  box-shadow:0 0 0 4px rgba(14,165,233,.12);
-}
-input,select{height:52px}
-textarea{min-height:112px;padding-top:13px;resize:vertical}
-select option{color:#0f172a;background:#fff}
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-soft: #0e1b2e;
+      --card: rgba(255, 255, 255, 0.075);
+      --card-strong: rgba(255, 255, 255, 0.11);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --muted: #a8b3c7;
+      --muted-2: #7c899e;
+      --green: #34d399;
+      --green-2: #10b981;
+      --cyan: #22d3ee;
+      --blue: #60a5fa;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+    }
 
-.glass{
-  background:linear-gradient(180deg,rgba(15,23,42,.78),rgba(15,23,42,.54));
-  border:1px solid var(--border);
-  backdrop-filter:blur(22px);
-  box-shadow:var(--shadow);
-}
-.btn{
-  border:0;
-  border-radius:15px;
-  padding:12px 18px;
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  background:rgba(148,163,184,.12);
-  border:1px solid rgba(148,163,184,.10);
-  transition:.22s ease;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-.btn:hover{transform:translateY(-2px);background:rgba(148,163,184,.18)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.p{
-  background:linear-gradient(135deg,var(--primary),var(--primary2));
-  box-shadow:0 12px 28px rgba(37,99,235,.22);
-}
-.p:hover{background:linear-gradient(135deg,#38bdf8,#2563eb)}
-.ok{background:rgba(34,197,94,.14);color:#86efac;border-color:rgba(34,197,94,.22)}
-.no{background:rgba(239,68,68,.14);color:#fca5a5;border-color:rgba(239,68,68,.22)}
-.warn{background:rgba(245,158,11,.14);color:#fcd34d;border-color:rgba(245,158,11,.22)}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-nav{
-  min-height:78px;
-  padding:14px 6%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(5,9,20,.78);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(148,163,184,.11);
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-.logo{display:flex;align-items:center;gap:13px}
-.x{
-  width:48px;height:48px;border-radius:18px;
-  background:linear-gradient(135deg,var(--primary),var(--primary2) 70%,var(--violet));
-  display:grid;place-items:center;font-weight:900;
-  box-shadow:0 18px 45px rgba(14,165,233,.22);
-}
-.logo h1{font-size:24px;line-height:1.1;font-weight:900;letter-spacing:-.3px}
-.logo small{color:var(--muted);font-weight:600}
+    html {
+      scroll-behavior: smooth;
+    }
 
-.hero{
-  padding:78px 6% 58px;
-  display:grid;
-  grid-template-columns:1.08fr .92fr;
-  gap:34px;
-  align-items:center;
-}
-.hero h2{
-  font-size:58px;
-  line-height:1.16;
-  margin-bottom:18px;
-  letter-spacing:-1.2px;
-  font-weight:900;
-}
-.hero p{color:var(--soft);font-size:18px;line-height:2;max-width:760px}
-.grad{
-  background:linear-gradient(90deg,#38bdf8,#2563eb,#8b5cf6);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.card,.panel{
-  border-radius:28px;
-  padding:22px;
-}
-.form{display:grid;gap:12px}
-.tabs{
-  display:flex;
-  gap:10px;
-  margin-bottom:14px;
-  padding:6px;
-  background:rgba(2,6,23,.28);
-  border-radius:20px;
-  border:1px solid rgba(148,163,184,.08);
-}
-.tabs .btn{flex:1}
+    body {
+      font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(52, 211, 153, 0.2), transparent 34%),
+        radial-gradient(circle at 10% 35%, rgba(34, 211, 238, 0.16), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(96, 165, 250, 0.12), transparent 38%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-#public{display:none}
-.app{display:none}
-.app.active,#public.active{display:block}
-.layout{
-  display:grid;
-  grid-template-columns:minmax(245px,280px) 1fr;
-  gap:20px;
-  padding:22px;
-}
-.side{
-  border-radius:30px;
-  padding:18px;
-  min-height:calc(100vh - 44px);
-  position:sticky;
-  top:94px;
-  align-self:start;
-}
-.side h3{font-size:18px}
-.side button{
-  width:100%;
-  margin:6px 0;
-  justify-content:flex-start;
-  text-align:right;
-  min-height:46px;
-}
-.side button.active{
-  background:linear-gradient(135deg,rgba(14,165,233,.28),rgba(37,99,235,.18));
-  border-color:rgba(14,165,233,.28);
-  color:#e0f2fe;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.page{display:none;animation:fadeUp .28s ease}
-.page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
 
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px;
-  margin-bottom:18px;
-}
-.kpi{
-  border-radius:24px;
-  padding:18px;
-  position:relative;
-  overflow:hidden;
-}
-.kpi:before{
-  content:"";
-  position:absolute;inset:auto -20% -45% -20%;
-  height:95px;
-  background:radial-gradient(circle,rgba(14,165,233,.18),transparent 70%);
-}
-.kpi h3{font-size:34px;font-weight:900;letter-spacing:-.8px}
-.kpi p{color:var(--muted);font-weight:700;margin-top:4px}
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin-inline: auto;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-}
-.item{
-  border-radius:24px;
-  padding:18px;
-  transition:.22s ease;
-  background:linear-gradient(180deg,rgba(15,23,42,.78),rgba(15,23,42,.52));
-  border:1px solid var(--border);
-}
-.item:hover{
-  transform:translateY(-4px);
-  border-color:rgba(14,165,233,.24);
-  box-shadow:0 22px 60px rgba(2,6,23,.30);
-}
-.item h3{font-size:19px;margin-bottom:6px}
-.item p{color:var(--muted);line-height:1.8}
+    .page-shell {
+      position: relative;
+      min-height: 100vh;
+    }
 
-.fg{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.full{grid-column:1/-1}
-.pill,.tag{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:6px 11px;
-  border-radius:999px;
-  background:rgba(14,165,233,.13);
-  color:#7dd3fc;
-  border:1px solid rgba(14,165,233,.15);
-  font-size:12px;
-  font-weight:800;
-  margin:3px;
-}
-.pending{background:rgba(245,158,11,.13);color:#fde68a;border-color:rgba(245,158,11,.2)}
-.accepted,.verified{background:rgba(34,197,94,.13);color:#86efac;border-color:rgba(34,197,94,.2)}
-.rejected{background:rgba(239,68,68,.13);color:#fca5a5;border-color:rgba(239,68,68,.2)}
-.interview,.invited{background:rgba(139,92,246,.14);color:#c4b5fd;border-color:rgba(139,92,246,.2)}
+    .blur-circle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.38;
+      z-index: -1;
+    }
 
-.toast{
-  position:fixed;
-  bottom:22px;
-  left:22px;
-  z-index:1000;
-  padding:14px 18px;
-  border-radius:18px;
-  background:rgba(34,197,94,.16);
-  border:1px solid rgba(34,197,94,.26);
-  color:#bbf7d0;
-  display:none;
-  box-shadow:0 18px 50px rgba(0,0,0,.24);
-}
-.toast.err{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.28);color:#fecaca}
+    .blur-1 {
+      width: 280px;
+      height: 280px;
+      background: var(--green);
+      top: -70px;
+      right: -70px;
+    }
 
-.searchbar{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-  margin:14px 0;
-}
-.meta{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
-.meta span{
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(148,163,184,.10);
-  font-size:12px;
-  color:var(--soft);
-  font-weight:700;
-}
-.empty{
-  border-radius:22px;
-  padding:28px;
-  text-align:center;
-  color:var(--muted);
-  background:rgba(15,23,42,.46);
-  border:1px dashed rgba(148,163,184,.18);
-}
-#bootScreen{
-  position:fixed;
-  inset:0;
-  z-index:999;
-  background:#050914;
-  display:grid;
-  place-items:center;
-}
-.loader{
-  width:54px;height:54px;border-radius:50%;
-  border:4px solid rgba(255,255,255,.12);
-  border-top-color:var(--primary);
-  animation:spin .8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
+    .blur-2 {
+      width: 360px;
+      height: 360px;
+      background: var(--cyan);
+      bottom: 8%;
+      left: -120px;
+    }
 
-@media(max-width:1100px){
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .kpis{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:900px){
-  nav{padding:12px 18px}
-  .hero,.layout{grid-template-columns:1fr}
-  .hero{padding:42px 20px}
-  .hero h2{font-size:38px}
-  .grid,.kpis,.fg,.searchbar{grid-template-columns:1fr}
-  .side{position:relative;top:0;min-height:auto}
-}
-</style></head><body><nav><div class="logo"><div class="x">X</div><div><h1>HireX</h1><small>منصة التوظيف الذكية</small></div></div><a class="btn p" href="candidate.html">ابدأ الآن</a></nav><section class="hero"><div><h2>منصة توظيف <span class="grad">جاهزة</span></h2><p>باحث، شركة، وإدارة منفصلة.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn p" href="candidate.html">باحث عن عمل</a><a class="btn" href="company.html">شركة</a></div></div><div class="card glass"><h3>HireX</h3><p>تجربة توظيف منظمة للباحثين والشركات، مع لوحة إدارة مستقلة.</p></div></section></body></html>
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 17, 31, 0.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      box-shadow: 0 12px 30px rgba(52, 211, 153, 0.24);
+      color: #06111d;
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      color: var(--muted-2);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      color: #06111d;
+      box-shadow: 0 14px 34px rgba(52, 211, 153, 0.22);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #6ee7b7, #67e8f9);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .btn-dark {
+      background: #ffffff;
+      color: #08111f;
+    }
+
+    .menu-btn {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .mobile-menu {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding: 14px 0 18px;
+    }
+
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 12px 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .mobile-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .hero {
+      padding: 78px 0 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .badge {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      background: rgba(52, 211, 153, 0.1);
+      color: #d1fae5;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 68px);
+      line-height: 1.12;
+      letter-spacing: -1.4px;
+      font-weight: 900;
+      max-width: 740px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff, #a7f3d0 44%, #67e8f9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 19px;
+      max-width: 630px;
+    }
+
+    .hero-actions {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .trust-row {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-panel {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.05));
+      border-radius: 36px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: radial-gradient(circle at 20% 0%, rgba(52, 211, 153, 0.24), transparent 34%);
+      pointer-events: none;
+    }
+
+    .dashboard-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(8, 17, 31, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .panel-title {
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .panel-subtitle {
+      color: var(--muted-2);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.11);
+      color: #d1fae5;
+      border: 1px solid rgba(52, 211, 153, 0.22);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 999px;
+      box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .mini-stat {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 20px;
+      padding: 13px;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: var(--muted-2);
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    .candidate-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .candidate-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .candidate-info {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #06111d;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+    }
+
+    .candidate-name {
+      font-weight: 900;
+    }
+
+    .candidate-role {
+      color: var(--muted-2);
+      font-size: 13px;
+    }
+
+    .status {
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.good {
+      background: rgba(52, 211, 153, 0.11);
+      color: #bbf7d0;
+      border: 1px solid rgba(52, 211, 153, 0.18);
+    }
+
+    .status.review {
+      background: rgba(251, 191, 36, 0.11);
+      color: #fde68a;
+      border: 1px solid rgba(251, 191, 36, 0.18);
+    }
+
+    .floating-note {
+      position: absolute;
+      right: -14px;
+      bottom: 26px;
+      z-index: 2;
+      width: 180px;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.96);
+      color: #08111f;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .floating-note span {
+      color: #059669;
+      display: block;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .section {
+      padding: 54px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.8px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      margin-top: 8px;
+      max-width: 640px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stat-card,
+    .feature-card,
+    .job-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card {
+      padding: 22px;
+    }
+
+    .stat-icon,
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      background: rgba(52, 211, 153, 0.12);
+      color: #bbf7d0;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .stat-value {
+      font-size: 33px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stat-label {
+      margin-top: 8px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .search-box {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.075);
+      border-radius: 30px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      position: relative;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 52px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(8, 17, 31, 0.72);
+      color: var(--text);
+      outline: none;
+      padding: 0 16px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .field input {
+      padding-right: 44px;
+    }
+
+    .field-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-2);
+      font-size: 17px;
+    }
+
+    option {
+      background: #08111f;
+      color: white;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .job-card {
+      padding: 20px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      background: var(--card-strong);
+    }
+
+    .job-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .job-title {
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .job-company {
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 700;
+    }
+
+    .job-date {
+      color: #bae6fd;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.18);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .job-meta {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .job-meta div {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 20px;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      padding: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+    }
+
+    .cta-card {
+      border: 1px solid rgba(52, 211, 153, 0.22);
+      background:
+        linear-gradient(135deg, rgba(52, 211, 153, 0.16), rgba(34, 211, 238, 0.1)),
+        rgba(255, 255, 255, 0.05);
+      border-radius: 36px;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .cta-card h2 {
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      margin-top: 10px;
+      max-width: 680px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      color: var(--muted-2);
+      font-weight: 700;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hidden-admin-link {
+      opacity: 0.3;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      z-index: 80;
+      max-width: 360px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      color: #06111d;
+      background: #ffffff;
+      box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
+      font-weight: 800;
+      display: none;
+    }
+
+    .toast.show {
+      display: block;
+      animation: toastIn 0.22s ease;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 980px) {
+      .nav-links,
+      .nav-actions {
+        display: none;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .hero-grid,
+      .cta-card {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      .stats-grid,
+      .jobs-grid,
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .search-box {
+        grid-template-columns: 1fr;
+      }
+
+      .floating-note {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .navbar {
+        height: 72px;
+      }
+
+      .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+      }
+
+      .brand-title {
+        font-size: 23px;
+      }
+
+      .hero h1 {
+        font-size: 37px;
+      }
+
+      .hero p {
+        font-size: 17px;
+      }
+
+      .hero-actions .btn,
+      .mobile-actions .btn {
+        width: 100%;
+      }
+
+      .mini-stats,
+      .stats-grid,
+      .jobs-grid,
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 42px 0;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-panel,
+      .dashboard-card,
+      .cta-card {
+        border-radius: 26px;
+      }
+
+      .candidate-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toast {
+        right: 12px;
+        left: 12px;
+        bottom: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+    <div class="blur-circle blur-1"></div>
+    <div class="blur-circle blur-2"></div>
+
+    <header class="header">
+      <div class="container">
+        <nav class="navbar" aria-label="القائمة الرئيسية">
+          <a class="brand" href="index.html" aria-label="HireX الصفحة الرئيسية">
+            <div class="brand-icon">H</div>
+            <div>
+              <div class="brand-title">HireX</div>
+              <div class="brand-subtitle">منصة التوظيف الذكية</div>
+            </div>
+          </a>
+
+          <div class="nav-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="jobs.html">الوظائف</a>
+            <a href="companies.html">للشركات</a>
+            <a href="candidates.html">للمرشحين</a>
+            <a href="#features">المميزات</a>
+          </div>
+
+          <div class="nav-actions">
+            <a class="btn btn-ghost" href="login.html">تسجيل الدخول</a>
+            <a class="btn btn-primary" href="register.html">إنشاء حساب</a>
+          </div>
+
+          <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة">☰</button>
+        </nav>
+
+        <div class="mobile-menu" id="mobileMenu">
+          <a href="index.html">الرئيسية</a>
+          <a href="jobs.html">الوظائف</a>
+          <a href="companies.html">للشركات</a>
+          <a href="candidates.html">للمرشحين</a>
+          <a href="#features">المميزات</a>
+          <div class="mobile-actions">
+            <a class="btn btn-ghost" href="login.html">تسجيل الدخول</a>
+            <a class="btn btn-primary" href="register.html">إنشاء حساب</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="badge">✨ نسخة Pro UI — بداية منظمة صفحة بصفحة</div>
+            <h1>
+              منصة توظيف <span class="gradient-text">احترافية</span> تربط الشركات بالمرشحين المناسبين.
+            </h1>
+            <p>
+              HireX تساعد المرشح على إنشاء ملفه والتقديم بسهولة، وتساعد الشركات على نشر الوظائف وفرز الطلبات ومتابعة المرشحين من مكان واحد.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="jobs.html">ابحث عن وظيفة ←</a>
+              <a class="btn btn-ghost" href="companies.html">انشر وظيفة كشركة</a>
+            </div>
+
+            <div class="trust-row" aria-label="مزايا مختصرة">
+              <div class="trust-item">✅ واجهة عربية واضحة</div>
+              <div class="trust-item">✅ مناسبة للجوال</div>
+              <div class="trust-item">✅ جاهزة للربط مع Supabase</div>
+            </div>
+          </div>
+
+          <div class="hero-panel" aria-label="عرض مختصر للوحة المتابعة">
+            <div class="dashboard-card">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-title">متابعة طلبات التوظيف</div>
+                  <div class="panel-subtitle">عرض تجريبي للوحة الشركات</div>
+                </div>
+                <div class="live-badge"><span class="dot"></span> مباشر</div>
+              </div>
+
+              <div class="mini-stats">
+                <div class="mini-stat">
+                  <strong>42</strong>
+                  <span>طلبات جديدة</span>
+                </div>
+                <div class="mini-stat">
+                  <strong>18</strong>
+                  <span>قيد المراجعة</span>
+                </div>
+                <div class="mini-stat">
+                  <strong>7</strong>
+                  <span>مقابلات</span>
+                </div>
+              </div>
+
+              <div class="candidate-list">
+                <div class="candidate-item">
+                  <div class="candidate-info">
+                    <div class="avatar">م</div>
+                    <div>
+                      <div class="candidate-name">محمد أحمد</div>
+                      <div class="candidate-role">محاسب عام</div>
+                    </div>
+                  </div>
+                  <span class="status good">مناسب</span>
+                </div>
+
+                <div class="candidate-item">
+                  <div class="candidate-info">
+                    <div class="avatar">س</div>
+                    <div>
+                      <div class="candidate-name">سارة خالد</div>
+                      <div class="candidate-role">موارد بشرية</div>
+                    </div>
+                  </div>
+                  <span class="status review">مراجعة</span>
+                </div>
+
+                <div class="candidate-item">
+                  <div class="candidate-info">
+                    <div class="avatar">ع</div>
+                    <div>
+                      <div class="candidate-name">عبدالله ناصر</div>
+                      <div class="candidate-role">Frontend Developer</div>
+                    </div>
+                  </div>
+                  <span class="status good">مناسب</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="floating-note">
+              <span>96%</span>
+              طلبات منظمة وقابلة للمتابعة
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💼</div>
+            <div class="stat-value">1,240+</div>
+            <div class="stat-label">وظائف منشورة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-value">320+</div>
+            <div class="stat-label">شركة مسجلة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-value">18K+</div>
+            <div class="stat-label">مرشح مؤهل</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🛡️</div>
+            <div class="stat-value">آمن</div>
+            <div class="stat-label">إدارة منفصلة للصلاحيات</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="jobs-preview">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">أحدث الوظائف</h2>
+              <p class="section-desc">هذا العرض مبدئي للصفحة الرئيسية. في المرحلة التالية سنبني صفحة الوظائف كاملة مع الفلاتر والتفاصيل.</p>
+            </div>
+            <a class="btn btn-ghost" href="jobs.html">عرض كل الوظائف</a>
+          </div>
+
+          <div class="search-box">
+            <div class="field">
+              <span class="field-icon">🔎</span>
+              <input id="jobSearch" type="text" placeholder="ابحث باسم الوظيفة أو المهارة..." />
+            </div>
+            <div class="field">
+              <select id="cityFilter" aria-label="فلترة المدينة">
+                <option value="all">كل المدن</option>
+                <option value="الرياض">الرياض</option>
+                <option value="جدة">جدة</option>
+                <option value="عن بعد">عن بعد</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="searchBtn">بحث</button>
+          </div>
+
+          <div class="jobs-grid" id="jobsGrid">
+            <article class="job-card" data-city="الرياض" data-keywords="محاسب عام محاسبة excel erp">
+              <div class="job-top">
+                <div>
+                  <h3 class="job-title">محاسب عام</h3>
+                  <div class="job-company">شركة نمو الأعمال</div>
+                </div>
+                <span class="job-date">اليوم</span>
+              </div>
+              <div class="job-meta">
+                <div>📍 الرياض</div>
+                <div>🕒 دوام كامل</div>
+                <div>💵 5,000 - 7,000 ريال</div>
+              </div>
+              <div class="tags">
+                <span class="tag">محاسبة</span>
+                <span class="tag">Excel</span>
+                <span class="tag">ERP</span>
+              </div>
+              <a class="btn btn-dark" href="job-details.html?id=1">عرض التفاصيل</a>
+            </article>
+
+            <article class="job-card" data-city="جدة" data-keywords="مسؤول موارد بشرية hr توظيف عقود">
+              <div class="job-top">
+                <div>
+                  <h3 class="job-title">مسؤول موارد بشرية</h3>
+                  <div class="job-company">HireX Partner</div>
+                </div>
+                <span class="job-date">منذ يومين</span>
+              </div>
+              <div class="job-meta">
+                <div>📍 جدة</div>
+                <div>🕒 دوام كامل</div>
+                <div>💵 4,500 - 6,500 ريال</div>
+              </div>
+              <div class="tags">
+                <span class="tag">HR</span>
+                <span class="tag">توظيف</span>
+                <span class="tag">عقود</span>
+              </div>
+              <a class="btn btn-dark" href="job-details.html?id=2">عرض التفاصيل</a>
+            </article>
+
+            <article class="job-card" data-city="عن بعد" data-keywords="مبرمج frontend react ui supabase">
+              <div class="job-top">
+                <div>
+                  <h3 class="job-title">مبرمج Frontend</h3>
+                  <div class="job-company">Tech Vision</div>
+                </div>
+                <span class="job-date">هذا الأسبوع</span>
+              </div>
+              <div class="job-meta">
+                <div>📍 عن بعد</div>
+                <div>🕒 مرن</div>
+                <div>💵 7,000 - 11,000 ريال</div>
+              </div>
+              <div class="tags">
+                <span class="tag">React</span>
+                <span class="tag">UI</span>
+                <span class="tag">Supabase</span>
+              </div>
+              <a class="btn btn-dark" href="job-details.html?id=3">عرض التفاصيل</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">لماذا HireX؟</h2>
+              <p class="section-desc">المطلوب الآن ليس كثرة صفحات، المطلوب أساس قوي. لذلك صممنا الصفحة الأولى لتكون قابلة للتوسع بدون كسر الربط.</p>
+            </div>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>سريعة وواضحة</h3>
+              <p>تجربة استخدام مباشرة للمرشح والشركة، بدون تعقيد زائد أو خطوات مربكة.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🧭</div>
+              <h3>تنقل منظم</h3>
+              <p>كل صفحة لها دور واضح، والروابط مجهزة من الآن حتى نربط الصفحات خطوة بخطوة.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🔐</div>
+              <h3>إدارة منفصلة</h3>
+              <p>لوحة الإدارة لن تظهر في القائمة العامة، وستكون لاحقًا عبر admin.html بصلاحيات خاصة.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="cta-card">
+            <div>
+              <h2>جاهز ننتقل للصفحة الثانية بعد اعتماد الصفحة الرئيسية؟</h2>
+              <p>بعد مراجعة هذه الصفحة، نبدأ صفحة الوظائف jobs.html ونربطها بنفس التصميم والهوية والأزرار.</p>
+            </div>
+            <a class="btn btn-primary" href="jobs.html">الانتقال للوظائف</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <div>© 2026 HireX — منصة التوظيف الذكية</div>
+        <div class="footer-links">
+          <a href="terms.html">الشروط</a>
+          <a href="privacy.html">الخصوصية</a>
+          <a href="support.html">الدعم</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const toast = document.getElementById("toast");
+    const jobSearch = document.getElementById("jobSearch");
+    const cityFilter = document.getElementById("cityFilter");
+    const searchBtn = document.getElementById("searchBtn");
+    const jobsGrid = document.getElementById("jobsGrid");
+
+    const nextPages = [
+      "jobs.html",
+      "job-details.html",
+      "companies.html",
+      "candidates.html",
+      "login.html",
+      "register.html",
+      "terms.html",
+      "privacy.html",
+      "support.html"
+    ];
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("open");
+      menuBtn.textContent = mobileMenu.classList.contains("open") ? "×" : "☰";
+    });
+
+    document.querySelectorAll("a[href]").forEach((link) => {
+      const href = link.getAttribute("href");
+      if (nextPages.includes(href)) {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          showToast("هذه الصفحة سيتم بناؤها في المرحلة التالية: " + href);
+        });
+      }
+    });
+
+    function filterJobs() {
+      const query = jobSearch.value.trim().toLowerCase();
+      const city = cityFilter.value;
+      const cards = jobsGrid.querySelectorAll(".job-card");
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const cardCity = card.dataset.city;
+        const keywords = card.dataset.keywords.toLowerCase();
+        const matchesQuery = !query || keywords.includes(query);
+        const matchesCity = city === "all" || cardCity === city;
+        const isVisible = matchesQuery && matchesCity;
+
+        card.style.display = isVisible ? "block" : "none";
+        if (isVisible) visibleCount += 1;
+      });
+
+      if (visibleCount === 0) {
+        showToast("لا توجد وظائف مطابقة للبحث الحالي.");
+      }
+    }
+
+    searchBtn.addEventListener("click", filterJobs);
+    jobSearch.addEventListener("input", filterJobs);
+    cityFilter.addEventListener("change", filterJobs);
+  </script>
+</body>
+</html>
