@@ -199,7 +199,7 @@ async function loadTransactions(){
 async function init(){
   try{
     const {data:authData} = await client.auth.getUser();
-    if(!authData.user){location.href=;return}
+    if(!authData.user){location.href="login.html";return}
     currentUser = authData.user;
     await loadWallet();
     await loadPackages();
