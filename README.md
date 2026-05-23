@@ -1,1 +1,0 @@
-Clean final fix. Upload all files to GitHub root and run supabase-setup.sql.
