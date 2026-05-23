@@ -5,125 +5,22 @@
   <title>إنشاء حساب | HireX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  
   <style>
-    :root{--bg:#08111f;--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--card:rgba(255,255,255,.075);--shadow:0 24px 80px rgba(0,0,0,.34)}
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:"Tajawal",system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}.header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900;line-height:1}.brand-sub{font-size:12px;color:var(--muted2)}.links{display:flex;gap:28px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}.btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.page{padding:42px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;box-shadow:0 18px 52px rgba(0,0,0,.12);padding:24px}.title{font-size:clamp(34px,4vw,54px);line-height:1.15;font-weight:900;margin-bottom:12px}.desc{color:var(--muted);font-size:18px}.badge{display:inline-flex;width:fit-content;margin-bottom:16px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:68px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}.form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.file{width:100%;min-height:52px;border:1px dashed rgba(52,211,153,.34);border-radius:18px;background:rgba(52,211,153,.08);color:var(--muted);padding:13px;font-weight:800}.actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:420px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}@media(max-width:900px){.links{display:none}.grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.tabs{grid-template-columns:1fr}.actions .btn{width:100%}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
+    :root{--bg:#08111f;--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--card:rgba(255,255,255,.075)}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),#08111f;color:#fff;min-height:100vh;line-height:1.7}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}.header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900}.brand-sub{font-size:12px;color:var(--muted2)}.links{display:flex;gap:24px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}.btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.page{padding:42px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;padding:24px}.title{font-size:clamp(34px,4vw,54px);line-height:1.15;font-weight:900;margin-bottom:12px}.desc{color:var(--muted);font-size:18px}.badge{display:inline-flex;margin-bottom:16px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:68px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}.form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:420px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}@media(max-width:900px){.links{display:none}.grid,.form-grid,.tabs{grid-template-columns:1fr}.actions .btn{width:100%}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
   </style>
-
 </head>
 <body>
-
-<header class="header"><div class="container"><nav class="nav">
-  <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-  <div class="links"><a href="index.html">الرئيسية</a><a href=>الوظائف</a><a href=>تسجيل الدخول</a><a href=>إنشاء حساب</a></div>
-</nav></div></header>
-
-<main class="page"><section class="container">
-  <div class="crumb"><a href="index.html">الرئيسية</a> › إنشاء حساب</div>
-  <div class="grid">
-    <aside class="card"><div class="badge">🚀 حساب جديد</div><h1 class="title">أنشئ حسابك في HireX</h1><p class="desc">اختر نوع الحساب. بعد التسجيل سيتم إرسال رابط تحقق إلى بريدك الإلكتروني عبر Supabase.</p></aside>
-    <section class="card">
-      <div class="tabs"><button class="tab active" data-type="candidate">👤 حساب مرشح</button><button class="tab" data-type="company">🏢 حساب شركة</button></div>
-
-      <form class="form active" id="candidateForm">
-        <div class="form-grid">
-          <div><label class="label">الاسم الكامل</label><input class="input" id="candidateName" required /></div>
-          <div><label class="label">البريد الإلكتروني</label><input class="input" id="candidateEmail" type="email" required /></div>
-          <div><label class="label">رقم الجوال</label><input class="input" id="candidatePhone" /></div>
-          <div><label class="label">المدينة</label><select class="select" id="candidateCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div>
-          <div><label class="label">التخصص</label><select class="select" id="candidateSpecialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div>
-          <div><label class="label">الخبرة</label><select class="select" id="candidateExperience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div>
-          <div><label class="label">كلمة المرور</label><input class="input" id="candidatePassword" type="password" required minlength="6" /></div>
-          <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="candidateConfirmPassword" type="password" required minlength="6" /></div>
-          <div class="full"><label class="label">نبذة مختصرة</label><textarea class="textarea" id="candidateSummary"></textarea></div>
-        </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a href=>لديك حساب؟ تسجيل الدخول</a></div>
-      </form>
-
-      <form class="form" id="companyForm">
-        <div class="form-grid">
-          <div><label class="label">اسم الشركة</label><input class="input" id="companyName" required /></div>
-          <div><label class="label">البريد الرسمي</label><input class="input" id="companyEmail" type="email" required /></div>
-          <div><label class="label">مسؤول التواصل</label><input class="input" id="contactName" required /></div>
-          <div><label class="label">رقم التواصل</label><input class="input" id="companyPhone" /></div>
-          <div><label class="label">المدينة</label><select class="select" id="companyCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>أخرى</option></select></div>
-          <div><label class="label">قطاع الشركة</label><select class="select" id="companySector"><option>طبي</option><option>تقني</option><option>تجاري</option><option>تشغيلي</option><option>آخر</option></select></div>
-          <div><label class="label">كلمة المرور</label><input class="input" id="companyPassword" type="password" required minlength="6" /></div>
-          <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="companyConfirmPassword" type="password" required minlength="6" /></div>
-          <div class="full"><label class="label">نبذة عن الشركة</label><textarea class="textarea" id="companyDescription"></textarea></div>
-        </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a href=>لديك حساب؟ تسجيل الدخول</a></div>
-      </form>
-    </section>
-  </div>
-</section></main>
-<footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Supabase Connected</div></div></footer>
-<div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script>
-const client = window.hirexSupabase;
-const toast = document.getElementById("toast");
-const tabs = document.querySelectorAll(".tab");
-const candidateForm = document.getElementById("candidateForm");
-const companyForm = document.getElementById("companyForm");
+<header class="header"><div class="container"><nav class="nav"><a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a><div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="login.html">تسجيل الدخول</a><a class="active" href="register.html">إنشاء حساب</a></div></nav></div></header>
+<main class="page"><section class="container"><div class="crumb"><a href="index.html">الرئيسية</a> › إنشاء حساب</div><div class="grid"><aside class="card"><div class="badge">🚀 حساب جديد</div><h1 class="title">أنشئ حسابك في HireX</h1><p class="desc">اختر نوع الحساب. سيتم إنشاء المستخدم في Supabase، ثم يمكنك تسجيل الدخول للحساب.</p></aside><section class="card"><div class="tabs"><button class="tab active" data-type="candidate">👤 حساب مرشح</button><button class="tab" data-type="company">🏢 حساب شركة</button></div>
+<form class="form active" id="candidateForm"><div class="form-grid"><div><label class="label">الاسم الكامل</label><input class="input" id="candidateName" required /></div><div><label class="label">البريد الإلكتروني</label><input class="input" id="candidateEmail" type="email" required /></div><div><label class="label">رقم الجوال</label><input class="input" id="candidatePhone" /></div><div><label class="label">المدينة</label><select class="select" id="candidateCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div><div><label class="label">التخصص</label><select class="select" id="candidateSpecialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div><div><label class="label">الخبرة</label><select class="select" id="candidateExperience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div><div><label class="label">كلمة المرور</label><input class="input" id="candidatePassword" type="password" required minlength="6" /></div><div><label class="label">تأكيد كلمة المرور</label><input class="input" id="candidateConfirmPassword" type="password" required minlength="6" /></div><div class="full"><label class="label">نبذة مختصرة</label><textarea class="textarea" id="candidateSummary"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a href="login.html">لديك حساب؟ تسجيل الدخول</a></div></form>
+<form class="form" id="companyForm"><div class="form-grid"><div><label class="label">اسم الشركة</label><input class="input" id="companyName" required /></div><div><label class="label">البريد الرسمي</label><input class="input" id="companyEmail" type="email" required /></div><div><label class="label">مسؤول التواصل</label><input class="input" id="contactName" required /></div><div><label class="label">رقم التواصل</label><input class="input" id="companyPhone" /></div><div><label class="label">المدينة</label><select class="select" id="companyCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>أخرى</option></select></div><div><label class="label">قطاع الشركة</label><select class="select" id="companySector"><option>طبي</option><option>تقني</option><option>تجاري</option><option>تشغيلي</option><option>آخر</option></select></div><div><label class="label">كلمة المرور</label><input class="input" id="companyPassword" type="password" required minlength="6" /></div><div><label class="label">تأكيد كلمة المرور</label><input class="input" id="companyConfirmPassword" type="password" required minlength="6" /></div><div class="full"><label class="label">نبذة عن الشركة</label><textarea class="textarea" id="companyDescription"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a href="login.html">لديك حساب؟ تسجيل الدخول</a></div></form>
+</section></div></section></main><footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Supabase Connected</div></div></footer><div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script>
+const client=window.hirexSupabase,toast=document.getElementById("toast"),tabs=document.querySelectorAll(".tab"),candidateForm=document.getElementById("candidateForm"),companyForm=document.getElementById("companyForm");
 function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
 tabs.forEach(tab=>tab.addEventListener("click",()=>{tabs.forEach(t=>t.classList.remove("active"));tab.classList.add("active");candidateForm.classList.toggle("active",tab.dataset.type==="candidate");companyForm.classList.toggle("active",tab.dataset.type==="company")}));
-async function createProfile(userId, data) {
-  const { error } = await client.from("profiles").upsert({ id: userId, ...data, updated_at: new Date().toISOString() });
-  if (error) throw error;
-}
-candidateForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const password = candidatePassword.value;
-  if(password !== candidateConfirmPassword.value) return showToast("كلمة المرور غير متطابقة.");
-  showToast("جاري إنشاء الحساب...");
-  const email = candidateEmail.value.trim();
-  const full_name = candidateName.value.trim();
-  const { data, error } = await client.auth.signUp({
-    email, password,
-    options: { data: { role:"candidate", full_name }, emailRedirectTo: location.origin + location.pathname.replace() }
-  });
-  if(error) return showToast(error.message);
-  if(data.user) {
-    try {
-      await createProfile(data.user.id, {
-        role:"candidate", email, full_name,
-        phone:candidatePhone.value, city:candidateCity.value,
-        specialty:candidateSpecialty.value, experience:candidateExperience.value,
-        summary:candidateSummary.value
-      });
-    } catch(err) { return showToast("تم إنشاء الحساب، لكن حدث خطأ في حفظ الملف: " + err.message); }
-  }
-  showToast("تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجل الدخول.");
-  setTimeout(()=>location.href=1200);
-});
-companyForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const password = companyPassword.value;
-  if(password !== companyConfirmPassword.value) return showToast("كلمة المرور غير متطابقة.");
-  showToast("جاري إنشاء حساب الشركة...");
-  const email = companyEmail.value.trim();
-  const company_name = companyName.value.trim();
-  const { data, error } = await client.auth.signUp({
-    email, password,
-    options: { data: { role:"company", company_name }, emailRedirectTo: location.origin + location.pathname.replace() }
-  });
-  if(error) return showToast(error.message);
-  if(data.user) {
-    try {
-      await createProfile(data.user.id, {
-        role:"company", email, company_name,
-        contact_name:contactName.value, phone:companyPhone.value,
-        city:companyCity.value, company_sector:companySector.value,
-        summary:companyDescription.value
-      });
-    } catch(err) { return showToast("تم إنشاء الحساب، لكن حدث خطأ في حفظ ملف الشركة: " + err.message); }
-  }
-  showToast("تم إنشاء حساب الشركة. تحقق من البريد ثم سجل الدخول.");
-  setTimeout(()=>location.href=1200);
-});
-</script>
-</body>
-</html>
+async function createProfile(userId,data){const {error}=await client.from("profiles").upsert({id:userId,...data,updated_at:new Date().toISOString()});if(error)throw error}
+candidateForm.addEventListener("submit",async(e)=>{e.preventDefault();try{const password=candidatePassword.value;if(password!==candidateConfirmPassword.value)return showToast("كلمة المرور غير متطابقة.");showToast("جاري إنشاء الحساب...");const email=candidateEmail.value.trim(),full_name=candidateName.value.trim();const {data,error}=await client.auth.signUp({email,password,options:{data:{role:"candidate",full_name},emailRedirectTo:location.origin+location.pathname.replace("register.html","login.html")}});if(error)return showToast(error.message);if(data.user){await createProfile(data.user.id,{role:"candidate",email,full_name,phone:candidatePhone.value,city:candidateCity.value,specialty:candidateSpecialty.value,experience:candidateExperience.value,summary:candidateSummary.value})}showToast("تم إنشاء الحساب. سجل الدخول الآن.");setTimeout(()=>location.href="login.html",1200)}catch(err){showToast(err.message||"حدث خطأ أثناء التسجيل.")}});
+companyForm.addEventListener("submit",async(e)=>{e.preventDefault();try{const password=companyPassword.value;if(password!==companyConfirmPassword.value)return showToast("كلمة المرور غير متطابقة.");showToast("جاري إنشاء حساب الشركة...");const email=companyEmail.value.trim(),company_name=companyName.value.trim();const {data,error}=await client.auth.signUp({email,password,options:{data:{role:"company",company_name},emailRedirectTo:location.origin+location.pathname.replace("register.html","login.html")}});if(error)return showToast(error.message);if(data.user){await createProfile(data.user.id,{role:"company",email,company_name,contact_name:contactName.value,phone:companyPhone.value,city:companyCity.value,company_sector:companySector.value,summary:companyDescription.value})}showToast("تم إنشاء حساب الشركة. سجل الدخول الآن.");setTimeout(()=>location.href="login.html",1200)}catch(err){showToast(err.message||"حدث خطأ أثناء التسجيل.")}});
+</script></body></html>

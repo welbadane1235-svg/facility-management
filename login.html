@@ -1,119 +1,99 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>تسجيل الدخول | HireX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta name="description" content="سجل دخولك إلى HireX للوصول إلى حسابك ومتابعة طلباتك أو إدارة وظائف شركتك." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  
   <style>
-    :root{--bg:#08111f;--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--card:rgba(255,255,255,.075);--shadow:0 24px 80px rgba(0,0,0,.34)}
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:"Tajawal",system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7}a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}.header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900;line-height:1}.brand-sub{font-size:12px;color:var(--muted2)}.links{display:flex;gap:28px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}.btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}.page{padding:42px 0 70px}.crumb{color:var(--muted);font-weight:800;margin-bottom:18px}.crumb a{color:#d1fae5}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;box-shadow:0 18px 52px rgba(0,0,0,.12);padding:24px}.title{font-size:clamp(34px,4vw,54px);line-height:1.15;font-weight:900;margin-bottom:12px}.desc{color:var(--muted);font-size:18px}.badge{display:inline-flex;width:fit-content;margin-bottom:16px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:68px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}.form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.file{width:100%;min-height:52px;border:1px dashed rgba(52,211,153,.34);border-radius:18px;background:rgba(52,211,153,.08);color:var(--muted);padding:13px;font-weight:800}.actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px}.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:420px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}.footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}@media(max-width:900px){.links{display:none}.grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.tabs{grid-template-columns:1fr}.actions .btn{width:100%}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
+    :root{--bg:#08111f;--card:rgba(255,255,255,.075);--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted-2:#7c899e;--green:#34d399;--cyan:#22d3ee;--shadow:0 24px 80px rgba(0,0,0,.34);--radius-lg:28px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),radial-gradient(circle at 50% 100%,rgba(96,165,250,.12),transparent 38%),var(--bg);color:var(--text);min-height:100vh;line-height:1.7;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}button,input{font-family:inherit}
+    .container{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+    .page-shell{position:relative;min-height:100vh}
+    .blur-circle{position:fixed;border-radius:50%;pointer-events:none;filter:blur(80px);opacity:.38;z-index:-1}.blur-1{width:280px;height:280px;background:var(--green);top:-70px;right:-70px}.blur-2{width:360px;height:360px;background:var(--cyan);bottom:8%;left:-120px}
+    .header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .navbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px}.brand-icon{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));box-shadow:0 12px 30px rgba(52,211,153,.24);color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1.1}.brand-subtitle{color:var(--muted-2);font-size:12px;margin-top:2px}
+    .nav-links{display:flex;align-items:center;gap:30px;color:var(--muted);font-weight:700;font-size:15px}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-actions{display:flex;align-items:center;gap:10px}
+    .btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:800;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s;white-space:nowrap}.btn:hover{transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;box-shadow:0 14px 34px rgba(52,211,153,.22)}.btn-ghost{color:var(--text);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+    .menu-btn{display:none;width:46px;height:46px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.07);color:var(--text);font-size:22px;cursor:pointer}
+    .mobile-menu{display:none;border-top:1px solid var(--border);padding:14px 0 18px}.mobile-menu.open{display:block}.mobile-menu a{display:block;padding:12px 0;color:var(--muted);font-weight:700}.mobile-actions{display:grid;gap:10px;margin-top:10px}
+    .hero-mini{padding:46px 0 22px}.breadcrumb{width:fit-content;color:var(--muted);display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;margin-bottom:18px}.breadcrumb a{color:#d1fae5}
+    .login-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start;padding-bottom:70px}
+    .intro-card,.login-card,.note-card{border:1px solid var(--border);background:rgba(255,255,255,.075);border-radius:var(--radius-lg);box-shadow:0 18px 52px rgba(0,0,0,.12)}
+    .intro-card{padding:28px;position:sticky;top:98px;overflow:hidden}.intro-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(52,211,153,.18),transparent 38%);pointer-events:none}.intro-content{position:relative;z-index:1}
+    .badge{width:fit-content;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(52,211,153,.24);background:rgba(52,211,153,.1);color:#d1fae5;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:16px}
+    .intro-title{font-size:clamp(34px,4vw,54px);line-height:1.15;font-weight:900;letter-spacing:-1px;margin-bottom:14px}.intro-desc{color:var(--muted);font-size:18px;margin-bottom:22px}
+    .steps{display:grid;gap:12px;margin-top:18px}.step{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-weight:800}.step span{width:28px;height:28px;min-width:28px;display:grid;place-items:center;border-radius:12px;color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));font-weight:900}
+    .note-card{margin-top:14px;padding:18px;background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.18)}.note-card h3{font-size:18px;font-weight:900;margin-bottom:7px}.note-card p{color:var(--muted);font-size:14px}
+    .login-card{padding:24px}.card-title{font-size:34px;font-weight:900;line-height:1.2}.card-desc{color:var(--muted);margin-top:6px;margin-bottom:18px}
+    .account-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}
+    .tab-btn{min-height:64px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900;display:grid;align-content:center;gap:2px}.tab-btn.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}.tab-btn span{font-size:13px;opacity:.78}
+    .form-grid{display:grid;gap:12px}.form-label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input{width:100%;height:52px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:var(--text);outline:none;padding:0 14px;font-size:15px;font-weight:700}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:4px;color:var(--muted);font-weight:800;font-size:14px}.remember{display:flex;align-items:center;gap:8px}.remember input{width:18px;height:18px;accent-color:var(--green)}.row a{color:#d1fae5}
+    .form-actions{display:grid;gap:10px;margin-top:18px}.form-actions .btn{width:100%}.register-link{text-align:center;color:var(--muted);font-weight:800}.register-link a{color:#d1fae5}
+    .toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:380px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block;animation:toastIn .22s ease}@keyframes toastIn{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted-2);font-weight:700}.footer-content{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+    @media(max-width:980px){.nav-links,.nav-actions{display:none}.menu-btn{display:block}.login-layout{grid-template-columns:1fr}.intro-card{position:static}}
+    @media(max-width:640px){.container{width:min(100% - 22px,1180px)}.navbar{height:72px}.brand-icon{width:42px;height:42px;border-radius:15px}.brand-title{font-size:23px}.login-card,.intro-card,.note-card{border-radius:24px;padding:18px}.account-tabs{grid-template-columns:1fr}.toast{right:12px;left:12px;bottom:14px}}
   </style>
-
 </head>
 <body>
+  <div class="page-shell">
+    <div class="blur-circle blur-1"></div><div class="blur-circle blur-2"></div>
+    <header class="header">
+      <div class="container">
+        <nav class="navbar">
+          <a class="brand" href="index.html"><div class="brand-icon">H</div><div><div class="brand-title">HireX</div><div class="brand-subtitle">منصة التوظيف والفرص المهنية</div></div></a>
+          <div class="nav-links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a></div>
+          <div class="nav-actions"><a class="btn btn-ghost active" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href="register.html">إنشاء حساب</a></div>
+          <button class="menu-btn" id="menuBtn">☰</button>
+        </nav>
+        <div class="mobile-menu" id="mobileMenu"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="index.html#features">المميزات</a><div class="mobile-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href="register.html">إنشاء حساب</a></div></div>
+      </div>
+    </header>
 
-<header class="header"><div class="container"><nav class="nav">
-  <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-  <div class="links"><a href="index.html">الرئيسية</a><a href=>الوظائف</a><a href=>تسجيل الدخول</a><a href=>إنشاء حساب</a></div>
-</nav></div></header>
+    <main>
+      <section class="hero-mini"><div class="container"><div class="breadcrumb"><a href="index.html">الرئيسية</a><span>›</span><span>تسجيل الدخول</span></div></div></section>
+      <section class="container login-layout">
+        <aside>
+          <div class="intro-card"><div class="intro-content"><div class="badge">🔐 دخول آمن</div><h1 class="intro-title">ادخل إلى حسابك وتابع رحلتك في HireX.</h1><p class="intro-desc">سواء كنت مرشحًا أو شركة، يمكنك الدخول للوصول إلى لوحة التحكم المناسبة لك.</p><div class="steps"><div class="step"><span>1</span><div>أدخل البريد وكلمة المرور.</div></div><div class="step"><span>2</span><div>يتم التحقق من حالة البريد الإلكتروني.</div></div><div class="step"><span>3</span><div>يتم توجيهك للوحة المناسبة حسب نوع الحساب.</div></div></div></div></div>
+          <div class="note-card"><h3>التحقق عبر البريد</h3><p>إذا لم يتم تأكيد البريد بعد، سيتم توجيه المستخدم إلى صفحة التحقق لإعادة إرسال رابط التفعيل.</p></div>
+        </aside>
 
-<main class="page"><section class="container">
-  <div class="crumb"><a href="index.html">الرئيسية</a> › تسجيل الدخول</div>
-  <div class="grid">
-    <aside class="card"><div class="badge">🔐 دخول آمن</div><h1 class="title">سجل دخولك إلى HireX</h1><p class="desc">بعد تسجيل الدخول سيتم توجيه المرشح إلى لوحة المرشح، والشركة لاحقًا إلى لوحة الشركة.</p></aside>
-    <section class="card">
-      <form id="loginForm">
-        <div class="form-grid">
-          <div class="full"><label class="label">البريد الإلكتروني</label><input class="input" id="email" type="email" required /></div>
-          <div class="full"><label class="label">كلمة المرور</label><input class="input" id="password" type="password" required /></div>
-        </div>
-        <div class="actions"><button class="btn btn-primary" type="submit">تسجيل الدخول</button><a href=>إنشاء حساب جديد</a></div>
-      </form>
-    </section>
+        <section class="login-card">
+          <h2 class="card-title">تسجيل الدخول</h2>
+          <p class="card-desc">اختر نوع الحساب ثم أدخل بيانات الدخول.</p>
+          <div class="account-tabs"><button type="button" class="tab-btn active" data-role="candidate">👤 مرشح<span>لوحة المرشح</span></button><button type="button" class="tab-btn" data-role="company">🏢 شركة<span>لوحة الشركة</span></button></div>
+          <form id="loginForm">
+            <div class="form-grid">
+              <div><label class="form-label" for="email">البريد الإلكتروني</label><input class="input" id="email" type="email" placeholder="name@email.com" required /></div>
+              <div><label class="form-label" for="password">كلمة المرور</label><input class="input" id="password" type="password" placeholder="••••••••" required /></div>
+              <div class="row"><label class="remember"><input type="checkbox" /> تذكرني</label><a href=>لم يصلك رابط التحقق؟</a></div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">تسجيل الدخول</button><div class="register-link">ليس لديك حساب؟ <a href=>إنشاء حساب جديد</a></div></div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer"><div class="container footer-content"><div>© 2026 HireX — منصة التوظيف والفرص المهنية</div><div class="footer-links"><a href="terms.html">الشروط</a><a href="privacy.html">الخصوصية</a><a href="support.html">الدعم</a></div></div></footer>
   </div>
-</section></main>
-<footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Supabase Connected</div></div></footer>
-<div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script>
-const client = window.hirexSupabase;
-const toast = document.getElementById("toast");
-
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3500);
-}
-
-async function getOrCreateProfile(user) {
-  let { data: profile, error } = await client
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (error) throw error;
-
-  if (!profile) {
-    const fallbackProfile = {
-      id: user.id,
-      role: user.user_metadata?.role || "candidate",
-      full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "مرشح جديد",
-      email: user.email,
-      city: "الرياض",
-      specialty: "محاسبة",
-      experience: "حديث تخرج",
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: createdProfile, error: insertError } = await client
-      .from("profiles")
-      .insert(fallbackProfile)
-      .select("*")
-      .single();
-
-    if (insertError) throw insertError;
-    profile = createdProfile;
-  }
-
-  return profile;
-}
-
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  try {
-    showToast("جاري تسجيل الدخول...");
-
-    const { data, error } = await client.auth.signInWithPassword({
-      email: email.value.trim(),
-      password: password.value
-    });
-
-    if (error) {
-      showToast(error.message);
-      return;
-    }
-
-    const profile = await getOrCreateProfile(data.user);
-
-    showToast("تم تسجيل الدخول بنجاح.");
-
-    setTimeout(() => {
-      if (profile.role === "company") {
-        location.href = ;
-      } else {
-        location.href = ;
-      }
-    }, 800);
-
-  } catch (err) {
-    showToast(err.message || "حدث خطأ أثناء تسجيل الدخول.");
-  }
-});
-</script>
+  <div class="toast" id="toast"></div>
+  <script>
+    const menuBtn=document.getElementById("menuBtn"),mobileMenu=document.getElementById("mobileMenu"),toast=document.getElementById("toast"),tabs=document.querySelectorAll(".tab-btn"),loginForm=document.getElementById("loginForm");let selectedRole="candidate";
+    const blockedPages=["companies.html","candidates.html","terms.html","privacy.html","support.html"];
+    function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3000)}
+    menuBtn.addEventListener("click",()=>{mobileMenu.classList.toggle("open");menuBtn.textContent=mobileMenu.classList.contains("open")?"×":"☰"});
+    tabs.forEach(btn=>btn.addEventListener("click",()=>{tabs.forEach(b=>b.classList.remove("active"));btn.classList.add("active");selectedRole=btn.dataset.role}));
+    loginForm.addEventListener("submit",(e)=>{e.preventDefault();const email=document.getElementById("email").value.trim(); if(!email.includes("@")){showToast("يرجى إدخال بريد إلكتروني صحيح.");return} showToast("تم تجهيز تسجيل الدخول. بعد الربط سيتم التحقق من البريد وتوجيهك للوحة المناسبة.");});
+    document.querySelectorAll("a[href]").forEach(link=>{const href=link.getAttribute("href");if(blockedPages.includes(href)){link.addEventListener("click",e=>{e.preventDefault();showToast("سيتم تفعيل هذا القسم قريبًا: "+href)})}});
+  </script>
 </body>
 </html>

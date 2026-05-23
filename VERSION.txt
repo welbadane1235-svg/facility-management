@@ -1,1 +1,1 @@
-HireX: wallet integrated inside candidate-dashboard account tab.
+Repair package: jobs categories restored, register fixed, wallet inside account retained.
