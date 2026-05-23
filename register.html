@@ -1,301 +1,44 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>إنشاء حساب | HireX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root{--bg:#08111f;--card:rgba(255,255,255,.075);--border:rgba(255,255,255,.12);--text:#fff;--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--danger:#fb7185}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),#08111f;color:#fff;min-height:100vh;line-height:1.7}
-    a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}
-    .header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
-    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900}.brand-sub{font-size:12px;color:var(--muted2)}
-    .links{display:flex;gap:22px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}
-    .btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
-    .page{padding:42px 0 70px}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;box-shadow:0 18px 52px rgba(0,0,0,.12);padding:24px}.badge{display:inline-flex;margin-bottom:14px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.title{font-size:clamp(34px,4vw,58px);line-height:1.12;font-weight:900}.desc{color:var(--muted);font-size:18px;margin-top:8px}
-    .tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:64px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}
-    .form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions .btn{flex:1}
-    .debug{margin-top:18px;border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.72);border-radius:20px;padding:14px;white-space:pre-wrap;direction:ltr;text-align:left;color:#d1fae5;font-size:13px;max-height:380px;overflow:auto}
-    .debug.error{color:#fecdd3;border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.08)}
-    .toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:430px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}
-    .footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted2);font-weight:700}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
-    @media(max-width:900px){.links{display:none}.grid,.form-grid,.tabs{grid-template-columns:1fr}.actions .btn{width:100%;flex:unset}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
-  </style>
-</head>
-<body>
-<header class="header"><div class="container"><nav class="nav">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>إنشاء حساب | HireX</title><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"/><style>
+:root{--bg:#08111f;--card:rgba(255,255,255,.075);--border:rgba(255,255,255,.12);--muted:#a8b3c7;--muted2:#7c899e;--green:#34d399;--cyan:#22d3ee;--danger:#fb7185}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 80% 0%,rgba(52,211,153,.2),transparent 34%),radial-gradient(circle at 10% 35%,rgba(34,211,238,.16),transparent 30%),#08111f;color:#fff;min-height:100vh;line-height:1.7}
+a{text-decoration:none;color:inherit}button,input,select,textarea{font-family:inherit}.container{width:min(1180px,calc(100% - 32px));margin:auto}
+.header{position:sticky;top:0;z-index:50;background:rgba(8,17,31,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d;font-weight:900;font-size:22px}.brand-title{font-size:26px;font-weight:900}.brand-sub{font-size:12px;color:var(--muted2)}
+.links{display:flex;gap:22px;color:var(--muted);font-weight:800}.links a:hover,.links a.active{color:#fff}.page{padding:42px 0 70px}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px}.card{border:1px solid var(--border);background:var(--card);border-radius:28px;padding:24px}.badge{display:inline-flex;margin-bottom:14px;padding:8px 12px;border-radius:999px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);color:#d1fae5;font-weight:900}.title{font-size:clamp(34px,4vw,58px);line-height:1.12;font-weight:900}.desc{color:var(--muted);font-size:18px;margin-top:8px}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px;border-radius:24px;background:rgba(8,17,31,.72);border:1px solid rgba(255,255,255,.1);margin-bottom:18px}.tab{min-height:64px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.055);color:var(--muted);cursor:pointer;font-weight:900}.tab.active{color:#06111d;background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent}
+.form{display:none}.form.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.label{display:block;color:var(--muted);font-weight:900;margin-bottom:7px;font-size:14px}.input,.select,.textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(8,17,31,.72);color:#fff;outline:none;padding:0 14px;font-size:15px;font-weight:700}.input,.select{height:52px}.textarea{min-height:110px;padding-top:12px;resize:vertical}option{background:#08111f}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions .btn{flex:1}
+.btn{min-height:46px;padding:0 20px;border:0;border-radius:16px;cursor:pointer;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#06111d}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
+.debug{margin-top:18px;border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.72);border-radius:20px;padding:14px;white-space:pre-wrap;direction:ltr;text-align:left;color:#d1fae5;font-size:13px;max-height:380px;overflow:auto}.debug.error{color:#fecdd3;border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.08)}
+.toast{position:fixed;bottom:22px;left:22px;z-index:80;max-width:430px;padding:14px 16px;border-radius:18px;color:#06111d;background:#fff;box-shadow:0 16px 46px rgba(0,0,0,.24);font-weight:800;display:none}.toast.show{display:block}
+.notice{margin-top:18px;border:1px solid rgba(251,191,36,.25);background:rgba(251,191,36,.08);border-radius:18px;padding:14px;color:#fde68a;font-weight:800}
+@media(max-width:900px){.links{display:none}.grid,.form-grid,.tabs{grid-template-columns:1fr}.actions .btn{width:100%;flex:unset}}@media(max-width:600px){.container{width:min(100% - 22px,1180px)}.card{border-radius:24px;padding:18px}.toast{right:12px;left:12px;bottom:14px}}
+</style></head>
+<body><header class="header"><div class="container"><nav class="nav">
 <a class="brand" href="index.html"><div class="logo">H</div><div><div class="brand-title">HireX</div><div class="brand-sub">منصة التوظيف والفرص المهنية</div></div></a>
-<div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="candidates.html">للمرشحين</a><a href="login.html">تسجيل الدخول</a><a class="active" href="register.html">إنشاء حساب</a></div>
+<div class="links"><a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="login.html">تسجيل الدخول</a><a class="active" href="register.html">إنشاء حساب</a></div>
 </nav></div></header>
-
 <main class="page"><section class="container grid">
-  <aside class="card">
-    <div class="badge">🧪 فحص التسجيل</div>
-    <h1 class="title">إنشاء حساب جديد</h1>
-    <p class="desc">هذه النسخة لا تعتبر التسجيل ناجحًا إلا إذا رجع `user.id` من Supabase.</p>
-    <div class="actions">
-      <button class="btn btn-ghost" type="button" id="testConnectionBtn">اختبار الاتصال</button>
-      <button class="btn btn-ghost" type="button" id="showConfigBtn">عرض إعدادات الربط</button>
-    </div>
-    <div id="debugBox" class="debug">جاهز للفحص...</div>
-  </aside>
-
-  <section class="card">
-    <div class="tabs"><button class="tab active" data-type="candidate">👤 حساب مرشح</button><button class="tab" data-type="company">🏢 حساب شركة</button></div>
-
-    <form class="form active" id="candidateForm">
-      <div class="form-grid">
-        <div><label class="label">الاسم الكامل</label><input class="input" id="candidateName" required /></div>
-        <div><label class="label">البريد الإلكتروني</label><input class="input" id="candidateEmail" type="email" required /></div>
-        <div><label class="label">رقم الجوال</label><input class="input" id="candidatePhone" /></div>
-        <div><label class="label">المدينة</label><select class="select" id="candidateCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div>
-        <div><label class="label">التخصص</label><select class="select" id="candidateSpecialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div>
-        <div><label class="label">الخبرة</label><select class="select" id="candidateExperience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div>
-        <div><label class="label">كلمة المرور</label><input class="input" id="candidatePassword" type="password" required minlength="6" /></div>
-        <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="candidateConfirmPassword" type="password" required minlength="6" /></div>
-        <div class="full"><label class="label">نبذة مختصرة</label><textarea class="textarea" id="candidateSummary"></textarea></div>
-      </div>
-      <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a></div>
-    </form>
-
-    <form class="form" id="companyForm">
-      <div class="form-grid">
-        <div><label class="label">اسم الشركة</label><input class="input" id="companyName" required /></div>
-        <div><label class="label">البريد الرسمي</label><input class="input" id="companyEmail" type="email" required /></div>
-        <div><label class="label">مسؤول التواصل</label><input class="input" id="contactName" required /></div>
-        <div><label class="label">رقم التواصل</label><input class="input" id="companyPhone" /></div>
-        <div><label class="label">كلمة المرور</label><input class="input" id="companyPassword" type="password" required minlength="6" /></div>
-        <div><label class="label">تأكيد كلمة المرور</label><input class="input" id="companyConfirmPassword" type="password" required minlength="6" /></div>
-      </div>
-      <div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a></div>
-    </form>
-  </section>
-</section></main>
-
-<footer class="footer"><div class="container foot"><div>© 2026 HireX</div><div>Strict Supabase Signup Debug</div></div></footer>
-<div class="toast" id="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+<aside class="card"><div class="badge">✅ تسجيل موثوق</div><h1 class="title">إنشاء حساب جديد</h1><p class="desc">لا نعتبر الحساب ناجحًا إلا بعد إنشاء المستخدم وتسجيل الدخول به وحفظ ملفه في قاعدة البيانات.</p><div class="notice">للتطوير بدون مشاكل بريد: عطّل Confirm email مؤقتًا من Supabase. بعد الانتهاء نفعله مع SMTP رسمي.</div><div id="debugBox" class="debug">جاهز للتسجيل...</div></aside>
+<section class="card">
+<div class="tabs"><button class="tab active" data-type="candidate">👤 حساب مرشح</button><button class="tab" data-type="company">🏢 حساب شركة</button></div>
+<form class="form active" id="candidateForm"><div class="form-grid">
+<div><label class="label">الاسم الكامل</label><input class="input" id="candidateName" required></div><div><label class="label">البريد الإلكتروني</label><input class="input" id="candidateEmail" type="email" required></div><div><label class="label">رقم الجوال</label><input class="input" id="candidatePhone"></div><div><label class="label">المدينة</label><select class="select" id="candidateCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div><div><label class="label">التخصص</label><select class="select" id="candidateSpecialty"><option>محاسبة</option><option>طبية</option><option>تقنية</option><option>موارد بشرية</option><option>مبيعات</option><option>تشغيل</option></select></div><div><label class="label">الخبرة</label><select class="select" id="candidateExperience"><option>حديث تخرج</option><option>متوسط الخبرة</option><option>خبير</option></select></div><div><label class="label">كلمة المرور</label><input class="input" id="candidatePassword" type="password" required minlength="6"></div><div><label class="label">تأكيد كلمة المرور</label><input class="input" id="candidateConfirmPassword" type="password" required minlength="6"></div><div class="full"><label class="label">نبذة مختصرة</label><textarea class="textarea" id="candidateSummary"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب مرشح</button><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a></div></form>
+<form class="form" id="companyForm"><div class="form-grid">
+<div><label class="label">اسم الشركة</label><input class="input" id="companyName" required></div><div><label class="label">البريد الرسمي</label><input class="input" id="companyEmail" type="email" required></div><div><label class="label">مسؤول التواصل</label><input class="input" id="contactName" required></div><div><label class="label">رقم التواصل</label><input class="input" id="companyPhone"></div><div><label class="label">المدينة</label><select class="select" id="companyCity"><option>الرياض</option><option>جدة</option><option>الدمام</option><option>عن بعد</option></select></div><div><label class="label">قطاع الشركة</label><select class="select" id="companySector"><option>إدارة مرافق</option><option>تقني</option><option>طبي</option><option>تجاري</option><option>تعليمي</option><option>أخرى</option></select></div><div><label class="label">كلمة المرور</label><input class="input" id="companyPassword" type="password" required minlength="6"></div><div><label class="label">تأكيد كلمة المرور</label><input class="input" id="companyConfirmPassword" type="password" required minlength="6"></div><div class="full"><label class="label">نبذة عن الشركة</label><textarea class="textarea" id="companyDescription"></textarea></div></div><div class="actions"><button class="btn btn-primary" type="submit">إنشاء حساب شركة</button><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a></div></form>
+</section></section></main><div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script>
 <script>
-const client = window.hirexSupabase;
-const toast = document.getElementById("toast");
-const debugBox = document.getElementById("debugBox");
-
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),3500);
-}
-function debug(data, isError=false){
-  debugBox.classList.toggle("error", isError);
-  debugBox.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
-}
-function redirectToLoginUrl(){
-  return window.location.origin + window.location.pathname.replace(/register\.html$/,"login.html");
-}
-function sanitizeResponse(data){
-  return {
-    user_id: data?.user?.id || null,
-    user_email: data?.user?.email || null,
-    user_aud: data?.user?.aud || null,
-    user_role_metadata: data?.user?.user_metadata || null,
-    identities_count: data?.user?.identities?.length ?? null,
-    session_exists: !!data?.session,
-    email_confirmed_at: data?.user?.email_confirmed_at || null,
-    created_at: data?.user?.created_at || null
-  };
-}
-function assertUserCreated(data){
-  if(!data || !data.user || !data.user.id){
-    throw new Error("Supabase did not return user.id. The user was NOT confirmed as created by this page.");
-  }
-  return data.user.id;
-}
-
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    candidateForm.classList.toggle("active",tab.dataset.type==="candidate");
-    companyForm.classList.toggle("active",tab.dataset.type==="company");
-  });
-});
-
-testConnectionBtn.addEventListener("click", async ()=>{
-  try{
-    debug("Testing Supabase connection...");
-    const { data, error } = await client.auth.getSession();
-    if(error) throw error;
-    debug({
-      ok:true,
-      message:"Supabase client loaded successfully",
-      project_url:"https://odfcsexotylhsstybiju.supabase.co",
-      has_session:!!data.session,
-      redirect_to:redirectToLoginUrl()
-    });
-  }catch(err){
-    debug({ok:false,message:err.message,details:String(err)}, true);
-  }
-});
-
-showConfigBtn.addEventListener("click", ()=>{
-  debug({
-    project_url:"https://odfcsexotylhsstybiju.supabase.co",
-    anon_key_prefix:"sb_publishable_zJn...",
-    current_page:window.location.href,
-    redirect_to:redirectToLoginUrl(),
-    note:"تأكد أن Supabase Authentication → Users الذي تفحصه تابع لنفس project_url أعلاه."
-  });
-});
-
-async function createProfileIfPossible(userId, profile){
-  try{
-    const { data, error } = await client
-      .from("profiles")
-      .upsert({ id:userId, ...profile, updated_at:new Date().toISOString() })
-      .select("*")
-      .single();
-
-    if(error){
-      debug({
-        auth_created:true,
-        profile_saved:false,
-        message:"User created in Auth, but profile save failed.",
-        user_id:userId,
-        profile_error:error
-      }, true);
-      return null;
-    }
-    return data;
-  }catch(err){
-    debug({
-      auth_created:true,
-      profile_saved:false,
-      message:"User created in Auth, but profile save threw an exception.",
-      user_id:userId,
-      exception:err.message
-    }, true);
-    return null;
-  }
-}
-
-candidateForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  try{
-    if(candidatePassword.value !== candidateConfirmPassword.value){
-      debug("Password confirmation does not match.", true);
-      showToast("كلمة المرور غير متطابقة.");
-      return;
-    }
-
-    const email = candidateEmail.value.trim();
-    const full_name = candidateName.value.trim();
-
-    debug({step:"starting signUp", email, redirect_to:redirectToLoginUrl()});
-    showToast("جاري إنشاء الحساب...");
-
-    const { data, error } = await client.auth.signUp({
-      email,
-      password:candidatePassword.value,
-      options:{
-        data:{role:"candidate", full_name},
-        emailRedirectTo:redirectToLoginUrl()
-      }
-    });
-
-    if(error){
-      debug({ok:false,step:"auth.signUp",error}, true);
-      showToast(error.message);
-      return;
-    }
-
-    const userId = assertUserCreated(data);
-
-    await createProfileIfPossible(userId,{
-      role:"candidate",
-      email,
-      full_name,
-      phone:candidatePhone.value,
-      city:candidateCity.value,
-      specialty:candidateSpecialty.value,
-      experience:candidateExperience.value,
-      summary:candidateSummary.value
-    });
-
-    debug({
-      ok:true,
-      message:"Auth user created successfully. Now check Authentication → Users.",
-      user_id:userId,
-      supabase_response:sanitizeResponse(data)
-    });
-
-    showToast("تم إنشاء المستخدم بنجاح. افحص Authentication → Users ثم البريد.");
-
-  }catch(err){
-    debug({ok:false,message:err.message,details:String(err)}, true);
-    showToast(err.message || "فشل إنشاء الحساب.");
-  }
-});
-
-companyForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  try{
-    if(companyPassword.value !== companyConfirmPassword.value){
-      debug("Password confirmation does not match.", true);
-      showToast("كلمة المرور غير متطابقة.");
-      return;
-    }
-
-    const email = companyEmail.value.trim();
-    const company_name = companyName.value.trim();
-
-    debug({step:"starting company signUp", email, redirect_to:redirectToLoginUrl()});
-    showToast("جاري إنشاء حساب الشركة...");
-
-    const { data, error } = await client.auth.signUp({
-      email,
-      password:companyPassword.value,
-      options:{
-        data:{role:"company", company_name},
-        emailRedirectTo:redirectToLoginUrl()
-      }
-    });
-
-    if(error){
-      debug({ok:false,step:"auth.signUp",error}, true);
-      showToast(error.message);
-      return;
-    }
-
-    const userId = assertUserCreated(data);
-
-    await createProfileIfPossible(userId,{
-      role:"company",
-      email,
-      company_name,
-      contact_name:contactName.value,
-      phone:companyPhone.value
-    });
-
-    debug({
-      ok:true,
-      message:"Auth company user created successfully. Now check Authentication → Users.",
-      user_id:userId,
-      supabase_response:sanitizeResponse(data)
-    });
-
-    showToast("تم إنشاء المستخدم بنجاح. افحص Authentication → Users ثم البريد.");
-
-  }catch(err){
-    debug({ok:false,message:err.message,details:String(err)}, true);
-    showToast(err.message || "فشل إنشاء الحساب.");
-  }
-});
-</script>
-</body>
-</html>
+const client=window.hirexSupabase,toast=document.getElementById("toast"),debugBox=document.getElementById("debugBox");
+function showToast(m){toast.textContent=m;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
+function debug(data,isError=false){debugBox.classList.toggle("error",isError);debugBox.textContent=typeof data==="string"?data:JSON.stringify(data,null,2)}
+function targetByRole(role){return role==="company"?"company-dashboard.html":"candidate-dashboard.html"}
+function explainError(message){const m=String(message||"").toLowerCase();if(m.includes("invalid login credentials"))return"تم إنشاء الحساب لكن لم يقبل تسجيل الدخول. غالبًا Confirm email مفعّل أو كلمة المرور مختلفة.";if(m.includes("email not confirmed"))return"البريد لم يتم تأكيده. أثناء التطوير عطّل Confirm email أو أكّد المستخدم من Supabase.";if(m.includes("rate limit"))return"تم تجاوز حد إرسال الإيميلات. عطّل Confirm email مؤقتًا أو انتظر انتهاء المهلة.";if(m.includes("already registered")||m.includes("already exists"))return"الإيميل مستخدم مسبقًا. سجّل الدخول أو استخدم بريدًا جديدًا.";return message}
+document.querySelectorAll(".tab").forEach(tab=>tab.onclick=()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));tab.classList.add("active");candidateForm.classList.toggle("active",tab.dataset.type==="candidate");companyForm.classList.toggle("active",tab.dataset.type==="company");});
+async function upsertProfile(user,role,extra){const payload={id:user.id,role,email:user.email,...extra,updated_at:new Date().toISOString()};const {data,error}=await client.from("profiles").upsert(payload).select("*").single();if(error)throw error;return data}
+async function ensureWallet(userId){const read=await client.from("wallets").select("*").eq("company_id",userId).maybeSingle();if(read.error||read.data)return read.data;const ins=await client.from("wallets").insert({company_id:userId,balance:0}).select("*").single();return ins.data}
+async function reliableSignup({email,password,role,profile}){debug({step:"signup-start",email,role});showToast("جاري إنشاء الحساب...");const sign=await client.auth.signUp({email,password,options:{data:{role,...profile}}});if(sign.error)throw sign.error;debug({step:"signup-response",user_id:sign.data?.user?.id||null,session_exists:!!sign.data?.session});showToast("جاري التحقق من الدخول...");const login=await client.auth.signInWithPassword({email,password});if(login.error)throw new Error(explainError(login.error.message));if(!login.data?.user?.id)throw new Error("لم يتم الحصول على user.id بعد تسجيل الدخول.");const saved=await upsertProfile(login.data.user,role,profile);await ensureWallet(login.data.user.id);debug({ok:true,message:"Account created, login verified, profile saved.",user_id:login.data.user.id,role:saved.role,redirect_to:targetByRole(saved.role)});showToast("تم إنشاء الحساب والدخول بنجاح.");setTimeout(()=>location.href=targetByRole(saved.role),900)}
+candidateForm.onsubmit=async e=>{e.preventDefault();try{if(candidatePassword.value!==candidateConfirmPassword.value)return showToast("كلمة المرور غير متطابقة.");await reliableSignup({email:candidateEmail.value.trim(),password:candidatePassword.value,role:"candidate",profile:{full_name:candidateName.value.trim(),phone:candidatePhone.value.trim(),city:candidateCity.value,specialty:candidateSpecialty.value,experience:candidateExperience.value,summary:candidateSummary.value.trim()}})}catch(err){const msg=explainError(err.message);debug({ok:false,message:msg,raw_error:err.message},true);showToast(msg)}};
+companyForm.onsubmit=async e=>{e.preventDefault();try{if(companyPassword.value!==companyConfirmPassword.value)return showToast("كلمة المرور غير متطابقة.");await reliableSignup({email:companyEmail.value.trim(),password:companyPassword.value,role:"company",profile:{company_name:companyName.value.trim(),contact_name:contactName.value.trim(),phone:companyPhone.value.trim(),city:companyCity.value,company_sector:companySector.value,company_description:companyDescription.value.trim()}})}catch(err){const msg=explainError(err.message);debug({ok:false,message:msg,raw_error:err.message},true);showToast(msg)}};
+</script></body></html>
