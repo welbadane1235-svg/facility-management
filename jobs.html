@@ -333,6 +333,73 @@
       font-weight: 800;
     }
 
+    .category-tabs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .category-tab {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+      border-radius: 18px;
+      min-height: 64px;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: 900;
+      display: grid;
+      gap: 2px;
+      align-content: center;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .category-tab:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .category-tab.active {
+      color: #06111d;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      border-color: transparent;
+    }
+
+    .category-tab span {
+      font-size: 12px;
+      opacity: 0.78;
+      font-weight: 800;
+    }
+
+    .category-section {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .category-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .category-title h3 {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .category-title span {
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
     .active-filters {
       display: flex;
       gap: 8px;
@@ -494,6 +561,7 @@
     @keyframes toastIn { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     @media (max-width: 980px) {
+      .category-tabs { grid-template-columns: repeat(3, 1fr); }
       .nav-links, .nav-actions { display: none; }
       .menu-btn { display: block; }
       .page-title-wrap, .jobs-layout { grid-template-columns: 1fr; }
@@ -505,6 +573,7 @@
     }
 
     @media (max-width: 640px) {
+      .category-tabs { grid-template-columns: repeat(2, 1fr); }
       .container { width: min(100% - 22px, 1180px); }
       .navbar { height: 72px; }
       .brand-icon { width: 42px; height: 42px; border-radius: 15px; }
@@ -622,6 +691,7 @@
               <div class="field">
                 <select id="categoryFilter">
                   <option value="all">كل المجالات</option>
+                  <option value="طبية">طبية</option>
                   <option value="تقنية">تقنية</option>
                   <option value="محاسبة">محاسبة</option>
                   <option value="موارد بشرية">موارد بشرية</option>
@@ -671,6 +741,8 @@
                 <option value="salaryLow">الأقل راتبًا</option>
               </select>
             </div>
+
+            <div class="category-tabs" id="categoryTabs"></div>
 
             <div class="active-filters" id="activeFilters"></div>
 
@@ -820,7 +892,65 @@
         featured: false,
         summary: "استقبال استفسارات العملاء، توثيق الطلبات، متابعة البلاغات، وتحسين تجربة العميل.",
         tags: ["خدمة عملاء", "بلاغات", "تواصل"]
+      },
+      {
+        id: 8,
+        title: "ممرض / ممرضة",
+        company: "مركز الرعاية الحديثة",
+        city: "الرياض",
+        type: "دوام كامل",
+        category: "طبية",
+        experience: "متوسط الخبرة",
+        salaryMin: 6000,
+        salaryMax: 8500,
+        postedOrder: 8,
+        postedText: "اليوم",
+        featured: true,
+        summary: "تقديم الرعاية التمريضية للمرضى، متابعة العلامات الحيوية، وتوثيق الحالات وفق الإجراءات الطبية المعتمدة.",
+        tags: ["تمريض", "رعاية صحية", "تصنيف مهني"]
+      },
+      {
+        id: 9,
+        title: "فني مختبرات طبية",
+        company: "مختبرات دقة",
+        city: "جدة",
+        type: "دوام كامل",
+        category: "طبية",
+        experience: "حديث تخرج",
+        salaryMin: 4500,
+        salaryMax: 6500,
+        postedOrder: 9,
+        postedText: "منذ يومين",
+        featured: false,
+        summary: "استقبال العينات، إجراء الفحوصات المخبرية، الالتزام بإجراءات السلامة، وتجهيز التقارير الفنية.",
+        tags: ["مختبر", "تحاليل", "سلامة"]
+      },
+      {
+        id: 10,
+        title: "أخصائي علاج طبيعي",
+        company: "عيادات توازن",
+        city: "الدمام",
+        type: "دوام جزئي",
+        category: "طبية",
+        experience: "متوسط الخبرة",
+        salaryMin: 5000,
+        salaryMax: 7500,
+        postedOrder: 10,
+        postedText: "منذ 3 أيام",
+        featured: false,
+        summary: "تقييم الحالات، إعداد خطط علاجية، متابعة تقدم المرضى، وتقديم التمارين العلاجية المناسبة.",
+        tags: ["علاج طبيعي", "تأهيل", "عيادات"]
       }
+    ];
+
+    const categories = [
+      { name: "all", label: "كل الأقسام", icon: "📌" },
+      { name: "طبية", label: "طبية", icon: "🩺" },
+      { name: "تقنية", label: "تقنية", icon: "💻" },
+      { name: "محاسبة", label: "محاسبة", icon: "📊" },
+      { name: "موارد بشرية", label: "موارد بشرية", icon: "👥" },
+      { name: "مبيعات", label: "مبيعات", icon: "🤝" },
+      { name: "تشغيل", label: "تشغيل", icon: "⚙️" }
     ];
 
     const menuBtn = document.getElementById("menuBtn");
@@ -836,6 +966,7 @@
     const resultsCount = document.getElementById("resultsCount");
     const heroCount = document.getElementById("heroCount");
     const activeFilters = document.getElementById("activeFilters");
+    const categoryTabs = document.getElementById("categoryTabs");
     const emptyState = document.getElementById("emptyState");
 
     const nextPages = [
@@ -908,15 +1039,28 @@
       activeFilters.innerHTML = chips.map(chip => `<span class="chip">${chip}</span>`).join("");
     }
 
-    function renderJobs() {
-      const filtered = getFilteredJobs();
-      heroCount.textContent = jobs.length;
-      resultsCount.textContent = filtered.length === 1 ? "تم العثور على وظيفة واحدة" : "تم العثور على " + filtered.length + " وظائف";
-      emptyState.style.display = filtered.length === 0 ? "block" : "none";
-      jobsList.style.display = filtered.length === 0 ? "none" : "grid";
-      renderActiveFilters();
+    function renderCategoryTabs() {
+      categoryTabs.innerHTML = categories.map(category => {
+        const count = category.name === "all" ? jobs.length : jobs.filter(job => job.category === category.name).length;
+        const isActive = categoryFilter.value === category.name || (category.name === "all" && categoryFilter.value === "all");
+        return `
+          <button class="category-tab ${isActive ? "active" : ""}" data-category="${category.name}">
+            <strong>${category.icon} ${category.label}</strong>
+            <span>${count} وظيفة</span>
+          </button>
+        `;
+      }).join("");
 
-      jobsList.innerHTML = filtered.map(job => `
+      document.querySelectorAll(".category-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          categoryFilter.value = tab.dataset.category;
+          renderJobs();
+        });
+      });
+    }
+
+    function renderJobCard(job) {
+      return `
         <article class="job-card">
           <div class="job-main">
             <div>
@@ -930,6 +1074,7 @@
                 <span class="meta-item">📍 ${job.city}</span>
                 <span class="meta-item">🕒 ${job.type}</span>
                 <span class="meta-item">💼 ${job.experience}</span>
+                <span class="meta-item">🏷️ ${job.category}</span>
                 <span class="meta-item">💵 ${formatSalary(job.salaryMin, job.salaryMax)}</span>
                 <span class="meta-item">🗓️ ${job.postedText}</span>
               </div>
@@ -943,7 +1088,47 @@
             </div>
           </div>
         </article>
-      `).join("");
+      `;
+    }
+
+    function renderJobs() {
+      const filtered = getFilteredJobs();
+      heroCount.textContent = jobs.length;
+      resultsCount.textContent = filtered.length === 1 ? "تم العثور على وظيفة واحدة" : "تم العثور على " + filtered.length + " وظائف";
+      emptyState.style.display = filtered.length === 0 ? "block" : "none";
+      jobsList.style.display = filtered.length === 0 ? "none" : "grid";
+      renderActiveFilters();
+      renderCategoryTabs();
+
+      if (categoryFilter.value === "all") {
+        const groupedHtml = categories
+          .filter(category => category.name !== "all")
+          .map(category => {
+            const categoryJobs = filtered.filter(job => job.category === category.name);
+            if (categoryJobs.length === 0) return "";
+            return `
+              <div class="category-section">
+                <div class="category-title">
+                  <h3>${category.icon} وظائف ${category.label}</h3>
+                  <span>${categoryJobs.length} وظيفة</span>
+                </div>
+                ${categoryJobs.map(renderJobCard).join("")}
+              </div>
+            `;
+          }).join("");
+        jobsList.innerHTML = groupedHtml;
+      } else {
+        const currentCategory = categories.find(category => category.name === categoryFilter.value);
+        jobsList.innerHTML = `
+          <div class="category-section">
+            <div class="category-title">
+              <h3>${currentCategory ? currentCategory.icon : "📌"} وظائف ${categoryFilter.value}</h3>
+              <span>${filtered.length} وظيفة</span>
+            </div>
+            ${filtered.map(renderJobCard).join("")}
+          </div>
+        `;
+      }
 
       document.querySelectorAll(".save-btn").forEach(button => {
         button.addEventListener("click", () => {
