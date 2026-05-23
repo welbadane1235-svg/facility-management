@@ -98,12 +98,12 @@
         <nav class="navbar" aria-label="القائمة الرئيسية">
           <a class="brand" href="index.html"><div class="brand-icon">H</div><div><div class="brand-title">HireX</div><div class="brand-subtitle">منصة التوظيف والفرص المهنية</div></div></a>
           <div class="nav-links"><a class="active" href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="#features">المميزات</a></div>
-          <div class="nav-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href="register.html">إنشاء حساب</a></div>
+          <div class="nav-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href=>إنشاء حساب</a></div>
           <button class="menu-btn" id="menuBtn">☰</button>
         </nav>
         <div class="mobile-menu" id="mobileMenu">
           <a href="index.html">الرئيسية</a><a href="jobs.html">الوظائف</a><a href="companies.html">للشركات</a><a href="candidates.html">للمرشحين</a><a href="#features">المميزات</a>
-          <div class="mobile-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href="register.html">إنشاء حساب</a></div>
+          <div class="mobile-actions"><a class="btn btn-ghost" href="login.html">تسجيل الدخول</a><a class="btn btn-primary" href=>إنشاء حساب</a></div>
         </div>
       </div>
     </header>
@@ -150,7 +150,7 @@
   <div class="toast" id="toast"></div>
   <script>
     const menuBtn=document.getElementById("menuBtn"),mobileMenu=document.getElementById("mobileMenu"),toast=document.getElementById("toast"),jobSearch=document.getElementById("jobSearch"),cityFilter=document.getElementById("cityFilter"),searchBtn=document.getElementById("searchBtn"),jobsGrid=document.getElementById("jobsGrid");
-    const nextPages=["companies.html","candidates.html","login.html","register.html","terms.html","privacy.html","support.html"];
+    const nextPages=["companies.html","candidates.html","login.html","terms.html","privacy.html","support.html"];
     function showToast(message){toast.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),2600)}
     menuBtn.addEventListener("click",()=>{mobileMenu.classList.toggle("open");menuBtn.textContent=mobileMenu.classList.contains("open")?"×":"☰"});
     document.querySelectorAll("a[href]").forEach(link=>{const href=link.getAttribute("href");if(nextPages.includes(href)){link.addEventListener("click",event=>{event.preventDefault();showToast("سيتم تفعيل هذا القسم قريبًا: "+href)})}});
