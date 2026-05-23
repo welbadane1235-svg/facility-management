@@ -1,1 +1,1 @@
-HireX wallet coins system added. SQL merged into supabase-setup.sql.
+HireX: wallet integrated inside candidate-dashboard account tab.

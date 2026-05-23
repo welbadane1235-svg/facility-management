@@ -117,6 +117,28 @@
     @media(max-width:1050px){.dashboard,.grid2{grid-template-columns:1fr}.side{position:static}.hero-card{grid-template-columns:1fr}.quick-actions{justify-content:flex-start}}
     @media(max-width:820px){.links{display:none}.stats,.grid3,.form-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:600px){.container{width:min(100% - 22px,1180px)}.nav{height:72px}.logo{width:42px;height:42px;border-radius:15px}.brand-title{font-size:23px}.form-grid,.stats,.grid3{grid-template-columns:1fr}.card{border-radius:24px}.panel,.side,.stat,.hero-card{padding:16px}.actions .btn,.quick-actions .btn{width:100%}.toast{right:12px;left:12px;bottom:14px}}
+  
+    .wallet-hero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;border:1px solid rgba(52,211,153,.22);background:linear-gradient(135deg,rgba(52,211,153,.14),rgba(34,211,238,.08)),rgba(255,255,255,.055);border-radius:26px;padding:18px;margin-bottom:16px}
+    .wallet-balance{min-width:220px;text-align:center;border:1px solid rgba(255,255,255,.12);background:rgba(8,17,31,.56);border-radius:24px;padding:16px}
+    .wallet-balance strong{display:block;font-size:44px;line-height:1;background:linear-gradient(135deg,#fff,#d1fae5,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .wallet-balance span{color:var(--muted);font-weight:900}
+    .packages-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .coin-package{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:22px;padding:16px;display:grid;gap:8px}
+    .coin-package h3{font-size:20px;font-weight:900}
+    .coin-package .coin-count{font-size:32px;font-weight:900;color:#d1fae5}
+    .coin-package .price{color:var(--muted);font-weight:900}
+    .coin-package .btn{width:100%}
+    .wallet-list{display:grid;gap:10px}
+    .wallet-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);border-radius:18px;padding:14px}
+    .wallet-row-title{font-weight:900}
+    .wallet-row-date{color:var(--muted2);font-size:13px;font-weight:800}
+    .coin-credit{color:#d1fae5;font-weight:900}
+    .coin-debit{color:#fecdd3;font-weight:900}
+    .coin-pending{background:rgba(251,191,36,.12);color:#fde68a;border:1px solid rgba(251,191,36,.2);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}
+    .coin-approved{background:rgba(52,211,153,.12);color:#d1fae5;border:1px solid rgba(52,211,153,.2);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}
+    .coin-rejected{background:rgba(251,113,133,.12);color:#fecdd3;border:1px solid rgba(251,113,133,.2);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}
+    @media(max-width:820px){.wallet-hero{grid-template-columns:1fr}.packages-grid{grid-template-columns:1fr}.wallet-balance{min-width:0}.wallet-row{flex-direction:column}}
+
   </style>
 </head>
 
@@ -170,6 +192,7 @@
           <button class="side-btn" data-view="resume">السيرة الذاتية <span>›</span></button>
           <button class="side-btn" data-view="applications">طلباتي <span>›</span></button>
           <button class="side-btn" data-view="saved">المحفوظات <span>›</span></button>
+          <button class="side-btn" data-view="wallet">محفظة الكوينز <span>›</span></button>
           <button class="side-btn" data-view="notifications">الإشعارات <span>›</span></button>
         </nav>
 
@@ -308,6 +331,53 @@
           </div>
         </section>
 
+        
+        <section class="view" id="wallet">
+          <div class="card panel">
+            <div class="wallet-hero">
+              <div>
+                <h2>محفظة الكوينز</h2>
+                <p>هذه المحفظة مرتبطة بحسابك الحالي. يمكنك شحن الكوينز واستخدامها لاحقًا داخل التطبيق حسب الخدمات المتاحة.</p>
+              </div>
+              <div class="wallet-balance">
+                <span>الرصيد الحالي</span>
+                <strong id="walletBalance">0</strong>
+                <span>كوينز</span>
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div>
+                <h2>باقات الشحن</h2>
+                <p>اختر باقة وسيتم إنشاء طلب شحن بانتظار تفعيل الإدارة.</p>
+                <div class="packages-grid" id="walletPackagesGrid"></div>
+
+                <div style="margin-top:18px">
+                  <h2>استخدامات الكوينز</h2>
+                  <div class="wallet-list">
+                    <div class="wallet-row"><div><div class="wallet-row-title">تقديم مميز على وظيفة</div><div class="wallet-row-date">لإظهار طلبك بشكل أفضل للشركة</div></div><strong class="coin-debit">10 كوينز</strong></div>
+                    <div class="wallet-row"><div><div class="wallet-row-title">إبراز الملف الشخصي</div><div class="wallet-row-date">رفع ظهور حسابك للشركات</div></div><strong class="coin-debit">25 كوينز</strong></div>
+                    <div class="wallet-row"><div><div class="wallet-row-title">تحليل السيرة الذاتية</div><div class="wallet-row-date">خدمة مستقبلية داخل التطبيق</div></div><strong class="coin-debit">15 كوينز</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2>طلبات الشحن</h2>
+                <p>آخر طلبات الشحن الخاصة بحسابك.</p>
+                <div class="wallet-list" id="walletRequestsList"></div>
+
+                <div style="margin-top:18px">
+                  <h2>سجل العمليات</h2>
+                  <p>كل إضافة أو خصم من المحفظة يظهر هنا.</p>
+                  <div class="wallet-list" id="walletTransactionsList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
         <section class="view" id="notifications">
           <div class="card panel">
             <h2>الإشعارات</h2>
@@ -411,6 +481,7 @@ async function loadProfile(){
     currentUser=authData.user;
     currentProfile=await getOrCreateProfile(currentUser);
     renderProfile(currentProfile);
+    await loadWalletInsideAccount();
   }catch(err){showToast(err.message||"تعذر تحميل الحساب.")}
 }
 async function uploadAvatar(){
@@ -471,6 +542,87 @@ function openView(id){
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
+function walletStatusLabel(status){
+  if(status === "approved") return '<span class="coin-approved">معتمد</span>';
+  if(status === "rejected") return '<span class="coin-rejected">مرفوض</span>';
+  return '<span class="coin-pending">بانتظار التفعيل</span>';
+}
+function walletMoney(value,currency){return Number(value || 0).toLocaleString("en-US") + " " + (currency || "SAR")}
+async function ensureUserWallet(){
+  const {data,error} = await client.from("wallets").select("*").eq("company_id",currentUser.id).maybeSingle();
+  if(error) throw error;
+  if(data) return data;
+  const {data:created,error:insertError} = await client.from("wallets").insert({company_id:currentUser.id,balance:0}).select("*").single();
+  if(insertError) throw insertError;
+  return created;
+}
+async function loadWalletInsideAccount(){
+  if(!currentUser || !document.getElementById("walletBalance")) return;
+  const wallet = await ensureUserWallet();
+  walletBalance.textContent = wallet.balance || 0;
+  await loadWalletPackages();
+  await loadWalletRequests();
+  await loadWalletTransactions();
+}
+async function loadWalletPackages(){
+  const {data,error} = await client.from("coin_packages").select("*").eq("is_active",true).order("sort_order",{ascending:true});
+  if(error) throw error;
+  walletPackagesGrid.innerHTML = (data || []).map(pkg => `
+    <div class="coin-package">
+      <h3>${pkg.name}</h3>
+      <div class="coin-count">${pkg.coins} كوينز</div>
+      <div class="price">${walletMoney(pkg.price,pkg.currency)}</div>
+      <button class="btn btn-primary" onclick="requestCoinsPackage('${pkg.id}',${pkg.coins},${pkg.price},'${pkg.currency}')">طلب شحن</button>
+    </div>
+  `).join("") || "<p>لا توجد باقات مفعلة حاليًا.</p>";
+}
+async function requestCoinsPackage(packageId, coins, price, currency){
+  try{
+    showToast("جاري إنشاء طلب الشحن...");
+    const {error} = await client.from("coin_purchase_requests").insert({
+      company_id: currentUser.id,
+      package_id: packageId,
+      coins,
+      price,
+      currency,
+      status: "pending"
+    });
+    if(error) throw error;
+    showToast("تم إنشاء طلب الشحن. بانتظار تفعيل الإدارة.");
+    await loadWalletRequests();
+  }catch(err){showToast(err.message || "تعذر إنشاء طلب الشحن.")}
+}
+async function loadWalletRequests(){
+  const {data,error} = await client.from("coin_purchase_requests").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false}).limit(10);
+  if(error) throw error;
+  walletRequestsList.innerHTML = (data || []).map(req => `
+    <div class="wallet-row">
+      <div>
+        <div class="wallet-row-title">${req.coins} كوينز</div>
+        <div class="wallet-row-date">${new Date(req.created_at).toLocaleString("ar-SA")}</div>
+      </div>
+      <div>
+        ${walletStatusLabel(req.status)}
+        <div class="wallet-row-date">${walletMoney(req.price,req.currency)}</div>
+      </div>
+    </div>
+  `).join("") || "<p>لا توجد طلبات شحن حتى الآن.</p>";
+}
+async function loadWalletTransactions(){
+  const {data,error} = await client.from("coin_transactions").select("*").eq("company_id",currentUser.id).order("created_at",{ascending:false}).limit(10);
+  if(error) throw error;
+  walletTransactionsList.innerHTML = (data || []).map(tx => `
+    <div class="wallet-row">
+      <div>
+        <div class="wallet-row-title">${tx.reason}</div>
+        <div class="wallet-row-date">${new Date(tx.created_at).toLocaleString("ar-SA")}</div>
+      </div>
+      <strong class="${tx.transaction_type === "credit" ? "coin-credit" : "coin-debit"}">${tx.transaction_type === "credit" ? "+" : "-"}${tx.amount} كوينز</strong>
+    </div>
+  `).join("") || "<p>لا توجد عمليات حتى الآن.</p>";
+}
+
 logoutBtn.addEventListener("click",async()=>{await client.auth.signOut();location.href="login.html"});
 loadProfile();
 </script>
