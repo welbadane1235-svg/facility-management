@@ -1,47 +1,23 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HireX - منصة التوظيف الذكية</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0072ff">
-<style>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HireX</title><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="manifest" href="manifest.json"><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Cairo,Arial,sans-serif}
 body{background:#050914;color:#fff;min-height:100vh;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:-35%;background:radial-gradient(circle at 80% 8%,rgba(0,198,255,.18),transparent 24%),radial-gradient(circle at 10% 92%,rgba(139,92,246,.18),transparent 25%);z-index:-1}
-a{text-decoration:none;color:#fff}button,input,select,textarea{font-family:inherit}
-.glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(22px);box-shadow:0 20px 70px rgba(0,0,0,.25)}
-.btn{border:0;border-radius:16px;padding:12px 18px;color:#fff;font-weight:800;cursor:pointer;background:rgba(255,255,255,.08);transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+button,input,select,textarea{font-family:inherit}.glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(22px);box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.btn{border:0;border-radius:16px;padding:12px 18px;color:#fff;font-weight:800;cursor:pointer;background:rgba(255,255,255,.08);transition:.2s}.btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.45}
 .p{background:linear-gradient(135deg,#00c6ff,#0072ff)}.ok{background:rgba(34,197,94,.18);color:#86efac}.no{background:rgba(239,68,68,.18);color:#fca5a5}.warn{background:rgba(245,158,11,.18);color:#fcd34d}
 input,select,textarea{border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:#fff;padding:0 14px;width:100%;outline:none}
 input,select{height:52px}textarea{min-height:105px;padding-top:12px;resize:vertical}select option{color:#111}
 nav{padding:16px 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(5,9,20,.72);border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:10}
 .logo{display:flex;align-items:center;gap:12px}.x{width:46px;height:46px;border-radius:17px;background:linear-gradient(135deg,#00c6ff,#0072ff);display:grid;place-items:center;font-weight:900}.logo h1{font-size:27px}.logo small{color:rgba(255,255,255,.55)}
 .hero{padding:60px 6%;display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:center}.hero h2{font-size:52px;line-height:1.18;margin-bottom:16px}.hero p{color:rgba(255,255,255,.65);font-size:18px;line-height:2}
-.grad{background:linear-gradient(90deg,#00c6ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.card,.panel{border-radius:28px;padding:20px}.form{display:grid;gap:10px}.tabs{display:flex;gap:10px;margin-bottom:12px}.tabs .btn{flex:1}
-.app{display:none}.app.active{display:block}.layout{display:grid;grid-template-columns:270px 1fr;gap:18px;padding:20px}.side{border-radius:30px;padding:18px;min-height:calc(100vh - 40px);position:sticky;top:20px}.side button{width:100%;margin:6px 0;text-align:right}.side button.active{background:linear-gradient(135deg,rgba(0,198,255,.26),rgba(0,114,255,.18))}
+.grad{background:linear-gradient(90deg,#00c6ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.card,.panel{border-radius:28px;padding:20px}.form{display:grid;gap:10px}.tabs{display:flex;gap:10px;margin-bottom:12px}.tabs .btn{flex:1}
+#public{display:none}.app{display:none}.app.active,#public.active{display:block}.layout{display:grid;grid-template-columns:270px 1fr;gap:18px;padding:20px}.side{border-radius:30px;padding:18px;min-height:calc(100vh - 40px);position:sticky;top:20px}.side button{width:100%;margin:6px 0;text-align:right}.side button.active{background:linear-gradient(135deg,rgba(0,198,255,.26),rgba(0,114,255,.18))}
 .page{display:none}.page.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.kpi{border-radius:22px;padding:16px}.kpi h3{font-size:30px}.kpi p{color:rgba(255,255,255,.58)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.item{border-radius:24px;padding:18px;transition:.2s}.item:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}.item p{color:rgba(255,255,255,.62);line-height:1.75}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.pill,.tag{display:inline-flex;padding:6px 10px;border-radius:30px;background:rgba(0,198,255,.14);color:#80e8ff;font-size:12px;margin:3px}.pending{background:rgba(245,158,11,.16);color:#fcd34d}.accepted{background:rgba(34,197,94,.16);color:#86efac}.rejected{background:rgba(239,68,68,.16);color:#fca5a5}.interview,.invited{background:rgba(139,92,246,.18);color:#c4b5fd}.verified{background:rgba(34,197,94,.16);color:#86efac}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.pill,.tag{display:inline-flex;padding:6px 10px;border-radius:30px;background:rgba(0,198,255,.14);color:#80e8ff;font-size:12px;margin:3px}
+.pending{background:rgba(245,158,11,.16);color:#fcd34d}.accepted,.verified{background:rgba(34,197,94,.16);color:#86efac}.rejected{background:rgba(239,68,68,.16);color:#fca5a5}.interview,.invited{background:rgba(139,92,246,.18);color:#c4b5fd}
 .toast{position:fixed;bottom:20px;left:20px;z-index:99;padding:13px 18px;border-radius:16px;background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.3);color:#86efac;display:none}.toast.err{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.3);color:#fca5a5}
 .searchbar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.meta{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.meta span{padding:6px 10px;border-radius:30px;background:rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.75)}
-.match,.bar{height:10px;border-radius:30px;background:rgba(255,255,255,.08);overflow:hidden;margin:8px 0}.match span,.bar span{display:block;height:100%;background:linear-gradient(90deg,#00c6ff,#8b5cf6)}
-.empty{border-radius:22px;padding:24px;text-align:center;color:rgba(255,255,255,.6)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}.modal-box{width:min(900px,100%);max-height:92vh;overflow:auto;border-radius:30px;padding:22px}
+.empty{border-radius:22px;padding:24px;text-align:center;color:rgba(255,255,255,.6)}#bootScreen{position:fixed;inset:0;z-index:999;background:#050914;display:grid;place-items:center}.loader{width:54px;height:54px;border-radius:50%;border:4px solid rgba(255,255,255,.12);border-top-color:#00c6ff;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:950px){.hero,.layout{grid-template-columns:1fr}.hero{padding:40px 20px}.hero h2{font-size:34px}.grid,.kpis,.fg,.searchbar{grid-template-columns:1fr}.side{position:relative;min-height:auto}}
-
-.portals{padding:40px 7% 70px}.portal{min-height:245px}.features{padding:20px 7% 70px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{border-radius:24px;padding:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}.feature p{color:rgba(255,255,255,.58);line-height:1.7}@media(max-width:900px){.features{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<nav><div class="logo"><div class="x">X</div><div><h1>HireX</h1><small>منصة التوظيف الذكية</small></div></div><a class="btn p" href="candidate.html">ابدأ الآن</a></nav>
-<section class="hero">
-<div><span class="pill">منصة توظيف احترافية</span><h2>اربط بين <span class="grad">المواهب</span> والشركات بطريقة أسرع</h2><p>حساب باحث، حساب شركة، ولوحة إدارة منفصلة ومخفية.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn p" href="candidate.html">أنا باحث عن عمل</a><a class="btn" href="company.html">أنا شركة</a></div></div>
-<div class="card glass"><h3>وظائف نشطة</h3><div class="item glass"><h3>مهندس تشغيل</h3><p>الرياض • دوام كامل</p></div><div class="item glass"><h3>أخصائي موارد بشرية</h3><p>جدة • مقابلات مباشرة</p></div></div>
-</section>
-<section class="portals"><div class="grid"><a class="item glass portal" href="candidate.html"><h2>👤 بوابة الباحث</h2><p>وظائف، تقديمات، ملف عام، CV، إشعارات.</p><span class="btn p">الدخول كباحث</span></a><a class="item glass portal" href="company.html"><h2>🏢 بوابة الشركات</h2><p>نشر وظائف، إدارة متقدمين، مقابلات وتوثيق.</p><span class="btn p">الدخول كشركة</span></a></div></section>
-<section class="features"><div class="feature"><h3>📌 وظائف منظمة</h3><p>بحث وفلترة وتفاصيل.</p></div><div class="feature"><h3>📄 CV</h3><p>رفع فعلي عبر Storage.</p></div><div class="feature"><h3>🔔 إشعارات</h3><p>قبول ورفض ومقابلات.</p></div><div class="feature"><h3>✅ توثيق</h3><p>إدارة كاملة من الأدمن.</p></div></section>
-<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{})</script>
-</body></html>
+</style></head><body><nav><div class="logo"><div class="x">X</div><div><h1>HireX</h1><small>منصة التوظيف الذكية</small></div></div><a class="btn p" href="candidate.html">ابدأ الآن</a></nav><section class="hero"><div><h2>منصة توظيف <span class="grad">جاهزة</span></h2><p>باحث، شركة، وإدارة منفصلة.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn p" href="candidate.html">باحث عن عمل</a><a class="btn" href="company.html">شركة</a></div></div><div class="card glass"><h3>HireX</h3><p>منصة توظيف ذكية قابلة للتطوير.</p></div></section></body></html>
