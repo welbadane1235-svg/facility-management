@@ -1,1 +1,1 @@
-HireX professional wallet UI improved inside candidate account. Prevents duplicated package display and SQL cleanup added.
+HireX: candidate CV category selection added to resume tab and profiles.cv_category SQL added.

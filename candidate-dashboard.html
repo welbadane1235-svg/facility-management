@@ -315,6 +315,19 @@
               <form id="resumeForm">
                 <div class="form-grid">
                   <div class="full"><label class="form-label">رفع ملف CV</label><input class="file" id="cvFile" type="file" accept=".pdf,.doc,.docx" /></div>
+                  <div class="full">
+                    <label class="form-label">القسم الذي تريد نشر السيرة فيه</label>
+                    <select class="select" id="cvCategory">
+                      <option value="medical">طبي</option>
+                      <option value="technical">تقني</option>
+                      <option value="finance">محاسبة ومالية</option>
+                      <option value="hr">موارد بشرية</option>
+                      <option value="sales">مبيعات وتسويق</option>
+                      <option value="operations">تشغيل وإدارة مرافق</option>
+                      <option value="customer_service">خدمة عملاء</option>
+                      <option value="other">أخرى</option>
+                    </select>
+                  </div>
                   <div><label class="form-label">آخر مسمى وظيفي</label><input class="input" id="lastJobTitle" placeholder="مثال: محاسب عام" /></div>
                   <div><label class="form-label">آخر شركة</label><input class="input" id="lastCompany" placeholder="مثال: شركة نمو الأعمال" /></div>
                   <div><label class="form-label">المؤهل</label><input class="input" id="education" placeholder="مثال: بكالوريوس محاسبة" /></div>
@@ -332,6 +345,10 @@
                   <div class="timeline-title" id="previewJobTitle">المسمى الوظيفي</div>
                   <div class="timeline-meta" id="previewCompany">الشركة</div>
                   <div class="timeline-desc" id="previewExperience">وصف الخبرة سيظهر هنا بعد الحفظ.</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-title">القسم المنشور فيه CV</div>
+                  <div class="timeline-meta" id="previewCvCategory">محاسبة ومالية</div>
                 </div>
                 <div class="timeline-item">
                   <div class="timeline-title">التعليم</div>
@@ -464,9 +481,24 @@ let currentProfile = null;
 
 function showToast(msg){toast.textContent=msg;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3500)}
 function safe(v,f="غير محدد"){return v && String(v).trim() ? v : f}
+
+function cvCategoryLabel(value){
+  const labels = {
+    medical:"طبي",
+    technical:"تقني",
+    finance:"محاسبة ومالية",
+    hr:"موارد بشرية",
+    sales:"مبيعات وتسويق",
+    operations:"تشغيل وإدارة مرافق",
+    customer_service:"خدمة عملاء",
+    other:"أخرى"
+  };
+  return labels[value] || "محاسبة ومالية";
+}
+
 function parseSkills(value){return (value || "").split(",").map(s=>s.trim()).filter(Boolean)}
 function completionPercent(p){
-  const fields=[p.full_name,p.email,p.phone,p.city,p.specialty,p.experience,p.summary,p.avatar_url,p.cv_url,p.headline,p.skills,p.education,p.last_job_title];
+  const fields=[p.full_name,p.email,p.phone,p.city,p.specialty,p.experience,p.summary,p.avatar_url,p.cv_url,p.cv_category,p.headline,p.skills,p.education,p.last_job_title];
   return Math.round((fields.filter(v=>v&&String(v).trim()).length/fields.length)*100)
 }
 function setSelectValue(select,value,fallback){
@@ -512,10 +544,12 @@ function renderProfile(p){
   education.value=p.education||"";
   graduationYear.value=p.graduation_year||"";
   experienceDetails.value=p.experience_details||"";
+  cvCategory.value=p.cv_category||"finance";
   previewJobTitle.textContent=p.last_job_title||"المسمى الوظيفي";
   previewCompany.textContent=p.last_company||"الشركة";
   previewExperience.textContent=p.experience_details||"وصف الخبرة سيظهر هنا بعد الحفظ.";
   previewEducation.textContent=(p.education||"المؤهل")+" "+(p.graduation_year||"");
+  previewCvCategory.textContent=cvCategoryLabel(p.cv_category||"finance");
 
   if(p.avatar_url){avatarBox.innerHTML='<img src="'+p.avatar_url+'" alt="صورة الحساب" />'}else{avatarBox.textContent=name.charAt(0)||"م"}
 
@@ -582,7 +616,7 @@ resumeForm.addEventListener("submit",async(e)=>{
   try{
     showToast("جاري حفظ السيرة الذاتية...");
     const cv_url=await uploadCv();
-    await saveUpdates({cv_url,last_job_title:lastJobTitle.value.trim(),last_company:lastCompany.value.trim(),education:education.value.trim(),graduation_year:graduationYear.value.trim(),experience_details:experienceDetails.value.trim()});
+    await saveUpdates({cv_url,cv_category:cvCategory.value,last_job_title:lastJobTitle.value.trim(),last_company:lastCompany.value.trim(),education:education.value.trim(),graduation_year:graduationYear.value.trim(),experience_details:experienceDetails.value.trim()});
     showToast("تم حفظ السيرة الذاتية بنجاح.");
   }catch(err){showToast(err.message||"حدث خطأ أثناء حفظ السيرة.")}
 });
