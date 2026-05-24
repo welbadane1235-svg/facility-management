@@ -88,9 +88,25 @@
     .status-pill{display:inline-flex;width:max-content;align-items:center;gap:6px;border-radius:999px;background:rgba(32,223,159,.13);border:1px solid rgba(32,223,159,.18);color:#b7ffe5;padding:5px 10px;font-size:11px;font-weight:900}
 
   
-    #platformChatOverlay{z-index:140}
+    #platformChatOverlay{z-index:300}
     #paymentOverlay{z-index:150}
     #phoneOverlay{z-index:150}
+
+  
+    .detail-actions button.detail-chat-btn{
+      min-height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+      cursor:pointer;
+      font-family:inherit;
+      width:100%;
+    }
+    #platformChatOverlay.show{display:grid!important}
 
   </style>
 </head>
@@ -629,13 +645,27 @@
 
     function openPlatformChat(serviceId){
       serviceId = Number(serviceId);
-      const item = servicesRecords.find(r => r.id === serviceId);
-      if(!item){ alert('تعذر فتح المحادثة: لم يتم العثور على بيانات الخدمة.'); return; }
+      const item = servicesRecords.find(r => Number(r.id) === serviceId);
+      if(!item){
+        alert('تعذر فتح المحادثة: لم يتم العثور على بيانات الخدمة.');
+        return;
+      }
 
       currentServiceDetailId = serviceId;
-      document.getElementById('chatServiceTitle').textContent = item.title;
-      document.getElementById('chatServiceSummary').textContent = item.summary || 'محادثة داخل المنصة حول هذه الخدمة.';
-      document.getElementById('chatStatus').textContent = item.type === 'provider' ? 'طلب خدمة من مقدم خدمة' : 'تقديم عرض على طلب خدمة';
+
+      const titleEl = document.getElementById('chatServiceTitle');
+      const summaryEl = document.getElementById('chatServiceSummary');
+      const statusEl = document.getElementById('chatStatus');
+      const overlayEl = document.getElementById('platformChatOverlay');
+
+      if(!overlayEl || !titleEl || !summaryEl || !statusEl){
+        alert('تعذر فتح المحادثة: عناصر نافذة الشات غير موجودة في الصفحة.');
+        return;
+      }
+
+      titleEl.textContent = item.title || 'خدمة';
+      summaryEl.textContent = item.summary || 'محادثة داخل المنصة حول هذه الخدمة.';
+      statusEl.textContent = item.type === 'provider' ? 'طلب خدمة من مقدم خدمة' : 'تقديم عرض على طلب خدمة';
 
       if(!chatThreads[serviceId]){
         chatThreads[serviceId] = [
@@ -644,17 +674,24 @@
         ];
       }
 
-      document.getElementById('chatText').value = '';
-      document.getElementById('offerAmount').value = '';
-      document.getElementById('offerDays').value = '';
+      const textEl = document.getElementById('chatText');
+      const amountEl = document.getElementById('offerAmount');
+      const daysEl = document.getElementById('offerDays');
+      if(textEl) textEl.value = '';
+      if(amountEl) amountEl.value = '';
+      if(daysEl) daysEl.value = '';
+
       renderPlatformChat(serviceId);
-      showOverlay('platformChatOverlay');
-      document.getElementById('platformChatOverlay').style.display = 'grid';
+      overlayEl.classList.add('show');
+      overlayEl.setAttribute('aria-hidden','false');
+      overlayEl.style.display = 'grid';
+      document.body.classList.add('modal-open');
     }
 
     function closePlatformChat(){
-      hideOverlay('platformChatOverlay');
-      document.getElementById('platformChatOverlay').style.display = '';
+      const overlayEl = document.getElementById('platformChatOverlay');
+      if(overlayEl){ overlayEl.classList.remove('show'); overlayEl.setAttribute('aria-hidden','true'); overlayEl.style.display=''; }
+      if(!document.querySelector('.overlay.show')) document.body.classList.remove('modal-open');
     }
 
     function renderPlatformChat(serviceId){
@@ -729,6 +766,16 @@
     document.addEventListener('keydown', function(e){
       if(e.key !== 'Escape') return;
       if(document.getElementById('platformChatOverlay')?.classList.contains('show')) return closePlatformChat();
+    });
+
+
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('.detail-chat-btn');
+      if(!btn) return;
+      e.preventDefault();
+      const serviceId = btn.getAttribute('data-service-id');
+      openPlatformChat(serviceId);
     });
 
 </script>
