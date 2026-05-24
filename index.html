@@ -108,6 +108,47 @@
     }
     #platformChatOverlay.show{display:grid!important}
 
+  
+    /* My Ads Smart Modal */
+    .ad-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);padding:8px}
+    .ad-tab{min-height:46px;border:0;border-radius:16px;background:transparent;color:#9db7ab;font-weight:900;cursor:pointer}
+    .ad-tab.active{background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d}
+    .ad-form{display:none;gap:12px}
+    .ad-form.active{display:grid}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{display:grid;gap:6px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:13px;color:#b7ffe5;font-weight:900}
+    .field input,.field select,.field textarea{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:#07120e;color:#fff;padding:0 12px;outline:none;font-family:inherit;font-size:14px;font-weight:800}
+    .field input,.field select{height:48px}
+    .field textarea{min-height:108px;padding-top:12px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:#8ea69c}
+    .submit-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+    .submit-row button{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-weight:900;cursor:pointer}
+    .submit-row button.primary{background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;border:0}
+    .myads-list{display:grid;gap:10px}
+    .myad-card{border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.05);padding:15px;display:grid;gap:10px}
+    .myad-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .myad-card h4{font-size:18px;line-height:1.25;font-weight:900}
+    .myad-card p{color:#9db7ab;font-size:13px;font-weight:800}
+    .status-badge{border-radius:999px;padding:5px 9px;color:#06110d;background:#b7ffe5;font-size:11px;font-weight:900;white-space:nowrap}
+    .status-badge.draft{background:#fff7ed}
+    .status-badge.review{background:#ecfeff}
+    .myad-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .myad-actions button{min-height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);color:#fff;font-weight:900;cursor:pointer}
+    .myad-actions button.primary{background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;border:0}
+    .empty-myads{border-radius:24px;border:1px dashed rgba(255,255,255,.16);padding:18px;color:#9db7ab;text-align:center;font-weight:900}
+    .preview-box{border-radius:22px;border:1px solid rgba(32,223,159,.18);background:rgba(32,223,159,.07);padding:14px;display:grid;gap:8px}
+    .preview-box h3{font-size:20px;font-weight:900}
+    .preview-box p{color:#9db7ab;font-weight:800;font-size:13px}
+    .quick-create-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quick-create{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.055);padding:14px;display:grid;gap:9px;cursor:pointer;text-align:right;color:#fff}
+    .quick-create.active{outline:2px solid rgba(32,223,159,.55);background:rgba(32,223,159,.10)}
+    .quick-create b{font-size:24px}
+    .quick-create strong{font-size:17px}
+    .quick-create span{font-size:12px;color:#9db7ab;font-weight:800}
+    @media(max-width:520px){.ad-tabs{grid-template-columns:1fr 1fr}.form-grid,.submit-row,.quick-create-grid,.myad-actions{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -135,7 +176,7 @@
       <button class="nav-item active" data-tab="home" onclick="goHome()"><b>🏠</b><span>الرئيسية</span></button>
       <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><b>💼</b><span>وظائف</span></button>
       <button class="nav-item" data-tab="services" onclick="openServicesModal()"><b>🛠️</b><span>خدمات</span></button>
-      <button class="nav-item" data-tab="post" onclick="openSoon('إعلاني')"><b>＋</b><span>إعلاني</span></button>
+      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><b>＋</b><span>إعلاني</span></button>
       <button class="nav-item" data-tab="account" onclick="openSoon('حسابي')"><b>⚙️</b><span>حسابي</span></button>
     </nav>
   </div>
@@ -841,6 +882,147 @@
       openPlatformChatV15(btn.dataset.serviceId);
     }, true);
 
+
+
+    const myAdsState = { type:'job', ads: [] };
+
+    function openMyAdsModal(){
+      setActive('post');
+      showOverlay('myAdsOverlay');
+      renderMyAdsList();
+      updateAdPreview();
+    }
+
+    function closeMyAdsModal(activateHome=true){
+      hideOverlay('myAdsOverlay');
+      if(activateHome) setActive('home');
+    }
+
+    function switchAdType(type){
+      myAdsState.type = type;
+      document.querySelectorAll('.quick-create').forEach(btn=>btn.classList.toggle('active', btn.dataset.adType === type));
+      document.querySelectorAll('.ad-form').forEach(form=>form.classList.remove('active'));
+      const map = {job:'jobAdForm', resume:'resumeAdForm', service:'serviceAdForm', request:'requestAdForm'};
+      document.getElementById(map[type]).classList.add('active');
+      document.getElementById('formHint').textContent = adTypeLabel(type);
+      updateAdPreview();
+    }
+
+    function adTypeLabel(type){
+      return {job:'فرصة عمل', resume:'يطلب عمل', service:'عرض خدمة', request:'طلب خدمة'}[type] || type;
+    }
+
+    function getCurrentAdData(){
+      const type = myAdsState.type;
+      if(type === 'job'){
+        return {
+          type, title: val('jobAdTitle'), category: val('jobAdCategory'), city: val('jobAdCity'),
+          workType: val('jobAdWorkType'), salary: val('jobAdSalary'), phone: val('jobAdPhone'),
+          description: val('jobAdDescription')
+        };
+      }
+      if(type === 'resume'){
+        return {
+          type, title: val('resumeAdTitle'), name: val('resumeAdName'), category: val('resumeAdCategory'),
+          city: val('resumeAdCity'), phone: val('resumeAdPhone'), file: val('resumeAdFile'), description: val('resumeAdSummary')
+        };
+      }
+      if(type === 'service'){
+        return {
+          type, title: val('serviceAdTitle'), category: val('serviceAdCategory'), price: val('serviceAdPrice'),
+          delivery: val('serviceAdDelivery'), description: val('serviceAdDescription')
+        };
+      }
+      return {
+        type, title: val('requestAdTitle'), category: val('requestAdCategory'), price: val('requestAdPrice'),
+        city: val('requestAdCity'), description: val('requestAdDescription')
+      };
+    }
+
+    function val(id){
+      return (document.getElementById(id)?.value || '').trim();
+    }
+
+    function updateAdPreview(){
+      const data = getCurrentAdData();
+      const title = data.title || adTypeLabel(data.type);
+      const desc = data.description || 'املأ البيانات وستظهر المعاينة هنا.';
+      const meta = [data.city, data.workType, data.salary ? data.salary + ' ريال' : '', data.price ? data.price + ' ريال' : '', data.delivery].filter(Boolean);
+      document.getElementById('adPreview').innerHTML = `
+        <h3>${safeText(title)}</h3>
+        <p>${safeText(desc)}</p>
+        <div class="meta-list">${meta.map(x=>`<span class="meta-pill">${safeText(x)}</span>`).join('')}</div>
+      `;
+    }
+
+    function saveCurrentAd(status){
+      const data = getCurrentAdData();
+      if(!data.title){
+        alert('اكتب عنوان الإعلان أولًا.');
+        return;
+      }
+      data.id = Date.now();
+      data.status = status;
+      data.createdAt = new Date().toLocaleString('ar-SA');
+      myAdsState.ads.unshift(data);
+      renderMyAdsList();
+      alert(status === 'published' ? 'تم نشر الإعلان تجريبيًا.' : 'تم حفظ الإعلان كمسودة.');
+    }
+
+    function renderMyAdsList(){
+      const box = document.getElementById('myAdsList');
+      if(!box) return;
+      if(!myAdsState.ads.length){
+        box.innerHTML = '<div class="empty-myads">لا توجد إعلانات مضافة بعد.</div>';
+        return;
+      }
+
+      box.innerHTML = myAdsState.ads.map(ad=>`
+        <article class="myad-card">
+          <div class="myad-top">
+            <div>
+              <h4>${safeText(ad.title)}</h4>
+              <p>${adTypeLabel(ad.type)} · ${safeText(ad.createdAt)}</p>
+            </div>
+            <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+          </div>
+          <div class="meta-list">
+            ${ad.city ? `<span class="meta-pill">${safeText(ad.city)}</span>` : ''}
+            ${ad.price ? `<span class="meta-pill">${safeText(ad.price)} ريال</span>` : ''}
+            ${ad.salary ? `<span class="meta-pill">${safeText(ad.salary)}</span>` : ''}
+          </div>
+          <div class="myad-actions">
+            <button class="primary" onclick="previewMyAd(${ad.id})">معاينة</button>
+            <button onclick="alert('سيتم تفعيل التعديل لاحقًا')">تعديل</button>
+            <button onclick="featureMyAd(${ad.id})">تمييز</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function previewMyAd(id){
+      const ad = myAdsState.ads.find(x=>x.id===id);
+      if(!ad) return;
+      alert('معاينة الإعلان:\\n' + ad.title + '\\n\\n' + (ad.description || ''));
+    }
+
+    function featureMyAd(id){
+      alert('سيتم ربط التمييز لاحقًا بالكوينز والمحفظة.');
+    }
+
+    document.addEventListener('input', function(e){
+      if(e.target.closest('#myAdsOverlay')) updateAdPreview();
+    });
+
+    document.getElementById('myAdsOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeMyAdsModal();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('myAdsOverlay')?.classList.contains('show')) return closeMyAdsModal();
+    });
+
 </script>
 
   <div class="overlay" id="servicesOverlay" aria-hidden="true">
@@ -959,6 +1141,101 @@
             </div>
           </div>
         </section>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="myAdsOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">＋</div><div><h2>إعلاناتي</h2><p>إضافة وإدارة إعلانات الوظائف والخدمات</p></div></div>
+        <button class="close-btn" onclick="closeMyAdsModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="cinema-layout">
+          <div class="cinema-main">
+            <section class="job-hero-panel">
+              <div class="tag">مركز إنشاء الإعلانات · بدون ربط قاعدة البيانات الآن</div>
+              <h3>أضف إعلانك بطريقة منظمة.</h3>
+              <p>اختر نوع الإعلان، املأ البيانات، ثم احفظه كمسودة أو انشره. لاحقًا سيتم ربطه بقاعدة البيانات.</p>
+            </section>
+
+            <div class="section-mini-head"><h3>نوع الإعلان</h3><span>اختر النموذج</span></div>
+            <section class="quick-create-grid">
+              <button class="quick-create active" data-ad-type="job" onclick="switchAdType('job')"><b>💼</b><strong>فرصة عمل</strong><span>للشركات وأصحاب الأعمال</span></button>
+              <button class="quick-create" data-ad-type="resume" onclick="switchAdType('resume')"><b>👤</b><strong>يطلب عمل</strong><span>سيرة ذاتية منشورة</span></button>
+              <button class="quick-create" data-ad-type="service" onclick="switchAdType('service')"><b>🛠️</b><strong>عرض خدمة</strong><span>مقدم خدمة يعرض خدمته</span></button>
+              <button class="quick-create" data-ad-type="request" onclick="switchAdType('request')"><b>📌</b><strong>طلب خدمة</strong><span>عميل يبحث عن منفذ</span></button>
+            </section>
+
+            <div class="section-mini-head"><h3>بيانات الإعلان</h3><span id="formHint">فرصة عمل</span></div>
+
+            <form class="ad-form active" id="jobAdForm">
+              <div class="form-grid">
+                <div class="field"><label>المسمى الوظيفي</label><input id="jobAdTitle" placeholder="مثال: محاسب عام"></div>
+                <div class="field"><label>القسم</label><select id="jobAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
+                <div class="field"><label>المدينة</label><input id="jobAdCity" placeholder="الرياض"></div>
+                <div class="field"><label>نوع الدوام</label><select id="jobAdWorkType"><option>دوام كامل</option><option>دوام جزئي</option><option>عن بعد</option><option>تدريب</option></select></div>
+                <div class="field"><label>الراتب</label><input id="jobAdSalary" placeholder="اختياري"></div>
+                <div class="field"><label>رقم التواصل</label><input id="jobAdPhone" placeholder="اختياري للوظائف"></div>
+                <div class="field full"><label>وصف الوظيفة</label><textarea id="jobAdDescription" placeholder="اكتب المهام والشروط..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="resumeAdForm">
+              <div class="form-grid">
+                <div class="field"><label>اسم المرشح</label><input id="resumeAdName" placeholder="مثال: محمد أحمد"></div>
+                <div class="field"><label>المسمى المهني</label><input id="resumeAdTitle" placeholder="مثال: محاسب حديث تخرج"></div>
+                <div class="field"><label>القسم</label><select id="resumeAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
+                <div class="field"><label>المدينة</label><input id="resumeAdCity" placeholder="الرياض"></div>
+                <div class="field"><label>رقم التواصل</label><input id="resumeAdPhone" placeholder="اختياري"></div>
+                <div class="field"><label>ملف السيرة</label><input id="resumeAdFile" placeholder="اسم ملف أو رابط"></div>
+                <div class="field full"><label>نبذة احترافية</label><textarea id="resumeAdSummary" placeholder="اكتب نبذة مختصرة عن الخبرة والمهارات..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="serviceAdForm">
+              <div class="form-grid">
+                <div class="field"><label>عنوان الخدمة</label><input id="serviceAdTitle" placeholder="مثال: كتابة سيرة ذاتية"></div>
+                <div class="field"><label>قسم الخدمة</label><select id="serviceAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
+                <div class="field"><label>السعر</label><input id="serviceAdPrice" placeholder="مثال: 120"></div>
+                <div class="field"><label>مدة التنفيذ</label><input id="serviceAdDelivery" placeholder="مثال: 24 ساعة"></div>
+                <div class="field full"><label>وصف الخدمة</label><textarea id="serviceAdDescription" placeholder="اشرح ما الذي سيحصل عليه العميل..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="requestAdForm">
+              <div class="form-grid">
+                <div class="field"><label>عنوان الطلب</label><input id="requestAdTitle" placeholder="مثال: أحتاج تصميم CV"></div>
+                <div class="field"><label>قسم الخدمة</label><select id="requestAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
+                <div class="field"><label>الميزانية</label><input id="requestAdPrice" placeholder="مثال: 100"></div>
+                <div class="field"><label>المدينة</label><input id="requestAdCity" placeholder="عن بعد / الرياض"></div>
+                <div class="field full"><label>تفاصيل الطلب</label><textarea id="requestAdDescription" placeholder="اكتب ما تحتاجه بالتفصيل..."></textarea></div>
+              </div>
+            </form>
+
+            <div class="submit-row">
+              <button class="primary" onclick="saveCurrentAd('published')">نشر الإعلان</button>
+              <button onclick="saveCurrentAd('draft')">حفظ كمسودة</button>
+            </div>
+          </div>
+
+          <aside class="cinema-side">
+            <section class="side-card">
+              <h3>معاينة سريعة</h3>
+              <div class="preview-box" id="adPreview">
+                <h3>فرصة عمل</h3>
+                <p>املأ البيانات وستظهر المعاينة هنا.</p>
+              </div>
+            </section>
+
+            <section class="side-card">
+              <h3>إعلاناتي الحالية</h3>
+              <div class="myads-list" id="myAdsList"></div>
+            </section>
+          </aside>
+        </div>
       </div>
     </section>
   </div>
