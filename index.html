@@ -48,6 +48,21 @@
     .bottom-nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(640px,calc(100% - 32px));height:78px;background:rgba(8,18,14,.96);border:1px solid var(--line);border-radius:30px;display:grid;grid-template-columns:repeat(5,1fr);z-index:60;box-shadow:0 20px 60px rgba(0,0,0,.58);overflow:hidden;backdrop-filter:blur(18px)}.nav-item{display:grid;place-items:center;color:#8ea69c;font-size:12px;font-weight:900;padding:8px;cursor:pointer;background:transparent;border:0}.nav-item b{font-size:22px;line-height:1}.nav-item.active{color:#fff;background:linear-gradient(135deg,rgba(32,223,159,.20),rgba(69,199,244,.10));margin:6px;border-radius:24px;border:1px solid rgba(32,223,159,.16)}
     @media(max-width:900px){.cinema-layout{grid-template-columns:1fr}.cinema-side{position:relative}.window{height:calc(100vh - 28px);border-radius:30px}.window-head{min-height:78px;padding:14px 16px}.win-title h2{font-size:23px}.win-title p{display:none}}
     @media(max-width:520px){.app{padding:0 12px}.hero{min-height:300px;padding:22px}.hero-art{width:128px;height:128px;border-radius:32px}.hero-art span{font-size:56px}.hero h2{font-size:29px}.promo{grid-template-columns:1fr 58px;min-height:156px;padding:18px}.promo-art{width:58px;height:58px;border-radius:20px;font-size:30px}.promo h4{font-size:22px}.overlay{padding:10px}.window{border-radius:26px;height:calc(100vh - 20px)}.window.small{height:calc(100vh - 20px)}.window.phone{height:auto}.window-body{padding:14px}.job-type-grid{grid-template-columns:1fr}.job-hero-panel h3{font-size:24px}.category-row{grid-template-columns:44px 1fr auto;padding:13px 12px}.category-count{font-size:12px;padding:5px 8px}.detail-hero{grid-template-columns:70px 1fr}.avatar{width:70px;height:70px;border-radius:22px}.detail-actions,.phone-grid{grid-template-columns:1fr}}
+  
+    /* Services Smart Modal */
+    .service-card{border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.05);padding:15px;display:grid;gap:10px}
+    .service-card h4{font-size:19px;font-weight:900;line-height:1.25}
+    .service-card p{color:#9db7ab;font-size:13px;font-weight:800}
+    .platform-policy{border-radius:24px;border:1px solid rgba(246,200,111,.22);background:linear-gradient(135deg,rgba(246,200,111,.12),rgba(255,255,255,.04));padding:15px}
+    .platform-policy h3{font-size:19px;font-weight:900;margin-bottom:6px;color:#fff7dd}
+    .platform-policy p{color:#d7c9a8;font-size:13px;font-weight:800}
+    .price-box{border-radius:22px;border:1px solid rgba(32,223,159,.18);background:rgba(32,223,159,.07);padding:14px;display:grid;gap:8px}
+    .price-row{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#dfffee;font-weight:900;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:8px}
+    .price-row:last-child{border-bottom:0;padding-bottom:0}
+    .price-row span:last-child{direction:ltr;color:#b7ffe5}
+    .payment-note{color:#9db7ab;font-size:12px;font-weight:800;text-align:center;margin-top:8px}
+    .service-message{border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);padding:12px;color:#c9ddd4;font-weight:800;font-size:13px}
+
   </style>
 </head>
 <body>
@@ -74,7 +89,7 @@
     <nav class="bottom-nav">
       <button class="nav-item active" data-tab="home" onclick="goHome()"><b>🏠</b><span>الرئيسية</span></button>
       <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><b>💼</b><span>وظائف</span></button>
-      <button class="nav-item" data-tab="services" onclick="openSoon('الخدمات')"><b>🛠️</b><span>خدمات</span></button>
+      <button class="nav-item" data-tab="services" onclick="openServicesModal()"><b>🛠️</b><span>خدمات</span></button>
       <button class="nav-item" data-tab="post" onclick="openSoon('إعلاني')"><b>＋</b><span>إعلاني</span></button>
       <button class="nav-item" data-tab="account" onclick="openSoon('حسابي')"><b>⚙️</b><span>حسابي</span></button>
     </nav>
@@ -350,6 +365,316 @@
       if(document.getElementById('categoryOverlay').classList.contains('show')) return closeCategoryModal();
       if(document.getElementById('jobsOverlay').classList.contains('show')) return closeJobsModal();
     });
-  </script>
+  
+
+    const serviceCategories = [
+      {id:'cv', title:'السيرة الذاتية', sub:'كتابة وتصميم وتحسين CV', icon:'📄'},
+      {id:'interview', title:'تدريب مقابلات', sub:'تحضير مقابلات واختبارات شخصية', icon:'🎤'},
+      {id:'career', title:'استشارات مهنية', sub:'مسار وظيفي وتحسين ملف مهني', icon:'🧭'},
+      {id:'recruitment', title:'خدمات توظيف', sub:'فرز مرشحين واستقطاب كفاءات', icon:'🏢'},
+      {id:'design', title:'تصميم وهوية', sub:'تصميم ملفات وعروض وسير', icon:'🎨'},
+      {id:'techservice', title:'خدمات تقنية', sub:'برمجة، دعم، صفحات تعريفية', icon:'💻'}
+    ];
+
+    const COMMISSION_RATE = 0.10;
+
+    const servicesRecords = [
+      {id:101,type:'provider',category:'cv',title:'كتابة سيرة ذاتية احترافية',summary:'صياغة CV عربي أو إنجليزي بشكل احترافي.',provider:'مكتب مسار المهني',providerImage:'📄',price:120,delivery:'24 ساعة',city:'عن بعد',description:'إعادة صياغة السيرة، ترتيب الخبرات، تحسين الكلمات المفتاحية، وتسليم نسخة PDF و Word.',phone:'',file:''},
+      {id:102,type:'provider',category:'interview',title:'تدريب مقابلة شخصية',summary:'جلسة تدريبية لمحاكاة المقابلة وتحسين الإجابات.',provider:'مدرب مهني معتمد',providerImage:'🎤',price:180,delivery:'جلسة واحدة',city:'عن بعد',description:'تدريب على الأسئلة الشائعة، طريقة التعريف بالنفس، ونقاط القوة والضعف.',phone:'',file:''},
+      {id:103,type:'request',category:'cv',title:'أحتاج تصميم CV لمحاسب',summary:'عميل يطلب تصميم سيرة ذاتية لمحاسب حديث تخرج.',provider:'',providerImage:'👤',price:90,delivery:'خلال يومين',city:'الرياض',description:'أحتاج تصميم CV عربي مرتب مع صياغة نبذة احترافية.',phone:'',file:'old-cv.pdf'},
+      {id:104,type:'provider',category:'recruitment',title:'خدمة فرز مرشحين للشركات',summary:'فرز أولي للمتقدمين حسب شروط الوظيفة.',provider:'شركة حلول الموارد',providerImage:'🏢',price:350,delivery:'3 أيام',city:'الرياض',description:'فرز السير الذاتية، إعداد قائمة مختصرة، وتقديم ملخص لكل مرشح.',phone:'',file:''},
+      {id:105,type:'request',category:'techservice',title:'أحتاج صفحة تعريفية لشركة',summary:'طلب خدمة تصميم صفحة تعريفية بسيطة.',provider:'',providerImage:'👤',price:500,delivery:'أسبوع',city:'جدة',description:'صفحة بسيطة تعرض خدمات الشركة ووسائل التواصل.',phone:'',file:''},
+      {id:106,type:'provider',category:'career',title:'استشارة مسار وظيفي',summary:'جلسة إرشاد لتحديد المسار المهني وتحسين الخطة.',provider:'مستشار مهني',providerImage:'🧭',price:150,delivery:'45 دقيقة',city:'عن بعد',description:'تحليل الوضع الحالي، اقتراح مسار وظيفي، وخطة تحسين خلال 30 يومًا.',phone:'',file:''}
+    ];
+
+    const serviceState = { globalType:'all', category:'all', categoryType:'all' };
+
+    function openServicesModal(){
+      setActive('services');
+      showOverlay('servicesOverlay');
+      renderServiceCategories();
+    }
+
+    function closeServicesModal(activateHome=true){
+      hideOverlay('servicesOverlay');
+      if(activateHome) setActive('home');
+    }
+
+    function setGlobalServiceType(type){
+      serviceState.globalType = serviceState.globalType === type ? 'all' : type;
+      document.getElementById('serviceProviderFilter').classList.toggle('active', serviceState.globalType === 'provider');
+      document.getElementById('serviceRequestFilter').classList.toggle('active', serviceState.globalType === 'request');
+      document.getElementById('globalServiceFilterText').textContent = serviceState.globalType === 'provider' ? 'يبحث عن خدمة فقط' : serviceState.globalType === 'request' ? 'يطلب خدمة فقط' : 'كل الخدمات والطلبات';
+      renderServiceCategories();
+    }
+
+    function resetGlobalServiceType(){
+      serviceState.globalType='all';
+      document.getElementById('serviceProviderFilter').classList.remove('active');
+      document.getElementById('serviceRequestFilter').classList.remove('active');
+      document.getElementById('globalServiceFilterText').textContent='كل الخدمات والطلبات';
+      renderServiceCategories();
+    }
+
+    function renderServiceCategories(){
+      const panel = document.getElementById('serviceCategoriesPanel');
+      panel.innerHTML = serviceCategories.map(cat=>{
+        const count = servicesRecords.filter(r=>r.category===cat.id && (serviceState.globalType==='all' || r.type===serviceState.globalType)).length;
+        return `<button class="category-row" onclick="openServiceCategoryModal('${cat.id}')">
+          <div class="category-icon">${cat.icon}</div>
+          <div><div class="category-title">${cat.title}</div><div class="category-sub">${cat.sub}</div></div>
+          <div class="category-count">${count}</div>
+        </button>`;
+      }).join('');
+    }
+
+    function openServiceCategoryModal(categoryId){
+      serviceState.category = categoryId;
+      serviceState.categoryType = serviceState.globalType;
+      const cat = serviceCategories.find(c=>c.id===categoryId) || {title:'كل الخدمات',sub:'كل البيانات',icon:'🛠️'};
+      document.getElementById('serviceCategoryTitle').textContent = cat.title;
+      document.getElementById('serviceCategorySubtitle').textContent = cat.sub;
+      document.getElementById('serviceCategoryIcon').textContent = cat.icon;
+      showOverlay('serviceCategoryOverlay');
+      renderServiceResults();
+    }
+
+    function closeServiceCategoryModal(){hideOverlay('serviceCategoryOverlay');}
+
+    function setServiceCategoryType(type){
+      serviceState.categoryType = type;
+      renderServiceResults();
+    }
+
+    function renderServiceResults(){
+      const cat = serviceCategories.find(c=>c.id===serviceState.category);
+      let items = servicesRecords.filter(r=> serviceState.category==='all' || r.category===serviceState.category);
+      if(serviceState.categoryType !== 'all') items = items.filter(r=>r.type===serviceState.categoryType);
+
+      document.getElementById('catProvider').classList.toggle('active', serviceState.categoryType === 'provider');
+      document.getElementById('catServiceRequest').classList.toggle('active', serviceState.categoryType === 'request');
+
+      const typeLabel = serviceState.categoryType === 'provider' ? 'يبحث عن خدمة' : serviceState.categoryType === 'request' ? 'يطلب خدمة' : 'كل البيانات';
+      document.getElementById('serviceCategoryFilterLabel').textContent = 'يعرض: ' + typeLabel + ' · ' + (cat?.title || 'كل الخدمات');
+      document.getElementById('serviceResultsCount').textContent = items.length + ' نتيجة';
+
+      const panel = document.getElementById('serviceResults');
+      if(!items.length){
+        panel.innerHTML = `<div class="service-card"><p>لا توجد بيانات في هذا القسم حسب الفلتر الحالي.</p></div>`;
+        return;
+      }
+
+      panel.innerHTML = items.map(item=>`
+        <article class="service-card">
+          <div class="result-top">
+            <div><h4>${item.title}</h4><p>${item.summary}</p></div>
+            <span class="type-badge ${item.type==='request'?'request':''}">${item.type==='provider'?'يبحث عن خدمة':'يطلب خدمة'}</span>
+          </div>
+          <div class="meta-list">
+            ${servicePill(serviceCategoryName(item.category))}
+            ${servicePill(item.city)}
+            ${servicePill(item.price ? item.price + ' ريال' : '')}
+          </div>
+          <button class="view-btn" onclick="openServiceDetailModal(${item.id})">عرض</button>
+        </article>
+      `).join('');
+    }
+
+    function serviceCategoryName(id){return serviceCategories.find(c=>c.id===id)?.title || id;}
+    function servicePill(value){return value ? `<span class="meta-pill">${value}</span>` : '';}
+
+    function openServiceDetailModal(id){
+      const item = servicesRecords.find(r=>r.id===id);
+      if(!item) return;
+
+      const rows = [
+        ['نوع الإعلان', item.type==='provider'?'يبحث عن خدمة':'يطلب خدمة'],
+        ['اسم مقدم الخدمة / العميل', item.provider],
+        ['القسم', serviceCategoryName(item.category)],
+        ['المدينة', item.city],
+        ['السعر المعروض', item.price ? item.price + ' ريال' : ''],
+        ['مدة التنفيذ', item.delivery],
+        ['الوصف', item.description],
+        ['ملف مرفق', item.file ? `<a href="${item.file}" target="_blank">${item.file}</a>` : '']
+      ].filter(row => row[1] && String(row[1]).trim() !== '');
+
+      const avatar = item.providerImage || (item.type === 'provider' ? '🛠️' : '👤');
+      const payButtonText = item.type === 'provider' ? 'طلب الخدمة عبر المنصة' : 'تقديم عرض عبر المنصة';
+
+      document.getElementById('serviceDetailContent').innerHTML = `
+        <div class="detail-hero">
+          <div class="avatar">${avatar}</div>
+          <div class="detail-title">
+            <h3>${item.title}</h3>
+            <p>${item.summary || ''}</p>
+          </div>
+        </div>
+
+        <div class="platform-policy" style="margin-bottom:12px">
+          <h3>تنبيه مهم</h3>
+          <p>لا يتم تبادل أرقام التواصل هنا. جميع الرسائل والدفع تتم داخل المنصة لحماية الطرفين واحتساب عمولة HireX.</p>
+        </div>
+
+        <div class="detail-grid">
+          ${rows.map(([label,value])=>`<div class="detail-item"><strong>${label}</strong><span>${value}</span></div>`).join('')}
+        </div>
+
+        <div class="detail-actions">
+          <a class="primary" href="#" onclick="openPaymentModal(${item.id}); return false;">${payButtonText}</a>
+          <a href="#" onclick="alert('سيتم فتح محادثة داخل المنصة لاحقًا.'); return false;">مراسلة داخل المنصة</a>
+        </div>
+      `;
+      showOverlay('serviceDetailOverlay');
+    }
+
+    function closeServiceDetailModal(){hideOverlay('serviceDetailOverlay');}
+
+    function openPaymentModal(id){
+      const item = servicesRecords.find(r=>r.id===id);
+      if(!item) return;
+      const price = Number(item.price || 0);
+      const commission = Math.round(price * COMMISSION_RATE);
+      const net = price - commission;
+      const commissionPercent = Math.round(COMMISSION_RATE * 100);
+
+      document.getElementById('paymentContent').innerHTML = `
+        <div class="phone-options">
+          <h3>${item.title}</h3>
+          <p>عند إتمام الدفع يتم خصم عمولة المنصة وتحويل الصافي لمقدم الخدمة.</p>
+
+          <div class="price-box">
+            <div class="price-row"><span>سعر الخدمة</span><span>${price.toLocaleString('en-US')} ريال</span></div>
+            <div class="price-row"><span>عمولة المنصة ${commissionPercent}%</span><span>${commission.toLocaleString('en-US')} ريال</span></div>
+            <div class="price-row"><span>الصافي لمقدم الخدمة</span><span>${net.toLocaleString('en-US')} ريال</span></div>
+          </div>
+
+          <div class="service-message">بعد الدفع يتم إنشاء طلب داخل المنصة، وتظهر المحادثة بين الطرفين، ويتم تحويل الصافي بعد اعتماد التنفيذ.</div>
+
+          <div class="phone-grid">
+            <a class="phone-choice primary" href="#" onclick="confirmPlatformPayment(${item.id}); return false;">دفع عبر المنصة</a>
+            <a class="phone-choice" href="#" onclick="closePaymentModal(); return false;">إلغاء</a>
+          </div>
+          <div class="payment-note">النسبة قابلة للتعديل من المتغير COMMISSION_RATE داخل الكود.</div>
+        </div>
+      `;
+      showOverlay('paymentOverlay');
+    }
+
+    function closePaymentModal(){hideOverlay('paymentOverlay');}
+
+    function confirmPlatformPayment(id){
+      alert('تمت محاكاة الدفع بنجاح. سيتم لاحقًا ربطها ببوابة دفع وإنشاء طلب خدمة.');
+      closePaymentModal();
+      closeServiceDetailModal();
+    }
+
+    ['servicesOverlay','serviceCategoryOverlay','serviceDetailOverlay','paymentOverlay'].forEach(id=>{
+      document.getElementById(id).addEventListener('click', function(e){
+        if(e.target !== this) return;
+        if(id==='paymentOverlay') closePaymentModal();
+        if(id==='serviceDetailOverlay') closeServiceDetailModal();
+        if(id==='serviceCategoryOverlay') closeServiceCategoryModal();
+        if(id==='servicesOverlay') closeServicesModal();
+      });
+    });
+
+
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('paymentOverlay')?.classList.contains('show')) return closePaymentModal();
+      if(document.getElementById('serviceDetailOverlay')?.classList.contains('show')) return closeServiceDetailModal();
+      if(document.getElementById('serviceCategoryOverlay')?.classList.contains('show')) return closeServiceCategoryModal();
+      if(document.getElementById('servicesOverlay')?.classList.contains('show')) return closeServicesModal();
+    });
+
+</script>
+
+  <div class="overlay" id="servicesOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">🛠️</div><div><h2>بوابة الخدمات</h2><p>يبحث عن خدمة · يطلب خدمة · الدفع داخل المنصة</p></div></div>
+        <button class="close-btn" onclick="closeServicesModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="cinema-layout">
+          <div class="cinema-main">
+            <section class="job-hero-panel">
+              <div class="tag">خدمات مهنية · دفع آمن · عمولة منصة</div>
+              <h3>الخدمات تتم بالكامل داخل HireX.</h3>
+              <p>لا يظهر رقم مقدم الخدمة قبل اعتماد الطلب. يتم عرض السعر، وعند الدفع تُخصم عمولة المنصة ويتحوّل الصافي لمقدم الخدمة.</p>
+              <div class="job-search"><input id="serviceSearch" placeholder="ابحث عن خدمة أو طلب..." /><button onclick="openServiceCategoryModal('all')">⌕</button></div>
+            </section>
+
+            <section class="job-type-grid">
+              <button class="job-type-card" id="serviceProviderFilter" onclick="setGlobalServiceType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">خدمات معروضة من مقدمي الخدمات</div></div></button>
+              <button class="job-type-card request" id="serviceRequestFilter" onclick="setGlobalServiceType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات عملاء يبحثون عن منفذ خدمة</div></div></button>
+            </section>
+
+            <div class="section-mini-head"><h3>أقسام الخدمات</h3><span>اضغط على القسم لفتح نافذة نتائجه</span></div>
+            <section class="category-panel" id="serviceCategoriesPanel"></section>
+          </div>
+
+          <aside class="cinema-side">
+            <section class="platform-policy">
+              <h3>سياسة المنصة</h3>
+              <p>التواصل والدفع يتمان داخل HireX فقط لحماية الطرفين وضمان خصم عمولة المنصة بشكل تلقائي.</p>
+            </section>
+            <section class="side-card">
+              <h3>الفلاتر الحالية</h3>
+              <p id="globalServiceFilterText">كل الخدمات والطلبات</p>
+              <div class="side-action"><a href="#" onclick="resetGlobalServiceType(); return false;">إلغاء فلتر الخدمات</a></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="serviceCategoryOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon" id="serviceCategoryIcon">🛠️</div><div><h2 id="serviceCategoryTitle">الخدمات</h2><p id="serviceCategorySubtitle">نتائج الخدمات حسب القسم</p></div></div>
+        <button class="close-btn" onclick="closeServiceCategoryModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="filter-status">
+          <strong id="serviceCategoryFilterLabel">يعرض: كل البيانات</strong>
+          <button onclick="setServiceCategoryType('all')">الكل</button>
+        </div>
+        <section class="job-type-grid" style="margin-top:12px">
+          <button class="job-type-card" id="catProvider" onclick="setServiceCategoryType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">الخدمات المعروضة فقط</div></div></button>
+          <button class="job-type-card request" id="catServiceRequest" onclick="setServiceCategoryType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات العملاء فقط</div></div></button>
+        </section>
+        <div class="section-mini-head"><h3>البيانات</h3><span id="serviceResultsCount">0 نتيجة</span></div>
+        <section class="list-panel" id="serviceResults"></section>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="serviceDetailOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">🧾</div><div><h2>تفاصيل الخدمة</h2><p>التواصل يتم عبر المنصة فقط</p></div></div>
+        <button class="close-btn" onclick="closeServiceDetailModal()">×</button>
+      </header>
+      <div class="window-body">
+        <section id="serviceDetailContent"></section>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="paymentOverlay" aria-hidden="true">
+    <section class="window phone" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">💳</div><div><h2>دفع الخدمة</h2><p>خصم العمولة وتحويل الصافي</p></div></div>
+        <button class="close-btn" onclick="closePaymentModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div id="paymentContent"></div>
+      </div>
+    </section>
+  </div>
+
 </body>
 </html>
