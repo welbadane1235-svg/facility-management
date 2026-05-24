@@ -1,2 +1,0 @@
-JS syntax: OK
-Local links: OK
