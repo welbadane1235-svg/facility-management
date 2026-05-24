@@ -277,7 +277,230 @@
     </section>
   </div>
 
-  <script>
+  
+
+
+  <div class="overlay" id="servicesOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">🛠️</div><div><h2>بوابة الخدمات</h2><p>يبحث عن خدمة · يطلب خدمة · الدفع داخل المنصة</p></div></div>
+        <button class="close-btn" onclick="closeServicesModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="cinema-layout">
+          <div class="cinema-main">
+            <section class="job-hero-panel">
+              <div class="tag">خدمات مهنية · دفع آمن · عمولة منصة</div>
+              <h3>الخدمات تتم بالكامل داخل HireX.</h3>
+              <p>لا يظهر رقم مقدم الخدمة قبل اعتماد الطلب. يتم عرض السعر، وعند الدفع تُخصم عمولة المنصة ويتحوّل الصافي لمقدم الخدمة.</p>
+              <div class="job-search"><input id="serviceSearch" placeholder="ابحث عن خدمة أو طلب..." /><button onclick="openServiceCategoryModal('all')">⌕</button></div>
+            </section>
+
+            <section class="job-type-grid">
+              <button class="job-type-card" id="serviceProviderFilter" onclick="setGlobalServiceType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">خدمات معروضة من مقدمي الخدمات</div></div></button>
+              <button class="job-type-card request" id="serviceRequestFilter" onclick="setGlobalServiceType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات عملاء يبحثون عن منفذ خدمة</div></div></button>
+            </section>
+
+            <div class="section-mini-head"><h3>أقسام الخدمات</h3><span>اضغط على القسم لفتح نافذة نتائجه</span></div>
+            <section class="category-panel" id="serviceCategoriesPanel"></section>
+          </div>
+
+          <aside class="cinema-side">
+            <section class="platform-policy">
+              <h3>سياسة المنصة</h3>
+              <p>التواصل والدفع يتمان داخل HireX فقط لحماية الطرفين وضمان خصم عمولة المنصة بشكل تلقائي.</p>
+            </section>
+            <section class="side-card">
+              <h3>الفلاتر الحالية</h3>
+              <p id="globalServiceFilterText">كل الخدمات والطلبات</p>
+              <div class="side-action"><a href="#" onclick="resetGlobalServiceType(); return false;">إلغاء فلتر الخدمات</a></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="serviceCategoryOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon" id="serviceCategoryIcon">🛠️</div><div><h2 id="serviceCategoryTitle">الخدمات</h2><p id="serviceCategorySubtitle">نتائج الخدمات حسب القسم</p></div></div>
+        <button class="close-btn" onclick="closeServiceCategoryModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="filter-status">
+          <strong id="serviceCategoryFilterLabel">يعرض: كل البيانات</strong>
+          <button onclick="setServiceCategoryType('all')">الكل</button>
+        </div>
+        <section class="job-type-grid" style="margin-top:12px">
+          <button class="job-type-card" id="catProvider" onclick="setServiceCategoryType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">الخدمات المعروضة فقط</div></div></button>
+          <button class="job-type-card request" id="catServiceRequest" onclick="setServiceCategoryType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات العملاء فقط</div></div></button>
+        </section>
+        <div class="section-mini-head"><h3>البيانات</h3><span id="serviceResultsCount">0 نتيجة</span></div>
+        <section class="list-panel" id="serviceResults"></section>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="serviceDetailOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">🧾</div><div><h2>تفاصيل الخدمة</h2><p>التواصل يتم عبر المنصة فقط</p></div></div>
+        <button class="close-btn" onclick="closeServiceDetailModal()">×</button>
+      </header>
+      <div class="window-body">
+        <section id="serviceDetailContent"></section>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="paymentOverlay" aria-hidden="true">
+    <section class="window phone" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">💳</div><div><h2>دفع الخدمة</h2><p>خصم العمولة وتحويل الصافي</p></div></div>
+        <button class="close-btn" onclick="closePaymentModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div id="paymentContent"></div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="platformChatOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">💬</div><div><h2>مراسلة داخل المنصة</h2><p>تواصل آمن قبل الدفع وبعده</p></div></div>
+        <button class="close-btn" onclick="closePlatformChat()">×</button>
+      </header>
+      <div class="window-body">
+        <section class="chat-shell">
+          <div class="chat-top-card">
+            <span class="status-pill" id="chatStatus">طلب خدمة قيد النقاش</span>
+            <h3 id="chatServiceTitle">عنوان الخدمة</h3>
+            <p id="chatServiceSummary">تفاصيل مختصرة عن الطلب.</p>
+            <div class="chat-policy">سياسة HireX: يمنع تبادل أرقام الهاتف أو روابط خارجية قبل إتمام الطلب داخل المنصة. الدفع والتحويل يتمان عبر المنصة لضمان العمولة وحماية الطرفين.</div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <div class="chat-compose">
+            <div class="offer-box">
+              <input id="offerAmount" inputmode="numeric" placeholder="عرض السعر / ريال">
+              <input id="offerDays" inputmode="numeric" placeholder="مدة التنفيذ / يوم">
+            </div>
+            <textarea id="chatText" placeholder="اكتب رسالتك هنا... مثال: أقدر تنفيذ الخدمة خلال يومين، والسعر يشمل مراجعة واحدة."></textarea>
+            <div class="chat-actions">
+              <button class="primary" onclick="sendPlatformMessage()">إرسال رسالة</button>
+              <button onclick="sendPlatformOffer()">إرسال عرض</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="myAdsOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">＋</div><div><h2>إعلاناتي</h2><p>إضافة وإدارة إعلانات الوظائف والخدمات</p></div></div>
+        <button class="close-btn" onclick="closeMyAdsModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="cinema-layout">
+          <div class="cinema-main">
+            <section class="job-hero-panel">
+              <div class="tag">مركز إنشاء الإعلانات · بدون ربط قاعدة البيانات الآن</div>
+              <h3>أضف إعلانك بطريقة منظمة.</h3>
+              <p>اختر نوع الإعلان، املأ البيانات، ثم احفظه كمسودة أو انشره. لاحقًا سيتم ربطه بقاعدة البيانات.</p>
+            </section>
+
+            <div class="section-mini-head"><h3>نوع الإعلان</h3><span>اختر النموذج</span></div>
+            <section class="quick-create-grid">
+              <button type="button" class="quick-create active" data-ad-type="job"><b>💼</b><strong>فرصة عمل</strong><span>للشركات وأصحاب الأعمال</span></button>
+              <button type="button" class="quick-create" data-ad-type="resume"><b>👤</b><strong>يطلب عمل</strong><span>سيرة ذاتية منشورة</span></button>
+              <button type="button" class="quick-create" data-ad-type="service"><b>🛠️</b><strong>عرض خدمة</strong><span>مقدم خدمة يعرض خدمته</span></button>
+              <button type="button" class="quick-create" data-ad-type="request"><b>📌</b><strong>طلب خدمة</strong><span>عميل يبحث عن منفذ</span></button>
+            </section>
+
+            <div class="section-mini-head"><h3>بيانات الإعلان</h3><span id="formHint">فرصة عمل</span></div>
+
+            <form class="ad-form active" id="jobAdForm">
+              <div class="form-grid">
+                <div class="field"><label>المسمى الوظيفي</label><input id="jobAdTitle" placeholder="مثال: محاسب عام"></div>
+                <div class="field"><label>القسم</label><select id="jobAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
+                <div class="field"><label>المدينة</label><input id="jobAdCity" placeholder="الرياض"></div>
+                <div class="field"><label>نوع الدوام</label><select id="jobAdWorkType"><option>دوام كامل</option><option>دوام جزئي</option><option>عن بعد</option><option>تدريب</option></select></div>
+                <div class="field"><label>الراتب</label><input id="jobAdSalary" placeholder="اختياري"></div>
+                <div class="field"><label>رقم التواصل</label><input id="jobAdPhone" placeholder="اختياري للوظائف"></div>
+                <div class="field"><label>صورة الإعلان / شعار الشركة</label><input id="jobAdImage" type="file" accept="image/*"></div>
+                <div class="field full"><label>وصف الوظيفة</label><textarea id="jobAdDescription" placeholder="اكتب المهام والشروط..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="resumeAdForm">
+              <div class="form-grid">
+                <div class="field"><label>اسم المرشح</label><input id="resumeAdName" placeholder="مثال: محمد أحمد"></div>
+                <div class="field"><label>المسمى المهني</label><input id="resumeAdTitle" placeholder="مثال: محاسب حديث تخرج"></div>
+                <div class="field"><label>القسم</label><select id="resumeAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
+                <div class="field"><label>المدينة</label><input id="resumeAdCity" placeholder="الرياض"></div>
+                <div class="field"><label>رقم التواصل</label><input id="resumeAdPhone" placeholder="اختياري"></div>
+                <div class="field"><label>الصورة الشخصية</label><input id="resumeAdImage" type="file" accept="image/*"></div>
+                <div class="field"><label>ملف السيرة CV</label><input id="resumeAdFile" type="file" accept=".pdf,.doc,.docx"></div>
+                <div class="field full"><label>نبذة احترافية</label><textarea id="resumeAdSummary" placeholder="اكتب نبذة مختصرة عن الخبرة والمهارات..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="serviceAdForm">
+              <div class="form-grid">
+                <div class="field"><label>عنوان الخدمة</label><input id="serviceAdTitle" placeholder="مثال: كتابة سيرة ذاتية"></div>
+                <div class="field"><label>قسم الخدمة</label><select id="serviceAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
+                <div class="field"><label>السعر</label><input id="serviceAdPrice" placeholder="مثال: 120"></div>
+                <div class="field"><label>مدة التنفيذ</label><input id="serviceAdDelivery" placeholder="مثال: 24 ساعة"></div>
+                <div class="field"><label>صورة الخدمة</label><input id="serviceAdImage" type="file" accept="image/*"></div>
+                <div class="field full"><label>وصف الخدمة</label><textarea id="serviceAdDescription" placeholder="اشرح ما الذي سيحصل عليه العميل..."></textarea></div>
+              </div>
+            </form>
+
+            <form class="ad-form" id="requestAdForm">
+              <div class="form-grid">
+                <div class="field"><label>عنوان الطلب</label><input id="requestAdTitle" placeholder="مثال: أحتاج تصميم CV"></div>
+                <div class="field"><label>قسم الخدمة</label><select id="requestAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
+                <div class="field"><label>الميزانية</label><input id="requestAdPrice" placeholder="مثال: 100"></div>
+                <div class="field"><label>المدينة</label><input id="requestAdCity" placeholder="عن بعد / الرياض"></div>
+                <div class="field"><label>ملف مرفق / سيرة</label><input id="requestAdFile" type="file" accept=".pdf,.doc,.docx,image/*"></div>
+                <div class="field full"><label>تفاصيل الطلب</label><textarea id="requestAdDescription" placeholder="اكتب ما تحتاجه بالتفصيل..."></textarea></div>
+              </div>
+            </form>
+
+            <div class="submit-row">
+              <button type="button" class="primary" onclick="saveCurrentAd('published')">نشر الإعلان</button>
+              <button type="button" onclick="saveCurrentAd('draft')">حفظ كمسودة</button>
+            </div>
+          </div>
+
+          <aside class="cinema-side">
+            <section class="side-card">
+              <h3>معاينة سريعة</h3>
+              <div class="preview-box" id="adPreview">
+                <h3>فرصة عمل</h3>
+                <p>املأ البيانات وستظهر المعاينة هنا.</p>
+              </div>
+            </section>
+
+            <section class="side-card">
+              <h3>إعلاناتي الحالية</h3>
+              <div class="myads-list" id="myAdsList"></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+<script>
     const categories = [
       {id:'accounting', title:'حسابات', sub:'محاسبين، مالية، إدخال بيانات', icon:'🧮'},
       {id:'technical', title:'تقني', sub:'برمجة، دعم فني، تصميم', icon:'💻'},
@@ -811,7 +1034,7 @@
       return hasPhone || hasUrl;
     }
 
-    document.getElementById('platformChatOverlay').addEventListener('click', function(e){
+    document.getElementById('platformChatOverlay')?.addEventListener('click', function(e){
       if(e.target === this) closePlatformChat();
     });
 
@@ -1071,225 +1294,5 @@
     }, true);
 
 </script>
-
-  <div class="overlay" id="servicesOverlay" aria-hidden="true">
-    <section class="window" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon">🛠️</div><div><h2>بوابة الخدمات</h2><p>يبحث عن خدمة · يطلب خدمة · الدفع داخل المنصة</p></div></div>
-        <button class="close-btn" onclick="closeServicesModal()">×</button>
-      </header>
-      <div class="window-body">
-        <div class="cinema-layout">
-          <div class="cinema-main">
-            <section class="job-hero-panel">
-              <div class="tag">خدمات مهنية · دفع آمن · عمولة منصة</div>
-              <h3>الخدمات تتم بالكامل داخل HireX.</h3>
-              <p>لا يظهر رقم مقدم الخدمة قبل اعتماد الطلب. يتم عرض السعر، وعند الدفع تُخصم عمولة المنصة ويتحوّل الصافي لمقدم الخدمة.</p>
-              <div class="job-search"><input id="serviceSearch" placeholder="ابحث عن خدمة أو طلب..." /><button onclick="openServiceCategoryModal('all')">⌕</button></div>
-            </section>
-
-            <section class="job-type-grid">
-              <button class="job-type-card" id="serviceProviderFilter" onclick="setGlobalServiceType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">خدمات معروضة من مقدمي الخدمات</div></div></button>
-              <button class="job-type-card request" id="serviceRequestFilter" onclick="setGlobalServiceType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات عملاء يبحثون عن منفذ خدمة</div></div></button>
-            </section>
-
-            <div class="section-mini-head"><h3>أقسام الخدمات</h3><span>اضغط على القسم لفتح نافذة نتائجه</span></div>
-            <section class="category-panel" id="serviceCategoriesPanel"></section>
-          </div>
-
-          <aside class="cinema-side">
-            <section class="platform-policy">
-              <h3>سياسة المنصة</h3>
-              <p>التواصل والدفع يتمان داخل HireX فقط لحماية الطرفين وضمان خصم عمولة المنصة بشكل تلقائي.</p>
-            </section>
-            <section class="side-card">
-              <h3>الفلاتر الحالية</h3>
-              <p id="globalServiceFilterText">كل الخدمات والطلبات</p>
-              <div class="side-action"><a href="#" onclick="resetGlobalServiceType(); return false;">إلغاء فلتر الخدمات</a></div>
-            </section>
-          </aside>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="overlay" id="serviceCategoryOverlay" aria-hidden="true">
-    <section class="window" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon" id="serviceCategoryIcon">🛠️</div><div><h2 id="serviceCategoryTitle">الخدمات</h2><p id="serviceCategorySubtitle">نتائج الخدمات حسب القسم</p></div></div>
-        <button class="close-btn" onclick="closeServiceCategoryModal()">×</button>
-      </header>
-      <div class="window-body">
-        <div class="filter-status">
-          <strong id="serviceCategoryFilterLabel">يعرض: كل البيانات</strong>
-          <button onclick="setServiceCategoryType('all')">الكل</button>
-        </div>
-        <section class="job-type-grid" style="margin-top:12px">
-          <button class="job-type-card" id="catProvider" onclick="setServiceCategoryType('provider')"><div class="job-type-icon">🛠️</div><div><div class="job-type-title">يبحث عن خدمة</div><div class="job-type-sub">الخدمات المعروضة فقط</div></div></button>
-          <button class="job-type-card request" id="catServiceRequest" onclick="setServiceCategoryType('request')"><div class="job-type-icon">📌</div><div><div class="job-type-title">يطلب خدمة</div><div class="job-type-sub">طلبات العملاء فقط</div></div></button>
-        </section>
-        <div class="section-mini-head"><h3>البيانات</h3><span id="serviceResultsCount">0 نتيجة</span></div>
-        <section class="list-panel" id="serviceResults"></section>
-      </div>
-    </section>
-  </div>
-
-  <div class="overlay" id="serviceDetailOverlay" aria-hidden="true">
-    <section class="window small" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon">🧾</div><div><h2>تفاصيل الخدمة</h2><p>التواصل يتم عبر المنصة فقط</p></div></div>
-        <button class="close-btn" onclick="closeServiceDetailModal()">×</button>
-      </header>
-      <div class="window-body">
-        <section id="serviceDetailContent"></section>
-      </div>
-    </section>
-  </div>
-
-  <div class="overlay" id="paymentOverlay" aria-hidden="true">
-    <section class="window phone" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon">💳</div><div><h2>دفع الخدمة</h2><p>خصم العمولة وتحويل الصافي</p></div></div>
-        <button class="close-btn" onclick="closePaymentModal()">×</button>
-      </header>
-      <div class="window-body">
-        <div id="paymentContent"></div>
-      </div>
-    </section>
-  </div>
-
-
-  <div class="overlay" id="platformChatOverlay" aria-hidden="true">
-    <section class="window small" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon">💬</div><div><h2>مراسلة داخل المنصة</h2><p>تواصل آمن قبل الدفع وبعده</p></div></div>
-        <button class="close-btn" onclick="closePlatformChat()">×</button>
-      </header>
-      <div class="window-body">
-        <section class="chat-shell">
-          <div class="chat-top-card">
-            <span class="status-pill" id="chatStatus">طلب خدمة قيد النقاش</span>
-            <h3 id="chatServiceTitle">عنوان الخدمة</h3>
-            <p id="chatServiceSummary">تفاصيل مختصرة عن الطلب.</p>
-            <div class="chat-policy">سياسة HireX: يمنع تبادل أرقام الهاتف أو روابط خارجية قبل إتمام الطلب داخل المنصة. الدفع والتحويل يتمان عبر المنصة لضمان العمولة وحماية الطرفين.</div>
-          </div>
-
-          <div class="chat-messages" id="chatMessages"></div>
-
-          <div class="chat-compose">
-            <div class="offer-box">
-              <input id="offerAmount" inputmode="numeric" placeholder="عرض السعر / ريال">
-              <input id="offerDays" inputmode="numeric" placeholder="مدة التنفيذ / يوم">
-            </div>
-            <textarea id="chatText" placeholder="اكتب رسالتك هنا... مثال: أقدر تنفيذ الخدمة خلال يومين، والسعر يشمل مراجعة واحدة."></textarea>
-            <div class="chat-actions">
-              <button class="primary" onclick="sendPlatformMessage()">إرسال رسالة</button>
-              <button onclick="sendPlatformOffer()">إرسال عرض</button>
-            </div>
-          </div>
-        </section>
-      </div>
-    </section>
-  </div>
-
-
-  <div class="overlay" id="myAdsOverlay" aria-hidden="true">
-    <section class="window" role="dialog" aria-modal="true">
-      <header class="window-head">
-        <div class="win-title"><div class="win-icon">＋</div><div><h2>إعلاناتي</h2><p>إضافة وإدارة إعلانات الوظائف والخدمات</p></div></div>
-        <button class="close-btn" onclick="closeMyAdsModal()">×</button>
-      </header>
-      <div class="window-body">
-        <div class="cinema-layout">
-          <div class="cinema-main">
-            <section class="job-hero-panel">
-              <div class="tag">مركز إنشاء الإعلانات · بدون ربط قاعدة البيانات الآن</div>
-              <h3>أضف إعلانك بطريقة منظمة.</h3>
-              <p>اختر نوع الإعلان، املأ البيانات، ثم احفظه كمسودة أو انشره. لاحقًا سيتم ربطه بقاعدة البيانات.</p>
-            </section>
-
-            <div class="section-mini-head"><h3>نوع الإعلان</h3><span>اختر النموذج</span></div>
-            <section class="quick-create-grid">
-              <button type="button" class="quick-create active" data-ad-type="job"><b>💼</b><strong>فرصة عمل</strong><span>للشركات وأصحاب الأعمال</span></button>
-              <button type="button" class="quick-create" data-ad-type="resume"><b>👤</b><strong>يطلب عمل</strong><span>سيرة ذاتية منشورة</span></button>
-              <button type="button" class="quick-create" data-ad-type="service"><b>🛠️</b><strong>عرض خدمة</strong><span>مقدم خدمة يعرض خدمته</span></button>
-              <button type="button" class="quick-create" data-ad-type="request"><b>📌</b><strong>طلب خدمة</strong><span>عميل يبحث عن منفذ</span></button>
-            </section>
-
-            <div class="section-mini-head"><h3>بيانات الإعلان</h3><span id="formHint">فرصة عمل</span></div>
-
-            <form class="ad-form active" id="jobAdForm">
-              <div class="form-grid">
-                <div class="field"><label>المسمى الوظيفي</label><input id="jobAdTitle" placeholder="مثال: محاسب عام"></div>
-                <div class="field"><label>القسم</label><select id="jobAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
-                <div class="field"><label>المدينة</label><input id="jobAdCity" placeholder="الرياض"></div>
-                <div class="field"><label>نوع الدوام</label><select id="jobAdWorkType"><option>دوام كامل</option><option>دوام جزئي</option><option>عن بعد</option><option>تدريب</option></select></div>
-                <div class="field"><label>الراتب</label><input id="jobAdSalary" placeholder="اختياري"></div>
-                <div class="field"><label>رقم التواصل</label><input id="jobAdPhone" placeholder="اختياري للوظائف"></div>
-                <div class="field"><label>صورة الإعلان / شعار الشركة</label><input id="jobAdImage" type="file" accept="image/*"></div>
-                <div class="field full"><label>وصف الوظيفة</label><textarea id="jobAdDescription" placeholder="اكتب المهام والشروط..."></textarea></div>
-              </div>
-            </form>
-
-            <form class="ad-form" id="resumeAdForm">
-              <div class="form-grid">
-                <div class="field"><label>اسم المرشح</label><input id="resumeAdName" placeholder="مثال: محمد أحمد"></div>
-                <div class="field"><label>المسمى المهني</label><input id="resumeAdTitle" placeholder="مثال: محاسب حديث تخرج"></div>
-                <div class="field"><label>القسم</label><select id="resumeAdCategory"><option value="accounting">حسابات</option><option value="technical">تقني</option><option value="medical">طب وتمريض</option><option value="hr">موارد بشرية</option><option value="sales">مبيعات وتسويق</option><option value="operations">عمال وتشغيل</option></select></div>
-                <div class="field"><label>المدينة</label><input id="resumeAdCity" placeholder="الرياض"></div>
-                <div class="field"><label>رقم التواصل</label><input id="resumeAdPhone" placeholder="اختياري"></div>
-                <div class="field"><label>الصورة الشخصية</label><input id="resumeAdImage" type="file" accept="image/*"></div>
-                <div class="field"><label>ملف السيرة CV</label><input id="resumeAdFile" type="file" accept=".pdf,.doc,.docx"></div>
-                <div class="field full"><label>نبذة احترافية</label><textarea id="resumeAdSummary" placeholder="اكتب نبذة مختصرة عن الخبرة والمهارات..."></textarea></div>
-              </div>
-            </form>
-
-            <form class="ad-form" id="serviceAdForm">
-              <div class="form-grid">
-                <div class="field"><label>عنوان الخدمة</label><input id="serviceAdTitle" placeholder="مثال: كتابة سيرة ذاتية"></div>
-                <div class="field"><label>قسم الخدمة</label><select id="serviceAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
-                <div class="field"><label>السعر</label><input id="serviceAdPrice" placeholder="مثال: 120"></div>
-                <div class="field"><label>مدة التنفيذ</label><input id="serviceAdDelivery" placeholder="مثال: 24 ساعة"></div>
-                <div class="field"><label>صورة الخدمة</label><input id="serviceAdImage" type="file" accept="image/*"></div>
-                <div class="field full"><label>وصف الخدمة</label><textarea id="serviceAdDescription" placeholder="اشرح ما الذي سيحصل عليه العميل..."></textarea></div>
-              </div>
-            </form>
-
-            <form class="ad-form" id="requestAdForm">
-              <div class="form-grid">
-                <div class="field"><label>عنوان الطلب</label><input id="requestAdTitle" placeholder="مثال: أحتاج تصميم CV"></div>
-                <div class="field"><label>قسم الخدمة</label><select id="requestAdCategory"><option value="cv">السيرة الذاتية</option><option value="interview">تدريب مقابلات</option><option value="career">استشارات مهنية</option><option value="recruitment">خدمات توظيف</option><option value="design">تصميم وهوية</option><option value="techservice">خدمات تقنية</option></select></div>
-                <div class="field"><label>الميزانية</label><input id="requestAdPrice" placeholder="مثال: 100"></div>
-                <div class="field"><label>المدينة</label><input id="requestAdCity" placeholder="عن بعد / الرياض"></div>
-                <div class="field"><label>ملف مرفق / سيرة</label><input id="requestAdFile" type="file" accept=".pdf,.doc,.docx,image/*"></div>
-                <div class="field full"><label>تفاصيل الطلب</label><textarea id="requestAdDescription" placeholder="اكتب ما تحتاجه بالتفصيل..."></textarea></div>
-              </div>
-            </form>
-
-            <div class="submit-row">
-              <button type="button" class="primary" onclick="saveCurrentAd('published')">نشر الإعلان</button>
-              <button type="button" onclick="saveCurrentAd('draft')">حفظ كمسودة</button>
-            </div>
-          </div>
-
-          <aside class="cinema-side">
-            <section class="side-card">
-              <h3>معاينة سريعة</h3>
-              <div class="preview-box" id="adPreview">
-                <h3>فرصة عمل</h3>
-                <p>املأ البيانات وستظهر المعاينة هنا.</p>
-              </div>
-            </section>
-
-            <section class="side-card">
-              <h3>إعلاناتي الحالية</h3>
-              <div class="myads-list" id="myAdsList"></div>
-            </section>
-          </aside>
-        </div>
-      </div>
-    </section>
-  </div>
-
 </body>
 </html>
