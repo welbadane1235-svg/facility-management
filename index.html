@@ -3,58 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HireX | منصة الوظائف والخدمات المهنية</title>
+  <title>HireX | وظائف وخدمات مهنية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#050807;
-      --surface:#111816;
-      --surface2:#18231f;
-      --card:#121b18;
-      --card2:#1a2621;
-      --line:rgba(196, 241, 221, .12);
-      --text:#f4fff9;
-      --muted:#9fb4ab;
-      --muted2:#6f8379;
-      --brand:#1fe0a5;
-      --brand2:#38bdf8;
-      --deep:#0b3b2f;
-      --gold:#f6c86f;
-      --danger:#fb7185;
-      --shadow:0 20px 65px rgba(0,0,0,.48);
+      --bg:#06110d;
+      --surface:#0b1813;
+      --surface2:#11241d;
+      --card:#102019;
+      --line:rgba(193,255,230,.12);
+      --text:#f3fff9;
+      --muted:#9db7ab;
+      --muted2:#6d8278;
+      --brand:#20df9f;
+      --cyan:#45c7f4;
+      --gold:#f5c86f;
+      --shadow:0 20px 70px rgba(0,0,0,.45);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     body{
       font-family:Tajawal,system-ui,sans-serif;
       background:
-        radial-gradient(circle at 80% -10%, rgba(31,224,165,.18), transparent 34%),
-        radial-gradient(circle at 15% 22%, rgba(56,189,248,.12), transparent 30%),
-        linear-gradient(180deg,#07100d,#050807 38%,#000 100%);
+        radial-gradient(circle at 12% -10%,rgba(32,223,159,.17),transparent 32%),
+        radial-gradient(circle at 92% 10%,rgba(69,199,244,.13),transparent 30%),
+        linear-gradient(180deg,#07130f,#020403);
       color:var(--text);
       min-height:100vh;
       line-height:1.65;
-      padding-bottom:104px;
+      padding-bottom:96px;
     }
 
     a{text-decoration:none;color:inherit}
     button,input{font-family:inherit}
-    .app{width:min(640px,100%);margin:auto;min-height:100vh}
 
-    .topbar{
-      height:82px;
-      background:rgba(12,18,16,.88);
-      backdrop-filter:blur(18px);
+    .app{
+      width:min(720px,100%);
+      margin:auto;
+      min-height:100vh;
+      padding:0 16px;
+    }
+
+    .header{
+      padding:18px 0 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 18px;
-      border-bottom:1px solid var(--line);
-      position:sticky;
-      top:0;
-      z-index:40;
+      gap:14px;
     }
 
     .brand{
@@ -63,384 +60,385 @@
       gap:12px;
     }
 
-    .brand-mark{
-      width:48px;
-      height:48px;
+    .brand-logo{
+      width:50px;
+      height:50px;
       border-radius:18px;
-      background:
-        linear-gradient(135deg, rgba(31,224,165,1), rgba(56,189,248,1));
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--brand),var(--cyan));
       color:#05110d;
-      display:grid;
-      place-items:center;
       font-weight:900;
-      font-size:22px;
-      box-shadow:0 12px 36px rgba(31,224,165,.22);
-      position:relative;
-      overflow:hidden;
+      font-size:24px;
+      box-shadow:0 16px 40px rgba(32,223,159,.20);
     }
 
-    .brand-mark:after{
-      content:"";
-      position:absolute;
-      width:70%;
-      height:130%;
-      background:rgba(255,255,255,.20);
-      transform:rotate(26deg);
-      right:-42%;
-      top:-20%;
-    }
-
-    .brand-name{
-      font-size:23px;
+    .brand h1{
+      font-size:26px;
+      line-height:1;
       font-weight:900;
-      line-height:1.05;
-      letter-spacing:.3px;
     }
 
-    .brand-sub{
+    .brand p{
+      font-size:12px;
       color:var(--muted2);
-      font-size:11px;
       font-weight:800;
-      margin-top:2px;
-    }
-
-    .circle-btn{
-      width:48px;
-      height:48px;
-      border-radius:18px;
-      background:rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      color:#d9fff0;
-      display:grid;
-      place-items:center;
-      font-size:22px;
-    }
-
-    .content{padding:18px}
-
-    .hero-card{
-      background:
-        linear-gradient(135deg, rgba(10,82,62,.95), rgba(13,49,53,.95)),
-        radial-gradient(circle at 0 0, rgba(31,224,165,.26), transparent 34%);
-      border:1px solid rgba(31,224,165,.23);
-      border-radius:28px;
-      padding:24px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .hero-card:before{
-      content:"";
-      position:absolute;
-      left:-60px;
-      bottom:-70px;
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      background:rgba(56,189,248,.14);
-      filter:blur(18px);
-    }
-
-    .hero-card > *{position:relative;z-index:1}
-
-    .greeting{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:8px;
-    }
-
-    .greeting small{
-      color:#b7f7dc;
-      font-weight:800;
-    }
-
-    .identity-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      height:30px;
-      padding:0 11px;
-      border-radius:999px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.12);
-      color:#eafff6;
-      font-size:12px;
-      font-weight:900;
-    }
-
-    .hero-card h1{
-      font-size:30px;
-      line-height:1.25;
-      font-weight:900;
-      margin-bottom:18px;
-      max-width:360px;
-    }
-
-    .hero-card h1 span{
-      color:#b7ffe5;
-    }
-
-    .search-box{
-      height:60px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(4,12,10,.32);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:0 15px;
-    }
-
-    .search-box span{font-size:23px;color:#d9fff0}
-    .search-box input{
-      flex:1;
-      background:transparent;
-      border:0;
-      outline:0;
-      color:#fff;
-      font-size:16px;
-      font-weight:800;
-    }
-    .search-box input::placeholder{color:#bddbd0}
-
-    .section-title{
-      color:#adc5bb;
-      font-weight:900;
-      margin:20px 0 10px;
-      font-size:15px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-
-    .section-title span:last-child{
-      color:var(--muted2);
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .category-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-    }
-
-    .category-card{
-      min-height:138px;
-      background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.035));
-      border:1px solid var(--line);
-      border-radius:23px;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:16px;
-      position:relative;
-      overflow:hidden;
-      box-shadow:0 14px 38px rgba(0,0,0,.22);
-    }
-
-    .category-card:before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 50% -20%,rgba(31,224,165,.13),transparent 45%);
-      pointer-events:none;
-    }
-
-    .category-icon{
-      width:64px;
-      height:64px;
-      border-radius:20px;
-      display:grid;
-      place-items:center;
-      font-size:32px;
-      margin:0 auto 10px;
-      position:relative;
-      z-index:1;
-      border:1px solid rgba(255,255,255,.22);
-    }
-
-    .jobs-icon{background:linear-gradient(135deg,#fff7ed,#dcfce7)}
-    .services-icon{background:linear-gradient(135deg,#ecfeff,#f0fdf4)}
-
-    .category-title{
-      font-size:21px;
-      font-weight:900;
-      position:relative;
-      z-index:1;
-    }
-
-    .category-sub{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:2px;
-      position:relative;
-      z-index:1;
-      font-weight:800;
-    }
-
-    .dashboard-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
       margin-top:4px;
     }
 
-    .dash-card{
-      min-height:80px;
-      background:rgba(18,27,24,.84);
+    .profile-btn{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      background:rgba(255,255,255,.06);
       border:1px solid var(--line);
-      border-radius:19px;
-      padding:13px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      color:#dfffee;
+      display:grid;
+      place-items:center;
+      font-size:21px;
+    }
+
+    .hero{
+      margin-top:8px;
+      border:1px solid rgba(32,223,159,.18);
+      border-radius:30px;
+      background:
+        linear-gradient(135deg,rgba(19,61,47,.96),rgba(14,35,40,.96));
+      box-shadow:var(--shadow);
+      padding:24px;
       position:relative;
       overflow:hidden;
     }
 
-    .dash-card:after{
+    .hero:before{
       content:"";
       position:absolute;
-      width:62px;
-      height:62px;
+      width:180px;
+      height:180px;
       border-radius:50%;
-      background:rgba(31,224,165,.07);
-      left:-22px;
-      top:-22px;
+      background:rgba(32,223,159,.14);
+      filter:blur(26px);
+      top:-72px;
+      left:-62px;
     }
 
-    .dash-card strong{
-      display:block;
-      font-size:24px;
-      line-height:1;
-      color:#b7ffe5;
-      font-weight:900;
-      direction:ltr;
-      text-align:left;
+    .hero:after{
+      content:"";
+      position:absolute;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:rgba(69,199,244,.12);
+      filter:blur(26px);
+      bottom:-78px;
+      right:-62px;
     }
 
-    .dash-card span{
-      display:block;
-      color:#a5bbb1;
-      font-size:13px;
-      font-weight:900;
-      margin-top:5px;
-    }
+    .hero-inner{position:relative;z-index:1}
 
-    .dash-ico{
-      width:40px;
-      height:40px;
-      border-radius:15px;
-      display:grid;
-      place-items:center;
-      background:rgba(31,224,165,.10);
-      color:#d9fff0;
-      font-size:20px;
-      border:1px solid rgba(31,224,165,.12);
-    }
-
-    .quick-list{
-      background:rgba(18,27,24,.88);
-      border:1px solid var(--line);
-      border-radius:23px;
-      overflow:hidden;
-      box-shadow:0 14px 42px rgba(0,0,0,.28);
-    }
-
-    .quick-row{
-      display:grid;
-      grid-template-columns:46px 1fr 30px;
+    .tag{
+      display:inline-flex;
       align-items:center;
-      gap:11px;
-      padding:16px 14px;
-      border-bottom:1px solid var(--line);
+      gap:8px;
+      height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.13);
+      color:#d7ffef;
+      font-size:12px;
+      font-weight:900;
+      margin-bottom:14px;
     }
 
-    .quick-row:last-child{border-bottom:0}
+    .hero h2{
+      font-size:32px;
+      line-height:1.22;
+      font-weight:900;
+      max-width:520px;
+    }
 
-    .quick-icon{
-      width:40px;
-      height:40px;
-      border-radius:15px;
+    .hero h2 span{color:#b7ffe5}
+
+    .hero-desc{
+      color:#b8d1c7;
+      font-size:15px;
+      font-weight:700;
+      margin:9px 0 18px;
+      max-width:500px;
+    }
+
+    .search-panel{
+      background:#07120e;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:8px;
+    }
+
+    .search-panel input{
+      height:50px;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:#fff;
+      padding:0 10px;
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .search-panel input::placeholder{color:#8ea69c}
+
+    .search-btn{
+      width:54px;
+      height:50px;
+      border:0;
+      border-radius:17px;
+      background:linear-gradient(135deg,var(--brand),var(--cyan));
+      color:#06110d;
+      font-size:20px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .section-head{
+      margin:22px 0 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .section-head h3{
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .section-head span{
+      color:var(--muted2);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .hub-grid{
+      display:grid;
+      gap:12px;
+    }
+
+    .hub-card{
+      min-height:130px;
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:18px;
+      display:grid;
+      grid-template-columns:72px 1fr 34px;
+      gap:14px;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hub-card:before{
+      content:"";
+      position:absolute;
+      inset:auto -30px -60px auto;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background:rgba(32,223,159,.07);
+      pointer-events:none;
+    }
+
+    .hub-icon{
+      width:70px;
+      height:70px;
+      border-radius:24px;
       display:grid;
       place-items:center;
-      font-size:23px;
-      color:#05110d;
-      background:linear-gradient(135deg,#eafff6,#b7ffe5);
+      font-size:34px;
+      background:#ecfff6;
+      color:#06110d;
       border:1px solid rgba(255,255,255,.2);
     }
 
-    .quick-title{
-      font-size:20px;
+    .hub-card.services .hub-icon{
+      background:#ecfeff;
+    }
+
+    .hub-title{
+      font-size:24px;
+      line-height:1.1;
+      font-weight:900;
+    }
+
+    .hub-sub{
+      color:#a8c1b7;
+      font-weight:800;
+      font-size:13px;
+      margin-top:5px;
+    }
+
+    .hub-meta{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+      margin-top:9px;
+    }
+
+    .mini-chip{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.045);
+      border-radius:999px;
+      padding:5px 8px;
+      color:#b9d3c9;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .hub-arrow{
+      width:32px;
+      height:32px;
+      border-radius:12px;
+      background:rgba(255,255,255,.06);
+      display:grid;
+      place-items:center;
+      color:#dfffee;
+      font-size:22px;
+    }
+
+    .metrics-strip{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+    }
+
+    .metric{
+      background:rgba(255,255,255,.055);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px 8px;
+      text-align:center;
+      min-height:84px;
+      display:grid;
+      align-content:center;
+    }
+
+    .metric strong{
+      color:#b7ffe5;
+      font-size:21px;
+      line-height:1;
+      direction:ltr;
+      font-weight:900;
+    }
+
+    .metric span{
+      color:#9db7ab;
+      font-size:11px;
+      font-weight:900;
+      margin-top:6px;
+      line-height:1.25;
+    }
+
+    .action-board{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .action-tile{
+      background:rgba(255,255,255,.055);
+      border:1px solid var(--line);
+      border-radius:24px;
+      min-height:132px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .action-tile:after{
+      content:"";
+      position:absolute;
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      background:rgba(32,223,159,.08);
+      left:-40px;
+      top:-35px;
+    }
+
+    .action-icon{
+      width:46px;
+      height:46px;
+      border-radius:17px;
+      background:linear-gradient(135deg,#eafff6,#b7ffe5);
+      color:#06110d;
+      display:grid;
+      place-items:center;
+      font-size:24px;
+      position:relative;
+      z-index:1;
+    }
+
+    .action-title{
+      font-size:18px;
+      font-weight:900;
+      line-height:1.25;
+      position:relative;
+      z-index:1;
+    }
+
+    .action-sub{
+      color:#8ca399;
+      font-size:12px;
+      font-weight:800;
+      margin-top:3px;
+      position:relative;
+      z-index:1;
+    }
+
+    .resume-feature{
+      margin-top:12px;
+      border-radius:28px;
+      padding:18px;
+      background:
+        linear-gradient(135deg,rgba(246,200,111,.12),rgba(32,223,159,.08)),
+        rgba(255,255,255,.045);
+      border:1px solid rgba(246,200,111,.22);
+      display:grid;
+      grid-template-columns:1fr 74px;
+      gap:14px;
+      align-items:center;
+      box-shadow:0 14px 44px rgba(0,0,0,.24);
+    }
+
+    .resume-feature h3{
+      font-size:22px;
       font-weight:900;
       line-height:1.2;
     }
 
-    .quick-sub{
-      color:#9fb4ab;
+    .resume-feature p{
+      color:#c5bda5;
       font-size:13px;
-      margin-top:2px;
       font-weight:800;
+      margin-top:6px;
     }
 
-    .chevron{
-      color:#799287;
-      font-size:24px;
-      transform:translateY(-1px);
-    }
-
-    .resume-card{
-      margin-top:14px;
-      background:
-        linear-gradient(135deg,rgba(31,224,165,.16),rgba(56,189,248,.08)),
-        rgba(18,27,24,.9);
-      border:1px solid rgba(31,224,165,.25);
-      border-radius:23px;
-      padding:16px;
-      display:grid;
-      grid-template-columns:58px 1fr;
-      gap:13px;
-      align-items:center;
-      box-shadow:0 14px 42px rgba(0,0,0,.24);
-    }
-
-    .resume-card .resume-icon{
-      width:58px;
-      height:58px;
-      border-radius:19px;
-      background:#ecfeff;
-      color:#05110d;
+    .resume-badge{
+      width:72px;
+      height:72px;
+      border-radius:26px;
+      background:#fff7ed;
+      color:#20130a;
       display:grid;
       place-items:center;
-      font-size:30px;
+      font-size:34px;
       border:1px solid rgba(255,255,255,.3);
-    }
-
-    .resume-card h3{
-      font-size:21px;
-      font-weight:900;
-      line-height:1.25;
-    }
-
-    .resume-card p{
-      color:#b4c9bf;
-      font-size:13px;
-      margin-top:4px;
-      font-weight:800;
-    }
-
-    .brand-footer-note{
-      text-align:center;
-      color:#60756b;
-      font-size:12px;
-      font-weight:800;
-      margin:22px 0 4px;
     }
 
     .bottom-nav{
@@ -448,210 +446,177 @@
       left:50%;
       bottom:18px;
       transform:translateX(-50%);
-      width:min(590px,calc(100% - 34px));
+      width:min(640px,calc(100% - 32px));
       height:78px;
-      background:rgba(18,27,24,.96);
-      backdrop-filter:blur(18px);
-      border:1px solid rgba(196,241,221,.14);
-      border-radius:35px;
+      background:rgba(8,18,14,.96);
+      border:1px solid var(--line);
+      border-radius:30px;
       display:grid;
       grid-template-columns:repeat(5,1fr);
       z-index:60;
       box-shadow:0 20px 60px rgba(0,0,0,.58);
       overflow:hidden;
+      backdrop-filter:blur(18px);
     }
 
     .nav-item{
       display:grid;
       place-items:center;
-      color:#8da399;
+      color:#8ea69c;
       font-size:12px;
       font-weight:900;
       padding:8px;
     }
 
-    .nav-item b{
-      font-size:22px;
-      line-height:1;
-    }
+    .nav-item b{font-size:22px;line-height:1}
 
     .nav-item.active{
-      background:linear-gradient(135deg,rgba(31,224,165,.22),rgba(56,189,248,.12));
       color:#fff;
-      border-radius:32px;
+      background:linear-gradient(135deg,rgba(32,223,159,.20),rgba(69,199,244,.10));
       margin:6px;
-      border:1px solid rgba(31,224,165,.18);
+      border-radius:24px;
+      border:1px solid rgba(32,223,159,.16);
     }
 
-    .toast{
-      position:fixed;
-      bottom:108px;
-      left:50%;
-      transform:translateX(-50%);
-      width:min(520px,calc(100% - 34px));
-      background:#f4fff9;
-      color:#06110d;
-      border-radius:16px;
-      padding:12px 14px;
-      font-weight:900;
-      display:none;
-      z-index:80;
-      box-shadow:0 12px 36px rgba(0,0,0,.35);
-    }
-    .toast.show{display:block}
-
-    @media(max-width:420px){
-      .hero-card h1{font-size:27px}
-      .category-card{min-height:124px}
-      .category-title{font-size:19px}
-      .quick-title{font-size:18px}
-      .brand-name{font-size:21px}
+    @media(max-width:520px){
+      .app{padding:0 12px}
+      .hero h2{font-size:28px}
+      .hub-card{grid-template-columns:60px 1fr 30px;padding:15px;min-height:122px}
+      .hub-icon{width:58px;height:58px;border-radius:20px;font-size:30px}
+      .hub-title{font-size:21px}
+      .metrics-strip{grid-template-columns:repeat(2,1fr)}
+      .action-board{grid-template-columns:1fr 1fr}
+      .action-tile{min-height:124px}
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="topbar">
-      <a class="circle-btn" href="account.html">⚙️</a>
+    <header class="header">
+      <a class="profile-btn" href="account.html">⚙️</a>
       <div class="brand">
         <div>
-          <div class="brand-name">HireX</div>
-          <div class="brand-sub">منصة الوظائف والخدمات المهنية</div>
+          <h1>HireX</h1>
+          <p>بوابة الوظائف والخدمات المهنية</p>
         </div>
-        <div class="brand-mark">H</div>
+        <div class="brand-logo">H</div>
       </div>
     </header>
 
-    <main class="content">
-      <section class="hero-card">
-        <div class="greeting">
-          <small>مساء الخير يا أبو سامر</small>
-          <span class="identity-pill">تصنيف × HireX</span>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="tag">تصنيف × HireX · نسخة مهنية خاصة</div>
+        <h2>ابحث، أعلن، وانطلق في <span>سوق مهني</span> واحد.</h2>
+        <p class="hero-desc">منصة تجمع الوظائف والخدمات والسير الذاتية بأسلوب عملي مختلف عن تطبيقات الإعلانات التقليدية.</p>
+        <div class="search-panel">
+          <input id="mainSearch" placeholder="ابحث عن وظيفة أو خدمة..." />
+          <button class="search-btn" onclick="doSearch()">⌕</button>
         </div>
-        <h1>كل فرص العمل والخدمات المهنية في <span>مكان واحد</span>.</h1>
-        <div class="search-box">
-          <span>🔎</span>
-          <input id="mainSearch" placeholder="ابحث عن وظيفة، خدمة، أو سيرة..." />
-        </div>
-      </section>
-
-      <div class="section-title">
-        <span>تصفح الأقسام</span>
-        <span>مختصر وواضح</span>
       </div>
+    </section>
 
-      <section class="category-grid">
-        <a class="category-card" href="jobs.html">
-          <div>
-            <div class="category-icon jobs-icon">💼</div>
-            <div class="category-title">وظائف</div>
-            <div class="category-sub">فرص عمل ويطلب عمل</div>
-          </div>
-        </a>
+    <div class="section-head">
+      <h3>المسارات الرئيسية</h3>
+      <span>قسمين فقط</span>
+    </div>
 
-        <a class="category-card" href="services.html">
-          <div>
-            <div class="category-icon services-icon">🤝</div>
-            <div class="category-title">خدمات</div>
-            <div class="category-sub">خدمات مهنية وتوظيفية</div>
-          </div>
-        </a>
-      </section>
-
-      <div class="section-title">
-        <span>لوحة مؤشرات حقيقية</span>
-        <span>من قاعدة البيانات</span>
-      </div>
-
-      <section class="dashboard-grid">
-        <div class="dash-card">
-          <div>
-            <strong id="jobsCount">0</strong>
-            <span>وظائف منشورة</span>
-          </div>
-          <div class="dash-ico">💼</div>
-        </div>
-
-        <div class="dash-card">
-          <div>
-            <strong id="servicesCount">0</strong>
-            <span>خدمات منشورة</span>
-          </div>
-          <div class="dash-ico">🛠️</div>
-        </div>
-
-        <div class="dash-card">
-          <div>
-            <strong id="resumesCount">0</strong>
-            <span>سير ذاتية منشورة</span>
-          </div>
-          <div class="dash-ico">📄</div>
-        </div>
-
-        <div class="dash-card">
-          <div>
-            <strong id="companiesCount">0</strong>
-            <span>شركات مسجلة</span>
-          </div>
-          <div class="dash-ico">🏢</div>
-        </div>
-      </section>
-
-      <div class="section-title">
-        <span>إجراءات سريعة</span>
-        <span>ابدأ الآن</span>
-      </div>
-
-      <section class="quick-list">
-        <a class="quick-row" href="post-ad.html">
-          <div class="quick-icon">＋</div>
-          <div>
-            <div class="quick-title">أضف إعلان</div>
-            <div class="quick-sub">أضف وظيفة أو خدمة مهنية بخطوات واضحة</div>
-          </div>
-          <div class="chevron">‹</div>
-        </a>
-
-        <a class="quick-row" href="jobs.html">
-          <div class="quick-icon">💼</div>
-          <div>
-            <div class="quick-title">استعرض الوظائف</div>
-            <div class="quick-sub">فرص عمل ويطلب عمل حسب الأقسام</div>
-          </div>
-          <div class="chevron">‹</div>
-        </a>
-
-        <a class="quick-row" href="services.html">
-          <div class="quick-icon">🛠️</div>
-          <div>
-            <div class="quick-title">استعرض الخدمات</div>
-            <div class="quick-sub">خدمات CV، مقابلات، وتوظيف للشركات</div>
-          </div>
-          <div class="chevron">‹</div>
-        </a>
-      </section>
-
-      <a class="resume-card" href="post-ad.html?type=resume">
-        <div class="resume-icon">📄</div>
+    <section class="hub-grid">
+      <a class="hub-card jobs" href="jobs.html">
+        <div class="hub-icon">💼</div>
         <div>
-          <h3>السيرة الذاتية الاحترافية</h3>
-          <p>أنشئ سيرة منظمة وانشرها في قسمك ليتمكن أصحاب العمل من الوصول إليك.</p>
+          <div class="hub-title">وظائف</div>
+          <div class="hub-sub">فرص عمل، يطلب عمل، وسير ذاتية منشورة</div>
+          <div class="hub-meta">
+            <span class="mini-chip">فرص عمل</span>
+            <span class="mini-chip">يطلب عمل</span>
+            <span class="mini-chip">حسب القسم</span>
+          </div>
+        </div>
+        <div class="hub-arrow">‹</div>
+      </a>
+
+      <a class="hub-card services" href="services.html">
+        <div class="hub-icon">🛠️</div>
+        <div>
+          <div class="hub-title">خدمات</div>
+          <div class="hub-sub">خدمات CV، مقابلات، توظيف، واستشارات مهنية</div>
+          <div class="hub-meta">
+            <span class="mini-chip">CV</span>
+            <span class="mini-chip">مقابلات</span>
+            <span class="mini-chip">استشارات</span>
+          </div>
+        </div>
+        <div class="hub-arrow">‹</div>
+      </a>
+    </section>
+
+    <div class="section-head">
+      <h3>مؤشرات النظام</h3>
+      <span>أرقام حقيقية</span>
+    </div>
+
+    <section class="metrics-strip">
+      <div class="metric"><strong id="jobsCount">0</strong><span>وظائف</span></div>
+      <div class="metric"><strong id="servicesCount">0</strong><span>خدمات</span></div>
+      <div class="metric"><strong id="resumesCount">0</strong><span>سير ذاتية</span></div>
+      <div class="metric"><strong id="companiesCount">0</strong><span>شركات</span></div>
+    </section>
+
+    <div class="section-head">
+      <h3>إجراءات سريعة</h3>
+      <span>تنفيذ مباشر</span>
+    </div>
+
+    <section class="action-board">
+      <a class="action-tile" href="post-ad.html">
+        <div class="action-icon">＋</div>
+        <div>
+          <div class="action-title">أضف إعلان</div>
+          <div class="action-sub">وظيفة أو خدمة</div>
         </div>
       </a>
 
-      <div class="brand-footer-note">تصميم خاص لهوية HireX المهنية — تشغيل واضح، نتائج قابلة للقياس</div>
-    </main>
+      <a class="action-tile" href="jobs.html">
+        <div class="action-icon">💼</div>
+        <div>
+          <div class="action-title">تصفح الوظائف</div>
+          <div class="action-sub">فرص ويطلب عمل</div>
+        </div>
+      </a>
+
+      <a class="action-tile" href="services.html">
+        <div class="action-icon">🛠️</div>
+        <div>
+          <div class="action-title">الخدمات</div>
+          <div class="action-sub">خدمات مهنية</div>
+        </div>
+      </a>
+
+      <a class="action-tile" href="account.html">
+        <div class="action-icon">👤</div>
+        <div>
+          <div class="action-title">حسابي</div>
+          <div class="action-sub">إدارة بياناتك</div>
+        </div>
+      </a>
+    </section>
+
+    <a class="resume-feature" href="post-ad.html?type=resume">
+      <div>
+        <h3>السيرة الذاتية الاحترافية</h3>
+        <p>نموذج مختلف لبناء ونشر السيرة، مصمم ليظهر للجهات الباحثة عن موظفين.</p>
+      </div>
+      <div class="resume-badge">📄</div>
+    </a>
 
     <nav class="bottom-nav">
       <a class="nav-item active" href="index.html"><b>🏠</b><span>الرئيسية</span></a>
       <a class="nav-item" href="jobs.html"><b>💼</b><span>وظائف</span></a>
       <a class="nav-item" href="services.html"><b>🛠️</b><span>خدمات</span></a>
       <a class="nav-item" href="post-ad.html"><b>＋</b><span>إعلاني</span></a>
-      <a class="nav-item" href="account.html"><b>⚙️</b><span>الإعدادات</span></a>
+      <a class="nav-item" href="account.html"><b>⚙️</b><span>حسابي</span></a>
     </nav>
   </div>
-
-  <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
@@ -677,7 +642,7 @@
       }
     }
 
-    async function loadDashboardStats(){
+    async function loadStats(){
       const jobs = await countTable("company_jobs", q => q.eq("status", "published"));
       const services = await countTable("professional_services", q => q.eq("status", "published"));
       const resumes = await countTable("profiles", q => q.eq("role", "candidate").eq("resume_published", true));
@@ -689,14 +654,16 @@
       setNumber("companiesCount", companies);
     }
 
+    function doSearch(){
+      const q = document.getElementById("mainSearch").value.trim();
+      if(q) location.href = "search.html?q=" + encodeURIComponent(q);
+    }
+
     document.getElementById("mainSearch").addEventListener("keydown", function(e){
-      if(e.key === "Enter"){
-        const q = encodeURIComponent(this.value.trim());
-        if(q) location.href = "search.html?q=" + q;
-      }
+      if(e.key === "Enter") doSearch();
     });
 
-    window.addEventListener("load", loadDashboardStats);
+    window.addEventListener("load", loadStats);
   </script>
 </body>
 </html>
