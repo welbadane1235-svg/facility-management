@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HireX | الرئيسية</title>
+  <title>HireX | الرئيسية وبوابة الوظائف</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
     body{
       font-family:Tajawal,system-ui,sans-serif;
       background:
@@ -36,6 +37,8 @@
     }
 
     a{text-decoration:none;color:inherit}
+    button,input{font-family:inherit}
+
     .app{
       width:min(720px,100%);
       margin:auto;
@@ -49,6 +52,11 @@
       align-items:center;
       justify-content:space-between;
       gap:14px;
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:linear-gradient(180deg,rgba(6,17,13,.96),rgba(6,17,13,.72));
+      backdrop-filter:blur(16px);
     }
 
     .brand{
@@ -70,23 +78,11 @@
       box-shadow:0 16px 40px rgba(32,223,159,.20);
     }
 
-    .brand h1{
-      font-size:26px;
-      line-height:1;
-      font-weight:900;
-    }
-
-    .brand p{
-      font-size:12px;
-      color:var(--muted2);
-      font-weight:800;
-      margin-top:4px;
-    }
+    .brand h1{font-size:26px;line-height:1;font-weight:900}
+    .brand p{font-size:12px;color:var(--muted2);font-weight:800;margin-top:4px}
 
     .profile-btn{
-      width:46px;
-      height:46px;
-      border-radius:16px;
+      width:46px;height:46px;border-radius:16px;
       background:rgba(255,255,255,.06);
       border:1px solid var(--line);
       color:#dfffee;
@@ -99,8 +95,7 @@
       margin-top:8px;
       border:1px solid rgba(32,223,159,.20);
       border-radius:32px;
-      background:
-        linear-gradient(135deg,rgba(18,69,52,.96),rgba(12,35,42,.96));
+      background:linear-gradient(135deg,rgba(18,69,52,.96),rgba(12,35,42,.96));
       box-shadow:var(--shadow);
       padding:26px;
       position:relative;
@@ -111,188 +106,74 @@
     }
 
     .hero:before{
-      content:"";
-      position:absolute;
-      width:260px;
-      height:260px;
-      border-radius:50%;
-      background:rgba(32,223,159,.13);
-      filter:blur(28px);
-      top:-110px;
-      left:-90px;
+      content:"";position:absolute;width:260px;height:260px;border-radius:50%;
+      background:rgba(32,223,159,.13);filter:blur(28px);top:-110px;left:-90px;
     }
 
     .hero:after{
-      content:"";
-      position:absolute;
-      width:210px;
-      height:210px;
-      border-radius:50%;
-      background:rgba(69,199,244,.13);
-      filter:blur(28px);
-      bottom:-95px;
-      right:-75px;
+      content:"";position:absolute;width:210px;height:210px;border-radius:50%;
+      background:rgba(69,199,244,.13);filter:blur(28px);bottom:-95px;right:-75px;
     }
 
     .hero-art{
-      position:absolute;
-      top:22px;
-      left:22px;
-      width:160px;
-      height:160px;
-      border-radius:38px;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+      position:absolute;top:22px;left:22px;width:160px;height:160px;border-radius:38px;
+      background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
       border:1px solid rgba(255,255,255,.14);
-      display:grid;
-      place-items:center;
-      transform:rotate(-3deg);
+      display:grid;place-items:center;transform:rotate(-3deg);
       box-shadow:0 22px 65px rgba(0,0,0,.25);
     }
 
-    .hero-art span{
-      font-size:70px;
-      filter:drop-shadow(0 10px 20px rgba(0,0,0,.22));
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:1;
-      max-width:520px;
-    }
+    .hero-art span{font-size:70px;filter:drop-shadow(0 10px 20px rgba(0,0,0,.22))}
+    .hero-content{position:relative;z-index:1;max-width:520px}
 
     .tag{
-      display:inline-flex;
-      align-items:center;
-      min-height:34px;
-      padding:0 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.13);
-      color:#d7ffef;
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:14px;
+      display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border-radius:999px;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);
+      color:#d7ffef;font-size:12px;font-weight:900;margin-bottom:14px;
     }
 
-    .hero h2{
-      font-size:34px;
-      line-height:1.18;
-      font-weight:900;
-    }
-
+    .hero h2{font-size:34px;line-height:1.18;font-weight:900}
     .hero h2 span{color:#b7ffe5}
-
-    .hero p{
-      color:#c0d7ce;
-      font-size:15px;
-      font-weight:800;
-      margin-top:12px;
-      max-width:500px;
-    }
+    .hero p{color:#c0d7ce;font-size:15px;font-weight:800;margin-top:12px;max-width:500px}
 
     .section-head{
-      margin:24px 0 12px;
+      margin:26px 0 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:12px;
     }
 
-    .section-head h3{
-      font-size:19px;
-      font-weight:900;
-    }
+    .section-head h3{font-size:20px;font-weight:900}
+    .section-head span{color:var(--muted2);font-size:12px;font-weight:900}
 
-    .section-head span{
-      color:var(--muted2);
-      font-size:12px;
-      font-weight:900;
-    }
-
-    .marketing-stack{
-      display:grid;
-      gap:14px;
-    }
+    .marketing-stack{display:grid;gap:14px}
 
     .promo{
-      min-height:178px;
-      border-radius:30px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      position:relative;
-      overflow:hidden;
-      padding:20px;
-      display:grid;
-      grid-template-columns:1fr 108px;
-      align-items:center;
-      gap:16px;
+      min-height:176px;border-radius:30px;border:1px solid var(--line);
+      background:rgba(255,255,255,.055);position:relative;overflow:hidden;padding:20px;
+      display:grid;grid-template-columns:1fr 108px;gap:14px;align-items:center;
       box-shadow:0 16px 48px rgba(0,0,0,.22);
     }
 
     .promo:before{
-      content:"";
-      position:absolute;
-      width:190px;
-      height:190px;
-      border-radius:50%;
-      left:-90px;
-      top:-90px;
-      background:rgba(32,223,159,.10);
+      content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+      left:-70px;top:-70px;background:rgba(32,223,159,.09);
     }
 
-    .promo.gold{
-      background:linear-gradient(135deg,rgba(246,200,111,.13),rgba(255,255,255,.045));
-      border-color:rgba(246,200,111,.25);
-    }
+    .promo.gold{background:linear-gradient(135deg,rgba(246,200,111,.13),rgba(255,255,255,.045));border-color:rgba(246,200,111,.25)}
+    .promo.blue{background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045));border-color:rgba(69,199,244,.22)}
+    .promo.rose{background:linear-gradient(135deg,rgba(251,113,133,.12),rgba(255,255,255,.045));border-color:rgba(251,113,133,.22)}
 
-    .promo.blue{
-      background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045));
-      border-color:rgba(69,199,244,.22);
-    }
-
-    .promo.rose{
-      background:linear-gradient(135deg,rgba(251,113,133,.12),rgba(255,255,255,.045));
-      border-color:rgba(251,113,133,.22);
-    }
-
-    .promo-text{
-      position:relative;
-      z-index:1;
-    }
-
-    .promo-label{
-      color:#b7ffe5;
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:7px;
-    }
-
-    .promo h4{
-      font-size:25px;
-      line-height:1.18;
-      font-weight:900;
-    }
-
-    .promo p{
-      color:#b4c9bf;
-      font-size:14px;
-      font-weight:800;
-      margin-top:8px;
-    }
+    .promo-text{position:relative;z-index:1}
+    .promo-label{color:#b7ffe5;font-size:12px;font-weight:900;margin-bottom:7px}
+    .promo h4{font-size:25px;line-height:1.18;font-weight:900}
+    .promo p{color:#b4c9bf;font-size:14px;font-weight:800;margin-top:8px}
 
     .promo-art{
-      width:104px;
-      height:104px;
-      border-radius:34px;
-      display:grid;
-      place-items:center;
-      background:#ecfff6;
-      color:#06110d;
-      font-size:52px;
-      position:relative;
-      z-index:1;
-      border:1px solid rgba(255,255,255,.3);
-      box-shadow:0 20px 52px rgba(0,0,0,.22);
+      width:104px;height:104px;border-radius:34px;display:grid;place-items:center;background:#ecfff6;
+      color:#06110d;font-size:52px;position:relative;z-index:1;
+      border:1px solid rgba(255,255,255,.3);box-shadow:0 20px 52px rgba(0,0,0,.22);
     }
 
     .promo.gold .promo-art{background:#fff7ed}
@@ -300,51 +181,241 @@
     .promo.rose .promo-art{background:#fff1f2}
 
     .story-card{
-      margin-top:14px;
-      border-radius:30px;
-      padding:22px;
-      border:1px solid rgba(32,223,159,.18);
+      margin-top:14px;border-radius:30px;padding:22px;border:1px solid rgba(32,223,159,.18);
+      background:linear-gradient(135deg,rgba(32,223,159,.10),rgba(69,199,244,.06)),rgba(255,255,255,.045);
+    }
+
+    .story-card h3{font-size:23px;line-height:1.25;font-weight:900;margin-bottom:8px}
+    .story-card p{color:#b4c9bf;font-size:14px;font-weight:800;margin-bottom:12px}
+    .story-points{display:grid;gap:8px}
+    .point{display:flex;align-items:center;gap:9px;color:#dfffee;font-size:14px;font-weight:900}
+    .point b{width:24px;height:24px;border-radius:9px;display:grid;place-items:center;background:rgba(32,223,159,.18);color:#b7ffe5}
+
+    /* JOBS PORTAL */
+    .jobs-portal{
+      margin-top:34px;
+      padding-top:16px;
+      border-top:1px solid rgba(193,255,230,.12);
+    }
+
+    .portal-hero{
+      border-radius:34px;
+      padding:24px;
       background:
-        linear-gradient(135deg,rgba(32,223,159,.10),rgba(69,199,244,.06)),
-        rgba(255,255,255,.045);
+        radial-gradient(circle at 100% 0%,rgba(69,199,244,.16),transparent 35%),
+        linear-gradient(135deg,rgba(13,43,51,.96),rgba(13,41,30,.96));
+      border:1px solid rgba(69,199,244,.20);
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
 
-    .story-card h3{
-      font-size:23px;
-      line-height:1.25;
+    .portal-hero h2{
+      font-size:31px;
+      line-height:1.2;
       font-weight:900;
-      margin-bottom:8px;
     }
 
-    .story-card p{
+    .portal-hero p{
       color:#b4c9bf;
       font-size:14px;
       font-weight:800;
-      margin-bottom:12px;
+      margin-top:8px;
     }
 
-    .story-points{
+    .job-search{
+      margin-top:16px;
+      background:#07120e;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:10px;
       display:grid;
+      grid-template-columns:1fr auto;
       gap:8px;
     }
 
-    .point{
-      display:flex;
-      align-items:center;
-      gap:9px;
-      color:#dfffee;
-      font-size:14px;
-      font-weight:900;
+    .job-search input{
+      height:50px;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:#fff;
+      padding:0 10px;
+      font-size:16px;
+      font-weight:800;
     }
 
-    .point b{
-      width:24px;
-      height:24px;
-      border-radius:9px;
+    .job-search input::placeholder{color:#8ea69c}
+
+    .job-search button{
+      width:54px;height:50px;border:0;border-radius:17px;
+      background:linear-gradient(135deg,var(--brand),var(--cyan));
+      color:#06110d;font-size:20px;font-weight:900;
+    }
+
+    .job-type-grid{
       display:grid;
-      place-items:center;
-      background:rgba(32,223,159,.18);
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .job-type-card{
+      min-height:138px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.055);
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .job-type-card:before{
+      content:"";position:absolute;width:120px;height:120px;border-radius:50%;
+      background:rgba(32,223,159,.09);left:-55px;top:-45px;
+    }
+
+    .job-type-card.offer{
+      background:linear-gradient(135deg,rgba(32,223,159,.12),rgba(255,255,255,.045));
+    }
+
+    .job-type-card.request{
+      background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045));
+    }
+
+    .job-type-icon{
+      width:48px;height:48px;border-radius:18px;
+      display:grid;place-items:center;background:#ecfff6;color:#06110d;font-size:25px;
+      position:relative;z-index:1;
+    }
+
+    .job-type-card.request .job-type-icon{background:#ecfeff}
+
+    .job-type-title{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.15;
+      position:relative;z-index:1;
+    }
+
+    .job-type-sub{
+      color:#9db7ab;
+      font-size:12px;
+      font-weight:800;
+      margin-top:4px;
+      position:relative;z-index:1;
+    }
+
+    .category-panel{
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.045);
+      overflow:hidden;
+    }
+
+    .category-row{
+      display:grid;
+      grid-template-columns:48px 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:15px 16px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .category-row:last-child{border-bottom:0}
+
+    .category-icon{
+      width:46px;height:46px;border-radius:17px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:24px;
+    }
+
+    .category-title{
+      font-size:19px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .category-sub{
+      color:#81988e;
+      font-size:12px;
+      font-weight:800;
+      margin-top:2px;
+    }
+
+    .category-count{
       color:#b7ffe5;
+      font-weight:900;
+      direction:ltr;
+      font-size:14px;
+      background:rgba(32,223,159,.10);
+      border:1px solid rgba(32,223,159,.16);
+      border-radius:999px;
+      padding:6px 10px;
+    }
+
+    .featured-jobs{
+      display:grid;
+      gap:12px;
+    }
+
+    .job-card{
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      padding:16px;
+      display:grid;
+      gap:10px;
+    }
+
+    .job-card-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .job-card h4{
+      font-size:20px;
+      font-weight:900;
+      line-height:1.25;
+    }
+
+    .job-card p{
+      color:#9db7ab;
+      font-size:13px;
+      font-weight:800;
+      margin-top:3px;
+    }
+
+    .job-badge{
+      color:#06110d;
+      background:#b7ffe5;
+      border-radius:999px;
+      padding:5px 9px;
+      font-size:11px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .job-meta{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+    }
+
+    .meta-pill{
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      color:#b4c9bf;
+      padding:6px 9px;
+      font-size:12px;
+      font-weight:900;
     }
 
     .bottom-nav{
@@ -372,16 +443,14 @@
       font-size:12px;
       font-weight:900;
       padding:8px;
+      cursor:pointer;
     }
 
     .nav-item b{font-size:22px;line-height:1}
-
     .nav-item.active{
       color:#fff;
       background:linear-gradient(135deg,rgba(32,223,159,.20),rgba(69,199,244,.10));
-      margin:6px;
-      border-radius:24px;
-      border:1px solid rgba(32,223,159,.16);
+      margin:6px;border-radius:24px;border:1px solid rgba(32,223,159,.16);
     }
 
     @media(max-width:520px){
@@ -390,16 +459,18 @@
       .hero-art{width:128px;height:128px;border-radius:32px}
       .hero-art span{font-size:56px}
       .hero h2{font-size:29px}
-      .promo{grid-template-columns:1fr 78px;min-height:156px;padding:18px}
-      .promo-art{width:78px;height:78px;border-radius:26px;font-size:40px}
+      .promo{grid-template-columns:1fr 58px;min-height:156px;padding:18px}
+      .promo-art{width:58px;height:58px;border-radius:20px;font-size:30px}
       .promo h4{font-size:22px}
+      .job-type-grid{grid-template-columns:1fr}
+      .portal-hero h2{font-size:27px}
     }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <a class="profile-btn" href="account.html">⚙️</a>
+      <a class="profile-btn" href="#account">⚙️</a>
       <div class="brand">
         <div>
           <h1>HireX</h1>
@@ -409,75 +480,236 @@
       </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-art"><span>🚀</span></div>
-      <div class="hero-content">
-        <div class="tag">الرئيسية · تعرّف على HireX</div>
-        <h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2>
-        <p>HireX ليست مجرد صفحة وظائف، بل مساحة منظمة للإعلانات المهنية: وظيفة، خدمة، أو سيرة ذاتية تبحث عن فرصة.</p>
+    <main id="home">
+      <section class="hero">
+        <div class="hero-art"><span>🚀</span></div>
+        <div class="hero-content">
+          <div class="tag">الرئيسية · تعرّف على HireX</div>
+          <h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2>
+          <p>HireX ليست مجرد صفحة وظائف، بل مساحة منظمة للإعلانات المهنية: وظيفة، خدمة، أو سيرة ذاتية تبحث عن فرصة.</p>
+        </div>
+      </section>
+
+      <div class="section-head">
+        <h3>لماذا HireX؟</h3>
+        <span>إعلانات تعريفية</span>
       </div>
-    </section>
 
-    <div class="section-head">
-      <h3>لماذا HireX؟</h3>
-      <span>إعلانات تعريفية</span>
-    </div>
+      <section class="marketing-stack">
+        <article class="promo gold">
+          <div class="promo-text">
+            <div class="promo-label">للباحثين عن عمل</div>
+            <h4>حوّل سيرتك إلى إعلان احترافي</h4>
+            <p>انشر نفسك بطريقة واضحة داخل القسم المناسب ليصل ملفك لأصحاب العمل.</p>
+          </div>
+          <div class="promo-art">📄</div>
+        </article>
 
-    <section class="marketing-stack">
-      <article class="promo gold">
-        <div class="promo-text">
-          <div class="promo-label">للباحثين عن عمل</div>
-          <h4>حوّل سيرتك إلى إعلان احترافي</h4>
-          <p>انشر نفسك بطريقة واضحة داخل القسم المناسب ليصل ملفك لأصحاب العمل.</p>
+        <article class="promo blue">
+          <div class="promo-text">
+            <div class="promo-label">للشركات وأصحاب الأعمال</div>
+            <h4>أعلن عن وظيفتك بشكل منظم</h4>
+            <p>اعرض الفرصة، حدد القسم والمدينة، واستقبل المتقدمين بوضوح.</p>
+          </div>
+          <div class="promo-art">🏢</div>
+        </article>
+
+        <article class="promo">
+          <div class="promo-text">
+            <div class="promo-label">لمقدمي الخدمات</div>
+            <h4>اعرض خبرتك كخدمة مهنية</h4>
+            <p>خدمات السيرة الذاتية، التدريب، الاستشارات، والتوظيف في مكان واحد.</p>
+          </div>
+          <div class="promo-art">🛠️</div>
+        </article>
+      </section>
+
+      <section class="story-card">
+        <h3>الرئيسية للتعريف، والتنفيذ في التبويبات</h3>
+        <p>هذه الصفحة مخصصة للتسويق والتعريف بالمنصة فقط. أما التصفح والإضافة تتم من تبويبات الوظائف والخدمات وإعلاني.</p>
+        <div class="story-points">
+          <div class="point"><b>1</b> وظائف للفرص والسير الذاتية</div>
+          <div class="point"><b>2</b> خدمات مهنية قابلة للإعلان</div>
+          <div class="point"><b>3</b> سيرة ذاتية احترافية قابلة للنشر</div>
         </div>
-        <div class="promo-art">📄</div>
-      </article>
+      </section>
+    </main>
 
-      <article class="promo blue">
-        <div class="promo-text">
-          <div class="promo-label">للشركات وأصحاب الأعمال</div>
-          <h4>أعلن عن وظيفتك بشكل منظم</h4>
-          <p>اعرض الفرصة، حدد القسم والمدينة، واستقبل المتقدمين بوضوح.</p>
+    <main id="jobs" class="jobs-portal">
+      <section class="portal-hero">
+        <div class="tag">بوابة الوظائف · فرص عمل ويطلب عمل</div>
+        <h2>ابحث عن الوظيفة المناسبة أو انشر سيرتك كطلب عمل.</h2>
+        <p>بوابة منظمة لتصفح فرص العمل، طلبات العمل، والسير الذاتية حسب التخصص والمدينة.</p>
+        <div class="job-search">
+          <input id="jobSearch" placeholder="ابحث في الوظائف أو السير الذاتية..." />
+          <button onclick="searchJobs()">⌕</button>
         </div>
-        <div class="promo-art">🏢</div>
-      </article>
+      </section>
 
-      <article class="promo">
-        <div class="promo-text">
-          <div class="promo-label">لمقدمي الخدمات</div>
-          <h4>اعرض خبرتك كخدمة مهنية</h4>
-          <p>خدمات السيرة الذاتية، التدريب، الاستشارات، والتوظيف في مكان واحد.</p>
-        </div>
-        <div class="promo-art">🛠️</div>
-      </article>
-
-      <article class="promo rose">
-        <div class="promo-text">
-          <div class="promo-label">تجربة مختلفة</div>
-          <h4>أقسام أقل، وصول أسرع</h4>
-          <p>بدل كثرة القوائم، HireX يركز على مسارين واضحين: وظائف وخدمات.</p>
-        </div>
-        <div class="promo-art">🎯</div>
-      </article>
-    </section>
-
-    <section class="story-card">
-      <h3>الرئيسية للتعريف، والتنفيذ في التبويبات</h3>
-      <p>هذه الصفحة مخصصة للتسويق والتعريف بالمنصة فقط. أما التصفح والإضافة تتم من تبويبات الوظائف والخدمات وإعلاني.</p>
-      <div class="story-points">
-        <div class="point"><b>1</b> وظائف للفرص والسير الذاتية</div>
-        <div class="point"><b>2</b> خدمات مهنية قابلة للإعلان</div>
-        <div class="point"><b>3</b> سيرة ذاتية احترافية قابلة للنشر</div>
+      <div class="section-head">
+        <h3>نوع الإعلان</h3>
+        <span>اختر المسار</span>
       </div>
-    </section>
+
+      <section class="job-type-grid">
+        <a class="job-type-card offer" href="#job-categories">
+          <div class="job-type-icon">💼</div>
+          <div>
+            <div class="job-type-title">فرص عمل</div>
+            <div class="job-type-sub">وظائف منشورة من الشركات وأصحاب الأعمال</div>
+          </div>
+        </a>
+
+        <a class="job-type-card request" href="#job-categories">
+          <div class="job-type-icon">👤</div>
+          <div>
+            <div class="job-type-title">يطلب عمل</div>
+            <div class="job-type-sub">سير ذاتية ومرشحون يبحثون عن فرصة</div>
+          </div>
+        </a>
+      </section>
+
+      <div class="section-head" id="job-categories">
+        <h3>الأقسام المهنية</h3>
+        <span>تصفح حسب التخصص</span>
+      </div>
+
+      <section class="category-panel">
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">🧮</div>
+          <div>
+            <div class="category-title">حسابات</div>
+            <div class="category-sub">محاسبين، مالية، إدخال بيانات</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">💻</div>
+          <div>
+            <div class="category-title">تقني</div>
+            <div class="category-sub">برمجة، دعم فني، تصميم</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">🚗</div>
+          <div>
+            <div class="category-title">سائق</div>
+            <div class="category-sub">نقل، توصيل، سائق خاص</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">🩺</div>
+          <div>
+            <div class="category-title">طب وتمريض</div>
+            <div class="category-sub">تمريض، عيادات، رعاية</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">📈</div>
+          <div>
+            <div class="category-title">مبيعات وتسويق</div>
+            <div class="category-sub">مندوبين، تسويق، خدمة عملاء</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+
+        <a class="category-row" href="#featured-jobs">
+          <div class="category-icon">🧤</div>
+          <div>
+            <div class="category-title">عمال وتشغيل</div>
+            <div class="category-sub">نظافة، تشغيل، صيانة، ميداني</div>
+          </div>
+          <div class="category-count">0</div>
+        </a>
+      </section>
+
+      <div class="section-head" id="featured-jobs">
+        <h3>إعلانات مميزة</h3>
+        <span>شكل العرض القادم</span>
+      </div>
+
+      <section class="featured-jobs">
+        <article class="job-card">
+          <div class="job-card-top">
+            <div>
+              <h4>محاسب عام</h4>
+              <p>شركة تبحث عن محاسب بخبرة متوسطة في الرياض.</p>
+            </div>
+            <span class="job-badge">فرصة عمل</span>
+          </div>
+          <div class="job-meta">
+            <span class="meta-pill">حسابات</span>
+            <span class="meta-pill">الرياض</span>
+            <span class="meta-pill">دوام كامل</span>
+          </div>
+        </article>
+
+        <article class="job-card">
+          <div class="job-card-top">
+            <div>
+              <h4>فني دعم تقني</h4>
+              <p>فرصة لفني تقني يجيد التعامل مع البلاغات وخدمة العملاء.</p>
+            </div>
+            <span class="job-badge">فرصة عمل</span>
+          </div>
+          <div class="job-meta">
+            <span class="meta-pill">تقني</span>
+            <span class="meta-pill">جدة</span>
+            <span class="meta-pill">دوام كامل</span>
+          </div>
+        </article>
+
+        <article class="job-card">
+          <div class="job-card-top">
+            <div>
+              <h4>مرشح يبحث عن وظيفة تشغيل</h4>
+              <p>خبرة في التشغيل الميداني وإدارة فرق العمل.</p>
+            </div>
+            <span class="job-badge">يطلب عمل</span>
+          </div>
+          <div class="job-meta">
+            <span class="meta-pill">تشغيل</span>
+            <span class="meta-pill">الرياض</span>
+            <span class="meta-pill">متاح فورًا</span>
+          </div>
+        </article>
+      </section>
+    </main>
 
     <nav class="bottom-nav">
-      <a class="nav-item active" href="index.html"><b>🏠</b><span>الرئيسية</span></a>
-      <a class="nav-item" href="jobs.html"><b>💼</b><span>وظائف</span></a>
-      <a class="nav-item" href="services.html"><b>🛠️</b><span>خدمات</span></a>
-      <a class="nav-item" href="post-ad.html"><b>＋</b><span>إعلاني</span></a>
-      <a class="nav-item" href="account.html"><b>⚙️</b><span>حسابي</span></a>
+      <a class="nav-item active" data-tab="home" href="#home"><b>🏠</b><span>الرئيسية</span></a>
+      <a class="nav-item" data-tab="jobs" href="#jobs"><b>💼</b><span>وظائف</span></a>
+      <a class="nav-item" data-tab="services" href="#services"><b>🛠️</b><span>خدمات</span></a>
+      <a class="nav-item" data-tab="post" href="#post"><b>＋</b><span>إعلاني</span></a>
+      <a class="nav-item" data-tab="account" href="#account"><b>⚙️</b><span>حسابي</span></a>
     </nav>
   </div>
+
+  <script>
+    function activateTab(tab){
+      document.querySelectorAll('.nav-item').forEach(item=>{
+        item.classList.toggle('active', item.dataset.tab === tab);
+      });
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item=>{
+      item.addEventListener('click', function(){
+        activateTab(this.dataset.tab);
+      });
+    });
+
+    function searchJobs(){
+      const q = document.getElementById('jobSearch').value.trim();
+      if(!q) return;
+      alert('سيتم ربط البحث لاحقًا: ' + q);
+    }
+  </script>
 </body>
 </html>
