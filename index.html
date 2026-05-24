@@ -8,7 +8,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#06110d;--line:rgba(193,255,230,.14);--text:#f3fff9;--muted:#a8beb5;--muted2:#748980;--brand:#20df9f;--cyan:#45c7f4;--gold:#f5c86f;--shadow:0 22px 80px rgba(0,0,0,.45)}
+    :root{
+      --bg:#0E1116;
+      --line:rgba(0,229,197,.16);
+      --text:#F2F5F7;
+      --muted:#A9B0B8;
+      --muted2:#6B7C93;
+      --brand:#00E5C5;
+      --cyan:#00B8D4;
+      --gold:#F5C86F;
+      --shadow:0 22px 80px rgba(0,0,0,.48);
+    }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 16% -8%,rgba(32,223,159,.18),transparent 32%),radial-gradient(circle at 92% 12%,rgba(69,199,244,.13),transparent 30%),linear-gradient(180deg,#07130f,#020403);color:var(--text);min-height:100vh;line-height:1.65;padding-bottom:96px;overflow-x:hidden}
     body.modal-open{overflow:hidden}a{text-decoration:none;color:inherit}button,input{font-family:inherit}
@@ -159,6 +169,191 @@
     .quick-create{user-select:none}
     .ad-form{animation:adFade .18s ease both}
     @keyframes adFade{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  
+    /* HireX Visual Identity V19 - Safe UI-only layer */
+    body{
+      background:
+        radial-gradient(circle at 12% -8%,rgba(0,229,197,.18),transparent 30%),
+        radial-gradient(circle at 92% 8%,rgba(0,184,212,.14),transparent 28%),
+        linear-gradient(180deg,#0E1116,#06100D 58%,#020403);
+    }
+
+    .brand-logo,
+    .win-icon,
+    .cinema-icon{
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      box-shadow:0 16px 45px rgba(0,229,197,.24);
+    }
+
+    .brand-logo{
+      position:relative;
+      overflow:hidden;
+      letter-spacing:-1px;
+    }
+
+    .brand-logo::after{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-top:4px solid rgba(255,255,255,.75);
+      border-right:4px solid rgba(255,255,255,.75);
+      transform:rotate(45deg) translate(-1px,-1px);
+      opacity:.28;
+    }
+
+    .brand h1{
+      letter-spacing:.2px;
+      background:linear-gradient(135deg,#F2F5F7 0%,#F2F5F7 58%,#00E5C5 59%,#00B8D4 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .hero,
+    .job-hero-panel{
+      border-color:rgba(0,229,197,.22);
+      background:
+        radial-gradient(circle at 0% 100%,rgba(0,229,197,.12),transparent 34%),
+        radial-gradient(circle at 100% 0%,rgba(0,184,212,.13),transparent 34%),
+        linear-gradient(135deg,rgba(13,42,43,.96),rgba(10,22,31,.96));
+    }
+
+    .hero-art,
+    .promo-art,
+    .avatar{
+      background:linear-gradient(135deg,#F2F5F7,#C7CDD4);
+      color:#0E1116;
+      box-shadow:0 20px 58px rgba(0,229,197,.14);
+    }
+
+    .hero h2 span,
+    .tag,
+    .promo-label,
+    .field label,
+    .detail-item strong{
+      color:#A7F3E1;
+    }
+
+    .tag{
+      background:rgba(0,229,197,.09);
+      border-color:rgba(0,229,197,.18);
+    }
+
+    .promo,
+    .story-card,
+    .side-card,
+    .result-card,
+    .service-card,
+    .myad-card,
+    .quick-create,
+    .category-panel,
+    .detail-item,
+    .chat-compose,
+    .chat-messages{
+      background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.035));
+      border-color:rgba(0,229,197,.13);
+    }
+
+    .promo.gold{
+      background:linear-gradient(135deg,rgba(0,229,197,.10),rgba(255,255,255,.04));
+      border-color:rgba(0,229,197,.20);
+    }
+
+    .promo.blue{
+      background:linear-gradient(135deg,rgba(0,184,212,.13),rgba(255,255,255,.04));
+      border-color:rgba(0,184,212,.22);
+    }
+
+    .quick-create.active,
+    .job-type-card.active,
+    .ad-tab.active,
+    .nav-item.active{
+      background:linear-gradient(135deg,rgba(0,229,197,.26),rgba(0,184,212,.14));
+      border-color:rgba(0,229,197,.22);
+      color:#fff;
+    }
+
+    .hero:before,
+    .promo:before,
+    .job-type-card:before{
+      background:rgba(0,229,197,.10);
+    }
+
+    .view-btn,
+    .submit-row button.primary,
+    .hero-btn.primary,
+    .search-btn,
+    .job-search button,
+    .detail-actions a.primary,
+    .phone-choice.primary,
+    .chat-actions button.primary,
+    .side-action a,
+    .action-icon,
+    .ad-tab.active{
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      box-shadow:0 12px 32px rgba(0,229,197,.16);
+    }
+
+    .bottom-nav{
+      background:rgba(14,17,22,.94);
+      border-color:rgba(0,229,197,.16);
+      box-shadow:0 20px 60px rgba(0,0,0,.62);
+    }
+
+    .nav-item{
+      color:#8FA1A9;
+    }
+
+    .nav-item.active{
+      color:#F2F5F7;
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    .job-search,
+    .chat-compose textarea,
+    .offer-box input{
+      background:#0A1114;
+      border-color:rgba(0,229,197,.13);
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus,
+    .job-search:focus-within,
+    .chat-compose textarea:focus,
+    .offer-box input:focus{
+      border-color:rgba(0,229,197,.45);
+      box-shadow:0 0 0 3px rgba(0,229,197,.08);
+    }
+
+    .window{
+      border-color:rgba(0,229,197,.18);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(0,184,212,.10),transparent 30%),
+        linear-gradient(135deg,rgba(13,31,33,.98),rgba(7,13,17,.98));
+    }
+
+    .window-head{
+      background:rgba(0,229,197,.045);
+      border-bottom-color:rgba(0,229,197,.12);
+    }
+
+    .status-badge,
+    .type-badge{
+      background:#A7F3E1;
+      color:#07110E;
+    }
+
+    .status-badge.draft{
+      background:#C7CDD4;
+      color:#0E1116;
+    }
 
   </style>
 </head>
