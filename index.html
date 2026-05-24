@@ -628,6 +628,123 @@
       .pay-card-row{grid-template-columns:1fr}
     }
 
+  
+    /* ATS CV Builder V23 */
+    .ats-entry-card{
+      border-radius:24px;
+      border:1px solid rgba(0,229,197,.20);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(0,184,212,.12),transparent 34%),
+        linear-gradient(135deg,rgba(0,229,197,.10),rgba(255,255,255,.04));
+      padding:14px;
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .ats-entry-card h3{
+      font-size:19px;
+      line-height:1.25;
+      font-weight:900;
+    }
+    .ats-entry-card p{
+      color:#A9B0B8;
+      font-size:13px;
+      font-weight:800;
+    }
+    .ats-cost-badge{
+      display:inline-flex;
+      width:max-content;
+      border-radius:999px;
+      background:rgba(0,229,197,.12);
+      border:1px solid rgba(0,229,197,.18);
+      color:#A7F3E1;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:900;
+      direction:ltr;
+    }
+    .ats-form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .ats-cv-preview{
+      direction:ltr;
+      text-align:left;
+      background:#ffffff;
+      color:#111827;
+      border-radius:18px;
+      padding:22px;
+      display:grid;
+      gap:12px;
+      font-family:Arial, sans-serif;
+      line-height:1.45;
+      max-height:520px;
+      overflow:auto;
+    }
+    .ats-cv-preview h1{
+      font-size:26px;
+      margin:0;
+      color:#111827;
+      letter-spacing:.2px;
+    }
+    .ats-cv-preview h2{
+      font-size:15px;
+      margin:14px 0 4px;
+      color:#111827;
+      border-bottom:1px solid #D1D5DB;
+      padding-bottom:4px;
+      text-transform:uppercase;
+    }
+    .ats-cv-preview p,
+    .ats-cv-preview li{
+      font-size:13px;
+      color:#1F2937;
+    }
+    .ats-cv-preview ul{
+      margin:4px 0 0 18px;
+      padding:0;
+    }
+    .ats-cv-preview .contact-line{
+      color:#4B5563;
+      font-size:12px;
+      margin-top:4px;
+    }
+    .ats-actions{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .ats-actions button{
+      min-height:44px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.07);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-family:inherit;
+    }
+    .ats-actions button.primary{
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      border:0;
+    }
+    .ats-note{
+      border-radius:18px;
+      border:1px solid rgba(245,200,111,.22);
+      background:rgba(245,200,111,.10);
+      color:#f6e5ba;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:900;
+    }
+    @media(max-width:900px){
+      .ats-form-grid{grid-template-columns:1fr}
+      .ats-actions{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
@@ -967,6 +1084,14 @@
                 <p>النشر العادي مجاني. الصدارة والتمييز تحتاج إكسز للظهور أعلى بوابات الوظائف والخدمات.</p>
                 <button type="button" class="xs-mini-btn" onclick="openXsStore()">شراء إكسز</button>
               </div>
+
+              <div class="ats-entry-card">
+                <span class="ats-cost-badge">35 Xs</span>
+                <h3>صناعة سيرة ذاتية ATS</h3>
+                <p>أنشئ سيرة احترافية متوافقة مع أنظمة الفرز ATS باستخدام الإكسز.</p>
+                <button type="button" class="xs-mini-btn" onclick="openAtsCvBuilder()">ابدأ صناعة السيرة</button>
+              </div>
+
               <div class="myads-toolbar">
                 <button type="button" class="myads-filter active" data-ads-filter="all">الكل</button>
                 <button type="button" class="myads-filter" data-ads-filter="published">منشور</button>
@@ -1945,7 +2070,7 @@
     ];
 
     function updateXsBalanceUI(){
-      const ids = ['xsBalance','promoXsBalance'];
+      const ids = ['xsBalance','promoXsBalance','atsXsBalance'];
       ids.forEach(id=>{
         const el = document.getElementById(id);
         if(el) el.textContent = Number(myAdsState.xsBalance || 0).toLocaleString('en-US');
@@ -2088,6 +2213,157 @@
 
     updateXsBalanceUI();
 
+
+
+    const ATS_CV_COST = 35;
+    let atsCvGeneratedText = '';
+
+    function openAtsCvBuilder(){
+      updateXsBalanceUI();
+      showOverlay('atsCvOverlay');
+    }
+
+    function closeAtsCvBuilder(){
+      hideOverlay('atsCvOverlay');
+    }
+
+    function atsVal(id){
+      return (document.getElementById(id)?.value || '').trim();
+    }
+
+    function generateAtsCv(){
+      const name = atsVal('atsName');
+      const title = atsVal('atsTitle');
+
+      if(!name || !title){
+        showMiniNotice('اكتب الاسم الكامل والمسمى المهني أولًا.');
+        return;
+      }
+
+      if(myAdsState.xsBalance < ATS_CV_COST){
+        showMiniNotice('رصيد الإكسز غير كافٍ لصناعة السيرة. سيتم فتح باقات الشحن.');
+        openXsStore();
+        return;
+      }
+
+      myAdsState.xsBalance -= ATS_CV_COST;
+      updateXsBalanceUI();
+
+      const lang = atsVal('atsLang') || 'en';
+      const data = {
+        name,
+        title,
+        email: atsVal('atsEmail'),
+        phone: atsVal('atsPhone'),
+        city: atsVal('atsCity'),
+        link: atsVal('atsLink'),
+        summary: atsVal('atsSummary'),
+        skills: atsVal('atsSkills'),
+        experience: atsVal('atsExperience'),
+        education: atsVal('atsEducation'),
+        certs: atsVal('atsCerts'),
+        lang
+      };
+
+      atsCvGeneratedText = buildAtsCvText(data);
+      renderAtsPreview(data);
+      showMiniNotice('تم إنشاء السيرة وخصم ' + ATS_CV_COST + ' Xs.');
+    }
+
+    function buildAtsCvText(data){
+      const contact = [data.city, data.phone, data.email, data.link].filter(Boolean).join(' | ');
+      const sections = [];
+      sections.push(data.name);
+      sections.push(data.title);
+      if(contact) sections.push(contact);
+      if(data.summary) sections.push('\\nPROFESSIONAL SUMMARY\\n' + data.summary);
+      if(data.skills) sections.push('\\nSKILLS\\n' + data.skills);
+      if(data.experience) sections.push('\\nWORK EXPERIENCE\\n' + data.experience);
+      if(data.education) sections.push('\\nEDUCATION\\n' + data.education);
+      if(data.certs) sections.push('\\nCERTIFICATIONS\\n' + data.certs);
+      return sections.join('\\n');
+    }
+
+    function renderAtsPreview(data){
+      const contact = [data.city, data.phone, data.email, data.link].filter(Boolean).join(' | ');
+      const skills = data.skills ? data.skills.split(',').map(s=>s.trim()).filter(Boolean) : [];
+      const preview = document.getElementById('atsPreview');
+
+      const section = (title, body) => body ? `<h2>${safeText(title)}</h2><p>${safeText(body).replace(/\\n/g,'<br>')}</p>` : '';
+      const skillsHtml = skills.length ? `<h2>Skills</h2><ul>${skills.map(s=>`<li>${safeText(s)}</li>`).join('')}</ul>` : '';
+
+      preview.innerHTML = `
+        <h1>${safeText(data.name)}</h1>
+        <p><strong>${safeText(data.title)}</strong></p>
+        ${contact ? `<p class="contact-line">${safeText(contact)}</p>` : ''}
+        ${section('Professional Summary', data.summary)}
+        ${skillsHtml}
+        ${section('Work Experience', data.experience)}
+        ${section('Education', data.education)}
+        ${section('Certifications', data.certs)}
+      `;
+    }
+
+    function copyAtsCv(){
+      if(!atsCvGeneratedText){
+        showMiniNotice('أنشئ السيرة أولًا.');
+        return;
+      }
+      navigator.clipboard?.writeText(atsCvGeneratedText).then(()=>{
+        showMiniNotice('تم نسخ السيرة.');
+      }).catch(()=>{
+        showMiniNotice('لم يتم النسخ تلقائيًا. يمكنك تحديد النص ونسخه يدويًا.');
+      });
+    }
+
+    function downloadAtsCv(){
+      if(!atsCvGeneratedText){
+        showMiniNotice('أنشئ السيرة أولًا.');
+        return;
+      }
+      const name = atsVal('atsName') || 'ats-cv';
+      const blob = new Blob([atsCvGeneratedText], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name.replace(/\s+/g,'-').toLowerCase() + '-ats-cv.txt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function printAtsCv(){
+      const preview = document.getElementById('atsPreview');
+      if(!atsCvGeneratedText){
+        showMiniNotice('أنشئ السيرة أولًا.');
+        return;
+      }
+      const w = window.open('', '_blank');
+      w.document.write('<html><head><title>ATS CV</title><style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}</style></head><body>' + preview.innerHTML + '</body></html>');
+      w.document.close();
+      w.focus();
+      w.print();
+    }
+
+    function clearAtsForm(){
+      ['atsName','atsTitle','atsEmail','atsPhone','atsCity','atsLink','atsSummary','atsSkills','atsExperience','atsEducation','atsCerts'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.value = '';
+      });
+      atsCvGeneratedText = '';
+      document.getElementById('atsPreview').innerHTML = '<h1>ATS CV Preview</h1><p class="contact-line">Fill the form and click Generate.</p><h2>Professional Summary</h2><p>Your professional summary will appear here.</p>';
+    }
+
+    document.getElementById('atsCvOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeAtsCvBuilder();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('atsCvOverlay')?.classList.contains('show')) return closeAtsCvBuilder();
+    });
+
 </script>
 
   <div class="overlay" id="myAdPreviewOverlay" aria-hidden="true">
@@ -2155,6 +2431,84 @@
           <p id="promoAdTitle">الإعلان المختار</p>
         </div>
         <section class="promotion-options" id="promotionOptions"></section>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="atsCvOverlay" aria-hidden="true">
+    <section class="window" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">📄</div><div><h2>صناعة سيرة ذاتية ATS</h2><p>مرتبطة بمحفظة الإكسز Xs</p></div></div>
+        <button class="close-btn" onclick="closeAtsCvBuilder()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="cinema-layout">
+          <div class="cinema-main">
+            <section class="job-hero-panel">
+              <div class="tag">ATS CV · احترافية · جاهزة للفرز الآلي</div>
+              <h3>أنشئ سيرة ذاتية منظمة خلال دقائق.</h3>
+              <p>املأ البيانات وسيتم توليد سيرة بصيغة ATS واضحة وبسيطة. تكلفة الإنشاء 35 Xs.</p>
+            </section>
+
+            <div class="ats-note">
+              نصيحة: سيرة ATS الأفضل تكون بدون زخارف كثيرة، بعناوين واضحة، وكلمات مفتاحية مناسبة للوظيفة.
+            </div>
+
+            <div class="section-mini-head"><h3>البيانات الأساسية</h3><span>الحقول الفارغة لا تظهر</span></div>
+            <div class="ats-form-grid">
+              <div class="field"><label>الاسم الكامل</label><input id="atsName" placeholder="مثال: Mustafa Abdulbaqi"></div>
+              <div class="field"><label>المسمى المهني</label><input id="atsTitle" placeholder="مثال: Operations Manager"></div>
+              <div class="field"><label>البريد الإلكتروني</label><input id="atsEmail" placeholder="email@example.com"></div>
+              <div class="field"><label>رقم الجوال</label><input id="atsPhone" placeholder="05xxxxxxxx"></div>
+              <div class="field"><label>المدينة</label><input id="atsCity" placeholder="Riyadh, Saudi Arabia"></div>
+              <div class="field"><label>رابط لينكدإن / موقع</label><input id="atsLink" placeholder="اختياري"></div>
+              <div class="field full"><label>الملخص المهني</label><textarea id="atsSummary" placeholder="اكتب 3 إلى 5 أسطر عن خبرتك ونقاط قوتك..."></textarea></div>
+              <div class="field full"><label>المهارات</label><textarea id="atsSkills" placeholder="اكتب المهارات مفصولة بفواصل: Excel, Team Leadership, Maintenance Operations"></textarea></div>
+              <div class="field full"><label>الخبرات العملية</label><textarea id="atsExperience" placeholder="مثال:
+Operations Manager - Tasneef FM - 2024 to Present
+- Managed daily operations across multiple facilities
+- Improved response time for maintenance requests"></textarea></div>
+              <div class="field full"><label>التعليم</label><textarea id="atsEducation" placeholder="مثال:
+Bachelor of Business Administration - King Saud University - 2020"></textarea></div>
+              <div class="field full"><label>الشهادات / الدورات</label><textarea id="atsCerts" placeholder="اختياري"></textarea></div>
+              <div class="field full"><label>اللغة المفضلة للسيرة</label><select id="atsLang"><option value="en">English ATS CV</option><option value="ar">Arabic ATS CV</option></select></div>
+            </div>
+
+            <div class="submit-row">
+              <button type="button" class="primary" onclick="generateAtsCv()">إنشاء السيرة - 35 Xs</button>
+              <button type="button" onclick="clearAtsForm()">تفريغ البيانات</button>
+            </div>
+          </div>
+
+          <aside class="cinema-side">
+            <section class="side-card">
+              <h3>محفظة الإكسز</h3>
+              <div class="xs-wallet-card">
+                <div class="xs-wallet-top">
+                  <div class="xs-wallet-title"><span class="xs-token">Xs</span><span>رصيدك</span></div>
+                  <div class="xs-balance"><span id="atsXsBalance">0</span> Xs</div>
+                </div>
+                <p>إذا الرصيد غير كافٍ ستظهر لك باقات الشحن مباشرة.</p>
+              </div>
+            </section>
+
+            <section class="side-card">
+              <h3>معاينة ATS</h3>
+              <div id="atsPreview" class="ats-cv-preview">
+                <h1>ATS CV Preview</h1>
+                <p class="contact-line">Fill the form and click Generate.</p>
+                <h2>Professional Summary</h2>
+                <p>Your professional summary will appear here.</p>
+              </div>
+              <div class="ats-actions">
+                <button type="button" class="primary" onclick="copyAtsCv()">نسخ</button>
+                <button type="button" onclick="downloadAtsCv()">تنزيل TXT</button>
+                <button type="button" onclick="printAtsCv()">طباعة</button>
+              </div>
+            </section>
+          </aside>
+        </div>
       </div>
     </section>
   </div>
