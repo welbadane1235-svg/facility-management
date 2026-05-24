@@ -462,6 +462,172 @@
       .preview-row{display:grid}
     }
 
+  
+    /* Xs Wallet & Promotion V22 */
+    .xs-wallet-card{
+      border-radius:24px;
+      border:1px solid rgba(0,229,197,.20);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(0,184,212,.12),transparent 34%),
+        linear-gradient(135deg,rgba(0,229,197,.10),rgba(255,255,255,.04));
+      padding:14px;
+      display:grid;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .xs-wallet-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .xs-wallet-title{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      color:#F2F5F7;
+    }
+    .xs-token{
+      width:34px;
+      height:34px;
+      border-radius:13px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      font-weight:900;
+      box-shadow:0 10px 28px rgba(0,229,197,.18);
+    }
+    .xs-balance{
+      font-size:24px;
+      font-weight:900;
+      color:#A7F3E1;
+      direction:ltr;
+    }
+    .xs-wallet-card p{
+      color:#A9B0B8;
+      font-size:12px;
+      font-weight:800;
+    }
+    .xs-mini-btn{
+      min-height:38px;
+      border:0;
+      border-radius:14px;
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      font-weight:900;
+      cursor:pointer;
+      font-family:inherit;
+    }
+    .promoted-badge{
+      background:linear-gradient(135deg,#F5C86F,#FFE9A8)!important;
+      color:#10130E!important;
+    }
+    .xs-packages{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+    .xs-package{
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.055);
+      padding:14px;
+      display:grid;
+      gap:8px;
+      text-align:center;
+      cursor:pointer;
+      color:#fff;
+      font-family:inherit;
+    }
+    .xs-package:hover,
+    .xs-package.active{
+      outline:2px solid rgba(0,229,197,.45);
+      background:rgba(0,229,197,.10);
+    }
+    .xs-package strong{
+      font-size:22px;
+      color:#A7F3E1;
+      direction:ltr;
+    }
+    .xs-package span{
+      color:#A9B0B8;
+      font-size:12px;
+      font-weight:900;
+    }
+    .promotion-options{
+      display:grid;
+      gap:10px;
+    }
+    .promotion-option{
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.055);
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+    .promotion-option-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .promotion-option h3{
+      font-size:18px;
+      font-weight:900;
+      line-height:1.25;
+    }
+    .promotion-option p{
+      color:#A9B0B8;
+      font-size:13px;
+      font-weight:800;
+    }
+    .xs-cost{
+      border-radius:999px;
+      background:rgba(0,229,197,.12);
+      border:1px solid rgba(0,229,197,.18);
+      color:#A7F3E1;
+      padding:6px 10px;
+      font-weight:900;
+      white-space:nowrap;
+      direction:ltr;
+    }
+    .pay-card{
+      display:grid;
+      gap:10px;
+    }
+    .pay-card input{
+      height:48px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:#0A1114;
+      color:#fff;
+      padding:0 12px;
+      outline:none;
+      font-weight:800;
+      font-family:inherit;
+    }
+    .pay-card-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .xs-info-box{
+      border-radius:18px;
+      border:1px solid rgba(245,200,111,.22);
+      background:rgba(245,200,111,.10);
+      color:#f6e5ba;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:900;
+    }
+    @media(max-width:520px){
+      .xs-packages{grid-template-columns:1fr}
+      .pay-card-row{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
@@ -793,6 +959,14 @@
 
             <section class="side-card">
               <h3>إعلاناتي الحالية</h3>
+              <div class="xs-wallet-card">
+                <div class="xs-wallet-top">
+                  <div class="xs-wallet-title"><span class="xs-token">Xs</span><span>محفظة الإكسز</span></div>
+                  <div class="xs-balance"><span id="xsBalance">0</span> Xs</div>
+                </div>
+                <p>النشر العادي مجاني. الصدارة والتمييز تحتاج إكسز للظهور أعلى بوابات الوظائف والخدمات.</p>
+                <button type="button" class="xs-mini-btn" onclick="openXsStore()">شراء إكسز</button>
+              </div>
               <div class="myads-toolbar">
                 <button type="button" class="myads-filter active" data-ads-filter="all">الكل</button>
                 <button type="button" class="myads-filter" data-ads-filter="published">منشور</button>
@@ -1426,7 +1600,7 @@
 
 
 
-    const myAdsState = { type:'job', ads: [], editingId:null, filter:'all' };
+    const myAdsState = { type:'job', ads: [], editingId:null, filter:'all', xsBalance:0, selectedPackage:null, promotingAdId:null };
 
     function openMyAdsModal(){
       setActive('post');
@@ -1576,7 +1750,10 @@
               <h4>${safeText(ad.title)}</h4>
               <p>${adTypeLabel(ad.type)} · ${safeText(ad.portalLabel || '')} · ${safeText(ad.createdAt || '')}</p>
             </div>
-            <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+            <div style="display:grid;gap:6px;justify-items:start">
+              <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+              ${ad.promoted ? `<span class="status-badge promoted-badge">بالصدارة</span>` : ''}
+            </div>
           </div>
           <div class="meta-list">
             ${ad.city ? `<span class="meta-pill">${safeText(ad.city)}</span>` : ''}
@@ -1614,7 +1791,10 @@
 
       document.getElementById('myAdPreviewContent').innerHTML = `
         <div class="preview-hero">
-          <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+          <div style="display:grid;gap:6px;justify-items:start">
+              <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+              ${ad.promoted ? `<span class="status-badge promoted-badge">بالصدارة</span>` : ''}
+            </div>
           <h3>${safeText(ad.title)}</h3>
           <p>${safeText(ad.description || 'لا يوجد وصف.')}</p>
           <div class="meta-list">
@@ -1709,7 +1889,14 @@
     });
 
     function featureMyAd(id){
-      alert('سيتم ربط التمييز لاحقًا بالكوينز والمحفظة.');
+      const ad = myAdsState.ads.find(x=>x.id===id);
+      if(!ad) return;
+      if(ad.status !== 'published'){
+        showMiniNotice('يجب نشر الإعلان أولًا قبل تفعيل الصدارة.');
+        return;
+      }
+      myAdsState.promotingAdId = id;
+      openPromotionModal(id);
     }
 
     document.addEventListener('input', function(e){
@@ -1743,6 +1930,164 @@
       if(document.getElementById('myAdPreviewOverlay')?.classList.contains('show')) return closeMyAdPreview();
     });
 
+
+
+    const xsPackages = [
+      {id:'starter', name:'Starter 100', xs:100, price:49, label:'مناسبة لتجربة الصدارة'},
+      {id:'growth', name:'Growth 300', xs:300, price:129, label:'الأكثر توازنًا'},
+      {id:'pro', name:'Pro 750', xs:750, price:299, label:'للإعلانات المتعددة'}
+    ];
+
+    const promotionPlans = [
+      {id:'top24', title:'صدارة 24 ساعة', cost:25, desc:'يظهر الإعلان أعلى القسم لمدة يوم كامل.'},
+      {id:'top7', title:'صدارة 7 أيام', cost:120, desc:'يظهر الإعلان أعلى القسم لمدة أسبوع.'},
+      {id:'featured', title:'تمييز بصري', cost:45, desc:'يحصل الإعلان على شارة مميز وتصميم بارز داخل البوابة.'}
+    ];
+
+    function updateXsBalanceUI(){
+      const ids = ['xsBalance','promoXsBalance'];
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.textContent = Number(myAdsState.xsBalance || 0).toLocaleString('en-US');
+      });
+    }
+
+    function openXsStore(){
+      renderXsPackages();
+      showOverlay('xsStoreOverlay');
+    }
+
+    function closeXsStore(){
+      hideOverlay('xsStoreOverlay');
+    }
+
+    function renderXsPackages(){
+      const box = document.getElementById('xsPackages');
+      if(!box) return;
+      box.innerHTML = xsPackages.map(pkg=>`
+        <button type="button" class="xs-package" onclick="selectXsPackage('${pkg.id}')">
+          <strong>${pkg.xs} Xs</strong>
+          <span>${pkg.name}</span>
+          <span>${pkg.price} ريال</span>
+          <span>${pkg.label}</span>
+        </button>
+      `).join('');
+    }
+
+    function selectXsPackage(packageId){
+      const pkg = xsPackages.find(x=>x.id===packageId);
+      if(!pkg) return;
+      myAdsState.selectedPackage = pkg;
+
+      document.getElementById('selectedPackageTitle').textContent = pkg.name;
+      document.getElementById('selectedPackageSummary').innerHTML = `
+        <span class="status-badge promoted-badge">الحزمة المختارة</span>
+        <h3>${pkg.name}</h3>
+        <p>ستحصل على ${pkg.xs} Xs مقابل ${pkg.price} ريال. بعد الدفع يظهر الرصيد مباشرة في محفظتك.</p>
+        <div class="meta-list">
+          <span class="meta-pill">${pkg.xs} Xs</span>
+          <span class="meta-pill">${pkg.price} ريال</span>
+        </div>
+      `;
+      showOverlay('xsPaymentOverlay');
+    }
+
+    function closeXsPayment(){
+      hideOverlay('xsPaymentOverlay');
+    }
+
+    function confirmXsPayment(){
+      const pkg = myAdsState.selectedPackage;
+      if(!pkg){
+        showMiniNotice('اختر الحزمة أولًا.');
+        return;
+      }
+
+      const cardNumber = (document.getElementById('cardNumber')?.value || '').trim();
+      if(cardNumber.length < 8){
+        showMiniNotice('أدخل بيانات البطاقة للتجربة.');
+        return;
+      }
+
+      myAdsState.xsBalance += pkg.xs;
+      updateXsBalanceUI();
+      closeXsPayment();
+      closeXsStore();
+      showMiniNotice('تم شحن ' + pkg.xs + ' Xs بنجاح. الحزمة: ' + pkg.name);
+    }
+
+    function openPromotionModal(adId){
+      const ad = myAdsState.ads.find(x=>x.id===adId);
+      if(!ad) return;
+      updateXsBalanceUI();
+      document.getElementById('promoAdTitle').textContent = 'الإعلان: ' + ad.title + ' · ' + (ad.portalLabel || '');
+      renderPromotionOptions(ad);
+      showOverlay('promotionOverlay');
+    }
+
+    function closePromotionModal(){
+      hideOverlay('promotionOverlay');
+    }
+
+    function renderPromotionOptions(ad){
+      const box = document.getElementById('promotionOptions');
+      if(!box) return;
+      box.innerHTML = promotionPlans.map(plan=>`
+        <article class="promotion-option">
+          <div class="promotion-option-top">
+            <div>
+              <h3>${plan.title}</h3>
+              <p>${plan.desc}</p>
+            </div>
+            <span class="xs-cost">${plan.cost} Xs</span>
+          </div>
+          <button type="button" class="view-btn" onclick="activatePromotion('${plan.id}')">تفعيل الصدارة</button>
+        </article>
+      `).join('');
+    }
+
+    function activatePromotion(planId){
+      const plan = promotionPlans.find(p=>p.id===planId);
+      const ad = myAdsState.ads.find(x=>x.id===myAdsState.promotingAdId);
+      if(!plan || !ad) return;
+
+      if(myAdsState.xsBalance < plan.cost){
+        showMiniNotice('رصيد الإكسز غير كافٍ. اختر حزمة شحن لإكمال الصدارة.');
+        openXsStore();
+        return;
+      }
+
+      myAdsState.xsBalance -= plan.cost;
+      ad.promoted = true;
+      ad.promotionPlan = plan.title;
+      ad.promotionCost = plan.cost;
+      ad.promotedAt = new Date().toLocaleString('ar-SA');
+
+      updateXsBalanceUI();
+      closePromotionModal();
+      renderMyAdsList();
+      showMiniNotice('تم تفعيل ' + plan.title + ' للإعلان بنجاح.');
+    }
+
+    document.getElementById('xsStoreOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeXsStore();
+    });
+    document.getElementById('xsPaymentOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeXsPayment();
+    });
+    document.getElementById('promotionOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closePromotionModal();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('xsPaymentOverlay')?.classList.contains('show')) return closeXsPayment();
+      if(document.getElementById('xsStoreOverlay')?.classList.contains('show')) return closeXsStore();
+      if(document.getElementById('promotionOverlay')?.classList.contains('show')) return closePromotionModal();
+    });
+
+    updateXsBalanceUI();
+
 </script>
 
   <div class="overlay" id="myAdPreviewOverlay" aria-hidden="true">
@@ -1753,6 +2098,63 @@
       </header>
       <div class="window-body">
         <section id="myAdPreviewContent" class="preview-modal-card"></section>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="xsStoreOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">Xs</div><div><h2>شراء الإكسز</h2><p>اختر حزمة الشحن المناسبة</p></div></div>
+        <button class="close-btn" onclick="closeXsStore()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="xs-info-box">الإكسز تستخدم لتفعيل الصدارة والتمييز. النشر العادي للإعلانات يبقى مجانيًا.</div>
+        <section class="xs-packages" id="xsPackages"></section>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="xsPaymentOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">💳</div><div><h2>دفع مباشر بالبطاقة</h2><p id="selectedPackageTitle">الحزمة المختارة</p></div></div>
+        <button class="close-btn" onclick="closeXsPayment()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="preview-hero" id="selectedPackageSummary"></div>
+        <div class="pay-card">
+          <input id="cardName" placeholder="اسم حامل البطاقة">
+          <input id="cardNumber" inputmode="numeric" placeholder="رقم البطاقة">
+          <div class="pay-card-row">
+            <input id="cardExpiry" placeholder="MM/YY">
+            <input id="cardCvv" inputmode="numeric" placeholder="CVV">
+          </div>
+          <div class="submit-row">
+            <button type="button" class="primary" onclick="confirmXsPayment()">تأكيد الدفع</button>
+            <button type="button" onclick="closeXsPayment()">إلغاء</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="promotionOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">🚀</div><div><h2>تفعيل الصدارة</h2><p>اختر نوع تمييز الإعلان</p></div></div>
+        <button class="close-btn" onclick="closePromotionModal()">×</button>
+      </header>
+      <div class="window-body">
+        <div class="xs-wallet-card">
+          <div class="xs-wallet-top">
+            <div class="xs-wallet-title"><span class="xs-token">Xs</span><span>رصيدك الحالي</span></div>
+            <div class="xs-balance"><span id="promoXsBalance">0</span> Xs</div>
+          </div>
+          <p id="promoAdTitle">الإعلان المختار</p>
+        </div>
+        <section class="promotion-options" id="promotionOptions"></section>
       </div>
     </section>
   </div>
