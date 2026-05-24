@@ -63,6 +63,30 @@
     .payment-note{color:#9db7ab;font-size:12px;font-weight:800;text-align:center;margin-top:8px}
     .service-message{border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);padding:12px;color:#c9ddd4;font-weight:800;font-size:13px}
 
+  
+    /* Smart Platform Messaging */
+    .chat-shell{display:grid;grid-template-rows:auto 1fr auto;gap:12px;min-height:460px}
+    .chat-top-card{border-radius:22px;border:1px solid rgba(32,223,159,.18);background:linear-gradient(135deg,rgba(32,223,159,.10),rgba(69,199,244,.06));padding:14px;display:grid;gap:6px}
+    .chat-top-card h3{font-size:20px;font-weight:900;line-height:1.25}
+    .chat-top-card p{color:#9db7ab;font-size:13px;font-weight:800}
+    .chat-policy{border-radius:18px;border:1px solid rgba(246,200,111,.24);background:rgba(246,200,111,.10);color:#f6e5ba;padding:10px 12px;font-size:12px;font-weight:900}
+    .chat-messages{border-radius:24px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);padding:14px;display:grid;gap:10px;max-height:320px;overflow:auto}
+    .msg{max-width:86%;border-radius:18px;padding:10px 12px;font-size:13px;font-weight:800;line-height:1.55}
+    .msg.system{max-width:100%;background:rgba(246,200,111,.10);border:1px solid rgba(246,200,111,.20);color:#f6e5ba;text-align:center}
+    .msg.me{margin-right:auto;background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d}
+    .msg.other{margin-left:auto;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.10);color:#fff}
+    .msg small{display:block;margin-top:4px;opacity:.7;font-size:10px;font-weight:900}
+    .chat-compose{border-radius:24px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);padding:12px;display:grid;gap:10px}
+    .chat-compose textarea{width:100%;min-height:96px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:#07120e;color:#fff;padding:12px;resize:vertical;outline:none;font-family:inherit;font-size:14px;font-weight:800}
+    .chat-compose textarea::placeholder{color:#8ea69c}
+    .chat-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .chat-actions button{min-height:46px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-weight:900;cursor:pointer}
+    .chat-actions button.primary{background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;border:0}
+    .offer-box{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .offer-box input{height:46px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:#07120e;color:#fff;padding:0 12px;outline:none;font-weight:800}
+    .offer-box input::placeholder{color:#8ea69c}
+    .status-pill{display:inline-flex;width:max-content;align-items:center;gap:6px;border-radius:999px;background:rgba(32,223,159,.13);border:1px solid rgba(32,223,159,.18);color:#b7ffe5;padding:5px 10px;font-size:11px;font-weight:900}
+
   </style>
 </head>
 <body>
@@ -388,6 +412,7 @@
     ];
 
     const serviceState = { globalType:'all', category:'all', categoryType:'all' };
+    let currentServiceDetailId = null;
 
     function openServicesModal(){
       setActive('services');
@@ -484,6 +509,7 @@
     function servicePill(value){return value ? `<span class="meta-pill">${value}</span>` : '';}
 
     function openServiceDetailModal(id){
+      currentServiceDetailId = id;
       const item = servicesRecords.find(r=>r.id===id);
       if(!item) return;
 
@@ -521,7 +547,7 @@
 
         <div class="detail-actions">
           <a class="primary" href="#" onclick="openPaymentModal(${item.id}); return false;">${payButtonText}</a>
-          <a href="#" onclick="alert('سيتم فتح محادثة داخل المنصة لاحقًا.'); return false;">مراسلة داخل المنصة</a>
+          <a href="#" onclick="openPlatformChat(currentServiceDetailId); return false;">مراسلة داخل المنصة</a>
         </div>
       `;
       showOverlay('serviceDetailOverlay');
@@ -586,6 +612,115 @@
       if(document.getElementById('serviceDetailOverlay')?.classList.contains('show')) return closeServiceDetailModal();
       if(document.getElementById('serviceCategoryOverlay')?.classList.contains('show')) return closeServiceCategoryModal();
       if(document.getElementById('servicesOverlay')?.classList.contains('show')) return closeServicesModal();
+    });
+
+
+
+    const chatThreads = {};
+
+    function safeText(value){
+      return String(value || '').replace(/[<>&]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]));
+    }
+
+    function openPlatformChat(serviceId){
+      const item = servicesRecords.find(r => r.id === serviceId);
+      if(!item) return;
+
+      currentServiceDetailId = serviceId;
+      document.getElementById('chatServiceTitle').textContent = item.title;
+      document.getElementById('chatServiceSummary').textContent = item.summary || 'محادثة داخل المنصة حول هذه الخدمة.';
+      document.getElementById('chatStatus').textContent = item.type === 'provider' ? 'طلب خدمة من مقدم خدمة' : 'تقديم عرض على طلب خدمة';
+
+      if(!chatThreads[serviceId]){
+        chatThreads[serviceId] = [
+          {from:'system', text:'تم إنشاء قناة مراسلة داخل HireX لهذه الخدمة. يرجى عدم مشاركة أرقام الهاتف أو روابط الدفع الخارجية.'},
+          {from:'other', text:item.type === 'provider' ? 'مرحبًا، يمكنك إرسال تفاصيل طلبك أو الاستفسار عن الخدمة قبل الدفع.' : 'مرحبًا، يمكنك تقديم عرضك للعميل مع السعر ومدة التنفيذ.'}
+        ];
+      }
+
+      document.getElementById('chatText').value = '';
+      document.getElementById('offerAmount').value = '';
+      document.getElementById('offerDays').value = '';
+      renderPlatformChat(serviceId);
+      showOverlay('platformChatOverlay');
+    }
+
+    function closePlatformChat(){
+      hideOverlay('platformChatOverlay');
+    }
+
+    function renderPlatformChat(serviceId){
+      const box = document.getElementById('chatMessages');
+      const thread = chatThreads[serviceId] || [];
+      box.innerHTML = thread.map(m => {
+        const cls = m.from === 'system' ? 'system' : m.from === 'me' ? 'me' : 'other';
+        return `<div class="msg ${cls}">${safeText(m.text)}<small>${m.from === 'me' ? 'أنت' : m.from === 'system' ? 'النظام' : 'الطرف الآخر'}</small></div>`;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendPlatformMessage(){
+      const serviceId = currentServiceDetailId;
+      if(!serviceId) return;
+      const text = document.getElementById('chatText').value.trim();
+      if(!text){
+        alert('اكتب رسالة أولًا.');
+        return;
+      }
+
+      if(containsExternalContact(text)){
+        alert('لا يمكن إرسال أرقام هاتف أو روابط خارجية. التواصل يجب أن يتم داخل المنصة.');
+        return;
+      }
+
+      chatThreads[serviceId] = chatThreads[serviceId] || [];
+      chatThreads[serviceId].push({from:'me', text});
+      document.getElementById('chatText').value = '';
+      renderPlatformChat(serviceId);
+    }
+
+    function sendPlatformOffer(){
+      const serviceId = currentServiceDetailId;
+      if(!serviceId) return;
+
+      const amount = document.getElementById('offerAmount').value.trim();
+      const days = document.getElementById('offerDays').value.trim();
+      const note = document.getElementById('chatText').value.trim();
+
+      if(!amount || Number(amount) <= 0){
+        alert('اكتب سعر العرض بشكل صحيح.');
+        return;
+      }
+
+      if(note && containsExternalContact(note)){
+        alert('لا يمكن إرسال أرقام هاتف أو روابط خارجية. التواصل يجب أن يتم داخل المنصة.');
+        return;
+      }
+
+      const msg = `عرض خدمة: السعر ${amount} ريال${days ? '، مدة التنفيذ ' + days + ' يوم' : ''}${note ? ' — ملاحظة: ' + note : ''}`;
+      chatThreads[serviceId] = chatThreads[serviceId] || [];
+      chatThreads[serviceId].push({from:'me', text:msg});
+      chatThreads[serviceId].push({from:'system', text:'تم تسجيل العرض داخل المنصة. عند قبول العرض والدفع، سيتم خصم عمولة HireX وتحويل الصافي بعد اعتماد التنفيذ.'});
+
+      document.getElementById('offerAmount').value = '';
+      document.getElementById('offerDays').value = '';
+      document.getElementById('chatText').value = '';
+      renderPlatformChat(serviceId);
+    }
+
+    function containsExternalContact(text){
+      const hasPhone = /(\+?\d[\d\s\-]{7,}\d)/.test(text);
+      const hasUrl = /(https?:\/\/|www\.|wa\.me|t\.me|snapchat|instagram|@)/i.test(text);
+      return hasPhone || hasUrl;
+    }
+
+    document.getElementById('platformChatOverlay').addEventListener('click', function(e){
+      if(e.target === this) closePlatformChat();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('platformChatOverlay')?.classList.contains('show')) return closePlatformChat();
     });
 
 </script>
@@ -672,6 +807,40 @@
       </header>
       <div class="window-body">
         <div id="paymentContent"></div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="platformChatOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">💬</div><div><h2>مراسلة داخل المنصة</h2><p>تواصل آمن قبل الدفع وبعده</p></div></div>
+        <button class="close-btn" onclick="closePlatformChat()">×</button>
+      </header>
+      <div class="window-body">
+        <section class="chat-shell">
+          <div class="chat-top-card">
+            <span class="status-pill" id="chatStatus">طلب خدمة قيد النقاش</span>
+            <h3 id="chatServiceTitle">عنوان الخدمة</h3>
+            <p id="chatServiceSummary">تفاصيل مختصرة عن الطلب.</p>
+            <div class="chat-policy">سياسة HireX: يمنع تبادل أرقام الهاتف أو روابط خارجية قبل إتمام الطلب داخل المنصة. الدفع والتحويل يتمان عبر المنصة لضمان العمولة وحماية الطرفين.</div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <div class="chat-compose">
+            <div class="offer-box">
+              <input id="offerAmount" inputmode="numeric" placeholder="عرض السعر / ريال">
+              <input id="offerDays" inputmode="numeric" placeholder="مدة التنفيذ / يوم">
+            </div>
+            <textarea id="chatText" placeholder="اكتب رسالتك هنا... مثال: أقدر تنفيذ الخدمة خلال يومين، والسعر يشمل مراجعة واحدة."></textarea>
+            <div class="chat-actions">
+              <button class="primary" onclick="sendPlatformMessage()">إرسال رسالة</button>
+              <button onclick="sendPlatformOffer()">إرسال عرض</button>
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   </div>
