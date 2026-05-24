@@ -357,6 +357,111 @@
     .brand h1 span{background:linear-gradient(135deg,#00E5C5,#00B8D4);-webkit-background-clip:text;background-clip:text;color:transparent}
     .brand p{font-size:12px;color:#8FA1A9;font-weight:800;margin-top:6px}
 
+  
+    /* My Ads Professional Manager V21 */
+    .myads-toolbar{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .myads-filter{
+      min-height:38px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.055);
+      color:#9db7ab;
+      font-weight:900;
+      cursor:pointer;
+      font-family:inherit;
+    }
+    .myads-filter.active{
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#07110E;
+      border:0;
+    }
+    .editing-banner{
+      display:none;
+      border-radius:18px;
+      border:1px solid rgba(245,200,111,.25);
+      background:rgba(245,200,111,.10);
+      color:#f6e5ba;
+      padding:10px 12px;
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+    .editing-banner.show{display:block}
+    .myad-card.editing{
+      outline:2px solid rgba(245,200,111,.55);
+      background:linear-gradient(135deg,rgba(245,200,111,.11),rgba(255,255,255,.04));
+    }
+    .myad-actions{
+      grid-template-columns:repeat(4,1fr)!important;
+    }
+    .danger-btn{
+      color:#ffd8df!important;
+      border-color:rgba(251,113,133,.25)!important;
+      background:rgba(251,113,133,.10)!important;
+    }
+    .review-btn{
+      color:#dff7ff!important;
+      border-color:rgba(0,184,212,.25)!important;
+      background:rgba(0,184,212,.10)!important;
+    }
+    .preview-modal-card{
+      display:grid;
+      gap:12px;
+    }
+    .preview-hero{
+      border-radius:24px;
+      border:1px solid rgba(0,229,197,.18);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(0,184,212,.12),transparent 34%),
+        linear-gradient(135deg,rgba(0,229,197,.09),rgba(255,255,255,.04));
+      padding:16px;
+      display:grid;
+      gap:8px;
+    }
+    .preview-hero h3{
+      font-size:24px;
+      line-height:1.2;
+      font-weight:900;
+    }
+    .preview-hero p{
+      color:#A9B0B8;
+      font-size:14px;
+      font-weight:800;
+    }
+    .preview-details{
+      display:grid;
+      gap:8px;
+    }
+    .preview-row{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-weight:900;
+    }
+    .preview-row span:first-child{
+      color:#A7F3E1;
+      font-size:12px;
+    }
+    .preview-row span:last-child{
+      color:#fff;
+      text-align:left;
+      word-break:break-word;
+    }
+    @media(max-width:520px){
+      .myads-toolbar,.myad-actions{grid-template-columns:1fr!important}
+      .preview-row{display:grid}
+    }
+
   </style>
 </head>
 <body>
@@ -688,6 +793,12 @@
 
             <section class="side-card">
               <h3>إعلاناتي الحالية</h3>
+              <div class="myads-toolbar">
+                <button type="button" class="myads-filter active" data-ads-filter="all">الكل</button>
+                <button type="button" class="myads-filter" data-ads-filter="published">منشور</button>
+                <button type="button" class="myads-filter" data-ads-filter="draft">مسودة</button>
+              </div>
+              <div class="editing-banner" id="editingBanner">وضع التعديل مفعّل. بعد تعديل البيانات اضغط نشر الإعلان أو حفظ كمسودة.</div>
               <div class="myads-list" id="myAdsList"></div>
             </section>
           </aside>
@@ -1315,7 +1426,7 @@
 
 
 
-    const myAdsState = { type:'job', ads: [] };
+    const myAdsState = { type:'job', ads: [], editingId:null, filter:'all' };
 
     function openMyAdsModal(){
       setActive('post');
@@ -1396,29 +1507,46 @@
     function saveCurrentAd(status){
       const data = getCurrentAdData();
       if(!data.title){
-        alert('اكتب عنوان الإعلان أولًا.');
+        showMiniNotice('اكتب عنوان الإعلان أولًا.');
         return;
       }
       if((data.type === 'job' || data.type === 'resume') && !data.category){
-        alert('اختر قسم الوظائف.');
+        showMiniNotice('اختر قسم الوظائف.');
         return;
       }
       if((data.type === 'service' || data.type === 'request') && !data.category){
-        alert('اختر قسم الخدمات.');
+        showMiniNotice('اختر قسم الخدمات.');
         return;
       }
 
-      data.id = Date.now();
       data.status = status;
-      data.createdAt = new Date().toLocaleString('ar-SA');
+      data.updatedAt = new Date().toLocaleString('ar-SA');
       data.targetPortal = (data.type === 'job' || data.type === 'resume') ? 'jobs' : 'services';
       data.portalLabel = data.targetPortal === 'jobs' ? 'بوابة الوظائف' : 'بوابة الخدمات';
+
+      if(myAdsState.editingId){
+        const idx = myAdsState.ads.findIndex(x => x.id === myAdsState.editingId);
+        if(idx !== -1){
+          data.id = myAdsState.editingId;
+          data.createdAt = myAdsState.ads[idx].createdAt || data.updatedAt;
+          myAdsState.ads[idx] = data;
+          myAdsState.editingId = null;
+          clearEditingMode();
+          renderMyAdsList();
+          updateAdPreview();
+          showMiniNotice(status === 'published' ? 'تم تحديث ونشر الإعلان.' : 'تم تحديث المسودة.');
+          return;
+        }
+      }
+
+      data.id = Date.now();
+      data.createdAt = data.updatedAt;
 
       myAdsState.ads.unshift(data);
       renderMyAdsList();
       updateAdPreview();
 
-      alert(status === 'published'
+      showMiniNotice(status === 'published'
         ? 'تم نشر الإعلان تجريبيًا وسيظهر لاحقًا في ' + data.portalLabel + ' بعد الربط.'
         : 'تم حفظ الإعلان كمسودة.');
     }
@@ -1426,17 +1554,27 @@
     function renderMyAdsList(){
       const box = document.getElementById('myAdsList');
       if(!box) return;
-      if(!myAdsState.ads.length){
-        box.innerHTML = '<div class="empty-myads">لا توجد إعلانات مضافة بعد.</div>';
+
+      let ads = myAdsState.ads || [];
+      if(myAdsState.filter !== 'all'){
+        ads = ads.filter(ad => ad.status === myAdsState.filter);
+      }
+
+      document.querySelectorAll('.myads-filter').forEach(btn=>{
+        btn.classList.toggle('active', btn.dataset.adsFilter === myAdsState.filter);
+      });
+
+      if(!ads.length){
+        box.innerHTML = '<div class="empty-myads">لا توجد إعلانات في هذا التصنيف.</div>';
         return;
       }
 
-      box.innerHTML = myAdsState.ads.map(ad=>`
-        <article class="myad-card">
+      box.innerHTML = ads.map(ad=>`
+        <article class="myad-card ${myAdsState.editingId === ad.id ? 'editing' : ''}">
           <div class="myad-top">
             <div>
               <h4>${safeText(ad.title)}</h4>
-              <p>${adTypeLabel(ad.type)} · ${safeText(ad.portalLabel || '')} · ${safeText(ad.createdAt)}</p>
+              <p>${adTypeLabel(ad.type)} · ${safeText(ad.portalLabel || '')} · ${safeText(ad.createdAt || '')}</p>
             </div>
             <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
           </div>
@@ -1448,9 +1586,10 @@
             ${ad.file ? `<span class="meta-pill">ملف CV مضاف</span>` : ''}
           </div>
           <div class="myad-actions">
-            <button class="primary" onclick="previewMyAd(${ad.id})">معاينة</button>
-            <button onclick="alert('سيتم تفعيل التعديل لاحقًا')">تعديل</button>
-            <button onclick="featureMyAd(${ad.id})">تمييز</button>
+            <button type="button" class="primary" onclick="previewMyAd(${ad.id})">معاينة</button>
+            <button type="button" onclick="editMyAd(${ad.id})">تعديل</button>
+            <button type="button" class="review-btn" onclick="featureMyAd(${ad.id})">تمييز</button>
+            <button type="button" class="danger-btn" onclick="deleteMyAd(${ad.id})">حذف</button>
           </div>
         </article>
       `).join('');
@@ -1459,8 +1598,115 @@
     function previewMyAd(id){
       const ad = myAdsState.ads.find(x=>x.id===id);
       if(!ad) return;
-      alert('معاينة الإعلان:\\n' + ad.title + '\\n\\n' + (ad.description || '') + (ad.image ? '\\n\\nالصورة: ' + ad.image : '') + (ad.file ? '\\nملف السيرة/المرفق: ' + ad.file : ''));
+
+      const rows = [
+        ['نوع الإعلان', adTypeLabel(ad.type)],
+        ['البوابة', ad.portalLabel],
+        ['القسم', ad.category],
+        ['المدينة', ad.city],
+        ['نوع الدوام / مدة التنفيذ', ad.workType || ad.delivery],
+        ['الراتب / السعر', ad.salary || (ad.price ? ad.price + ' ريال' : '')],
+        ['رقم التواصل', ad.phone],
+        ['الصورة', ad.image],
+        ['ملف السيرة / المرفق', ad.file],
+        ['الحالة', ad.status === 'published' ? 'منشور' : 'مسودة'],
+      ].filter(([k,v]) => v && String(v).trim());
+
+      document.getElementById('myAdPreviewContent').innerHTML = `
+        <div class="preview-hero">
+          <span class="status-badge ${ad.status === 'draft' ? 'draft' : ''}">${ad.status === 'published' ? 'منشور' : 'مسودة'}</span>
+          <h3>${safeText(ad.title)}</h3>
+          <p>${safeText(ad.description || 'لا يوجد وصف.')}</p>
+          <div class="meta-list">
+            ${ad.city ? `<span class="meta-pill">${safeText(ad.city)}</span>` : ''}
+            ${ad.portalLabel ? `<span class="meta-pill">${safeText(ad.portalLabel)}</span>` : ''}
+          </div>
+        </div>
+        <div class="preview-details">
+          ${rows.map(([k,v])=>`<div class="preview-row"><span>${safeText(k)}</span><span>${safeText(v)}</span></div>`).join('')}
+        </div>
+      `;
+      showOverlay('myAdPreviewOverlay');
     }
+
+    function closeMyAdPreview(){
+      hideOverlay('myAdPreviewOverlay');
+    }
+
+    function editMyAd(id){
+      const ad = myAdsState.ads.find(x=>x.id===id);
+      if(!ad) return;
+
+      myAdsState.editingId = id;
+      switchAdType(ad.type);
+
+      setFieldByType(ad);
+      const banner = document.getElementById('editingBanner');
+      if(banner) banner.classList.add('show');
+
+      renderMyAdsList();
+      updateAdPreview();
+      showMiniNotice('تم تحميل الإعلان للتعديل.');
+    }
+
+    function setField(id, value){
+      const el = document.getElementById(id);
+      if(el && el.type !== 'file') el.value = value || '';
+    }
+
+    function setFieldByType(ad){
+      if(ad.type === 'job'){
+        setField('jobAdTitle', ad.title); setField('jobAdCategory', ad.category); setField('jobAdCity', ad.city);
+        setField('jobAdWorkType', ad.workType); setField('jobAdSalary', ad.salary); setField('jobAdPhone', ad.phone);
+        setField('jobAdDescription', ad.description);
+      }
+      if(ad.type === 'resume'){
+        setField('resumeAdName', ad.name); setField('resumeAdTitle', ad.title); setField('resumeAdCategory', ad.category);
+        setField('resumeAdCity', ad.city); setField('resumeAdPhone', ad.phone); setField('resumeAdSummary', ad.description);
+      }
+      if(ad.type === 'service'){
+        setField('serviceAdTitle', ad.title); setField('serviceAdCategory', ad.category); setField('serviceAdPrice', ad.price);
+        setField('serviceAdDelivery', ad.delivery); setField('serviceAdDescription', ad.description);
+      }
+      if(ad.type === 'request'){
+        setField('requestAdTitle', ad.title); setField('requestAdCategory', ad.category); setField('requestAdPrice', ad.price);
+        setField('requestAdCity', ad.city); setField('requestAdDescription', ad.description);
+      }
+    }
+
+    function clearEditingMode(){
+      const banner = document.getElementById('editingBanner');
+      if(banner) banner.classList.remove('show');
+    }
+
+    function deleteMyAd(id){
+      const ad = myAdsState.ads.find(x=>x.id===id);
+      if(!ad) return;
+      if(!confirm('هل تريد حذف الإعلان: ' + ad.title + '؟')) return;
+      myAdsState.ads = myAdsState.ads.filter(x=>x.id !== id);
+      if(myAdsState.editingId === id){
+        myAdsState.editingId = null;
+        clearEditingMode();
+      }
+      renderMyAdsList();
+      showMiniNotice('تم حذف الإعلان.');
+    }
+
+    function showMiniNotice(message){
+      alert(message);
+    }
+
+    document.addEventListener('click', function(e){
+      const filterBtn = e.target.closest('.myads-filter[data-ads-filter]');
+      if(!filterBtn) return;
+      e.preventDefault();
+      myAdsState.filter = filterBtn.dataset.adsFilter;
+      renderMyAdsList();
+    });
+
+    document.getElementById('myAdPreviewOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeMyAdPreview();
+    });
 
     function featureMyAd(id){
       alert('سيتم ربط التمييز لاحقًا بالكوينز والمحفظة.');
@@ -1490,6 +1736,26 @@
       switchAdType(btn.dataset.adType);
     }, true);
 
+
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('myAdPreviewOverlay')?.classList.contains('show')) return closeMyAdPreview();
+    });
+
 </script>
+
+  <div class="overlay" id="myAdPreviewOverlay" aria-hidden="true">
+    <section class="window small" role="dialog" aria-modal="true">
+      <header class="window-head">
+        <div class="win-title"><div class="win-icon">👁️</div><div><h2>معاينة الإعلان</h2><p>عرض الإعلان كما سيظهر لاحقًا</p></div></div>
+        <button class="close-btn" onclick="closeMyAdPreview()">×</button>
+      </header>
+      <div class="window-body">
+        <section id="myAdPreviewContent" class="preview-modal-card"></section>
+      </div>
+    </section>
+  </div>
+
 </body>
 </html>
