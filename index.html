@@ -568,7 +568,7 @@
 
         <div class="detail-actions">
           <a class="primary" href="#" onclick="openPaymentModal(${item.id}); return false;">${payButtonText}</a>
-          <a href=\"#\" onclick=\"openPlatformChat(${item.id}); return false;\">مراسلة داخل المنصة</a>
+          <button type="button" class="detail-chat-btn" data-service-id="${item.id}">مراسلة داخل المنصة</button>
         </div>
       `;
       showOverlay('serviceDetailOverlay');
@@ -777,6 +777,69 @@
       const serviceId = btn.getAttribute('data-service-id');
       openPlatformChat(serviceId);
     });
+
+
+
+    // V15 final robust delegation for platform chat button
+    function openPlatformChatV15(serviceId){
+      serviceId = Number(serviceId);
+      const item = (typeof servicesRecords !== 'undefined' ? servicesRecords : []).find(r => Number(r.id) === serviceId);
+      if(!item){
+        alert('تعذر فتح المحادثة: بيانات الخدمة غير موجودة.');
+        return;
+      }
+
+      currentServiceDetailId = serviceId;
+
+      if(!window.chatThreads) window.chatThreads = {};
+      if(typeof chatThreads === 'undefined') window.chatThreads = {};
+
+      const overlayEl = document.getElementById('platformChatOverlay');
+      if(!overlayEl){
+        alert('تعذر فتح المحادثة: نافذة الشات غير موجودة داخل الصفحة.');
+        return;
+      }
+
+      document.getElementById('chatServiceTitle').textContent = item.title || 'خدمة';
+      document.getElementById('chatServiceSummary').textContent = item.summary || 'محادثة داخل المنصة حول هذه الخدمة.';
+      document.getElementById('chatStatus').textContent = item.type === 'provider' ? 'طلب خدمة من مقدم خدمة' : 'تقديم عرض على طلب خدمة';
+
+      if(!chatThreads[serviceId]){
+        chatThreads[serviceId] = [
+          {from:'system', text:'تم إنشاء قناة مراسلة داخل HireX لهذه الخدمة. يمنع مشاركة أرقام الهاتف أو روابط خارجية.'},
+          {from:'other', text:item.type === 'provider' ? 'مرحبًا، أرسل تفاصيل طلبك هنا قبل الدفع.' : 'مرحبًا، يمكنك تقديم عرضك مع السعر ومدة التنفيذ.'}
+        ];
+      }
+
+      const textEl = document.getElementById('chatText');
+      const amountEl = document.getElementById('offerAmount');
+      const daysEl = document.getElementById('offerDays');
+      if(textEl) textEl.value = '';
+      if(amountEl) amountEl.value = '';
+      if(daysEl) daysEl.value = '';
+
+      if(typeof renderPlatformChat === 'function'){
+        renderPlatformChat(serviceId);
+      } else {
+        const box = document.getElementById('chatMessages');
+        if(box){
+          box.innerHTML = chatThreads[serviceId].map(m => `<div class="msg ${m.from === 'system' ? 'system' : m.from === 'me' ? 'me' : 'other'}">${m.text}</div>`).join('');
+        }
+      }
+
+      overlayEl.classList.add('show');
+      overlayEl.setAttribute('aria-hidden','false');
+      overlayEl.style.display = 'grid';
+      document.body.classList.add('modal-open');
+    }
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('.detail-chat-btn');
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openPlatformChatV15(btn.dataset.serviceId);
+    }, true);
 
 </script>
 
