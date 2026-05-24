@@ -8,640 +8,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#06110d;
-      --line:rgba(193,255,230,.14);
-      --text:#f3fff9;
-      --muted:#a8beb5;
-      --muted2:#748980;
-      --brand:#20df9f;
-      --cyan:#45c7f4;
-      --gold:#f5c86f;
-      --rose:#fb7185;
-      --shadow:0 22px 80px rgba(0,0,0,.45);
-    }
-
+    :root{--bg:#06110d;--line:rgba(193,255,230,.14);--text:#f3fff9;--muted:#a8beb5;--muted2:#748980;--brand:#20df9f;--cyan:#45c7f4;--gold:#f5c86f;--shadow:0 22px 80px rgba(0,0,0,.45)}
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Tajawal,system-ui,sans-serif;
-      background:
-        radial-gradient(circle at 16% -8%,rgba(32,223,159,.18),transparent 32%),
-        radial-gradient(circle at 92% 12%,rgba(69,199,244,.13),transparent 30%),
-        linear-gradient(180deg,#07130f,#020403);
-      color:var(--text);
-      min-height:100vh;
-      line-height:1.65;
-      padding-bottom:96px;
-      overflow-x:hidden;
-    }
-
-    body.modal-open{overflow:hidden}
-    a{text-decoration:none;color:inherit}
-    button,input{font-family:inherit}
-
-    .app{
-      width:min(720px,100%);
-      margin:auto;
-      min-height:100vh;
-      padding:0 16px;
-    }
-
-    .header{
-      padding:18px 0 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:linear-gradient(180deg,rgba(6,17,13,.96),rgba(6,17,13,.72));
-      backdrop-filter:blur(16px);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brand-logo{
-      width:50px;
-      height:50px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--brand),var(--cyan));
-      color:#05110d;
-      font-weight:900;
-      font-size:24px;
-      box-shadow:0 16px 40px rgba(32,223,159,.20);
-    }
-
-    .brand h1{font-size:26px;line-height:1;font-weight:900}
-    .brand p{font-size:12px;color:var(--muted2);font-weight:800;margin-top:4px}
-
-    .profile-btn{
-      width:46px;height:46px;border-radius:16px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--line);
-      color:#dfffee;
-      display:grid;
-      place-items:center;
-      font-size:21px;
-    }
-
-    .hero{
-      margin-top:8px;
-      border:1px solid rgba(32,223,159,.20);
-      border-radius:32px;
-      background:linear-gradient(135deg,rgba(18,69,52,.96),rgba(12,35,42,.96));
-      box-shadow:var(--shadow);
-      padding:26px;
-      position:relative;
-      overflow:hidden;
-      min-height:310px;
-      display:grid;
-      align-items:end;
-    }
-
-    .hero:before{
-      content:"";position:absolute;width:260px;height:260px;border-radius:50%;
-      background:rgba(32,223,159,.13);filter:blur(28px);top:-110px;left:-90px;
-    }
-
-    .hero:after{
-      content:"";position:absolute;width:210px;height:210px;border-radius:50%;
-      background:rgba(69,199,244,.13);filter:blur(28px);bottom:-95px;right:-75px;
-    }
-
-    .hero-art{
-      position:absolute;top:22px;left:22px;width:160px;height:160px;border-radius:38px;
-      background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.14);
-      display:grid;place-items:center;transform:rotate(-3deg);
-      box-shadow:0 22px 65px rgba(0,0,0,.25);
-    }
-
-    .hero-art span{font-size:70px;filter:drop-shadow(0 10px 20px rgba(0,0,0,.22))}
-    .hero-content{position:relative;z-index:1;max-width:520px}
-
-    .tag{
-      display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border-radius:999px;
-      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);
-      color:#d7ffef;font-size:12px;font-weight:900;margin-bottom:14px;
-    }
-
-    .hero h2{font-size:34px;line-height:1.18;font-weight:900}
-    .hero h2 span{color:#b7ffe5}
-    .hero p{color:#c0d7ce;font-size:15px;font-weight:800;margin-top:12px;max-width:500px}
-
-    .section-head{
-      margin:26px 0 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .section-head h3{font-size:20px;font-weight:900}
-    .section-head span{color:var(--muted2);font-size:12px;font-weight:900}
-
-    .marketing-stack{display:grid;gap:14px}
-
-    .promo{
-      min-height:176px;border-radius:30px;border:1px solid var(--line);
-      background:rgba(255,255,255,.055);position:relative;overflow:hidden;padding:20px;
-      display:grid;grid-template-columns:1fr 108px;gap:14px;align-items:center;
-      box-shadow:0 16px 48px rgba(0,0,0,.22);
-    }
-
-    .promo:before{
-      content:"";position:absolute;width:150px;height:150px;border-radius:50%;
-      left:-70px;top:-70px;background:rgba(32,223,159,.09);
-    }
-
-    .promo.gold{background:linear-gradient(135deg,rgba(246,200,111,.13),rgba(255,255,255,.045));border-color:rgba(246,200,111,.25)}
-    .promo.blue{background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045));border-color:rgba(69,199,244,.22)}
-    .promo.rose{background:linear-gradient(135deg,rgba(251,113,133,.12),rgba(255,255,255,.045));border-color:rgba(251,113,133,.22)}
-
-    .promo-text{position:relative;z-index:1}
-    .promo-label{color:#b7ffe5;font-size:12px;font-weight:900;margin-bottom:7px}
-    .promo h4{font-size:25px;line-height:1.18;font-weight:900}
-    .promo p{color:#b4c9bf;font-size:14px;font-weight:800;margin-top:8px}
-
-    .promo-art{
-      width:104px;height:104px;border-radius:34px;display:grid;place-items:center;background:#ecfff6;
-      color:#06110d;font-size:52px;position:relative;z-index:1;
-      border:1px solid rgba(255,255,255,.3);box-shadow:0 20px 52px rgba(0,0,0,.22);
-    }
-
-    .promo.gold .promo-art{background:#fff7ed}
-    .promo.blue .promo-art{background:#ecfeff}
-    .promo.rose .promo-art{background:#fff1f2}
-
-    .story-card{
-      margin-top:14px;border-radius:30px;padding:22px;border:1px solid rgba(32,223,159,.18);
-      background:linear-gradient(135deg,rgba(32,223,159,.10),rgba(69,199,244,.06)),rgba(255,255,255,.045);
-    }
-
-    .story-card h3{font-size:23px;line-height:1.25;font-weight:900;margin-bottom:8px}
-    .story-card p{color:#b4c9bf;font-size:14px;font-weight:800;margin-bottom:12px}
-    .story-points{display:grid;gap:8px}
-    .point{display:flex;align-items:center;gap:9px;color:#dfffee;font-size:14px;font-weight:900}
-    .point b{width:24px;height:24px;border-radius:9px;display:grid;place-items:center;background:rgba(32,223,159,.18);color:#b7ffe5}
-
-    /* Cinematic Jobs Modal */
-    .cinema-overlay{
-      position:fixed;
-      inset:0;
-      z-index:100;
-      display:none;
-      background:
-        radial-gradient(circle at 80% 0%,rgba(32,223,159,.20),transparent 28%),
-        radial-gradient(circle at 0% 90%,rgba(69,199,244,.16),transparent 28%),
-        rgba(0,0,0,.72);
-      backdrop-filter:blur(14px);
-      padding:18px;
-    }
-
-    .cinema-overlay.show{
-      display:grid;
-      place-items:center;
-      animation:fadeIn .22s ease both;
-    }
-
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-    .cinema-window{
-      width:min(1120px,100%);
-      height:min(760px,calc(100vh - 36px));
-      border-radius:36px;
-      background:
-        linear-gradient(135deg,rgba(13,34,28,.98),rgba(6,14,17,.98));
-      border:1px solid rgba(193,255,230,.18);
-      box-shadow:0 40px 120px rgba(0,0,0,.70);
-      overflow:hidden;
-      display:grid;
-      grid-template-rows:auto 1fr;
-      animation:cinemaUp .24s ease both;
-    }
-
-    @keyframes cinemaUp{from{transform:translateY(20px) scale(.98);opacity:.7}to{transform:translateY(0) scale(1);opacity:1}}
-
-    .cinema-head{
-      min-height:86px;
-      padding:18px 22px;
-      border-bottom:1px solid rgba(193,255,230,.12);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .cinema-title{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .cinema-icon{
-      width:56px;
-      height:56px;
-      border-radius:20px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--brand),var(--cyan));
-      color:#06110d;
-      font-size:28px;
-      font-weight:900;
-    }
-
-    .cinema-title h2{
-      font-size:28px;
-      font-weight:900;
-      line-height:1.1;
-    }
-
-    .cinema-title p{
-      color:#9db7ab;
-      font-size:13px;
-      font-weight:800;
-      margin-top:3px;
-    }
-
-    .close-btn{
-      width:48px;
-      height:48px;
-      border-radius:17px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      color:#fff;
-      font-size:26px;
-      cursor:pointer;
-    }
-
-    .cinema-body{
-      overflow:auto;
-      padding:22px;
-    }
-
-    .cinema-layout{
-      display:grid;
-      grid-template-columns:1fr 340px;
-      gap:18px;
-      align-items:start;
-    }
-
-    .cinema-main{
-      display:grid;
-      gap:16px;
-    }
-
-    .cinema-side{
-      display:grid;
-      gap:14px;
-      position:sticky;
-      top:0;
-    }
-
-    .job-hero-panel{
-      border-radius:30px;
-      padding:22px;
-      background:
-        radial-gradient(circle at 100% 0%,rgba(69,199,244,.15),transparent 36%),
-        linear-gradient(135deg,rgba(16,58,47,.92),rgba(11,31,37,.92));
-      border:1px solid rgba(69,199,244,.18);
-    }
-
-    .job-hero-panel h3{
-      font-size:28px;
-      line-height:1.18;
-      font-weight:900;
-    }
-
-    .job-hero-panel p{
-      color:#b4c9bf;
-      font-size:14px;
-      font-weight:800;
-      margin-top:8px;
-    }
-
-    .job-search{
-      margin-top:16px;
-      background:#07120e;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:22px;
-      padding:10px;
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:8px;
-    }
-
-    .job-search input{
-      height:50px;
-      border:0;
-      outline:0;
-      background:transparent;
-      color:#fff;
-      padding:0 10px;
-      font-size:16px;
-      font-weight:800;
-    }
-
-    .job-search input::placeholder{color:#8ea69c}
-
-    .job-search button{
-      width:54px;height:50px;border:0;border-radius:17px;
-      background:linear-gradient(135deg,var(--brand),var(--cyan));
-      color:#06110d;font-size:20px;font-weight:900;
-      cursor:pointer;
-    }
-
-    .job-type-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    .job-type-card{
-      min-height:138px;
-      border-radius:28px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .job-type-card:before{
-      content:"";position:absolute;width:120px;height:120px;border-radius:50%;
-      background:rgba(32,223,159,.09);left:-55px;top:-45px;
-    }
-
-    .job-type-card.offer{background:linear-gradient(135deg,rgba(32,223,159,.12),rgba(255,255,255,.045))}
-    .job-type-card.request{background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045))}
-
-    .job-type-icon{
-      width:48px;height:48px;border-radius:18px;
-      display:grid;place-items:center;background:#ecfff6;color:#06110d;font-size:25px;
-      position:relative;z-index:1;
-    }
-
-    .job-type-card.request .job-type-icon{background:#ecfeff}
-
-    .job-type-title{
-      font-size:22px;
-      font-weight:900;
-      line-height:1.15;
-      position:relative;z-index:1;
-    }
-
-    .job-type-sub{
-      color:#9db7ab;
-      font-size:12px;
-      font-weight:800;
-      margin-top:4px;
-      position:relative;z-index:1;
-    }
-
-    .section-mini-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin:4px 0 -4px;
-    }
-
-    .section-mini-head h3{
-      font-size:18px;
-      font-weight:900;
-    }
-
-    .section-mini-head span{
-      color:#748980;
-      font-size:12px;
-      font-weight:900;
-    }
-
-    .category-panel{
-      border-radius:30px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.045);
-      overflow:hidden;
-    }
-
-    .category-row{
-      display:grid;
-      grid-template-columns:48px 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding:15px 16px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .category-row:last-child{border-bottom:0}
-
-    .category-icon{
-      width:46px;height:46px;border-radius:17px;
-      display:grid;place-items:center;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      font-size:24px;
-    }
-
-    .category-title{
-      font-size:18px;
-      font-weight:900;
-      line-height:1.2;
-    }
-
-    .category-sub{
-      color:#81988e;
-      font-size:12px;
-      font-weight:800;
-      margin-top:2px;
-    }
-
-    .category-count{
-      color:#b7ffe5;
-      font-weight:900;
-      direction:ltr;
-      font-size:14px;
-      background:rgba(32,223,159,.10);
-      border:1px solid rgba(32,223,159,.16);
-      border-radius:999px;
-      padding:6px 10px;
-    }
-
-    .side-card{
-      border-radius:28px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.055);
-      padding:16px;
-    }
-
-    .side-card h3{
-      font-size:19px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .side-card p{
-      color:#9db7ab;
-      font-size:13px;
-      font-weight:800;
-    }
-
-    .side-action{
-      margin-top:12px;
-      display:grid;
-      gap:8px;
-    }
-
-    .side-action a{
-      min-height:46px;
-      display:grid;
-      place-items:center;
-      border-radius:16px;
-      background:linear-gradient(135deg,var(--brand),var(--cyan));
-      color:#06110d;
-      font-weight:900;
-    }
-
-    .mini-stats{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .mini-stat{
-      border-radius:17px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.045);
-      padding:12px;
-      text-align:center;
-    }
-
-    .mini-stat strong{
-      display:block;
-      color:#b7ffe5;
-      font-size:20px;
-      line-height:1;
-      direction:ltr;
-    }
-
-    .mini-stat span{
-      display:block;
-      color:#9db7ab;
-      font-size:11px;
-      font-weight:900;
-      margin-top:5px;
-    }
-
-    .job-card{
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      padding:14px;
-      display:grid;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    .job-card h4{
-      font-size:18px;
-      font-weight:900;
-      line-height:1.25;
-    }
-
-    .job-card p{
-      color:#9db7ab;
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .meta-list{
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-    }
-
-    .meta-pill{
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.045);
-      color:#b4c9bf;
-      padding:5px 8px;
-      font-size:11px;
-      font-weight:900;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      width:min(640px,calc(100% - 32px));
-      height:78px;
-      background:rgba(8,18,14,.96);
-      border:1px solid var(--line);
-      border-radius:30px;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      z-index:60;
-      box-shadow:0 20px 60px rgba(0,0,0,.58);
-      overflow:hidden;
-      backdrop-filter:blur(18px);
-    }
-
-    .nav-item{
-      display:grid;
-      place-items:center;
-      color:#8ea69c;
-      font-size:12px;
-      font-weight:900;
-      padding:8px;
-      cursor:pointer;
-    }
-
-    .nav-item b{font-size:22px;line-height:1}
-    .nav-item.active{
-      color:#fff;
-      background:linear-gradient(135deg,rgba(32,223,159,.20),rgba(69,199,244,.10));
-      margin:6px;border-radius:24px;border:1px solid rgba(32,223,159,.16);
-    }
-
-    @media(max-width:900px){
-      .cinema-layout{grid-template-columns:1fr}
-      .cinema-side{position:relative}
-      .cinema-window{height:calc(100vh - 28px);border-radius:30px}
-      .cinema-head{min-height:78px;padding:14px 16px}
-      .cinema-title h2{font-size:23px}
-      .cinema-title p{display:none}
-    }
-
-    @media(max-width:520px){
-      .app{padding:0 12px}
-      .hero{min-height:300px;padding:22px}
-      .hero-art{width:128px;height:128px;border-radius:32px}
-      .hero-art span{font-size:56px}
-      .hero h2{font-size:29px}
-      .promo{grid-template-columns:1fr 58px;min-height:156px;padding:18px}
-      .promo-art{width:58px;height:58px;border-radius:20px;font-size:30px}
-      .promo h4{font-size:22px}
-      .cinema-overlay{padding:10px}
-      .cinema-window{border-radius:26px;height:calc(100vh - 20px)}
-      .cinema-body{padding:14px}
-      .job-type-grid{grid-template-columns:1fr}
-      .job-hero-panel h3{font-size:24px}
-      .category-row{grid-template-columns:44px 1fr auto;padding:13px 12px}
-      .category-count{font-size:12px;padding:5px 8px}
-    }
+    body{font-family:Tajawal,system-ui,sans-serif;background:radial-gradient(circle at 16% -8%,rgba(32,223,159,.18),transparent 32%),radial-gradient(circle at 92% 12%,rgba(69,199,244,.13),transparent 30%),linear-gradient(180deg,#07130f,#020403);color:var(--text);min-height:100vh;line-height:1.65;padding-bottom:96px;overflow-x:hidden}
+    body.modal-open{overflow:hidden}a{text-decoration:none;color:inherit}button,input{font-family:inherit}
+    .app{width:min(720px,100%);margin:auto;min-height:100vh;padding:0 16px}
+    .header{padding:18px 0 10px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(6,17,13,.96),rgba(6,17,13,.72));backdrop-filter:blur(16px)}
+    .brand{display:flex;align-items:center;gap:12px}.brand-logo{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--cyan));color:#05110d;font-weight:900;font-size:24px;box-shadow:0 16px 40px rgba(32,223,159,.20)}
+    .brand h1{font-size:26px;line-height:1;font-weight:900}.brand p{font-size:12px;color:var(--muted2);font-weight:800;margin-top:4px}
+    .profile-btn{width:46px;height:46px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#dfffee;display:grid;place-items:center;font-size:21px}
+    .hero{margin-top:8px;border:1px solid rgba(32,223,159,.20);border-radius:32px;background:linear-gradient(135deg,rgba(18,69,52,.96),rgba(12,35,42,.96));box-shadow:var(--shadow);padding:26px;position:relative;overflow:hidden;min-height:310px;display:grid;align-items:end}
+    .hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(32,223,159,.13);filter:blur(28px);top:-110px;left:-90px}.hero:after{content:"";position:absolute;width:210px;height:210px;border-radius:50%;background:rgba(69,199,244,.13);filter:blur(28px);bottom:-95px;right:-75px}
+    .hero-art{position:absolute;top:22px;left:22px;width:160px;height:160px;border-radius:38px;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;transform:rotate(-3deg);box-shadow:0 22px 65px rgba(0,0,0,.25)}
+    .hero-art span{font-size:70px;filter:drop-shadow(0 10px 20px rgba(0,0,0,.22))}.hero-content{position:relative;z-index:1;max-width:520px}
+    .tag{display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#d7ffef;font-size:12px;font-weight:900;margin-bottom:14px}
+    .hero h2{font-size:34px;line-height:1.18;font-weight:900}.hero h2 span{color:#b7ffe5}.hero p{color:#c0d7ce;font-size:15px;font-weight:800;margin-top:12px;max-width:500px}
+    .section-head{margin:26px 0 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.section-head h3{font-size:20px;font-weight:900}.section-head span{color:var(--muted2);font-size:12px;font-weight:900}
+    .marketing-stack{display:grid;gap:14px}.promo{min-height:176px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.055);position:relative;overflow:hidden;padding:20px;display:grid;grid-template-columns:1fr 108px;gap:14px;align-items:center;box-shadow:0 16px 48px rgba(0,0,0,.22)}
+    .promo:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;left:-70px;top:-70px;background:rgba(32,223,159,.09)}.promo.gold{background:linear-gradient(135deg,rgba(246,200,111,.13),rgba(255,255,255,.045));border-color:rgba(246,200,111,.25)}.promo.blue{background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045));border-color:rgba(69,199,244,.22)}
+    .promo-text{position:relative;z-index:1}.promo-label{color:#b7ffe5;font-size:12px;font-weight:900;margin-bottom:7px}.promo h4{font-size:25px;line-height:1.18;font-weight:900}.promo p{color:#b4c9bf;font-size:14px;font-weight:800;margin-top:8px}
+    .promo-art{width:104px;height:104px;border-radius:34px;display:grid;place-items:center;background:#ecfff6;color:#06110d;font-size:52px;position:relative;z-index:1;border:1px solid rgba(255,255,255,.3);box-shadow:0 20px 52px rgba(0,0,0,.22)}.promo.gold .promo-art{background:#fff7ed}.promo.blue .promo-art{background:#ecfeff}
+    .story-card{margin-top:14px;border-radius:30px;padding:22px;border:1px solid rgba(32,223,159,.18);background:linear-gradient(135deg,rgba(32,223,159,.10),rgba(69,199,244,.06)),rgba(255,255,255,.045)}
+    .story-card h3{font-size:23px;line-height:1.25;font-weight:900;margin-bottom:8px}.story-card p{color:#b4c9bf;font-size:14px;font-weight:800;margin-bottom:12px}.story-points{display:grid;gap:8px}.point{display:flex;align-items:center;gap:9px;color:#dfffee;font-size:14px;font-weight:900}.point b{width:24px;height:24px;border-radius:9px;display:grid;place-items:center;background:rgba(32,223,159,.18);color:#b7ffe5}
+    .cinema-overlay{position:fixed;inset:0;z-index:100;display:none;background:radial-gradient(circle at 80% 0%,rgba(32,223,159,.20),transparent 28%),radial-gradient(circle at 0% 90%,rgba(69,199,244,.16),transparent 28%),rgba(0,0,0,.72);backdrop-filter:blur(14px);padding:18px}.cinema-overlay.show{display:grid;place-items:center;animation:fadeIn .22s ease both}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .cinema-window{width:min(1120px,100%);height:min(760px,calc(100vh - 36px));border-radius:36px;background:linear-gradient(135deg,rgba(13,34,28,.98),rgba(6,14,17,.98));border:1px solid rgba(193,255,230,.18);box-shadow:0 40px 120px rgba(0,0,0,.70);overflow:hidden;display:grid;grid-template-rows:auto 1fr;animation:cinemaUp .24s ease both}@keyframes cinemaUp{from{transform:translateY(20px) scale(.98);opacity:.7}to{transform:translateY(0) scale(1);opacity:1}}
+    .cinema-head{min-height:86px;padding:18px 22px;border-bottom:1px solid rgba(193,255,230,.12);display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.035)}.cinema-title{display:flex;align-items:center;gap:12px}.cinema-icon{width:56px;height:56px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;font-size:28px;font-weight:900}.cinema-title h2{font-size:28px;font-weight:900;line-height:1.1}.cinema-title p{color:#9db7ab;font-size:13px;font-weight:800;margin-top:3px}.close-btn{width:48px;height:48px;border-radius:17px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:26px;cursor:pointer}
+    .cinema-body{overflow:auto;padding:22px}.cinema-layout{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}.cinema-main{display:grid;gap:16px}.cinema-side{display:grid;gap:14px;position:sticky;top:0}
+    .job-hero-panel{border-radius:30px;padding:22px;background:radial-gradient(circle at 100% 0%,rgba(69,199,244,.15),transparent 36%),linear-gradient(135deg,rgba(16,58,47,.92),rgba(11,31,37,.92));border:1px solid rgba(69,199,244,.18)}.job-hero-panel h3{font-size:28px;line-height:1.18;font-weight:900}.job-hero-panel p{color:#b4c9bf;font-size:14px;font-weight:800;margin-top:8px}
+    .job-search{margin-top:16px;background:#07120e;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px}.job-search input{height:50px;border:0;outline:0;background:transparent;color:#fff;padding:0 10px;font-size:16px;font-weight:800}.job-search input::placeholder{color:#8ea69c}.job-search button{width:54px;height:50px;border:0;border-radius:17px;background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;font-size:20px;font-weight:900;cursor:pointer}
+    .filter-status{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:20px;border:1px solid rgba(32,223,159,.16);background:rgba(32,223,159,.07);padding:12px 14px}.filter-status strong{font-size:14px}.filter-status button{border:0;border-radius:14px;padding:8px 11px;background:rgba(255,255,255,.08);color:#fff;font-weight:900;cursor:pointer}
+    .job-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.job-type-card{min-height:138px;border-radius:28px;border:1px solid var(--line);background:rgba(255,255,255,.055);padding:18px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;cursor:pointer;text-align:right}.job-type-card.active{outline:2px solid rgba(32,223,159,.55);background:linear-gradient(135deg,rgba(32,223,159,.18),rgba(69,199,244,.06))}.job-type-card:before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(32,223,159,.09);left:-55px;top:-45px}.job-type-card.request{background:linear-gradient(135deg,rgba(69,199,244,.13),rgba(255,255,255,.045))}
+    .job-type-icon{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:#ecfff6;color:#06110d;font-size:25px;position:relative;z-index:1}.job-type-card.request .job-type-icon{background:#ecfeff}.job-type-title{font-size:22px;font-weight:900;line-height:1.15;position:relative;z-index:1}.job-type-sub{color:#9db7ab;font-size:12px;font-weight:800;margin-top:4px;position:relative;z-index:1}
+    .section-mini-head{display:flex;align-items:center;justify-content:space-between;margin:4px 0 -4px}.section-mini-head h3{font-size:18px;font-weight:900}.section-mini-head span{color:#748980;font-size:12px;font-weight:900}
+    .category-panel{border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.045);overflow:hidden}.category-row{width:100%;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:15px 16px;border:0;border-bottom:1px solid var(--line);background:transparent;color:#fff;text-align:right;cursor:pointer}.category-row:last-child{border-bottom:0}.category-row.active{background:rgba(32,223,159,.08)}.category-icon{width:46px;height:46px;border-radius:17px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);font-size:24px}.category-title{font-size:18px;font-weight:900;line-height:1.2}.category-sub{color:#81988e;font-size:12px;font-weight:800;margin-top:2px}.category-count{color:#b7ffe5;font-weight:900;direction:ltr;font-size:14px;background:rgba(32,223,159,.10);border:1px solid rgba(32,223,159,.16);border-radius:999px;padding:6px 10px}
+    .results-panel{display:grid;gap:10px}.result-card{border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.05);padding:15px;display:grid;gap:9px}.result-card.hide{display:none}.result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.result-card h4{font-size:19px;font-weight:900;line-height:1.25}.result-card p{color:#9db7ab;font-size:13px;font-weight:800}.type-badge{border-radius:999px;padding:5px 9px;color:#06110d;background:#b7ffe5;font-size:11px;font-weight:900;white-space:nowrap}.type-badge.request{background:#ecfeff}.meta-list{display:flex;gap:6px;flex-wrap:wrap}.meta-pill{border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:#b4c9bf;padding:5px 8px;font-size:11px;font-weight:900}.empty-state{display:none;border-radius:24px;border:1px dashed rgba(255,255,255,.16);padding:18px;color:#9db7ab;text-align:center;font-weight:900}.empty-state.show{display:block}
+    .side-card{border-radius:28px;border:1px solid var(--line);background:rgba(255,255,255,.055);padding:16px}.side-card h3{font-size:19px;font-weight:900;margin-bottom:8px}.side-card p{color:#9db7ab;font-size:13px;font-weight:800}.side-action{margin-top:12px;display:grid;gap:8px}.side-action a{min-height:46px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--cyan));color:#06110d;font-weight:900}.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.mini-stat{border-radius:17px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);padding:12px;text-align:center}.mini-stat strong{display:block;color:#b7ffe5;font-size:20px;line-height:1;direction:ltr}.mini-stat span{display:block;color:#9db7ab;font-size:11px;font-weight:900;margin-top:5px}
+    .bottom-nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(640px,calc(100% - 32px));height:78px;background:rgba(8,18,14,.96);border:1px solid var(--line);border-radius:30px;display:grid;grid-template-columns:repeat(5,1fr);z-index:60;box-shadow:0 20px 60px rgba(0,0,0,.58);overflow:hidden;backdrop-filter:blur(18px)}.nav-item{display:grid;place-items:center;color:#8ea69c;font-size:12px;font-weight:900;padding:8px;cursor:pointer;background:transparent;border:0}.nav-item b{font-size:22px;line-height:1}.nav-item.active{color:#fff;background:linear-gradient(135deg,rgba(32,223,159,.20),rgba(69,199,244,.10));margin:6px;border-radius:24px;border:1px solid rgba(32,223,159,.16)}
+    @media(max-width:900px){.cinema-layout{grid-template-columns:1fr}.cinema-side{position:relative}.cinema-window{height:calc(100vh - 28px);border-radius:30px}.cinema-head{min-height:78px;padding:14px 16px}.cinema-title h2{font-size:23px}.cinema-title p{display:none}}
+    @media(max-width:520px){.app{padding:0 12px}.hero{min-height:300px;padding:22px}.hero-art{width:128px;height:128px;border-radius:32px}.hero-art span{font-size:56px}.hero h2{font-size:29px}.promo{grid-template-columns:1fr 58px;min-height:156px;padding:18px}.promo-art{width:58px;height:58px;border-radius:20px;font-size:30px}.promo h4{font-size:22px}.cinema-overlay{padding:10px}.cinema-window{border-radius:26px;height:calc(100vh - 20px)}.cinema-body{padding:14px}.job-type-grid{grid-template-columns:1fr}.job-hero-panel h3{font-size:24px}.category-row{grid-template-columns:44px 1fr auto;padding:13px 12px}.category-count{font-size:12px;padding:5px 8px}}
   </style>
 </head>
 <body>
@@ -649,10 +53,7 @@
     <header class="header">
       <a class="profile-btn" href="#account">⚙️</a>
       <div class="brand">
-        <div>
-          <h1>HireX</h1>
-          <p>بوابة الوظائف والخدمات المهنية</p>
-        </div>
+        <div><h1>HireX</h1><p>بوابة الوظائف والخدمات المهنية</p></div>
         <div class="brand-logo">H</div>
       </div>
     </header>
@@ -667,48 +68,16 @@
         </div>
       </section>
 
-      <div class="section-head">
-        <h3>لماذا HireX؟</h3>
-        <span>إعلانات تعريفية</span>
-      </div>
-
+      <div class="section-head"><h3>لماذا HireX؟</h3><span>إعلانات تعريفية</span></div>
       <section class="marketing-stack">
-        <article class="promo gold">
-          <div class="promo-text">
-            <div class="promo-label">للباحثين عن عمل</div>
-            <h4>حوّل سيرتك إلى إعلان احترافي</h4>
-            <p>انشر نفسك بطريقة واضحة داخل القسم المناسب ليصل ملفك لأصحاب العمل.</p>
-          </div>
-          <div class="promo-art">📄</div>
-        </article>
-
-        <article class="promo blue">
-          <div class="promo-text">
-            <div class="promo-label">للشركات وأصحاب الأعمال</div>
-            <h4>أعلن عن وظيفتك بشكل منظم</h4>
-            <p>اعرض الفرصة، حدد القسم والمدينة، واستقبل المتقدمين بوضوح.</p>
-          </div>
-          <div class="promo-art">🏢</div>
-        </article>
-
-        <article class="promo">
-          <div class="promo-text">
-            <div class="promo-label">لمقدمي الخدمات</div>
-            <h4>اعرض خبرتك كخدمة مهنية</h4>
-            <p>خدمات السيرة الذاتية، التدريب، الاستشارات، والتوظيف في مكان واحد.</p>
-          </div>
-          <div class="promo-art">🛠️</div>
-        </article>
+        <article class="promo gold"><div class="promo-text"><div class="promo-label">للباحثين عن عمل</div><h4>حوّل سيرتك إلى إعلان احترافي</h4><p>انشر نفسك بطريقة واضحة داخل القسم المناسب ليصل ملفك لأصحاب العمل.</p></div><div class="promo-art">📄</div></article>
+        <article class="promo blue"><div class="promo-text"><div class="promo-label">للشركات وأصحاب الأعمال</div><h4>أعلن عن وظيفتك بشكل منظم</h4><p>اعرض الفرصة، حدد القسم والمدينة، واستقبل المتقدمين بوضوح.</p></div><div class="promo-art">🏢</div></article>
+        <article class="promo"><div class="promo-text"><div class="promo-label">لمقدمي الخدمات</div><h4>اعرض خبرتك كخدمة مهنية</h4><p>خدمات السيرة الذاتية، التدريب، الاستشارات، والتوظيف في مكان واحد.</p></div><div class="promo-art">🛠️</div></article>
       </section>
-
       <section class="story-card">
         <h3>الرئيسية للتعريف، والتنفيذ في التبويبات</h3>
         <p>هذه الصفحة مخصصة للتسويق والتعريف بالمنصة فقط. أما عند الضغط على وظائف ستظهر لك نافذة ذكية بعرض سينمائي.</p>
-        <div class="story-points">
-          <div class="point"><b>1</b> وظائف للفرص والسير الذاتية</div>
-          <div class="point"><b>2</b> خدمات مهنية قابلة للإعلان</div>
-          <div class="point"><b>3</b> سيرة ذاتية احترافية قابلة للنشر</div>
-        </div>
+        <div class="story-points"><div class="point"><b>1</b> وظائف للفرص والسير الذاتية</div><div class="point"><b>2</b> خدمات مهنية قابلة للإعلان</div><div class="point"><b>3</b> سيرة ذاتية احترافية قابلة للنشر</div></div>
       </section>
     </main>
 
@@ -724,13 +93,7 @@
   <div class="cinema-overlay" id="jobsOverlay" aria-hidden="true">
     <section class="cinema-window" role="dialog" aria-modal="true">
       <header class="cinema-head">
-        <div class="cinema-title">
-          <div class="cinema-icon">💼</div>
-          <div>
-            <h2>بوابة الوظائف</h2>
-            <p>نافذة ذكية بعرض سينمائي لفرص العمل والسير الذاتية</p>
-          </div>
-        </div>
+        <div class="cinema-title"><div class="cinema-icon">💼</div><div><h2>بوابة الوظائف</h2><p>نافذة ذكية بعرض سينمائي لفرص العمل والسير الذاتية</p></div></div>
         <button class="close-btn" onclick="closeJobsModal()">×</button>
       </header>
 
@@ -740,107 +103,80 @@
             <section class="job-hero-panel">
               <div class="tag">فرص عمل · يطلب عمل · تصنيفات مهنية</div>
               <h3>كل ما يخص الوظائف داخل نافذة واحدة.</h3>
-              <p>ابحث، تصفح الأقسام، أو اختر بين فرص العمل والسير الذاتية المنشورة للباحثين عن عمل.</p>
-              <div class="job-search">
-                <input id="jobSearch" placeholder="ابحث في الوظائف أو السير الذاتية..." />
-                <button onclick="searchJobs()">⌕</button>
-              </div>
+              <p>اختر القسم لعرض كل البيانات فيه، أو استخدم فلتر فرص عمل / يطلب عمل لتصفية النتائج.</p>
+              <div class="job-search"><input id="jobSearch" placeholder="ابحث في الوظائف أو السير الذاتية..." oninput="applyFilters()" /><button onclick="applyFilters()">⌕</button></div>
             </section>
 
-            <section class="job-type-grid">
-              <a class="job-type-card offer" href="#job-categories">
-                <div class="job-type-icon">💼</div>
-                <div>
-                  <div class="job-type-title">فرص عمل</div>
-                  <div class="job-type-sub">وظائف منشورة من الشركات وأصحاب الأعمال</div>
-                </div>
-              </a>
-
-              <a class="job-type-card request" href="#job-categories">
-                <div class="job-type-icon">👤</div>
-                <div>
-                  <div class="job-type-title">يطلب عمل</div>
-                  <div class="job-type-sub">سير ذاتية ومرشحون يبحثون عن فرصة</div>
-                </div>
-              </a>
-            </section>
-
-            <div class="section-mini-head" id="job-categories">
-              <h3>الأقسام المهنية</h3>
-              <span>تصفح حسب التخصص</span>
+            <div class="filter-status">
+              <strong id="filterLabel">يعرض: جميع البيانات</strong>
+              <button onclick="resetFilters()">إلغاء الفلاتر</button>
             </div>
 
+            <section class="job-type-grid">
+              <button class="job-type-card offer" id="filterOffer" onclick="setTypeFilter('offer')">
+                <div class="job-type-icon">💼</div><div><div class="job-type-title">فرص عمل</div><div class="job-type-sub">يعرض فقط الوظائف المنشورة من الشركات</div></div>
+              </button>
+              <button class="job-type-card request" id="filterRequest" onclick="setTypeFilter('request')">
+                <div class="job-type-icon">👤</div><div><div class="job-type-title">يطلب عمل</div><div class="job-type-sub">يعرض فقط الباحثين عن عمل والسير الذاتية</div></div>
+              </button>
+            </section>
+
+            <div class="section-mini-head"><h3>الأقسام المهنية</h3><span>اختيار القسم يعمل كفلتر</span></div>
+
             <section class="category-panel">
-              <a class="category-row" href="#">
-                <div class="category-icon">🧮</div>
-                <div><div class="category-title">حسابات</div><div class="category-sub">محاسبين، مالية، إدخال بيانات</div></div>
-                <div class="category-count">0</div>
-              </a>
-              <a class="category-row" href="#">
-                <div class="category-icon">💻</div>
-                <div><div class="category-title">تقني</div><div class="category-sub">برمجة، دعم فني، تصميم</div></div>
-                <div class="category-count">0</div>
-              </a>
-              <a class="category-row" href="#">
-                <div class="category-icon">🚗</div>
-                <div><div class="category-title">سائق</div><div class="category-sub">نقل، توصيل، سائق خاص</div></div>
-                <div class="category-count">0</div>
-              </a>
-              <a class="category-row" href="#">
-                <div class="category-icon">🩺</div>
-                <div><div class="category-title">طب وتمريض</div><div class="category-sub">تمريض، عيادات، رعاية</div></div>
-                <div class="category-count">0</div>
-              </a>
-              <a class="category-row" href="#">
-                <div class="category-icon">📈</div>
-                <div><div class="category-title">مبيعات وتسويق</div><div class="category-sub">مندوبين، تسويق، خدمة عملاء</div></div>
-                <div class="category-count">0</div>
-              </a>
-              <a class="category-row" href="#">
-                <div class="category-icon">🧤</div>
-                <div><div class="category-title">عمال وتشغيل</div><div class="category-sub">نظافة، تشغيل، صيانة، ميداني</div></div>
-                <div class="category-count">0</div>
-              </a>
+              <button class="category-row" data-category="accounting" onclick="setCategoryFilter('accounting')"><div class="category-icon">🧮</div><div><div class="category-title">حسابات</div><div class="category-sub">محاسبين، مالية، إدخال بيانات</div></div><div class="category-count" data-count="accounting">0</div></button>
+              <button class="category-row" data-category="technical" onclick="setCategoryFilter('technical')"><div class="category-icon">💻</div><div><div class="category-title">تقني</div><div class="category-sub">برمجة، دعم فني، تصميم</div></div><div class="category-count" data-count="technical">0</div></button>
+              <button class="category-row" data-category="driver" onclick="setCategoryFilter('driver')"><div class="category-icon">🚗</div><div><div class="category-title">سائق</div><div class="category-sub">نقل، توصيل، سائق خاص</div></div><div class="category-count" data-count="driver">0</div></button>
+              <button class="category-row" data-category="medical" onclick="setCategoryFilter('medical')"><div class="category-icon">🩺</div><div><div class="category-title">طب وتمريض</div><div class="category-sub">تمريض، عيادات، رعاية</div></div><div class="category-count" data-count="medical">0</div></button>
+              <button class="category-row" data-category="sales" onclick="setCategoryFilter('sales')"><div class="category-icon">📈</div><div><div class="category-title">مبيعات وتسويق</div><div class="category-sub">مندوبين، تسويق، خدمة عملاء</div></div><div class="category-count" data-count="sales">0</div></button>
+              <button class="category-row" data-category="operations" onclick="setCategoryFilter('operations')"><div class="category-icon">🧤</div><div><div class="category-title">عمال وتشغيل</div><div class="category-sub">نظافة، تشغيل، صيانة، ميداني</div></div><div class="category-count" data-count="operations">0</div></button>
+            </section>
+
+            <div class="section-mini-head"><h3>النتائج</h3><span id="resultsCount">0 نتيجة</span></div>
+            <section class="results-panel" id="resultsPanel">
+              <article class="result-card" data-type="offer" data-category="accounting" data-keywords="محاسب عام حسابات الرياض شركة">
+                <div class="result-top"><div><h4>محاسب عام</h4><p>شركة تبحث عن محاسب بخبرة متوسطة في الرياض.</p></div><span class="type-badge">فرصة عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">حسابات</span><span class="meta-pill">الرياض</span><span class="meta-pill">دوام كامل</span></div>
+              </article>
+              <article class="result-card" data-type="offer" data-category="technical" data-keywords="فني دعم تقني جدة بلاغات">
+                <div class="result-top"><div><h4>فني دعم تقني</h4><p>فرصة لفني تقني يجيد البلاغات وخدمة العملاء.</p></div><span class="type-badge">فرصة عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">تقني</span><span class="meta-pill">جدة</span></div>
+              </article>
+              <article class="result-card" data-type="request" data-category="operations" data-keywords="باحث عن عمل تشغيل ميداني الرياض">
+                <div class="result-top"><div><h4>مشرف تشغيل يبحث عن عمل</h4><p>خبرة في التشغيل الميداني وإدارة فرق العمل.</p></div><span class="type-badge request">يطلب عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">عمال وتشغيل</span><span class="meta-pill">الرياض</span><span class="meta-pill">متاح فورًا</span></div>
+              </article>
+              <article class="result-card" data-type="request" data-category="accounting" data-keywords="محاسب يبحث عن عمل حديث تخرج حسابات">
+                <div class="result-top"><div><h4>محاسب حديث تخرج</h4><p>باحث عن فرصة في قسم الحسابات والمالية.</p></div><span class="type-badge request">يطلب عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">حسابات</span><span class="meta-pill">الرياض</span></div>
+              </article>
+              <article class="result-card" data-type="offer" data-category="driver" data-keywords="سائق توصيل دوام كامل">
+                <div class="result-top"><div><h4>سائق توصيل</h4><p>مطلوب سائق ملتزم للعمل بدوام كامل.</p></div><span class="type-badge">فرصة عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">سائق</span><span class="meta-pill">دوام كامل</span></div>
+              </article>
+              <article class="result-card" data-type="request" data-category="medical" data-keywords="ممرضة تبحث عن عمل طب تمريض">
+                <div class="result-top"><div><h4>ممرضة تبحث عن عمل</h4><p>خبرة في الرعاية والعيادات، متاحة للعمل.</p></div><span class="type-badge request">يطلب عمل</span></div>
+                <div class="meta-list"><span class="meta-pill">طب وتمريض</span><span class="meta-pill">متاحة</span></div>
+              </article>
+              <div class="empty-state" id="emptyState">لا توجد نتائج مطابقة لهذا الفلتر حاليًا.</div>
             </section>
           </div>
 
           <aside class="cinema-side">
             <section class="side-card">
-              <h3>لوحة سريعة</h3>
-              <p>هذه الأرقام سيتم ربطها لاحقًا بقاعدة البيانات لعرض الوظائف والسير الذاتية بشكل حي.</p>
+              <h3>لوحة الفلاتر</h3>
+              <p>اختيار القسم يعرض كل البيانات داخله. اختيار فرص عمل أو يطلب عمل يصفّي النتائج حسب النوع.</p>
               <div class="mini-stats">
-                <div class="mini-stat"><strong>0</strong><span>فرص عمل</span></div>
-                <div class="mini-stat"><strong>0</strong><span>يطلب عمل</span></div>
-                <div class="mini-stat"><strong>0</strong><span>مميزة</span></div>
-                <div class="mini-stat"><strong>0</strong><span>اليوم</span></div>
+                <div class="mini-stat"><strong id="offerCount">0</strong><span>فرص عمل</span></div>
+                <div class="mini-stat"><strong id="requestCount">0</strong><span>يطلب عمل</span></div>
+                <div class="mini-stat"><strong id="visibleCount">0</strong><span>ظاهرة الآن</span></div>
+                <div class="mini-stat"><strong id="totalCount">0</strong><span>الإجمالي</span></div>
               </div>
-              <div class="side-action">
-                <a href="#">أضف إعلان وظيفة</a>
-              </div>
+              <div class="side-action"><a href="#">أضف إعلان وظيفة</a></div>
             </section>
-
             <section class="side-card">
-              <h3>إعلانات مميزة</h3>
-              <p>شكل عرض مصغر للإعلانات داخل بوابة الوظائف.</p>
-
-              <article class="job-card">
-                <h4>محاسب عام</h4>
-                <p>شركة تبحث عن محاسب بخبرة متوسطة في الرياض.</p>
-                <div class="meta-list">
-                  <span class="meta-pill">حسابات</span>
-                  <span class="meta-pill">الرياض</span>
-                  <span class="meta-pill">دوام كامل</span>
-                </div>
-              </article>
-
-              <article class="job-card">
-                <h4>فني دعم تقني</h4>
-                <p>فرصة لفني تقني يجيد البلاغات وخدمة العملاء.</p>
-                <div class="meta-list">
-                  <span class="meta-pill">تقني</span>
-                  <span class="meta-pill">جدة</span>
-                </div>
-              </article>
+              <h3>طريقة العمل</h3>
+              <p>مثال: اختر حسابات لعرض كل إعلانات الحسابات. ثم اضغط فرص عمل لعرض وظائف الحسابات فقط، أو يطلب عمل لعرض الباحثين عن عمل في الحسابات فقط.</p>
             </section>
           </aside>
         </div>
@@ -849,10 +185,10 @@
   </div>
 
   <script>
+    const state = { type: 'all', category: 'all', query: '' };
+
     function setActive(tab){
-      document.querySelectorAll('.nav-item').forEach(item=>{
-        item.classList.toggle('active', item.dataset.tab === tab);
-      });
+      document.querySelectorAll('.nav-item').forEach(item=> item.classList.toggle('active', item.dataset.tab === tab));
     }
 
     function goHome(){
@@ -867,6 +203,7 @@
       document.getElementById('jobsOverlay').setAttribute('aria-hidden','false');
       document.body.classList.add('modal-open');
       setTimeout(()=>document.getElementById('jobSearch')?.focus(), 180);
+      applyFilters();
     }
 
     function closeJobsModal(activateHome = true){
@@ -880,10 +217,73 @@
       alert('سيتم تجهيز تبويب ' + name + ' بنفس أسلوب النافذة الذكية لاحقًا.');
     }
 
-    function searchJobs(){
-      const q = document.getElementById('jobSearch').value.trim();
-      if(!q) return;
-      alert('سيتم ربط البحث لاحقًا: ' + q);
+    function setTypeFilter(type){
+      state.type = state.type === type ? 'all' : type;
+      applyFilters();
+    }
+
+    function setCategoryFilter(category){
+      state.category = state.category === category ? 'all' : category;
+      applyFilters();
+    }
+
+    function resetFilters(){
+      state.type = 'all';
+      state.category = 'all';
+      state.query = '';
+      document.getElementById('jobSearch').value = '';
+      applyFilters();
+    }
+
+    function applyFilters(){
+      state.query = (document.getElementById('jobSearch')?.value || '').trim().toLowerCase();
+
+      const cards = Array.from(document.querySelectorAll('.result-card'));
+      let visible = 0;
+      let offers = 0;
+      let requests = 0;
+      const categoryTotals = {};
+
+      cards.forEach(card=>{
+        const type = card.dataset.type;
+        const category = card.dataset.category;
+        const keywords = (card.dataset.keywords || card.textContent || '').toLowerCase();
+
+        if(type === 'offer') offers++;
+        if(type === 'request') requests++;
+        categoryTotals[category] = (categoryTotals[category] || 0) + 1;
+
+        const matchType = state.type === 'all' || state.type === type;
+        const matchCategory = state.category === 'all' || state.category === category;
+        const matchQuery = !state.query || keywords.includes(state.query);
+
+        const show = matchType && matchCategory && matchQuery;
+        card.classList.toggle('hide', !show);
+        if(show) visible++;
+      });
+
+      document.querySelectorAll('[data-count]').forEach(el=>{
+        el.textContent = categoryTotals[el.dataset.count] || 0;
+      });
+
+      document.getElementById('offerCount').textContent = offers;
+      document.getElementById('requestCount').textContent = requests;
+      document.getElementById('visibleCount').textContent = visible;
+      document.getElementById('totalCount').textContent = cards.length;
+      document.getElementById('resultsCount').textContent = visible + ' نتيجة';
+
+      document.getElementById('emptyState').classList.toggle('show', visible === 0);
+
+      document.getElementById('filterOffer').classList.toggle('active', state.type === 'offer');
+      document.getElementById('filterRequest').classList.toggle('active', state.type === 'request');
+
+      document.querySelectorAll('.category-row').forEach(row=>{
+        row.classList.toggle('active', state.category === row.dataset.category);
+      });
+
+      const typeLabel = state.type === 'offer' ? 'فرص عمل' : state.type === 'request' ? 'يطلب عمل' : 'كل الأنواع';
+      const categoryLabel = state.category === 'all' ? 'كل الأقسام' : document.querySelector('.category-row[data-category="' + state.category + '"] .category-title')?.textContent || state.category;
+      document.getElementById('filterLabel').textContent = 'يعرض: ' + typeLabel + ' · ' + categoryLabel;
     }
 
     document.getElementById('jobsOverlay').addEventListener('click', function(e){
