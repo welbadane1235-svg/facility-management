@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HireX Admin | لوحة الإدارة</title>
+  <title>HireX Admin Pro | لوحة الإدارة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
       --shadow:0 24px 80px rgba(0,0,0,.62);
     }
     *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;min-height:100%;overflow-x:hidden}
     body{
       min-height:100vh;
       font-family:Tajawal,system-ui,sans-serif;
@@ -32,53 +33,24 @@
         radial-gradient(circle at 85% 8%,rgba(0,184,212,.09),transparent 34%),
         linear-gradient(180deg,#020606,#061111 50%,#010202);
       color:var(--text);
-      overflow-x:hidden;
     }
     button,input,select,textarea{font-family:inherit}
     button{cursor:pointer}
-    .admin-shell{
-      width:min(1200px,100%);
-      margin:auto;
-      padding:16px;
-      min-height:100vh;
-    }
-
-    .admin-login{
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:18px;
-    }
+    .admin-shell{width:min(1280px,100%);margin:auto;padding:16px;min-height:100vh}
+    .admin-login{min-height:100vh;display:grid;place-items:center;padding:18px}
     .login-card{
-      width:min(440px,100%);
+      width:min(460px,100%);
       border-radius:34px;
       border:1px solid rgba(0,234,240,.34);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(0,234,240,.14),transparent 34%),
-        linear-gradient(145deg,rgba(3,30,32,.95),rgba(3,9,11,.98));
+      background:radial-gradient(circle at 50% 0%,rgba(0,234,240,.14),transparent 34%),linear-gradient(145deg,rgba(3,30,32,.95),rgba(3,9,11,.98));
       box-shadow:var(--shadow), inset 0 0 26px rgba(0,234,240,.035);
       padding:24px;
       display:grid;
       gap:14px;
       text-align:center;
     }
-    .hrx-logo{
-      direction:ltr;
-      display:grid;
-      justify-items:center;
-      gap:5px;
-      color:var(--cyan);
-      filter:drop-shadow(0 0 16px rgba(0,234,240,.65));
-      user-select:none;
-    }
-    .hrx-mark{
-      font-family:Georgia,'Times New Roman',serif;
-      font-size:66px;
-      line-height:.82;
-      letter-spacing:-8px;
-      color:var(--cyan);
-      text-shadow:0 0 16px rgba(0,234,240,.8),0 0 36px rgba(0,234,240,.32);
-    }
+    .hrx-logo{direction:ltr;display:grid;justify-items:center;gap:5px;color:var(--cyan);filter:drop-shadow(0 0 16px rgba(0,234,240,.65));user-select:none}
+    .hrx-mark{font-family:Georgia,'Times New Roman',serif;font-size:66px;line-height:.82;letter-spacing:-8px;color:var(--cyan);text-shadow:0 0 16px rgba(0,234,240,.8),0 0 36px rgba(0,234,240,.32)}
     .hrx-mark span{font-style:italic;display:inline-block;transform:translateX(-7px)}
     .hrx-word{font-size:13px;letter-spacing:8px;color:var(--cyan)}
     .login-card h1{font-size:27px;line-height:1.25;font-weight:900}
@@ -86,194 +58,84 @@
     .field{display:grid;gap:6px;text-align:right}
     .field span{font-size:12px;font-weight:900;color:#A7F3E1}
     .field input,.field select,.field textarea{
-      width:100%;
-      height:52px;
-      border-radius:18px;
-      border:1px solid rgba(0,234,240,.18);
-      background:#061011;
-      color:white;
-      padding:0 14px;
-      outline:none;
-      font-weight:800;
+      width:100%;height:52px;border-radius:18px;border:1px solid rgba(0,234,240,.18);
+      background:#061011;color:white;padding:0 14px;outline:none;font-weight:800;
     }
-    .field textarea{height:auto;min-height:100px;padding-top:12px;resize:vertical}
-    .field input:focus,.field select:focus,.field textarea:focus{
-      border-color:rgba(0,234,240,.55);
-      box-shadow:0 0 0 3px rgba(0,234,240,.08);
-    }
+    .field textarea{height:auto;min-height:105px;padding-top:12px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(0,234,240,.55);box-shadow:0 0 0 3px rgba(0,234,240,.08)}
     .primary-btn{
-      min-height:52px;
-      border:0;
-      border-radius:18px;
-      background:linear-gradient(180deg,#22F0EE,#04B8C4);
-      color:#03120f;
-      font-weight:900;
-      font-size:16px;
-      box-shadow:0 0 24px rgba(0,234,240,.20);
+      min-height:52px;border:0;border-radius:18px;background:linear-gradient(180deg,#22F0EE,#04B8C4);
+      color:#03120f;font-weight:900;font-size:16px;box-shadow:0 0 24px rgba(0,234,240,.20);
     }
-    .ghost-btn{
-      min-height:44px;
-      border:1px solid var(--line2);
-      border-radius:16px;
-      background:rgba(255,255,255,.045);
-      color:white;
-      font-weight:900;
-    }
-    .note{
-      border-radius:18px;
-      border:1px solid rgba(245,200,111,.24);
-      background:rgba(245,200,111,.10);
-      color:#f6e5ba;
-      padding:10px 12px;
-      font-size:12px;
-      font-weight:800;
-      line-height:1.5;
-    }
-
+    .ghost-btn{min-height:44px;border:1px solid var(--line2);border-radius:16px;background:rgba(255,255,255,.045);color:white;font-weight:900}
+    .note{border-radius:18px;border:1px solid rgba(245,200,111,.24);background:rgba(245,200,111,.10);color:#f6e5ba;padding:10px 12px;font-size:12px;font-weight:800;line-height:1.5}
     .admin-app{display:none}
     .admin-app.show{display:block}
     .topbar{
-      min-height:86px;
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:14px;
-      align-items:center;
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:linear-gradient(180deg,rgba(2,6,6,.96),rgba(2,6,6,.70));
-      backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(0,234,240,.10);
-      padding:12px 0;
+      min-height:86px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+      position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(2,6,6,.96),rgba(2,6,6,.70));
+      backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,234,240,.10);padding:12px 0;
     }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
+    .brand{display:flex;align-items:center;gap:12px}
     .brand .mini-logo{
-      width:56px;height:56px;border-radius:20px;
-      border:1px solid rgba(0,234,240,.32);
-      display:grid;place-items:center;color:var(--cyan);
-      background:rgba(0,234,240,.045);
-      font-family:Georgia,serif;
-      font-size:22px;
-      direction:ltr;
-      text-shadow:0 0 14px rgba(0,234,240,.75);
+      width:56px;height:56px;border-radius:20px;border:1px solid rgba(0,234,240,.32);
+      display:grid;place-items:center;color:var(--cyan);background:rgba(0,234,240,.045);
+      font-family:Georgia,serif;font-size:22px;direction:ltr;text-shadow:0 0 14px rgba(0,234,240,.75);
     }
     .brand h2{font-size:22px;line-height:1;font-weight:900}
     .brand p{font-size:12px;color:var(--muted);font-weight:800;margin-top:4px}
-    .top-actions{display:flex;gap:8px;align-items:center}
+    .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .top-actions button{
       height:42px;border-radius:15px;border:1px solid var(--line);
       background:rgba(0,234,240,.055);color:white;font-weight:900;padding:0 12px;
     }
-    .layout{
-      display:grid;
-      grid-template-columns:250px 1fr;
-      gap:16px;
-      align-items:start;
-      margin-top:16px;
-    }
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start;margin-top:16px}
     .sidebar{
-      position:sticky;
-      top:104px;
-      border-radius:28px;
-      border:1px solid var(--line);
+      position:sticky;top:104px;border-radius:28px;border:1px solid var(--line);
       background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
-      padding:12px;
-      display:grid;
-      gap:8px;
-      box-shadow:0 18px 50px rgba(0,0,0,.35);
+      padding:12px;display:grid;gap:8px;box-shadow:0 18px 50px rgba(0,0,0,.35);
     }
     .side-tab{
-      min-height:50px;
-      border:1px solid transparent;
-      background:transparent;
-      color:#cdd9d9;
-      border-radius:18px;
-      display:grid;
-      grid-template-columns:34px 1fr;
-      align-items:center;
-      gap:10px;
-      text-align:right;
-      padding:0 10px;
-      font-weight:900;
+      min-height:50px;border:1px solid transparent;background:transparent;color:#cdd9d9;border-radius:18px;
+      display:grid;grid-template-columns:34px 1fr;align-items:center;gap:10px;text-align:right;padding:0 10px;font-weight:900;
     }
-    .side-tab b{
-      width:34px;height:34px;border-radius:13px;display:grid;place-items:center;
-      color:var(--cyan);border:1px solid rgba(0,234,240,.20);
-      background:rgba(0,234,240,.045);font-size:13px;direction:ltr;
-    }
-    .side-tab.active{
-      border-color:rgba(0,234,240,.36);
-      background:linear-gradient(135deg,rgba(0,234,240,.15),rgba(0,234,240,.04));
-      color:white;
-      box-shadow:inset 0 0 18px rgba(0,234,240,.05);
-    }
+    .side-tab b{width:34px;height:34px;border-radius:13px;display:grid;place-items:center;color:var(--cyan);border:1px solid rgba(0,234,240,.20);background:rgba(0,234,240,.045);font-size:13px;direction:ltr}
+    .side-tab.active{border-color:rgba(0,234,240,.36);background:linear-gradient(135deg,rgba(0,234,240,.15),rgba(0,234,240,.04));color:white;box-shadow:inset 0 0 18px rgba(0,234,240,.05)}
     .content{display:grid;gap:16px}
     .hero{
-      border-radius:32px;
-      border:1px solid rgba(0,234,240,.36);
-      background:
-        radial-gradient(circle at 0% 100%,rgba(0,234,240,.12),transparent 34%),
-        linear-gradient(135deg,rgba(3,32,34,.94),rgba(3,10,12,.96));
-      padding:20px;
-      box-shadow:0 18px 52px rgba(0,0,0,.45), inset 0 0 26px rgba(0,234,240,.035);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
+      border-radius:32px;border:1px solid rgba(0,234,240,.36);
+      background:radial-gradient(circle at 0% 100%,rgba(0,234,240,.12),transparent 34%),linear-gradient(135deg,rgba(3,32,34,.94),rgba(3,10,12,.96));
+      padding:20px;box-shadow:0 18px 52px rgba(0,0,0,.45), inset 0 0 26px rgba(0,234,240,.035);
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
     }
-    .hero span.status{
-      display:inline-flex;width:max-content;border-radius:999px;padding:5px 12px;
-      background:rgba(0,234,240,.10);border:1px solid rgba(0,234,240,.24);
-      color:var(--cyan);font-size:12px;font-weight:900;margin-bottom:8px;
-    }
+    .hero span.status{display:inline-flex;width:max-content;border-radius:999px;padding:5px 12px;background:rgba(0,234,240,.10);border:1px solid rgba(0,234,240,.24);color:var(--cyan);font-size:12px;font-weight:900;margin-bottom:8px}
     .hero h1{font-size:30px;line-height:1.2;font-weight:900}
     .hero p{color:#cdd9d9;font-size:14px;line-height:1.6;font-weight:800;margin-top:5px}
     .hero-actions{display:flex;gap:8px;flex-wrap:wrap}
     .hero-actions button{min-height:42px;border-radius:15px;border:1px solid var(--line);background:rgba(0,234,240,.055);color:white;font-weight:900;padding:0 12px}
     .hero-actions .primary-btn{min-height:42px;color:#03120f;border:0}
-
-    .kpis{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-    }
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
     .kpi{
-      min-height:118px;
-      border-radius:26px;
-      border:1px solid rgba(0,234,240,.20);
+      min-height:118px;border-radius:26px;border:1px solid rgba(0,234,240,.20);
       background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
-      padding:16px;
-      display:grid;
-      align-content:space-between;
+      padding:16px;display:grid;align-content:space-between;
     }
     .kpi small{color:var(--muted);font-weight:900}
     .kpi strong{color:var(--cyan);font-size:34px;line-height:1;direction:ltr;text-shadow:0 0 14px rgba(0,234,240,.56)}
     .kpi span{color:#d5e2e2;font-size:12px;font-weight:800}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     .panel{
-      border-radius:28px;
-      border:1px solid rgba(0,234,240,.18);
+      border-radius:28px;border:1px solid rgba(0,234,240,.18);
       background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.025));
-      padding:16px;
-      display:grid;
-      gap:12px;
+      padding:16px;display:grid;gap:12px;
     }
-    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .panel-head h3{font-size:20px;font-weight:900}
     .panel-head span{color:var(--muted);font-size:12px;font-weight:900}
     .row{
-      border-radius:20px;
-      border:1px solid rgba(0,234,240,.14);
-      background:rgba(0,234,240,.035);
-      padding:12px;
-      display:grid;
-      grid-template-columns:44px 1fr auto;
-      gap:10px;
-      align-items:center;
+      border-radius:20px;border:1px solid rgba(0,234,240,.14);background:rgba(0,234,240,.035);
+      padding:12px;display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;
     }
     .row-icon{
       width:44px;height:44px;border-radius:16px;display:grid;place-items:center;
@@ -282,74 +144,66 @@
     }
     .row h4{font-size:15.5px;line-height:1.25;font-weight:900}
     .row p{font-size:12px;color:var(--muted);font-weight:800;margin-top:2px}
-    .row-actions{display:flex;gap:6px}
-    .row-actions button{
+    .row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .row-actions button,.small-btn{
       height:34px;border-radius:12px;border:1px solid var(--line2);
       background:rgba(255,255,255,.045);color:white;font-size:12px;font-weight:900;padding:0 10px;
     }
-    .row-actions button.ok{color:var(--cyan);border-color:rgba(0,234,240,.28)}
-    .row-actions button.danger{color:#ffccd4;border-color:rgba(251,113,133,.28)}
-    .empty{
-      border:1px dashed rgba(255,255,255,.18);
-      border-radius:22px;
-      padding:22px;
-      color:var(--muted);
-      text-align:center;
-      font-weight:900;
-    }
-    .chart{
-      height:180px;
-      display:flex;
-      align-items:end;
-      gap:10px;
-      padding-top:10px;
-    }
-    .bar{
-      flex:1;
-      min-width:28px;
-      border-radius:14px 14px 6px 6px;
-      background:linear-gradient(180deg,#22F0EE,#046d74);
-      box-shadow:0 0 18px rgba(0,234,240,.18);
-      position:relative;
-    }
-    .bar small{
-      position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
-      color:var(--muted);font-size:11px;font-weight:900;
-    }
+    .row-actions button.ok,.small-btn.ok{color:var(--cyan);border-color:rgba(0,234,240,.28)}
+    .row-actions button.danger,.small-btn.danger{color:#ffccd4;border-color:rgba(251,113,133,.28)}
+    .row-actions button.warn,.small-btn.warn{color:#f6e5ba;border-color:rgba(245,200,111,.26)}
+    .empty{border:1px dashed rgba(255,255,255,.18);border-radius:22px;padding:22px;color:var(--muted);text-align:center;font-weight:900}
+    .chart{height:180px;display:flex;align-items:end;gap:10px;padding-top:10px}
+    .bar{flex:1;min-width:28px;border-radius:14px 14px 6px 6px;background:linear-gradient(180deg,#22F0EE,#046d74);box-shadow:0 0 18px rgba(0,234,240,.18);position:relative}
+    .bar small{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:11px;font-weight:900}
     .table-tools{display:flex;gap:8px;flex-wrap:wrap}
     .table-tools input,.table-tools select{
       height:42px;border-radius:15px;border:1px solid rgba(0,234,240,.16);
-      background:#061011;color:white;padding:0 12px;outline:none;font-weight:800;
+      background:#061011;color:white;padding:0 12px;outline:none;font-weight:800;min-width:150px;
     }
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(80px);
-      background:rgba(3,20,22,.96);border:1px solid rgba(0,234,240,.28);
-      color:white;padding:12px 16px;border-radius:18px;z-index:50;
-      box-shadow:0 18px 50px rgba(0,0,0,.45);
-      transition:.25s ease;
-      font-weight:900;
-    }
-    .toast.show{transform:translateX(-50%) translateY(0)}
-    .badge{
-      display:inline-flex;align-items:center;justify-content:center;
-      border-radius:999px;padding:4px 9px;background:rgba(0,234,240,.10);
-      color:var(--cyan);border:1px solid rgba(0,234,240,.22);
-      font-size:11px;font-weight:900;
-    }
+    .badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 9px;background:rgba(0,234,240,.10);color:var(--cyan);border:1px solid rgba(0,234,240,.22);font-size:11px;font-weight:900;white-space:nowrap}
     .badge.warn{color:#f6e5ba;border-color:rgba(245,200,111,.24);background:rgba(245,200,111,.10)}
     .badge.danger{color:#ffccd4;border-color:rgba(251,113,133,.24);background:rgba(251,113,133,.10)}
     .badge.ok{color:#bfffe3;border-color:rgba(78,240,166,.24);background:rgba(78,240,166,.10)}
-
-    @media(max-width:900px){
+    .money{direction:ltr;text-align:right;color:#00EAF0;font-weight:900}
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(80px);
+      background:rgba(3,20,22,.96);border:1px solid rgba(0,234,240,.28);
+      color:white;padding:12px 16px;border-radius:18px;z-index:80;box-shadow:0 18px 50px rgba(0,0,0,.45);
+      transition:.25s ease;font-weight:900;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .modal{
+      position:fixed;inset:0;background:rgba(0,0,0,.66);backdrop-filter:blur(12px);
+      display:none;place-items:center;padding:16px;z-index:60;
+    }
+    .modal.show{display:grid}
+    .modal-card{
+      width:min(720px,100%);max-height:min(90vh,820px);overflow:auto;
+      border-radius:30px;border:1px solid rgba(0,234,240,.32);
+      background:radial-gradient(circle at 50% 0%,rgba(0,234,240,.12),transparent 32%),linear-gradient(180deg,rgba(3,20,22,.98),rgba(1,5,6,.99));
+      box-shadow:0 26px 90px rgba(0,0,0,.70);padding:18px;display:grid;gap:14px;
+    }
+    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid rgba(0,234,240,.16);padding-bottom:12px}
+    .modal-head h3{font-size:22px;font-weight:900}
+    .modal-head p{font-size:12px;color:var(--muted);font-weight:800;margin-top:3px}
+    .close-btn{width:40px;height:40px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.05);color:white;font-weight:900}
+    .details-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .detail-box{border-radius:18px;border:1px solid rgba(0,234,240,.16);background:rgba(0,234,240,.035);padding:12px}
+    .detail-box small{display:block;color:#A7F3E1;font-size:11px;font-weight:900;margin-bottom:4px}
+    .detail-box strong{display:block;color:white;font-size:14px;line-height:1.45}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .form-grid .field.full{grid-column:1/-1}
+    @media(max-width:940px){
       .layout{grid-template-columns:1fr}
-      .sidebar{position:relative;top:auto;grid-template-columns:repeat(3,1fr)}
+      .sidebar{position:relative;top:auto;grid-template-columns:repeat(4,1fr)}
       .side-tab{grid-template-columns:1fr;justify-items:center;text-align:center;height:68px}
       .side-tab span{font-size:12px}
       .kpis{grid-template-columns:repeat(2,1fr)}
-      .grid-2{grid-template-columns:1fr}
+      .grid-2,.grid-3{grid-template-columns:1fr}
       .hero{display:grid}
     }
-    @media(max-width:520px){
+    @media(max-width:560px){
       .admin-shell{padding:10px}
       .topbar{grid-template-columns:1fr;gap:10px}
       .top-actions{justify-content:stretch}
@@ -362,22 +216,20 @@
       .row-actions{grid-column:1/-1;justify-content:flex-end}
       .hero h1{font-size:24px}
       .chart{height:140px}
+      .details-grid,.form-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <section id="loginScreen" class="admin-login">
     <div class="login-card">
-      <div class="hrx-logo">
-        <div class="hrx-mark">HR<span>X</span></div>
-        <div class="hrx-word">H i R E X</div>
-      </div>
-      <h1>لوحة إدارة HireX</h1>
-      <p>واجهة مستقلة تمامًا لإدارة المنصة، منفصلة عن تطبيق المستخدم.</p>
+      <div class="hrx-logo"><div class="hrx-mark">HR<span>X</span></div><div class="hrx-word">H i R E X</div></div>
+      <h1>لوحة إدارة HireX Pro</h1>
+      <p>واجهة مستقلة ومتكاملة لإدارة المنصة، المشتركين، المدفوعات، الإعلانات، الخدمات، والإكسز.</p>
       <label class="field"><span>إيميل الإدارة</span><input id="loginEmail" type="email" placeholder="admin@hirex.com"></label>
       <label class="field"><span>كلمة المرور</span><input id="loginPassword" type="password" placeholder="••••••"></label>
       <button class="primary-btn" onclick="loginAdmin()">دخول الإدارة</button>
-      <div class="note">تجريبيًا: استخدم أي إيميل صحيح وكلمة المرور <b>1234</b>. عند الربط يتم استبدالها بصلاحيات Supabase.</div>
+      <div class="note">تجريبيًا: استخدم أي إيميل صحيح وكلمة المرور <b>1234</b>. عند الربط يتم استخدام صلاحيات Supabase.</div>
     </div>
   </section>
 
@@ -386,12 +238,13 @@
       <header class="topbar">
         <div class="brand">
           <div class="mini-logo">HRX</div>
-          <div><h2>HireX Admin</h2><p id="adminEmailText">admin@hirex.com</p></div>
+          <div><h2>HireX Admin Pro</h2><p id="adminEmailText">admin@hirex.com</p></div>
         </div>
         <div></div>
         <div class="top-actions">
           <button onclick="refreshDashboard()">تحديث</button>
           <button onclick="exportAdminReport()">تصدير تقرير</button>
+          <button onclick="backupData()">نسخة بيانات</button>
           <button onclick="logoutAdmin()">خروج</button>
         </div>
       </header>
@@ -400,6 +253,8 @@
         <aside class="sidebar">
           <button class="side-tab active" data-tab="overview" onclick="setAdminTab('overview')"><b>⌂</b><span>الرئيسية</span></button>
           <button class="side-tab" data-tab="users" onclick="setAdminTab('users')"><b>US</b><span>المستخدمين</span></button>
+          <button class="side-tab" data-tab="subscribers" onclick="setAdminTab('subscribers')"><b>SB</b><span>المشتركين</span></button>
+          <button class="side-tab" data-tab="payments" onclick="setAdminTab('payments')"><b>PY</b><span>السداد</span></button>
           <button class="side-tab" data-tab="ads" onclick="setAdminTab('ads')"><b>AD</b><span>الإعلانات</span></button>
           <button class="side-tab" data-tab="services" onclick="setAdminTab('services')"><b>SV</b><span>الخدمات</span></button>
           <button class="side-tab" data-tab="xs" onclick="setAdminTab('xs')"><b>Xs</b><span>الإكسز</span></button>
@@ -409,18 +264,26 @@
         <main class="content">
           <section class="hero">
             <div>
-              <span class="status">لوحة مستقلة</span>
+              <span class="status">لوحة مستقلة متكاملة</span>
               <h1 id="pageTitle">نظرة عامة</h1>
               <p id="pageDesc">مراقبة كاملة للمنصة وإدارتها من واجهة إدارية منفصلة.</p>
             </div>
             <div class="hero-actions">
               <button class="primary-btn" onclick="quickApproveAll()">اعتماد السليم</button>
-              <button onclick="setAdminTab('reports')">عرض التقارير</button>
+              <button onclick="setAdminTab('payments')">متابعة السداد</button>
+              <button onclick="openCreateModal()">إضافة يدوي</button>
             </div>
           </section>
 
           <section class="kpis">
-            <article class="kpi"><small>إجمالي المستخدمين</small><strong id="kpiUsers">0</strong><span>زائر / مرشح / شركة</span></article>
+            <article class="kpi"><small>إجمالي السداد</small><strong id="kpiPaidAmount">0</strong><span>ريال محصلة</span></article>
+            <article class="kpi"><small>عدد المسددين</small><strong id="kpiPaidCount">0</strong><span>عملية مكتملة</span></article>
+            <article class="kpi"><small>المشتركين النشطين</small><strong id="kpiSubscribers">0</strong><span>اشتراكات فعالة</span></article>
+            <article class="kpi"><small>إعلانات تحت المراجعة</small><strong id="kpiPendingAds">0</strong><span>تحتاج إجراء</span></article>
+          </section>
+
+          <section class="kpis">
+            <article class="kpi"><small>المستخدمين</small><strong id="kpiUsers">0</strong><span>زائر / مرشح / شركة</span></article>
             <article class="kpi"><small>الإعلانات</small><strong id="kpiAds">0</strong><span>منشور وتحت المراجعة</span></article>
             <article class="kpi"><small>الخدمات</small><strong id="kpiServices">0</strong><span>طلبات وعروض</span></article>
             <article class="kpi"><small>رصيد Xs</small><strong id="kpiXs">0</strong><span>إجمالي متداول</span></article>
@@ -432,37 +295,65 @@
     </div>
   </section>
 
+  <div id="detailsModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head"><div><h3 id="detailsTitle">التفاصيل</h3><p id="detailsSub">عرض التفاصيل</p></div><button class="close-btn" onclick="closeModal()">×</button></div>
+      <div id="detailsBody"></div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head"><div><h3 id="editTitle">تعديل</h3><p>تعديل بيانات العنصر المحدد</p></div><button class="close-btn" onclick="closeEditModal()">×</button></div>
+      <div id="editBody"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast">تم</div>
 
   <script>
     const state = {
       tab:'overview',
       adminEmail:'',
+      editTarget:null,
       users:[
-        {id:1,name:'مصطفى عبدالباقي',email:'mustafa@hirex.com',role:'شركة / صاحب عمل',status:'نشط',joined:'اليوم'},
-        {id:2,name:'مرشح تجريبي',email:'candidate@hirex.com',role:'باحث عن عمل',status:'نشط',joined:'أمس'},
-        {id:3,name:'مقدم خدمة',email:'service@hirex.com',role:'مقدم خدمة',status:'تحت المراجعة',joined:'قبل يومين'}
+        {id:1,name:'مصطفى عبدالباقي',email:'mustafa@hirex.com',phone:'0500000000',role:'شركة / صاحب عمل',status:'نشط',joined:'اليوم',city:'الرياض',notes:'حساب إدارة تجريبي'},
+        {id:2,name:'مرشح تجريبي',email:'candidate@hirex.com',phone:'0551111111',role:'باحث عن عمل',status:'نشط',joined:'أمس',city:'جدة',notes:'مهتم بوظائف المحاسبة'},
+        {id:3,name:'مقدم خدمة',email:'service@hirex.com',phone:'0552222222',role:'مقدم خدمة',status:'تحت المراجعة',joined:'قبل يومين',city:'الدمام',notes:'خدمة كتابة CV'}
+      ],
+      subscribers:[
+        {id:1,user:'شركة تجريبية',email:'company@hirex.com',plan:'Pro Companies',price:299,status:'نشط',start:'2026-05-01',end:'2026-06-01',paid:true},
+        {id:2,user:'مرشح تجريبي',email:'candidate@hirex.com',plan:'ATS Plus',price:49,status:'نشط',start:'2026-05-10',end:'2026-06-10',paid:true},
+        {id:3,user:'مقدم خدمة',email:'service@hirex.com',plan:'Service Provider',price:99,status:'بانتظار السداد',start:'2026-05-18',end:'2026-06-18',paid:false}
+      ],
+      payments:[
+        {id:1,payer:'شركة تجريبية',email:'company@hirex.com',amount:299,method:'بطاقة',reason:'اشتراك Pro Companies',status:'مكتمل',date:'2026-05-23',ref:'PAY-1001',notes:'اشتراك شركات شهري'},
+        {id:2,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:49,method:'بطاقة',reason:'صناعة سيرة ATS Plus',status:'مكتمل',date:'2026-05-23',ref:'PAY-1002',notes:'خدمة ATS'},
+        {id:3,payer:'شركة تجريبية',email:'company@hirex.com',amount:129,method:'بطاقة',reason:'شراء حزمة Xs Growth 300',status:'مكتمل',date:'2026-05-22',ref:'PAY-1003',notes:'شراء عملات'},
+        {id:4,payer:'مقدم خدمة',email:'service@hirex.com',amount:99,method:'تحويل',reason:'اشتراك مقدم خدمة',status:'بانتظار التأكيد',date:'2026-05-21',ref:'PAY-1004',notes:'لم يتم التأكيد بعد'},
+        {id:5,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:25,method:'Xs',reason:'تفعيل صدارة 24 ساعة',status:'خصم Xs',date:'2026-05-20',ref:'XS-2001',notes:'خصم من المحفظة'}
       ],
       ads:[
-        {id:1,title:'محاسب عام',type:'فرصة عمل',owner:'شركة تجريبية',status:'منشور',promoted:true},
-        {id:2,title:'كتابة سيرة ذاتية',type:'عرض خدمة',owner:'مقدم خدمة',status:'تحت المراجعة',promoted:false},
-        {id:3,title:'باحث عن عمل موارد بشرية',type:'يطلب عمل',owner:'مرشح تجريبي',status:'مسودة',promoted:false}
+        {id:1,title:'محاسب عام',type:'فرصة عمل',owner:'شركة تجريبية',status:'منشور',promoted:true,city:'الرياض',price:0,views:182},
+        {id:2,title:'كتابة سيرة ذاتية',type:'عرض خدمة',owner:'مقدم خدمة',status:'تحت المراجعة',promoted:false,city:'جدة',price:90,views:66},
+        {id:3,title:'باحث عن عمل موارد بشرية',type:'يطلب عمل',owner:'مرشح تجريبي',status:'مسودة',promoted:false,city:'الدمام',price:0,views:24}
       ],
       services:[
-        {id:1,title:'طلب تصميم CV',client:'عميل تجريبي',amount:120,status:'جديد'},
-        {id:2,title:'تدريب مقابلة شخصية',client:'مرشح تجريبي',amount:180,status:'مدفوع'},
-        {id:3,title:'خدمة فرز مرشحين',client:'شركة تجريبية',amount:350,status:'قيد التنفيذ'}
+        {id:1,title:'طلب تصميم CV',client:'عميل تجريبي',provider:'مقدم خدمة',amount:120,status:'جديد',commission:12,paid:false},
+        {id:2,title:'تدريب مقابلة شخصية',client:'مرشح تجريبي',provider:'مدرب تجريبي',amount:180,status:'مدفوع',commission:18,paid:true},
+        {id:3,title:'خدمة فرز مرشحين',client:'شركة تجريبية',provider:'HireX Team',amount:350,status:'قيد التنفيذ',commission:35,paid:true}
       ],
       xs:[
-        {id:1,user:'مصطفى عبدالباقي',type:'شراء حزمة Growth 300',amount:300,price:129,status:'مكتمل'},
-        {id:2,user:'شركة تجريبية',type:'تفعيل صدارة 7 أيام',amount:-120,price:0,status:'خصم'},
-        {id:3,user:'مرشح تجريبي',type:'صناعة سيرة ATS',amount:-35,price:0,status:'خصم'}
+        {id:1,user:'مصطفى عبدالباقي',type:'شراء حزمة Growth 300',amount:300,price:129,status:'مكتمل',date:'2026-05-23'},
+        {id:2,user:'شركة تجريبية',type:'تفعيل صدارة 7 أيام',amount:-120,price:0,status:'خصم',date:'2026-05-22'},
+        {id:3,user:'مرشح تجريبي',type:'صناعة سيرة ATS',amount:-35,price:0,status:'خصم',date:'2026-05-21'}
       ]
     };
 
     function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim())}
-    function safeText(v){return String(v||'').replace(/[<>&]/g, s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}
+    function safeText(v){return String(v??'').replace(/[<>&]/g, s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}
     function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+    function money(n){return Number(n||0).toLocaleString('en-US')}
 
     function loginAdmin(){
       const email=document.getElementById('loginEmail').value.trim();
@@ -476,136 +367,263 @@
       render();
       toast('تم دخول لوحة الإدارة');
     }
-    function logoutAdmin(){
-      document.getElementById('adminApp').classList.remove('show');
-      document.getElementById('loginScreen').style.display='grid';
-      toast('تم تسجيل الخروج');
-    }
+    function logoutAdmin(){document.getElementById('adminApp').classList.remove('show');document.getElementById('loginScreen').style.display='grid';toast('تم تسجيل الخروج')}
     function setAdminTab(tab){state.tab=tab;render()}
     function refreshDashboard(){render();toast('تم تحديث اللوحة')}
+    function backupData(){downloadJson('hirex-admin-backup.json', state);toast('تم تنزيل نسخة البيانات')}
+    function exportAdminReport(){
+      const m=metrics();
+      const report={date:new Date().toLocaleString('ar-SA'), metrics:m, payments:state.payments, subscribers:state.subscribers};
+      downloadJson('hirex-admin-report.json', report);
+      toast('تم تصدير التقرير');
+    }
+    function downloadJson(name,data){
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    }
     function quickApproveAll(){
       state.users.forEach(u=>{if(u.status==='تحت المراجعة')u.status='نشط'});
       state.ads.forEach(a=>{if(a.status==='تحت المراجعة')a.status='منشور'});
+      state.payments.forEach(p=>{if(p.status==='بانتظار التأكيد')p.status='مكتمل'});
+      state.subscribers.forEach(s=>{if(s.status==='بانتظار السداد' && s.paid) s.status='نشط'});
       render();toast('تم اعتماد العناصر السليمة تجريبيًا');
-    }
-    function exportAdminReport(){
-      const data = {
-        date:new Date().toLocaleString('ar-SA'),
-        users:state.users.length,
-        ads:state.ads.length,
-        services:state.services.length,
-        xs:state.xs.reduce((s,x)=>s+x.amount,0)
-      };
-      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download='hirex-admin-report.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-      toast('تم تصدير التقرير');
     }
 
     function metrics(){
+      const paid = state.payments.filter(p=>p.status==='مكتمل');
+      const paidAmount = paid.reduce((s,p)=>s+p.amount,0);
+      const pendingPayments = state.payments.filter(p=>p.status==='بانتظار التأكيد').length;
+      const activeSubs = state.subscribers.filter(s=>s.status==='نشط').length;
+      const pendingAds = state.ads.filter(a=>a.status==='تحت المراجعة').length;
       return {
         users:state.users.length,
         ads:state.ads.length,
         services:state.services.length,
-        xs:state.xs.reduce((s,x)=>s+x.amount,0)
+        xs:state.xs.reduce((s,x)=>s+x.amount,0),
+        paidCount:paid.length,
+        paidAmount,
+        pendingPayments,
+        activeSubs,
+        pendingAds,
+        serviceRevenue:state.services.filter(s=>s.paid).reduce((sum,s)=>sum+s.amount,0),
+        commission:state.services.filter(s=>s.paid).reduce((sum,s)=>sum+s.commission,0)
       }
     }
     function renderKpis(){
       const m=metrics();
+      document.getElementById('kpiPaidAmount').textContent=money(m.paidAmount);
+      document.getElementById('kpiPaidCount').textContent=m.paidCount;
+      document.getElementById('kpiSubscribers').textContent=m.activeSubs;
+      document.getElementById('kpiPendingAds').textContent=m.pendingAds;
       document.getElementById('kpiUsers').textContent=m.users;
       document.getElementById('kpiAds').textContent=m.ads;
       document.getElementById('kpiServices').textContent=m.services;
-      document.getElementById('kpiXs').textContent=m.xs.toLocaleString('en-US');
+      document.getElementById('kpiXs').textContent=money(m.xs);
     }
     function render(){
       renderKpis();
       document.querySelectorAll('.side-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab));
       const titles={
         overview:['نظرة عامة','مؤشرات المنصة والحركة اليومية.'],
-        users:['إدارة المستخدمين','متابعة المرشحين والشركات ومقدمي الخدمات.'],
+        users:['إدارة المستخدمين','عرض وتعديل وإيقاف المستخدمين.'],
+        subscribers:['تفاصيل المشتركين','متابعة الاشتراكات النشطة والمنتهية والمنتظرة.'],
+        payments:['إدارة السداد','كم سددوا، كم المبلغ، وسبب السداد.'],
         ads:['إدارة الإعلانات','مراجعة الإعلانات، الصدارة، والنشر.'],
-        services:['إدارة الخدمات','طلبات الخدمات والعروض والمدفوعات.'],
+        services:['إدارة الخدمات','طلبات الخدمات والعروض والمدفوعات والعمولة.'],
         xs:['إدارة الإكسز','حركات شراء وخصم Xs وحزم الصدارة.'],
-        reports:['التقارير','ملخصات تشغيلية وإدارية قابلة للتصدير.']
+        reports:['التقارير','ملخصات مالية وتشغيلية قابلة للتصدير.']
       };
       document.getElementById('pageTitle').textContent=titles[state.tab][0];
       document.getElementById('pageDesc').textContent=titles[state.tab][1];
       const box=document.getElementById('adminContent');
-      if(state.tab==='overview') box.innerHTML=overviewHtml();
-      if(state.tab==='users') box.innerHTML=usersHtml();
-      if(state.tab==='ads') box.innerHTML=adsHtml();
-      if(state.tab==='services') box.innerHTML=servicesHtml();
-      if(state.tab==='xs') box.innerHTML=xsHtml();
-      if(state.tab==='reports') box.innerHTML=reportsHtml();
+      const views={overview:overviewHtml,users:usersHtml,subscribers:subscribersHtml,payments:paymentsHtml,ads:adsHtml,services:servicesHtml,xs:xsHtml,reports:reportsHtml};
+      box.innerHTML=views[state.tab]();
     }
-
-    function overviewHtml(){
-      return `
-        <section class="grid-2">
-          <div class="panel">
-            <div class="panel-head"><h3>حركة المنصة</h3><span>آخر 6 أيام</span></div>
-            <div class="chart">
-              ${[35,58,42,70,54,88].map((h,i)=>`<div class="bar" style="height:${h}%"><small>${['س','ح','ن','ث','ر','خ'][i]}</small></div>`).join('')}
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-head"><h3>تنبيهات مهمة</h3><span>متابعة</span></div>
-            ${row('!', 'إعلانات تحت المراجعة', 'يوجد إعلانات تحتاج اعتماد.', 'مراجعة', "setAdminTab('ads')")}
-            ${row('Xs', 'حركات الإكسز', 'متابعة عمليات الشراء والخصم.', 'عرض', "setAdminTab('xs')")}
-            ${row('SV', 'طلبات خدمات', 'طلبات جديدة تحتاج متابعة.', 'فتح', "setAdminTab('services')")}
-          </div>
-        </section>`;
+    function statusBadge(status){
+      let cls = ['نشط','منشور','مكتمل','مدفوع','قيد التنفيذ'].includes(status) ? 'ok' : ['تحت المراجعة','جديد','بانتظار التأكيد','بانتظار السداد'].includes(status) ? 'warn' : ['مسودة','خصم Xs','خصم'].includes(status) ? '' : 'danger';
+      return `<span class="badge ${cls}">${safeText(status)}</span>`;
     }
     function row(icon,title,desc,btn,action){
       return `<article class="row"><div class="row-icon">${safeText(icon)}</div><div><h4>${safeText(title)}</h4><p>${safeText(desc)}</p></div><div class="row-actions"><button class="ok" onclick="${action}">${safeText(btn)}</button></div></article>`
     }
-    function statusBadge(status){
-      let cls = status==='نشط'||status==='منشور'||status==='مكتمل'||status==='مدفوع' ? 'ok' : status==='تحت المراجعة'||status==='جديد' ? 'warn' : status==='مسودة' ? '' : 'danger';
-      return `<span class="badge ${cls}">${safeText(status)}</span>`;
+    function overviewHtml(){
+      const m=metrics();
+      return `
+        <section class="grid-3">
+          <div class="panel"><div class="panel-head"><h3>السداد</h3><span>اليوم</span></div>
+            <p>عدد المسددين: <b>${m.paidCount}</b></p>
+            <p>إجمالي المسدد: <b class="money">${money(m.paidAmount)} ريال</b></p>
+            <p>عمليات تنتظر التأكيد: <b>${m.pendingPayments}</b></p>
+          </div>
+          <div class="panel"><div class="panel-head"><h3>الخدمات والعمولة</h3><span>تشغيلي</span></div>
+            <p>إيراد الخدمات المدفوعة: <b class="money">${money(m.serviceRevenue)} ريال</b></p>
+            <p>عمولة المنصة: <b class="money">${money(m.commission)} ريال</b></p>
+            <p>طلبات الخدمات: <b>${m.services}</b></p>
+          </div>
+          <div class="panel"><div class="panel-head"><h3>الاشتراكات</h3><span>فعال</span></div>
+            <p>مشتركين نشطين: <b>${m.activeSubs}</b></p>
+            <p>بانتظار السداد: <b>${state.subscribers.filter(s=>s.status==='بانتظار السداد').length}</b></p>
+            <p>إجمالي المشتركين: <b>${state.subscribers.length}</b></p>
+          </div>
+        </section>
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h3>حركة المنصة</h3><span>آخر 6 أيام</span></div>
+            <div class="chart">${[35,58,42,70,54,88].map((h,i)=>`<div class="bar" style="height:${h}%"><small>${['س','ح','ن','ث','ر','خ'][i]}</small></div>`).join('')}</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>تنبيهات مهمة</h3><span>متابعة</span></div>
+            ${row('PY','سداد ينتظر التأكيد',`${m.pendingPayments} عملية تحتاج مراجعة`,'فتح',"setAdminTab('payments')")}
+            ${row('AD','إعلانات تحت المراجعة',`${m.pendingAds} إعلان يحتاج اعتماد`,'مراجعة',"setAdminTab('ads')")}
+            ${row('SB','مشتركين بانتظار السداد',`${state.subscribers.filter(s=>s.status==='بانتظار السداد').length} اشتراك`,'فتح',"setAdminTab('subscribers')")}
+          </div>
+        </section>`;
     }
     function usersHtml(){
-      return `<section class="panel"><div class="panel-head"><h3>المستخدمين</h3><span>${state.users.length} مستخدم</span></div>
-      <div class="table-tools"><input id="userSearch" placeholder="بحث عن مستخدم..." oninput="filterRows('usersList', this.value)"><select><option>كل الأنواع</option><option>شركة</option><option>باحث</option><option>مقدم خدمة</option></select></div>
-      <div id="usersList">${state.users.map(u=>`<article class="row"><div class="row-icon">US</div><div><h4>${safeText(u.name)}</h4><p>${safeText(u.email)} · ${safeText(u.role)} · ${safeText(u.joined)}</p></div><div class="row-actions">${statusBadge(u.status)}<button class="ok" onclick="approveUser(${u.id})">اعتماد</button><button class="danger" onclick="blockUser(${u.id})">إيقاف</button></div></article>`).join('')}</div></section>`;
+      return tablePanel('المستخدمين', `${state.users.length} مستخدم`, 'usersList', state.users.map(u=>`
+        <article class="row">
+          <div class="row-icon">US</div><div><h4>${safeText(u.name)}</h4><p>${safeText(u.email)} · ${safeText(u.phone)} · ${safeText(u.role)} · ${safeText(u.city)}</p></div>
+          <div class="row-actions">${statusBadge(u.status)}<button onclick="viewItem('users',${u.id})">عرض</button><button class="ok" onclick="editItem('users',${u.id})">تعديل</button><button class="danger" onclick="blockUser(${u.id})">إيقاف</button></div>
+        </article>`).join(''));
+    }
+    function subscribersHtml(){
+      return tablePanel('المشتركين', `${state.subscribers.length} اشتراك`, 'subsList', state.subscribers.map(s=>`
+        <article class="row">
+          <div class="row-icon">SB</div><div><h4>${safeText(s.user)}</h4><p>${safeText(s.plan)} · ${money(s.price)} ريال · ${safeText(s.start)} إلى ${safeText(s.end)}</p></div>
+          <div class="row-actions">${statusBadge(s.status)}<button onclick="viewItem('subscribers',${s.id})">عرض</button><button class="ok" onclick="editItem('subscribers',${s.id})">تعديل</button><button class="warn" onclick="markSubscriberPaid(${s.id})">سدد</button></div>
+        </article>`).join(''));
+    }
+    function paymentsHtml(){
+      const paid=state.payments.filter(p=>p.status==='مكتمل');
+      return `
+        <section class="grid-3">
+          <div class="panel"><h3>عدد المسددين</h3><strong class="money">${paid.length}</strong><p>عمليات مكتملة</p></div>
+          <div class="panel"><h3>إجمالي السداد</h3><strong class="money">${money(paid.reduce((s,p)=>s+p.amount,0))} ريال</strong><p>مبالغ محصلة</p></div>
+          <div class="panel"><h3>بانتظار التأكيد</h3><strong class="money">${state.payments.filter(p=>p.status==='بانتظار التأكيد').length}</strong><p>عمليات مراجعة</p></div>
+        </section>
+        ${tablePanel('عمليات السداد', `${state.payments.length} عملية`, 'paymentsList', state.payments.map(p=>`
+        <article class="row">
+          <div class="row-icon">PY</div><div><h4>${safeText(p.payer)}</h4><p>${safeText(p.reason)} · ${money(p.amount)} ريال · ${safeText(p.method)} · ${safeText(p.date)}</p></div>
+          <div class="row-actions">${statusBadge(p.status)}<button onclick="viewItem('payments',${p.id})">تفاصيل</button><button class="ok" onclick="confirmPayment(${p.id})">تأكيد</button><button class="danger" onclick="rejectPayment(${p.id})">رفض</button></div>
+        </article>`).join(''))}`;
     }
     function adsHtml(){
-      return `<section class="panel"><div class="panel-head"><h3>الإعلانات</h3><span>${state.ads.length} إعلان</span></div>
-      <div class="table-tools"><input id="adsSearch" placeholder="بحث عن إعلان..." oninput="filterRows('adsList', this.value)"><select><option>كل الحالات</option><option>منشور</option><option>تحت المراجعة</option></select></div>
-      <div id="adsList">${state.ads.map(a=>`<article class="row"><div class="row-icon">AD</div><div><h4>${safeText(a.title)}</h4><p>${safeText(a.type)} · ${safeText(a.owner)} · ${a.promoted?'بالصدارة':'عادي'}</p></div><div class="row-actions">${statusBadge(a.status)}<button class="ok" onclick="approveAd(${a.id})">نشر</button><button class="danger" onclick="rejectAd(${a.id})">رفض</button></div></article>`).join('')}</div></section>`;
+      return tablePanel('الإعلانات', `${state.ads.length} إعلان`, 'adsList', state.ads.map(a=>`
+        <article class="row">
+          <div class="row-icon">AD</div><div><h4>${safeText(a.title)}</h4><p>${safeText(a.type)} · ${safeText(a.owner)} · ${safeText(a.city)} · ${a.promoted?'بالصدارة':'عادي'} · ${a.views} مشاهدة</p></div>
+          <div class="row-actions">${statusBadge(a.status)}<button onclick="viewItem('ads',${a.id})">عرض</button><button class="ok" onclick="editItem('ads',${a.id})">تعديل</button><button class="ok" onclick="approveAd(${a.id})">نشر</button><button class="danger" onclick="rejectAd(${a.id})">رفض</button></div>
+        </article>`).join(''));
     }
     function servicesHtml(){
-      return `<section class="panel"><div class="panel-head"><h3>الخدمات</h3><span>${state.services.length} خدمة</span></div>
-      <div id="servicesList">${state.services.map(s=>`<article class="row"><div class="row-icon">SV</div><div><h4>${safeText(s.title)}</h4><p>${safeText(s.client)} · ${s.amount} ريال</p></div><div class="row-actions">${statusBadge(s.status)}<button class="ok" onclick="serviceDone(${s.id})">اعتماد</button><button class="danger" onclick="serviceHold(${s.id})">تعليق</button></div></article>`).join('')}</div></section>`;
+      return tablePanel('الخدمات', `${state.services.length} خدمة`, 'servicesList', state.services.map(s=>`
+        <article class="row">
+          <div class="row-icon">SV</div><div><h4>${safeText(s.title)}</h4><p>${safeText(s.client)} → ${safeText(s.provider)} · ${money(s.amount)} ريال · عمولة ${money(s.commission)} ريال</p></div>
+          <div class="row-actions">${statusBadge(s.status)}<button onclick="viewItem('services',${s.id})">عرض</button><button class="ok" onclick="editItem('services',${s.id})">تعديل</button><button class="ok" onclick="serviceDone(${s.id})">اعتماد</button><button class="danger" onclick="serviceHold(${s.id})">تعليق</button></div>
+        </article>`).join(''));
     }
     function xsHtml(){
-      return `<section class="panel"><div class="panel-head"><h3>الإكسز</h3><span>الحركات</span></div>
-      ${state.xs.map(x=>`<article class="row"><div class="row-icon">Xs</div><div><h4>${safeText(x.type)}</h4><p>${safeText(x.user)} · ${x.amount} Xs · ${x.price} ريال</p></div><div class="row-actions">${statusBadge(x.status)}</div></article>`).join('')}</section>`;
+      return tablePanel('حركات الإكسز', `${state.xs.length} حركة`, 'xsList', state.xs.map(x=>`
+        <article class="row">
+          <div class="row-icon">Xs</div><div><h4>${safeText(x.type)}</h4><p>${safeText(x.user)} · ${x.amount} Xs · ${money(x.price)} ريال · ${safeText(x.date)}</p></div>
+          <div class="row-actions">${statusBadge(x.status)}<button onclick="viewItem('xs',${x.id})">تفاصيل</button></div>
+        </article>`).join(''));
     }
     function reportsHtml(){
       const m=metrics();
       return `<section class="grid-2">
-        <div class="panel"><div class="panel-head"><h3>تقرير سريع</h3><span>اليوم</span></div>
-          <p>عدد المستخدمين: ${m.users}</p><p>عدد الإعلانات: ${m.ads}</p><p>عدد الخدمات: ${m.services}</p><p>إجمالي Xs: ${m.xs}</p>
-          <button class="primary-btn" onclick="exportAdminReport()">تصدير JSON</button>
+        <div class="panel"><div class="panel-head"><h3>تقرير مالي سريع</h3><span>مباشر</span></div>
+          <p>إجمالي السداد: <b class="money">${money(m.paidAmount)} ريال</b></p>
+          <p>عدد المسددين: <b>${m.paidCount}</b></p>
+          <p>إيراد الخدمات: <b class="money">${money(m.serviceRevenue)} ريال</b></p>
+          <p>عمولة المنصة: <b class="money">${money(m.commission)} ريال</b></p>
+          <button class="primary-btn" onclick="exportAdminReport()">تصدير تقرير JSON</button>
         </div>
         <div class="panel"><div class="panel-head"><h3>ملاحظات الإدارة</h3><span>داخلي</span></div>
-          <label class="field"><span>ملاحظة</span><textarea placeholder="اكتب ملاحظة إدارية..."></textarea></label>
+          <label class="field"><span>ملاحظة</span><textarea id="adminNote" placeholder="اكتب ملاحظة إدارية..."></textarea></label>
           <button class="ghost-btn" onclick="toast('تم حفظ الملاحظة تجريبيًا')">حفظ الملاحظة</button>
         </div>
       </section>`;
     }
-
-    function approveUser(id){const u=state.users.find(x=>x.id===id); if(u){u.status='نشط';render();toast('تم اعتماد المستخدم')}}
-    function blockUser(id){const u=state.users.find(x=>x.id===id); if(u){u.status='موقوف';render();toast('تم إيقاف المستخدم')}}
-    function approveAd(id){const a=state.ads.find(x=>x.id===id); if(a){a.status='منشور';render();toast('تم نشر الإعلان')}}
-    function rejectAd(id){const a=state.ads.find(x=>x.id===id); if(a){a.status='مرفوض';render();toast('تم رفض الإعلان')}}
-    function serviceDone(id){const s=state.services.find(x=>x.id===id); if(s){s.status='مكتمل';render();toast('تم اعتماد الخدمة')}}
-    function serviceHold(id){const s=state.services.find(x=>x.id===id); if(s){s.status='معلق';render();toast('تم تعليق الخدمة')}}
-    function filterRows(containerId, value){
-      const q=String(value||'').toLowerCase();
-      document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=row.textContent.toLowerCase().includes(q)?'grid':'none');
+    function tablePanel(title, count, id, rows){
+      return `<section class="panel"><div class="panel-head"><h3>${safeText(title)}</h3><span>${safeText(count)}</span></div>
+      <div class="table-tools"><input placeholder="بحث..." oninput="filterRows('${id}', this.value)"><select onchange="filterStatus('${id}', this.value)"><option value="">كل الحالات</option><option>نشط</option><option>منشور</option><option>مكتمل</option><option>تحت المراجعة</option><option>بانتظار التأكيد</option><option>بانتظار السداد</option><option>مسودة</option></select></div>
+      <div id="${id}">${rows || '<div class="empty">لا توجد بيانات.</div>'}</div></section>`;
     }
+    function getCollection(name){return state[name] || []}
+    function findItem(collection,id){return getCollection(collection).find(x=>String(x.id)===String(id))}
+    function viewItem(collection,id){
+      const item=findItem(collection,id); if(!item) return toast('العنصر غير موجود');
+      document.getElementById('detailsTitle').textContent='تفاصيل ' + collectionLabel(collection);
+      document.getElementById('detailsSub').textContent='عرض كامل للبيانات';
+      document.getElementById('detailsBody').innerHTML=`<div class="details-grid">${Object.entries(item).map(([k,v])=>`<div class="detail-box"><small>${safeText(fieldLabel(k))}</small><strong>${safeText(v)}</strong></div>`).join('')}</div>
+      <div class="row-actions" style="margin-top:14px"><button class="ok" onclick="editItem('${collection}',${id})">تعديل</button><button onclick="closeModal()">إغلاق</button></div>`;
+      document.getElementById('detailsModal').classList.add('show');
+    }
+    function editItem(collection,id){
+      const item=findItem(collection,id); if(!item) return toast('العنصر غير موجود');
+      state.editTarget={collection,id};
+      closeModal();
+      document.getElementById('editTitle').textContent='تعديل ' + collectionLabel(collection);
+      document.getElementById('editBody').innerHTML=`<div class="form-grid">${Object.entries(item).map(([k,v])=>`
+        <label class="field ${String(v).length>60?'full':''}"><span>${safeText(fieldLabel(k))}</span>
+        ${k==='id'?`<input value="${safeText(v)}" disabled>`: inputFor(k,v)}
+        </label>`).join('')}</div>
+        <div class="row-actions" style="margin-top:14px"><button class="ok" onclick="saveEdit()">حفظ التعديل</button><button onclick="closeEditModal()">إلغاء</button></div>`;
+      document.getElementById('editModal').classList.add('show');
+    }
+    function inputFor(k,v){
+      const statusOptions=['نشط','تحت المراجعة','منشور','مسودة','مكتمل','بانتظار التأكيد','بانتظار السداد','مرفوض','موقوف','مدفوع','قيد التنفيذ','معلق','خصم','خصم Xs'];
+      if(k==='status') return `<select data-key="${k}">${statusOptions.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('')}</select>`;
+      if(typeof v === 'boolean') return `<select data-key="${k}"><option value="true" ${v?'selected':''}>نعم</option><option value="false" ${!v?'selected':''}>لا</option></select>`;
+      if(String(v).length>60) return `<textarea data-key="${k}">${safeText(v)}</textarea>`;
+      return `<input data-key="${k}" value="${safeText(v)}">`;
+    }
+    function saveEdit(){
+      const target=state.editTarget; if(!target) return;
+      const item=findItem(target.collection,target.id); if(!item) return;
+      document.querySelectorAll('#editBody [data-key]').forEach(el=>{
+        const k=el.dataset.key; let val=el.value;
+        if(val==='true') val=true; else if(val==='false') val=false; else if(!Number.isNaN(Number(val)) && val.trim()!=='' && ['price','amount','commission','views'].includes(k)) val=Number(val);
+        item[k]=val;
+      });
+      closeEditModal(); render(); toast('تم حفظ التعديل');
+    }
+    function collectionLabel(c){return ({users:'المستخدم',subscribers:'المشترك',payments:'السداد',ads:'الإعلان',services:'الخدمة',xs:'الإكسز'})[c] || c}
+    function fieldLabel(k){return ({id:'الرقم',name:'الاسم',email:'البريد',phone:'الجوال',role:'الدور',status:'الحالة',joined:'تاريخ التسجيل',city:'المدينة',notes:'ملاحظات',user:'المستخدم',plan:'الباقة',price:'السعر',start:'البداية',end:'النهاية',paid:'مسدد',payer:'المسدد',amount:'المبلغ',method:'طريقة السداد',reason:'سبب السداد',date:'التاريخ',ref:'رقم العملية',title:'العنوان',type:'النوع',owner:'صاحب الإعلان',promoted:'بالصدارة',views:'المشاهدات',client:'العميل',provider:'المقدم',commission:'عمولة المنصة'})[k] || k}
+    function closeModal(){document.getElementById('detailsModal').classList.remove('show')}
+    function closeEditModal(){document.getElementById('editModal').classList.remove('show'); state.editTarget=null}
+    function openCreateModal(){
+      document.getElementById('editTitle').textContent='إضافة عملية سداد';
+      document.getElementById('editBody').innerHTML=`<div class="form-grid">
+        <label class="field"><span>المسدد</span><input id="newPayer"></label>
+        <label class="field"><span>البريد</span><input id="newEmail"></label>
+        <label class="field"><span>المبلغ</span><input id="newAmount" type="number"></label>
+        <label class="field"><span>طريقة السداد</span><select id="newMethod"><option>بطاقة</option><option>تحويل</option><option>نقدي</option><option>Xs</option></select></label>
+        <label class="field full"><span>سبب السداد</span><input id="newReason" placeholder="اشتراك / شراء Xs / صدارة / خدمة"></label>
+        <label class="field full"><span>ملاحظات</span><textarea id="newNotes"></textarea></label>
+      </div><div class="row-actions" style="margin-top:14px"><button class="ok" onclick="createPayment()">حفظ عملية السداد</button><button onclick="closeEditModal()">إلغاء</button></div>`;
+      document.getElementById('editModal').classList.add('show');
+    }
+    function createPayment(){
+      const id=Math.max(...state.payments.map(p=>p.id))+1;
+      state.payments.unshift({id,payer:val('newPayer')||'مسدد جديد',email:val('newEmail')||'unknown@hirex.com',amount:Number(val('newAmount')||0),method:val('newMethod')||'بطاقة',reason:val('newReason')||'سداد يدوي',status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+(1000+id),notes:val('newNotes')});
+      closeEditModal(); setAdminTab('payments'); toast('تمت إضافة عملية السداد');
+    }
+    function val(id){return (document.getElementById(id)?.value||'').trim()}
+    function approveUser(id){const u=findItem('users',id); if(u){u.status='نشط';render();toast('تم اعتماد المستخدم')}}
+    function blockUser(id){const u=findItem('users',id); if(u){u.status='موقوف';render();toast('تم إيقاف المستخدم')}}
+    function markSubscriberPaid(id){const s=findItem('subscribers',id); if(s){s.paid=true;s.status='نشط';state.payments.unshift({id:Date.now(),payer:s.user,email:s.email,amount:s.price,method:'بطاقة',reason:'سداد اشتراك '+s.plan,status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+Date.now(),notes:'تم السداد من لوحة الإدارة'});render();toast('تم تسجيل السداد')}}
+    function confirmPayment(id){const p=findItem('payments',id); if(p){p.status='مكتمل';render();toast('تم تأكيد السداد')}}
+    function rejectPayment(id){const p=findItem('payments',id); if(p){p.status='مرفوض';render();toast('تم رفض السداد')}}
+    function approveAd(id){const a=findItem('ads',id); if(a){a.status='منشور';render();toast('تم نشر الإعلان')}}
+    function rejectAd(id){const a=findItem('ads',id); if(a){a.status='مرفوض';render();toast('تم رفض الإعلان')}}
+    function serviceDone(id){const s=findItem('services',id); if(s){s.status='مكتمل';render();toast('تم اعتماد الخدمة')}}
+    function serviceHold(id){const s=findItem('services',id); if(s){s.status='معلق';render();toast('تم تعليق الخدمة')}}
+    function filterRows(containerId, value){const q=String(value||'').toLowerCase();document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=row.textContent.toLowerCase().includes(q)?'grid':'none')}
+    function filterStatus(containerId, status){document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=!status || row.textContent.includes(status)?'grid':'none')}
     document.getElementById('loginPassword').addEventListener('keydown', e=>{if(e.key==='Enter')loginAdmin()});
+    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
   </script>
 </body>
 </html>
