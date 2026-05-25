@@ -3744,104 +3744,29 @@
         return;
       }
       const w = window.open('', '_blank');
-      w.document.write('<html><head><title>ATS CV</title><style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}ul{padding-left:20px}section{margin-bottom:16px}strong{display:block;margin-bottom:4px}</style></head><body>' + preview.innerHTML + '
-  <div class="overlay" id="accountOverlay" aria-hidden="true">
-    <section class="window account-window" role="dialog" aria-modal="true">
-      <header class="window-head account-head">
-        <div class="win-title">
-          <div class="win-icon account-avatar">HX</div>
-          <div>
-            <h2>حسابي</h2>
-            <p>ملفك، محفظتك، إعداداتك، وإعلاناتك</p>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeAccountModal()">×</button>
-      </header>
-
-      <div class="window-body account-body">
-        <section class="account-hero">
-          <div class="account-avatar-big">HRX</div>
-          <div class="account-main-info">
-            <span class="account-status">نشط</span>
-            <h3 id="accountDisplayName">مستخدم HireX</h3>
-            <p id="accountDisplayRole">باحث / مقدم خدمة / صاحب عمل</p>
-            <small id="accountDisplayEmail">user@hirex.com</small>
-          </div>
-        </section>
-
-        <section class="account-stats">
-          <button type="button" onclick="openMyAdsModal()" class="account-stat">
-            <strong id="accountAdsCount">0</strong>
-            <span>إعلاناتي</span>
-          </button>
-          <button type="button" onclick="openXsStore()" class="account-stat">
-            <strong><span id="accountXsBalance">0</span></strong>
-            <span>Xs</span>
-          </button>
-          <button type="button" onclick="openAtsCvBuilder()" class="account-stat">
-            <strong>ATS</strong>
-            <span>السيرة</span>
-          </button>
-        </section>
-
-        <section class="account-card">
-          <div class="account-card-title">
-            <h3>الملف الشخصي</h3>
-            <span>تجريبي الآن</span>
-          </div>
-          <div class="account-form-grid">
-            <label class="field"><span>الاسم</span><input id="accName" placeholder="اسم المستخدم"></label>
-            <label class="field"><span>البريد</span><input id="accEmail" placeholder="email@example.com"></label>
-            <label class="field"><span>الجوال</span><input id="accPhone" placeholder="05xxxxxxxx"></label>
-            <label class="field"><span>نوع الحساب</span>
-              <select id="accRole">
-                <option>باحث عن عمل</option>
-                <option>مقدم خدمة</option>
-                <option>شركة / صاحب عمل</option>
-              </select>
-            </label>
-            <label class="field full"><span>نبذة قصيرة</span><textarea id="accBio" placeholder="اكتب نبذة قصيرة تظهر في ملفك لاحقًا"></textarea></label>
-          </div>
-          <div class="account-actions">
-            <button type="button" class="primary" onclick="saveAccountProfile()">حفظ الملف</button>
-            <button type="button" onclick="fillDemoAccount()">بيانات تجريبية</button>
-          </div>
-        </section>
-
-        <section class="account-menu">
-          <button type="button" onclick="openMyAdsModal()">
-            <b>＋</b>
-            <div><strong>إعلاناتي</strong><span>إدارة ونشر الإعلانات</span></div>
-            <i>‹</i>
-          </button>
-          <button type="button" onclick="openAtsCvBuilder()">
-            <b>📄</b>
-            <div><strong>صناعة سيرة ATS</strong><span>إنشاء سيرة مرتبطة بالإكسز</span></div>
-            <i>‹</i>
-          </button>
-          <button type="button" onclick="openXsStore()">
-            <b>Xs</b>
-            <div><strong>محفظة الإكسز</strong><span>شراء وتفعيل الصدارة</span></div>
-            <i>‹</i>
-          </button>
-          <button type="button" onclick="openSoon('الإشعارات')">
-            <b>🔔</b>
-            <div><strong>الإشعارات</strong><span>طلبات ورسائل وتنبيهات</span></div>
-            <i>‹</i>
-          </button>
-          <button type="button" onclick="openSoon('الإعدادات')">
-            <b>⚙️</b>
-            <div><strong>الإعدادات</strong><span>اللغة، الخصوصية، وإدارة الحساب</span></div>
-            <i>‹</i>
-          </button>
-        </section>
-
-        <button type="button" class="logout-btn" onclick="accountLogout()">تسجيل الخروج</button>
-      </div>
-    </section>
-  </div>
-
-</body></html>');
+      if(!w){
+        showMiniNotice('تعذر فتح نافذة الطباعة. تأكد من السماح بالنوافذ المنبثقة.');
+        return;
+      }
+      const printHtml = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ATS CV</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}
+    h1{font-size:26px}
+    h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}
+    p,li{font-size:13px}
+    ul{padding-left:20px}
+    section{margin-bottom:16px}
+    strong{display:block;margin-bottom:4px}
+  </style>
+</head>
+<body>${preview.innerHTML}</body>
+</html>`;
+      w.document.open();
+      w.document.write(printHtml);
       w.document.close();
       w.focus();
       w.print();
@@ -4036,6 +3961,18 @@
     // Prevent duplicate inline actions if old onclick remains anywhere
     document.querySelectorAll('.bottom-nav .nav-item').forEach(btn=>{
       btn.setAttribute('type','button');
+    });
+
+
+    /* V32 final runtime guard: attach bottom nav after DOM is ready */
+    window.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(btn=>{
+        btn.setAttribute('type','button');
+      });
+      const accountBtn = document.querySelector('.bottom-nav .nav-item[data-tab="account"]');
+      if(accountBtn && !accountBtn.dataset.v32ready){
+        accountBtn.dataset.v32ready = '1';
+      }
     });
 
 </script>
