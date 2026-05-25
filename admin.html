@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HireX Admin | لوحة الإدارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#020606;
+      --panel:#061011;
+      --panel2:#081819;
+      --line:rgba(0,234,240,.24);
+      --line2:rgba(255,255,255,.10);
+      --text:#F4F7F7;
+      --muted:#9fb4b4;
+      --cyan:#00EAF0;
+      --cyan2:#04B8C4;
+      --danger:#ff6b86;
+      --warn:#F5C86F;
+      --ok:#4EF0A6;
+      --shadow:0 24px 80px rgba(0,0,0,.62);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:Tajawal,system-ui,sans-serif;
+      background:
+        radial-gradient(circle at 12% -5%,rgba(0,234,240,.13),transparent 30%),
+        radial-gradient(circle at 85% 8%,rgba(0,184,212,.09),transparent 34%),
+        linear-gradient(180deg,#020606,#061111 50%,#010202);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    button,input,select,textarea{font-family:inherit}
+    button{cursor:pointer}
+    .admin-shell{
+      width:min(1200px,100%);
+      margin:auto;
+      padding:16px;
+      min-height:100vh;
+    }
+
+    .admin-login{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .login-card{
+      width:min(440px,100%);
+      border-radius:34px;
+      border:1px solid rgba(0,234,240,.34);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(0,234,240,.14),transparent 34%),
+        linear-gradient(145deg,rgba(3,30,32,.95),rgba(3,9,11,.98));
+      box-shadow:var(--shadow), inset 0 0 26px rgba(0,234,240,.035);
+      padding:24px;
+      display:grid;
+      gap:14px;
+      text-align:center;
+    }
+    .hrx-logo{
+      direction:ltr;
+      display:grid;
+      justify-items:center;
+      gap:5px;
+      color:var(--cyan);
+      filter:drop-shadow(0 0 16px rgba(0,234,240,.65));
+      user-select:none;
+    }
+    .hrx-mark{
+      font-family:Georgia,'Times New Roman',serif;
+      font-size:66px;
+      line-height:.82;
+      letter-spacing:-8px;
+      color:var(--cyan);
+      text-shadow:0 0 16px rgba(0,234,240,.8),0 0 36px rgba(0,234,240,.32);
+    }
+    .hrx-mark span{font-style:italic;display:inline-block;transform:translateX(-7px)}
+    .hrx-word{font-size:13px;letter-spacing:8px;color:var(--cyan)}
+    .login-card h1{font-size:27px;line-height:1.25;font-weight:900}
+    .login-card p{color:#d5e2e2;font-size:14px;line-height:1.65;font-weight:700}
+    .field{display:grid;gap:6px;text-align:right}
+    .field span{font-size:12px;font-weight:900;color:#A7F3E1}
+    .field input,.field select,.field textarea{
+      width:100%;
+      height:52px;
+      border-radius:18px;
+      border:1px solid rgba(0,234,240,.18);
+      background:#061011;
+      color:white;
+      padding:0 14px;
+      outline:none;
+      font-weight:800;
+    }
+    .field textarea{height:auto;min-height:100px;padding-top:12px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:rgba(0,234,240,.55);
+      box-shadow:0 0 0 3px rgba(0,234,240,.08);
+    }
+    .primary-btn{
+      min-height:52px;
+      border:0;
+      border-radius:18px;
+      background:linear-gradient(180deg,#22F0EE,#04B8C4);
+      color:#03120f;
+      font-weight:900;
+      font-size:16px;
+      box-shadow:0 0 24px rgba(0,234,240,.20);
+    }
+    .ghost-btn{
+      min-height:44px;
+      border:1px solid var(--line2);
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+      color:white;
+      font-weight:900;
+    }
+    .note{
+      border-radius:18px;
+      border:1px solid rgba(245,200,111,.24);
+      background:rgba(245,200,111,.10);
+      color:#f6e5ba;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .admin-app{display:none}
+    .admin-app.show{display:block}
+    .topbar{
+      min-height:86px;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:14px;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:linear-gradient(180deg,rgba(2,6,6,.96),rgba(2,6,6,.70));
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(0,234,240,.10);
+      padding:12px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand .mini-logo{
+      width:56px;height:56px;border-radius:20px;
+      border:1px solid rgba(0,234,240,.32);
+      display:grid;place-items:center;color:var(--cyan);
+      background:rgba(0,234,240,.045);
+      font-family:Georgia,serif;
+      font-size:22px;
+      direction:ltr;
+      text-shadow:0 0 14px rgba(0,234,240,.75);
+    }
+    .brand h2{font-size:22px;line-height:1;font-weight:900}
+    .brand p{font-size:12px;color:var(--muted);font-weight:800;margin-top:4px}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .top-actions button{
+      height:42px;border-radius:15px;border:1px solid var(--line);
+      background:rgba(0,234,240,.055);color:white;font-weight:900;padding:0 12px;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:250px 1fr;
+      gap:16px;
+      align-items:start;
+      margin-top:16px;
+    }
+    .sidebar{
+      position:sticky;
+      top:104px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      padding:12px;
+      display:grid;
+      gap:8px;
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+    }
+    .side-tab{
+      min-height:50px;
+      border:1px solid transparent;
+      background:transparent;
+      color:#cdd9d9;
+      border-radius:18px;
+      display:grid;
+      grid-template-columns:34px 1fr;
+      align-items:center;
+      gap:10px;
+      text-align:right;
+      padding:0 10px;
+      font-weight:900;
+    }
+    .side-tab b{
+      width:34px;height:34px;border-radius:13px;display:grid;place-items:center;
+      color:var(--cyan);border:1px solid rgba(0,234,240,.20);
+      background:rgba(0,234,240,.045);font-size:13px;direction:ltr;
+    }
+    .side-tab.active{
+      border-color:rgba(0,234,240,.36);
+      background:linear-gradient(135deg,rgba(0,234,240,.15),rgba(0,234,240,.04));
+      color:white;
+      box-shadow:inset 0 0 18px rgba(0,234,240,.05);
+    }
+    .content{display:grid;gap:16px}
+    .hero{
+      border-radius:32px;
+      border:1px solid rgba(0,234,240,.36);
+      background:
+        radial-gradient(circle at 0% 100%,rgba(0,234,240,.12),transparent 34%),
+        linear-gradient(135deg,rgba(3,32,34,.94),rgba(3,10,12,.96));
+      padding:20px;
+      box-shadow:0 18px 52px rgba(0,0,0,.45), inset 0 0 26px rgba(0,234,240,.035);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .hero span.status{
+      display:inline-flex;width:max-content;border-radius:999px;padding:5px 12px;
+      background:rgba(0,234,240,.10);border:1px solid rgba(0,234,240,.24);
+      color:var(--cyan);font-size:12px;font-weight:900;margin-bottom:8px;
+    }
+    .hero h1{font-size:30px;line-height:1.2;font-weight:900}
+    .hero p{color:#cdd9d9;font-size:14px;line-height:1.6;font-weight:800;margin-top:5px}
+    .hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .hero-actions button{min-height:42px;border-radius:15px;border:1px solid var(--line);background:rgba(0,234,240,.055);color:white;font-weight:900;padding:0 12px}
+    .hero-actions .primary-btn{min-height:42px;color:#03120f;border:0}
+
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+    .kpi{
+      min-height:118px;
+      border-radius:26px;
+      border:1px solid rgba(0,234,240,.20);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      padding:16px;
+      display:grid;
+      align-content:space-between;
+    }
+    .kpi small{color:var(--muted);font-weight:900}
+    .kpi strong{color:var(--cyan);font-size:34px;line-height:1;direction:ltr;text-shadow:0 0 14px rgba(0,234,240,.56)}
+    .kpi span{color:#d5e2e2;font-size:12px;font-weight:800}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .panel{
+      border-radius:28px;
+      border:1px solid rgba(0,234,240,.18);
+      background:linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.025));
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .panel-head h3{font-size:20px;font-weight:900}
+    .panel-head span{color:var(--muted);font-size:12px;font-weight:900}
+    .row{
+      border-radius:20px;
+      border:1px solid rgba(0,234,240,.14);
+      background:rgba(0,234,240,.035);
+      padding:12px;
+      display:grid;
+      grid-template-columns:44px 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+    .row-icon{
+      width:44px;height:44px;border-radius:16px;display:grid;place-items:center;
+      border:1px solid rgba(0,234,240,.22);background:rgba(0,234,240,.055);
+      color:var(--cyan);font-weight:900;direction:ltr;
+    }
+    .row h4{font-size:15.5px;line-height:1.25;font-weight:900}
+    .row p{font-size:12px;color:var(--muted);font-weight:800;margin-top:2px}
+    .row-actions{display:flex;gap:6px}
+    .row-actions button{
+      height:34px;border-radius:12px;border:1px solid var(--line2);
+      background:rgba(255,255,255,.045);color:white;font-size:12px;font-weight:900;padding:0 10px;
+    }
+    .row-actions button.ok{color:var(--cyan);border-color:rgba(0,234,240,.28)}
+    .row-actions button.danger{color:#ffccd4;border-color:rgba(251,113,133,.28)}
+    .empty{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:22px;
+      padding:22px;
+      color:var(--muted);
+      text-align:center;
+      font-weight:900;
+    }
+    .chart{
+      height:180px;
+      display:flex;
+      align-items:end;
+      gap:10px;
+      padding-top:10px;
+    }
+    .bar{
+      flex:1;
+      min-width:28px;
+      border-radius:14px 14px 6px 6px;
+      background:linear-gradient(180deg,#22F0EE,#046d74);
+      box-shadow:0 0 18px rgba(0,234,240,.18);
+      position:relative;
+    }
+    .bar small{
+      position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
+      color:var(--muted);font-size:11px;font-weight:900;
+    }
+    .table-tools{display:flex;gap:8px;flex-wrap:wrap}
+    .table-tools input,.table-tools select{
+      height:42px;border-radius:15px;border:1px solid rgba(0,234,240,.16);
+      background:#061011;color:white;padding:0 12px;outline:none;font-weight:800;
+    }
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(80px);
+      background:rgba(3,20,22,.96);border:1px solid rgba(0,234,240,.28);
+      color:white;padding:12px 16px;border-radius:18px;z-index:50;
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
+      transition:.25s ease;
+      font-weight:900;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .badge{
+      display:inline-flex;align-items:center;justify-content:center;
+      border-radius:999px;padding:4px 9px;background:rgba(0,234,240,.10);
+      color:var(--cyan);border:1px solid rgba(0,234,240,.22);
+      font-size:11px;font-weight:900;
+    }
+    .badge.warn{color:#f6e5ba;border-color:rgba(245,200,111,.24);background:rgba(245,200,111,.10)}
+    .badge.danger{color:#ffccd4;border-color:rgba(251,113,133,.24);background:rgba(251,113,133,.10)}
+    .badge.ok{color:#bfffe3;border-color:rgba(78,240,166,.24);background:rgba(78,240,166,.10)}
+
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:relative;top:auto;grid-template-columns:repeat(3,1fr)}
+      .side-tab{grid-template-columns:1fr;justify-items:center;text-align:center;height:68px}
+      .side-tab span{font-size:12px}
+      .kpis{grid-template-columns:repeat(2,1fr)}
+      .grid-2{grid-template-columns:1fr}
+      .hero{display:grid}
+    }
+    @media(max-width:520px){
+      .admin-shell{padding:10px}
+      .topbar{grid-template-columns:1fr;gap:10px}
+      .top-actions{justify-content:stretch}
+      .top-actions button{flex:1}
+      .sidebar{grid-template-columns:repeat(2,1fr)}
+      .kpis{grid-template-columns:1fr 1fr}
+      .kpi{min-height:100px;padding:12px}
+      .kpi strong{font-size:28px}
+      .row{grid-template-columns:42px 1fr}
+      .row-actions{grid-column:1/-1;justify-content:flex-end}
+      .hero h1{font-size:24px}
+      .chart{height:140px}
+    }
+  </style>
+</head>
+<body>
+  <section id="loginScreen" class="admin-login">
+    <div class="login-card">
+      <div class="hrx-logo">
+        <div class="hrx-mark">HR<span>X</span></div>
+        <div class="hrx-word">H i R E X</div>
+      </div>
+      <h1>لوحة إدارة HireX</h1>
+      <p>واجهة مستقلة تمامًا لإدارة المنصة، منفصلة عن تطبيق المستخدم.</p>
+      <label class="field"><span>إيميل الإدارة</span><input id="loginEmail" type="email" placeholder="admin@hirex.com"></label>
+      <label class="field"><span>كلمة المرور</span><input id="loginPassword" type="password" placeholder="••••••"></label>
+      <button class="primary-btn" onclick="loginAdmin()">دخول الإدارة</button>
+      <div class="note">تجريبيًا: استخدم أي إيميل صحيح وكلمة المرور <b>1234</b>. عند الربط يتم استبدالها بصلاحيات Supabase.</div>
+    </div>
+  </section>
+
+  <section id="adminApp" class="admin-app">
+    <div class="admin-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="mini-logo">HRX</div>
+          <div><h2>HireX Admin</h2><p id="adminEmailText">admin@hirex.com</p></div>
+        </div>
+        <div></div>
+        <div class="top-actions">
+          <button onclick="refreshDashboard()">تحديث</button>
+          <button onclick="exportAdminReport()">تصدير تقرير</button>
+          <button onclick="logoutAdmin()">خروج</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <button class="side-tab active" data-tab="overview" onclick="setAdminTab('overview')"><b>⌂</b><span>الرئيسية</span></button>
+          <button class="side-tab" data-tab="users" onclick="setAdminTab('users')"><b>US</b><span>المستخدمين</span></button>
+          <button class="side-tab" data-tab="ads" onclick="setAdminTab('ads')"><b>AD</b><span>الإعلانات</span></button>
+          <button class="side-tab" data-tab="services" onclick="setAdminTab('services')"><b>SV</b><span>الخدمات</span></button>
+          <button class="side-tab" data-tab="xs" onclick="setAdminTab('xs')"><b>Xs</b><span>الإكسز</span></button>
+          <button class="side-tab" data-tab="reports" onclick="setAdminTab('reports')"><b>RP</b><span>التقارير</span></button>
+        </aside>
+
+        <main class="content">
+          <section class="hero">
+            <div>
+              <span class="status">لوحة مستقلة</span>
+              <h1 id="pageTitle">نظرة عامة</h1>
+              <p id="pageDesc">مراقبة كاملة للمنصة وإدارتها من واجهة إدارية منفصلة.</p>
+            </div>
+            <div class="hero-actions">
+              <button class="primary-btn" onclick="quickApproveAll()">اعتماد السليم</button>
+              <button onclick="setAdminTab('reports')">عرض التقارير</button>
+            </div>
+          </section>
+
+          <section class="kpis">
+            <article class="kpi"><small>إجمالي المستخدمين</small><strong id="kpiUsers">0</strong><span>زائر / مرشح / شركة</span></article>
+            <article class="kpi"><small>الإعلانات</small><strong id="kpiAds">0</strong><span>منشور وتحت المراجعة</span></article>
+            <article class="kpi"><small>الخدمات</small><strong id="kpiServices">0</strong><span>طلبات وعروض</span></article>
+            <article class="kpi"><small>رصيد Xs</small><strong id="kpiXs">0</strong><span>إجمالي متداول</span></article>
+          </section>
+
+          <section id="adminContent" class="content"></section>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast">تم</div>
+
+  <script>
+    const state = {
+      tab:'overview',
+      adminEmail:'',
+      users:[
+        {id:1,name:'مصطفى عبدالباقي',email:'mustafa@hirex.com',role:'شركة / صاحب عمل',status:'نشط',joined:'اليوم'},
+        {id:2,name:'مرشح تجريبي',email:'candidate@hirex.com',role:'باحث عن عمل',status:'نشط',joined:'أمس'},
+        {id:3,name:'مقدم خدمة',email:'service@hirex.com',role:'مقدم خدمة',status:'تحت المراجعة',joined:'قبل يومين'}
+      ],
+      ads:[
+        {id:1,title:'محاسب عام',type:'فرصة عمل',owner:'شركة تجريبية',status:'منشور',promoted:true},
+        {id:2,title:'كتابة سيرة ذاتية',type:'عرض خدمة',owner:'مقدم خدمة',status:'تحت المراجعة',promoted:false},
+        {id:3,title:'باحث عن عمل موارد بشرية',type:'يطلب عمل',owner:'مرشح تجريبي',status:'مسودة',promoted:false}
+      ],
+      services:[
+        {id:1,title:'طلب تصميم CV',client:'عميل تجريبي',amount:120,status:'جديد'},
+        {id:2,title:'تدريب مقابلة شخصية',client:'مرشح تجريبي',amount:180,status:'مدفوع'},
+        {id:3,title:'خدمة فرز مرشحين',client:'شركة تجريبية',amount:350,status:'قيد التنفيذ'}
+      ],
+      xs:[
+        {id:1,user:'مصطفى عبدالباقي',type:'شراء حزمة Growth 300',amount:300,price:129,status:'مكتمل'},
+        {id:2,user:'شركة تجريبية',type:'تفعيل صدارة 7 أيام',amount:-120,price:0,status:'خصم'},
+        {id:3,user:'مرشح تجريبي',type:'صناعة سيرة ATS',amount:-35,price:0,status:'خصم'}
+      ]
+    };
+
+    function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim())}
+    function safeText(v){return String(v||'').replace(/[<>&]/g, s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}
+    function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+
+    function loginAdmin(){
+      const email=document.getElementById('loginEmail').value.trim();
+      const pass=document.getElementById('loginPassword').value.trim();
+      if(!validEmail(email)) return toast('اكتب إيميل صحيح');
+      if(pass !== '1234') return toast('كلمة المرور التجريبية 1234');
+      state.adminEmail=email;
+      document.getElementById('adminEmailText').textContent=email;
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('adminApp').classList.add('show');
+      render();
+      toast('تم دخول لوحة الإدارة');
+    }
+    function logoutAdmin(){
+      document.getElementById('adminApp').classList.remove('show');
+      document.getElementById('loginScreen').style.display='grid';
+      toast('تم تسجيل الخروج');
+    }
+    function setAdminTab(tab){state.tab=tab;render()}
+    function refreshDashboard(){render();toast('تم تحديث اللوحة')}
+    function quickApproveAll(){
+      state.users.forEach(u=>{if(u.status==='تحت المراجعة')u.status='نشط'});
+      state.ads.forEach(a=>{if(a.status==='تحت المراجعة')a.status='منشور'});
+      render();toast('تم اعتماد العناصر السليمة تجريبيًا');
+    }
+    function exportAdminReport(){
+      const data = {
+        date:new Date().toLocaleString('ar-SA'),
+        users:state.users.length,
+        ads:state.ads.length,
+        services:state.services.length,
+        xs:state.xs.reduce((s,x)=>s+x.amount,0)
+      };
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='hirex-admin-report.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+      toast('تم تصدير التقرير');
+    }
+
+    function metrics(){
+      return {
+        users:state.users.length,
+        ads:state.ads.length,
+        services:state.services.length,
+        xs:state.xs.reduce((s,x)=>s+x.amount,0)
+      }
+    }
+    function renderKpis(){
+      const m=metrics();
+      document.getElementById('kpiUsers').textContent=m.users;
+      document.getElementById('kpiAds').textContent=m.ads;
+      document.getElementById('kpiServices').textContent=m.services;
+      document.getElementById('kpiXs').textContent=m.xs.toLocaleString('en-US');
+    }
+    function render(){
+      renderKpis();
+      document.querySelectorAll('.side-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab));
+      const titles={
+        overview:['نظرة عامة','مؤشرات المنصة والحركة اليومية.'],
+        users:['إدارة المستخدمين','متابعة المرشحين والشركات ومقدمي الخدمات.'],
+        ads:['إدارة الإعلانات','مراجعة الإعلانات، الصدارة، والنشر.'],
+        services:['إدارة الخدمات','طلبات الخدمات والعروض والمدفوعات.'],
+        xs:['إدارة الإكسز','حركات شراء وخصم Xs وحزم الصدارة.'],
+        reports:['التقارير','ملخصات تشغيلية وإدارية قابلة للتصدير.']
+      };
+      document.getElementById('pageTitle').textContent=titles[state.tab][0];
+      document.getElementById('pageDesc').textContent=titles[state.tab][1];
+      const box=document.getElementById('adminContent');
+      if(state.tab==='overview') box.innerHTML=overviewHtml();
+      if(state.tab==='users') box.innerHTML=usersHtml();
+      if(state.tab==='ads') box.innerHTML=adsHtml();
+      if(state.tab==='services') box.innerHTML=servicesHtml();
+      if(state.tab==='xs') box.innerHTML=xsHtml();
+      if(state.tab==='reports') box.innerHTML=reportsHtml();
+    }
+
+    function overviewHtml(){
+      return `
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h3>حركة المنصة</h3><span>آخر 6 أيام</span></div>
+            <div class="chart">
+              ${[35,58,42,70,54,88].map((h,i)=>`<div class="bar" style="height:${h}%"><small>${['س','ح','ن','ث','ر','خ'][i]}</small></div>`).join('')}
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>تنبيهات مهمة</h3><span>متابعة</span></div>
+            ${row('!', 'إعلانات تحت المراجعة', 'يوجد إعلانات تحتاج اعتماد.', 'مراجعة', "setAdminTab('ads')")}
+            ${row('Xs', 'حركات الإكسز', 'متابعة عمليات الشراء والخصم.', 'عرض', "setAdminTab('xs')")}
+            ${row('SV', 'طلبات خدمات', 'طلبات جديدة تحتاج متابعة.', 'فتح', "setAdminTab('services')")}
+          </div>
+        </section>`;
+    }
+    function row(icon,title,desc,btn,action){
+      return `<article class="row"><div class="row-icon">${safeText(icon)}</div><div><h4>${safeText(title)}</h4><p>${safeText(desc)}</p></div><div class="row-actions"><button class="ok" onclick="${action}">${safeText(btn)}</button></div></article>`
+    }
+    function statusBadge(status){
+      let cls = status==='نشط'||status==='منشور'||status==='مكتمل'||status==='مدفوع' ? 'ok' : status==='تحت المراجعة'||status==='جديد' ? 'warn' : status==='مسودة' ? '' : 'danger';
+      return `<span class="badge ${cls}">${safeText(status)}</span>`;
+    }
+    function usersHtml(){
+      return `<section class="panel"><div class="panel-head"><h3>المستخدمين</h3><span>${state.users.length} مستخدم</span></div>
+      <div class="table-tools"><input id="userSearch" placeholder="بحث عن مستخدم..." oninput="filterRows('usersList', this.value)"><select><option>كل الأنواع</option><option>شركة</option><option>باحث</option><option>مقدم خدمة</option></select></div>
+      <div id="usersList">${state.users.map(u=>`<article class="row"><div class="row-icon">US</div><div><h4>${safeText(u.name)}</h4><p>${safeText(u.email)} · ${safeText(u.role)} · ${safeText(u.joined)}</p></div><div class="row-actions">${statusBadge(u.status)}<button class="ok" onclick="approveUser(${u.id})">اعتماد</button><button class="danger" onclick="blockUser(${u.id})">إيقاف</button></div></article>`).join('')}</div></section>`;
+    }
+    function adsHtml(){
+      return `<section class="panel"><div class="panel-head"><h3>الإعلانات</h3><span>${state.ads.length} إعلان</span></div>
+      <div class="table-tools"><input id="adsSearch" placeholder="بحث عن إعلان..." oninput="filterRows('adsList', this.value)"><select><option>كل الحالات</option><option>منشور</option><option>تحت المراجعة</option></select></div>
+      <div id="adsList">${state.ads.map(a=>`<article class="row"><div class="row-icon">AD</div><div><h4>${safeText(a.title)}</h4><p>${safeText(a.type)} · ${safeText(a.owner)} · ${a.promoted?'بالصدارة':'عادي'}</p></div><div class="row-actions">${statusBadge(a.status)}<button class="ok" onclick="approveAd(${a.id})">نشر</button><button class="danger" onclick="rejectAd(${a.id})">رفض</button></div></article>`).join('')}</div></section>`;
+    }
+    function servicesHtml(){
+      return `<section class="panel"><div class="panel-head"><h3>الخدمات</h3><span>${state.services.length} خدمة</span></div>
+      <div id="servicesList">${state.services.map(s=>`<article class="row"><div class="row-icon">SV</div><div><h4>${safeText(s.title)}</h4><p>${safeText(s.client)} · ${s.amount} ريال</p></div><div class="row-actions">${statusBadge(s.status)}<button class="ok" onclick="serviceDone(${s.id})">اعتماد</button><button class="danger" onclick="serviceHold(${s.id})">تعليق</button></div></article>`).join('')}</div></section>`;
+    }
+    function xsHtml(){
+      return `<section class="panel"><div class="panel-head"><h3>الإكسز</h3><span>الحركات</span></div>
+      ${state.xs.map(x=>`<article class="row"><div class="row-icon">Xs</div><div><h4>${safeText(x.type)}</h4><p>${safeText(x.user)} · ${x.amount} Xs · ${x.price} ريال</p></div><div class="row-actions">${statusBadge(x.status)}</div></article>`).join('')}</section>`;
+    }
+    function reportsHtml(){
+      const m=metrics();
+      return `<section class="grid-2">
+        <div class="panel"><div class="panel-head"><h3>تقرير سريع</h3><span>اليوم</span></div>
+          <p>عدد المستخدمين: ${m.users}</p><p>عدد الإعلانات: ${m.ads}</p><p>عدد الخدمات: ${m.services}</p><p>إجمالي Xs: ${m.xs}</p>
+          <button class="primary-btn" onclick="exportAdminReport()">تصدير JSON</button>
+        </div>
+        <div class="panel"><div class="panel-head"><h3>ملاحظات الإدارة</h3><span>داخلي</span></div>
+          <label class="field"><span>ملاحظة</span><textarea placeholder="اكتب ملاحظة إدارية..."></textarea></label>
+          <button class="ghost-btn" onclick="toast('تم حفظ الملاحظة تجريبيًا')">حفظ الملاحظة</button>
+        </div>
+      </section>`;
+    }
+
+    function approveUser(id){const u=state.users.find(x=>x.id===id); if(u){u.status='نشط';render();toast('تم اعتماد المستخدم')}}
+    function blockUser(id){const u=state.users.find(x=>x.id===id); if(u){u.status='موقوف';render();toast('تم إيقاف المستخدم')}}
+    function approveAd(id){const a=state.ads.find(x=>x.id===id); if(a){a.status='منشور';render();toast('تم نشر الإعلان')}}
+    function rejectAd(id){const a=state.ads.find(x=>x.id===id); if(a){a.status='مرفوض';render();toast('تم رفض الإعلان')}}
+    function serviceDone(id){const s=state.services.find(x=>x.id===id); if(s){s.status='مكتمل';render();toast('تم اعتماد الخدمة')}}
+    function serviceHold(id){const s=state.services.find(x=>x.id===id); if(s){s.status='معلق';render();toast('تم تعليق الخدمة')}}
+    function filterRows(containerId, value){
+      const q=String(value||'').toLowerCase();
+      document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=row.textContent.toLowerCase().includes(q)?'grid':'none');
+    }
+    document.getElementById('loginPassword').addEventListener('keydown', e=>{if(e.key==='Enter')loginAdmin()});
+  </script>
+</body>
+</html>
