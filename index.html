@@ -1144,68 +1144,592 @@
       .bottom-nav{width:calc(100% - 12px)}
     }
 
+  
+    /* V27: applied exact reference home UI to real app */
+    :root{
+      --rx-bg:#020606;
+      --rx-panel:#071314;
+      --rx-border:#00DDEB;
+      --rx-glow:#00EAF0;
+      --rx-text:#F4F7F7;
+      --rx-muted:#D3DEDE;
+    }
+    html,body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+      background:#020606!important;
+    }
+    body{
+      min-height:100vh;
+      padding-bottom:calc(112px + env(safe-area-inset-bottom))!important;
+      background:
+        radial-gradient(circle at 18% 4%,rgba(0,234,240,.08),transparent 26%),
+        radial-gradient(circle at 80% 12%,rgba(0,234,240,.06),transparent 28%),
+        linear-gradient(180deg,#030606,#020606 45%,#010202)!important;
+      color:var(--rx-text);
+    }
+    .app{
+      width:min(430px,100%)!important;
+      max-width:430px!important;
+      margin:auto!important;
+      padding:0 16px!important;
+    }
+    .header{
+      height:112px!important;
+      min-height:112px!important;
+      padding:16px 0 10px!important;
+      display:grid!important;
+      grid-template-columns:58px 1fr 58px!important;
+      align-items:start!important;
+      gap:0!important;
+      position:relative!important;
+      top:auto!important;
+      background:transparent!important;
+      border:0!important;
+      backdrop-filter:none!important;
+      z-index:40;
+    }
+    .circle-icon{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      border:1px solid rgba(0,234,240,.38);
+      background:radial-gradient(circle at 50% 30%,rgba(0,234,240,.08),rgba(255,255,255,.02));
+      color:#fff;
+      display:grid;
+      place-items:center;
+      position:relative;
+      cursor:pointer;
+      box-shadow:0 0 22px rgba(0,234,240,.12), inset 0 0 18px rgba(0,234,240,.04);
+      padding:0;
+    }
+    .circle-icon svg{
+      width:28px;
+      height:28px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:3.1;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      filter:drop-shadow(0 0 8px rgba(0,234,240,.35));
+    }
+    .notify-btn{justify-self:start}
+    .settings-btn{justify-self:end}
+    .notify-dot{
+      position:absolute;
+      width:15px;
+      height:15px;
+      border-radius:50%;
+      background:#00F0F0;
+      top:7px;
+      right:4px;
+      box-shadow:0 0 12px rgba(0,240,240,.9);
+    }
+    .brand-hrx{
+      justify-self:center;
+      text-align:center;
+      width:150px;
+      height:92px;
+      display:grid;
+      place-items:center;
+      align-content:start;
+      color:#08EAF0;
+      filter:drop-shadow(0 0 15px rgba(0,234,240,.65));
+      direction:ltr;
+      user-select:none;
+    }
+    .hrx-mark{
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:61px;
+      line-height:.82;
+      letter-spacing:-8px;
+      color:#08EAF0;
+      text-shadow:0 0 13px rgba(0,234,240,.85),0 0 34px rgba(0,234,240,.30);
+      transform:translateX(-2px);
+      font-weight:400;
+    }
+    .hrx-mark span{
+      display:inline-block;
+      font-style:italic;
+      transform:translateX(-7px) scaleX(1.15);
+    }
+    .hrx-word{
+      margin-top:9px;
+      font-size:15px;
+      letter-spacing:10px;
+      color:#07EAF0;
+      opacity:.95;
+      line-height:1;
+      font-weight:500;
+      transform:translateX(5px);
+    }
+    .hrx-line{
+      width:78px;
+      height:1px;
+      background:linear-gradient(90deg,transparent,#00EAF0,transparent);
+      margin-top:8px;
+      position:relative;
+    }
+    .hrx-line:after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-3px;
+      width:7px;
+      height:7px;
+      background:#00EAF0;
+      transform:translateX(-50%) rotate(45deg);
+      box-shadow:0 0 13px rgba(0,234,240,.9);
+    }
+
+    .hero-reference{
+      min-height:300px!important;
+      border-radius:30px!important;
+      padding:22px 20px!important;
+      margin-top:0!important;
+      border:1px solid rgba(0,234,240,.62)!important;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(0,234,240,.19),transparent 22%),
+        radial-gradient(circle at 55% 45%,rgba(0,234,240,.045),transparent 42%),
+        linear-gradient(135deg,rgba(4,30,31,.95),rgba(3,9,11,.98))!important;
+      box-shadow:0 24px 80px rgba(0,0,0,.72), inset 0 0 42px rgba(0,234,240,.035)!important;
+      overflow:hidden;
+      position:relative;
+      display:block!important;
+    }
+    .hero-reference:before,.hero-reference:after{display:none!important}
+    .hero-corner{
+      position:absolute;
+      top:-44px;
+      left:-42px;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:rgba(0,234,240,.12);
+    }
+    .hero-rocket{
+      position:absolute;
+      left:-18px;
+      top:16px;
+      width:178px;
+      height:205px;
+      z-index:1;
+      opacity:.98;
+      filter:drop-shadow(0 0 15px rgba(0,234,240,.65));
+    }
+    .rocket-svg{width:100%;height:100%;display:block;transform:rotate(-7deg)}
+    .hero-content{
+      position:relative;
+      z-index:2;
+      text-align:right!important;
+      width:100%!important;
+      max-width:100%!important;
+      padding:0!important;
+      display:grid;
+      justify-items:end;
+    }
+    .hero-reference .tag{
+      margin:10px 0 12px auto!important;
+      width:max-content!important;
+      min-height:39px!important;
+      border-radius:999px!important;
+      padding:0 15px!important;
+      color:#07EAF0!important;
+      font-weight:900!important;
+      font-size:15px!important;
+      border:1px solid rgba(0,234,240,.38)!important;
+      background:rgba(0,234,240,.065)!important;
+      text-shadow:0 0 10px rgba(0,234,240,.45);
+    }
+    .hero-reference h2{
+      width:248px;
+      margin:0!important;
+      padding:0!important;
+      font-size:31px!important;
+      line-height:1.16!important;
+      font-weight:900!important;
+      color:#f5f5f5!important;
+      text-shadow:0 3px 0 rgba(0,0,0,.42), 0 0 16px rgba(255,255,255,.08);
+      letter-spacing:-.5px;
+    }
+    .hero-reference h2 span{
+      display:block;
+      color:#19F1EF!important;
+      text-shadow:0 0 14px rgba(0,234,240,.45);
+    }
+    .hero-reference p{
+      width:270px!important;
+      margin:13px 0 0!important;
+      padding:0!important;
+      color:#F2F2F2!important;
+      font-size:16px!important;
+      line-height:1.62!important;
+      font-weight:500!important;
+      text-shadow:0 2px 0 rgba(0,0,0,.35);
+    }
+    .hero-cta{
+      width:268px!important;
+      min-height:55px!important;
+      margin:20px auto 0 39px!important;
+      border-radius:999px!important;
+      background:linear-gradient(180deg,#22F0EE,#04B8C4)!important;
+      color:white!important;
+      border:1px solid rgba(87,255,255,.42)!important;
+      box-shadow:0 0 28px rgba(0,234,240,.30), inset 0 1px 13px rgba(255,255,255,.18)!important;
+      font-size:18px!important;
+      font-weight:900!important;
+      gap:48px!important;
+      direction:ltr;
+    }
+    .hero-cta span{
+      font-size:25px!important;
+      color:#061313!important;
+      line-height:1;
+    }
+
+    .discover-title{
+      margin:20px 0 12px!important;
+      display:grid!important;
+      grid-template-columns:1fr auto 1fr!important;
+      align-items:center!important;
+      gap:16px!important;
+      text-align:center!important;
+    }
+    .discover-title h3{
+      font-size:24px!important;
+      line-height:1!important;
+      color:white!important;
+      font-weight:900!important;
+      text-shadow:0 0 10px rgba(255,255,255,.12);
+    }
+    .discover-title span{
+      height:1px!important;
+      background:linear-gradient(90deg,transparent,#00EAF0,transparent)!important;
+      position:relative;
+      display:block;
+    }
+    .discover-title span:after{
+      content:"";
+      width:7px;
+      height:7px;
+      background:#00EAF0;
+      box-shadow:0 0 12px rgba(0,234,240,.9);
+      position:absolute;
+      top:-3px;
+      left:50%;
+      transform:translateX(-50%) rotate(45deg);
+    }
+
+    .home-feature-stack{
+      display:grid!important;
+      gap:10px!important;
+    }
+    .reference-card{
+      min-height:104px!important;
+      border-radius:21px!important;
+      padding:14px 96px 14px 46px!important;
+      display:grid!important;
+      align-items:center!important;
+      grid-template-columns:1fr!important;
+      background:
+        radial-gradient(circle at 87% 50%,rgba(0,234,240,.11),transparent 28%),
+        linear-gradient(135deg,rgba(3,26,28,.94),rgba(3,9,11,.96))!important;
+      border:1px solid rgba(0,234,240,.45)!important;
+      box-shadow:0 14px 42px rgba(0,0,0,.45), inset 0 0 22px rgba(0,234,240,.025)!important;
+      position:relative!important;
+      overflow:hidden!important;
+    }
+    .reference-card:before{display:none!important}
+    .reference-card .promo-text{
+      z-index:2;
+      text-align:center;
+    }
+    .reference-card h4{
+      font-size:20.5px!important;
+      line-height:1.25!important;
+      color:white!important;
+      font-weight:900!important;
+      margin:0 0 2px!important;
+      text-shadow:0 0 12px rgba(255,255,255,.08);
+    }
+    .reference-card p{
+      margin:0!important;
+      color:#E0E6E6!important;
+      font-size:14.5px!important;
+      line-height:1.45!important;
+      font-weight:500!important;
+    }
+    .reference-card .promo-arrow{
+      position:absolute!important;
+      left:18px!important;
+      top:50%!important;
+      transform:translateY(-50%)!important;
+      color:white!important;
+      opacity:1!important;
+      font-size:36px!important;
+      background:transparent!important;
+      border:0!important;
+      z-index:3!important;
+      cursor:pointer;
+      padding:0!important;
+    }
+    .neon-icon{
+      position:absolute!important;
+      right:16px!important;
+      top:50%!important;
+      transform:translateY(-50%)!important;
+      width:70px!important;
+      height:70px!important;
+      border-radius:50%!important;
+      background:radial-gradient(circle at 50% 50%,rgba(0,234,240,.14),rgba(0,234,240,.02) 62%,transparent 63%)!important;
+      border:1px solid rgba(0,234,240,.18)!important;
+      box-shadow:0 0 28px rgba(0,234,240,.17), inset 0 0 22px rgba(0,234,240,.07)!important;
+      display:grid!important;
+      place-items:center!important;
+      color:#00EAF0!important;
+      filter:none!important;
+      backdrop-filter:none!important;
+      z-index:2;
+    }
+    .neon-icon:before{display:none!important}
+    .neon-icon svg{
+      width:46px!important;
+      height:46px!important;
+      fill:none!important;
+      stroke:#00EAF0!important;
+      stroke-width:3.2!important;
+      stroke-linecap:round!important;
+      stroke-linejoin:round!important;
+      filter:drop-shadow(0 0 10px rgba(0,234,240,.85));
+    }
+
+    .reference-community{
+      min-height:116px!important;
+      border-radius:24px!important;
+      padding:18px 88px 18px 18px!important;
+      margin-top:18px!important;
+      display:block!important;
+      background:
+        radial-gradient(circle at 14% 50%,rgba(0,234,240,.12),transparent 26%),
+        radial-gradient(circle at 96% 80%,rgba(0,234,240,.05),transparent 30%),
+        linear-gradient(135deg,rgba(3,28,30,.94),rgba(3,10,12,.97))!important;
+      border:1px solid rgba(0,234,240,.45)!important;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 14px 42px rgba(0,0,0,.45)!important;
+    }
+    .reference-community .community-icon{
+      right:18px!important;
+      left:auto!important;
+      width:60px!important;
+      height:60px!important;
+    }
+    .reference-community h3{
+      color:#17F2F0!important;
+      font-size:21px!important;
+      font-weight:900!important;
+      margin:0 0 3px!important;
+      text-align:center;
+    }
+    .reference-community p{
+      color:#E0E6E6!important;
+      font-size:14.5px!important;
+      margin:0 0 4px!important;
+      text-align:center;
+    }
+    .reference-community button{
+      color:#00EAF0!important;
+      font-size:16px!important;
+      display:block;
+      margin:auto;
+      background:transparent!important;
+      border:0;
+      font-weight:500!important;
+      cursor:pointer;
+    }
+
+    .bottom-nav{
+      width:min(398px,calc(100% - 32px))!important;
+      height:73px!important;
+      bottom:calc(13px + env(safe-area-inset-bottom))!important;
+      border-radius:24px!important;
+      background:linear-gradient(180deg,rgba(8,17,19,.92),rgba(4,9,11,.95))!important;
+      border:1px solid rgba(0,234,240,.24)!important;
+      box-shadow:0 18px 55px rgba(0,0,0,.76), inset 0 0 24px rgba(0,234,240,.03)!important;
+      display:grid!important;
+      grid-template-columns:repeat(5,1fr)!important;
+      padding:5px!important;
+      gap:2px!important;
+      z-index:80!important;
+      overflow:hidden!important;
+      backdrop-filter:blur(18px);
+    }
+    .nav-item{
+      border:0!important;
+      background:transparent!important;
+      color:#A7ADB8!important;
+      display:grid!important;
+      place-items:center!important;
+      align-content:center!important;
+      gap:2px!important;
+      font-size:11.5px!important;
+      font-weight:800!important;
+      padding:4px!important;
+      cursor:pointer!important;
+      border-radius:19px!important;
+      margin:0!important;
+      min-width:0;
+    }
+    .nav-item svg{
+      width:28px!important;
+      height:28px!important;
+      fill:none!important;
+      stroke:currentColor!important;
+      stroke-width:3.1!important;
+      stroke-linecap:round!important;
+      stroke-linejoin:round!important;
+      filter:drop-shadow(0 0 7px rgba(0,234,240,.12));
+    }
+    .nav-item span{line-height:1.1}
+    .nav-item.active{
+      background:radial-gradient(circle at 50% 25%,rgba(0,234,240,.20),rgba(0,234,240,.06))!important;
+      color:#00EAF0!important;
+      border:1px solid rgba(0,234,240,.42)!important;
+      box-shadow:0 0 25px rgba(0,234,240,.18), inset 0 0 16px rgba(0,234,240,.09)!important;
+      margin:0!important;
+    }
+    .nav-item.active svg{
+      filter:drop-shadow(0 0 12px rgba(0,234,240,.75));
+    }
+
+    /* remove old light/emoji tile look */
+    .promo-label{display:none!important}
+    .hero-art,.promo-art,.avatar,.job-type-icon,.category-icon,.win-icon,.action-icon{
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+
+    @media(max-width:380px){
+      .app{padding:0 11px!important}
+      .hero-reference{min-height:292px!important;padding:18px 16px!important}
+      .hero-rocket{width:160px;height:190px;left:-24px;top:20px}
+      .hero-reference h2{font-size:28px!important;width:226px}
+      .hero-reference p{font-size:14.5px!important;width:246px}
+      .hero-cta{width:242px!important;margin-left:32px!important}
+      .reference-card{padding-right:86px!important}
+      .neon-icon{width:62px!important;height:62px!important}
+      .neon-icon svg{width:40px!important;height:40px!important}
+    }
+
   </style>
 </head>
 <body>
   <div class="app">
+
     <header class="header">
-      <a class="profile-btn" href="#account">⚙️</a>
-      <div class="brand">
-        <img class="brand-image" src="assets/hirex-logo.png" alt="HireX">
+      <button class="circle-icon notify-btn" type="button" onclick="openSoon('الإشعارات')" aria-label="الإشعارات">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 45h24l-4-6V27c0-8-5-14-8-14s-8 6-8 14v12z"/><path d="M28 49c1 4 7 4 8 0"/></svg>
+        <span class="notify-dot"></span>
+      </button>
+      
+      <div class="brand-hrx" aria-label="HireX">
+        <div class="hrx-mark">HR<span>X</span></div>
+        <div class="hrx-word">H i R E X</div>
+        <div class="hrx-line"></div>
       </div>
+
+      <button class="circle-icon settings-btn" type="button" onclick="openSoon('الإعدادات')" aria-label="الإعدادات">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8"/><path d="M32 10v7M32 47v7M10 32h7M47 32h7M17 17l5 5M42 42l5 5M47 17l-5 5M22 42l-5 5"/><path d="M25 12l3-4h8l3 4M25 52l3 4h8l3-4M12 25l-4 3v8l4 3M52 25l4 3v8l-4 3"/></svg>
+      </button>
     </header>
 
+
+
     <main id="home">
-      <section class="hero">
-        <div class="hero-art"><span class="neon-rocket">🚀</span></div>
+      <section class="hero hero-reference">
+        <div class="hero-corner"></div>
+        <div class="hero-rocket">
+<svg class="rocket-svg" viewBox="0 0 360 360" aria-hidden="true">
+  <defs>
+    <linearGradient id="rocketGlow" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E5C5"/>
+      <stop offset="100%" stop-color="#00B8D4"/>
+    </linearGradient>
+    <filter id="neonBlur">
+      <feGaussianBlur stdDeviation="2.4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#neonBlur)" fill="none" stroke="url(#rocketGlow)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M177 214 C220 184 250 130 255 60 C187 72 133 103 103 146 L82 198 L135 177 Z"/>
+    <path d="M103 146 L56 157 L86 185"/>
+    <path d="M177 214 L166 260 L138 227"/>
+    <circle cx="178" cy="132" r="28"/>
+    <path d="M120 222 L48 296"/>
+    <path d="M100 209 L35 263"/>
+    <path d="M137 239 L82 307"/>
+    <path d="M42 303 C84 295 103 282 129 253"/>
+  </g>
+  <g fill="#00E5C5" opacity=".85">
+    <circle cx="34" cy="286" r="2.5"/><circle cx="52" cy="270" r="2"/><circle cx="70" cy="305" r="2.5"/>
+    <circle cx="88" cy="286" r="1.8"/><circle cx="23" cy="249" r="1.8"/><circle cx="111" cy="309" r="1.7"/>
+  </g>
+</svg>
+</div>
         <div class="hero-content">
           <div class="tag">منصة HireX ✨</div>
           <h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2>
           <p>اكتشف فرصك، اعرض خدماتك، وتواصل مع أصحاب الأعمال والعملاء بسهولة وأمان.</p>
-          <button type="button" class="hero-cta" onclick="openMyAdsModal()">ابدأ رحلتك الآن <span>←</span></button>
+          <button type="button" class="hero-cta" onclick="openMyAdsModal()"><span>→</span> ابدأ رحلتك الآن</button>
         </div>
       </section>
+
       <div class="section-head discover-title"><span></span><h3>اكتشف أكثر</h3><span></span></div>
+
       <section class="marketing-stack home-feature-stack">
-        <article class="promo gold">
+        <article class="promo reference-card">
+          <button class="promo-arrow" onclick="openJobsModal()">‹</button>
           <div class="promo-text">
-            <div class="promo-label">للباحثين عن عمل</div>
             <h4>اعثر على وظيفة تناسبك</h4>
             <p>تصفح آلاف الفرص الوظيفية الموثوقة في مختلف المجالات.</p>
           </div>
-          <div class="promo-art">💼</div>
-          <button class="promo-arrow" onclick="openJobsModal()">‹</button>
+          <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5"/><rect x="12" y="24" width="40" height="28" rx="6"/><path d="M12 34h40M29 35h6v6h-6z"/></svg></div>
         </article>
-        <article class="promo blue">
+
+        <article class="promo reference-card">
+          <button class="promo-arrow" onclick="openServicesModal()">‹</button>
           <div class="promo-text">
-            <div class="promo-label">للمحترفين</div>
             <h4>اعرض خدماتك باحتراف</h4>
             <p>أنشئ ملفك المهني، قدم خدماتك، ووصل لعملاء يبحثون عن خبراتك.</p>
           </div>
-          <div class="promo-art">👤</div>
-          <button class="promo-arrow" onclick="openServicesModal()">‹</button>
+          <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="27" cy="21" r="10"/><path d="M10 53c3-12 11-18 22-18 5 0 9 1 12 4"/><path d="M48 34l3 7 7 1-5 5 1 8-6-4-7 4 2-8-6-5 8-1z"/></svg></div>
         </article>
-        <article class="promo">
+
+        <article class="promo reference-card">
+          <button class="promo-arrow" onclick="openMyAdsModal()">‹</button>
           <div class="promo-text">
-            <div class="promo-label">للشركات وأصحاب الأعمال</div>
             <h4>شركات وأصحاب أعمال</h4>
             <p>اعثر على أفضل المواهب أو الخدمات التي تدعم نمو أعمالك بسهولة.</p>
           </div>
-          <div class="promo-art">🏢</div>
-          <button class="promo-arrow" onclick="openMyAdsModal()">‹</button>
+          <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 54V18l21-6v42M35 24h15v30M22 25h5M22 35h5M22 45h5M42 34h4M42 44h4M10 54h46"/></svg></div>
         </article>
-        <article class="promo">
+
+        <article class="promo reference-card">
+          <button class="promo-arrow" onclick="openSoon('الأمان')">‹</button>
           <div class="promo-text">
-            <div class="promo-label">ثقة وأمان</div>
             <h4>تجربة آمنة وموثوقة</h4>
             <p>منصة موثوقة وآمنة تضمن لك أفضل تجربة للتوظيف والتعاون.</p>
           </div>
-          <div class="promo-art">🛡️</div>
-          <button class="promo-arrow" onclick="openSoon('الأمان')">‹</button>
+          <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8l21 8v15c0 14-9 22-21 27-12-5-21-13-21-27V16z"/><path d="M22 32l7 7 14-16"/></svg></div>
         </article>
       </section>
-      <section class="story-card community-card">
-        <div class="community-icon">✦</div>
+
+      <section class="story-card community-card reference-community">
+        <div class="community-icon neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8l21 8v15c0 14-9 22-21 27-12-5-21-13-21-27V16z"/><path d="M22 32l7 7 14-16"/></svg></div>
         <div>
           <h3>انضم إلى مجتمع HireX</h3>
           <p>آلاف المحترفين والشركات يثقون بنا كل يوم.</p>
@@ -1214,13 +1738,16 @@
       </section>
     </main>
 
+
+
     <nav class="bottom-nav">
-      <button class="nav-item active" data-tab="home" onclick="goHome()"><b>🏠</b><span>الرئيسية</span></button>
-      <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><b>💼</b><span>وظائف</span></button>
-      <button class="nav-item" data-tab="services" onclick="openServicesModal()"><b>🛠️</b><span>خدمات</span></button>
-      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><b>＋</b><span>إعلاناتي</span></button>
-      <button class="nav-item" data-tab="account" onclick="openSoon('حسابي')"><b>⚙️</b><span>حسابي</span></button>
+      <button class="nav-item active" data-tab="home" onclick="goHome()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 32L32 13l22 19"/><path d="M17 29v24h30V29"/><path d="M26 53V39h12v14"/></svg><span>الرئيسية</span></button>
+      <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5"/><rect x="12" y="24" width="40" height="28" rx="6"/><path d="M12 35h40"/></svg><span>وظائف</span></button>
+      <button class="nav-item" data-tab="services" onclick="openServicesModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 10l8 8-8 8-8-8z"/><path d="M30 18l24 24-8 8-24-24"/><path d="M45 12l7 7-17 17-7-7z"/><path d="M18 43l7 7-5 5h-7v-7z"/></svg><span>خدمات</span></button>
+      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22"/><path d="M32 20v24M20 32h24"/></svg><span>إعلاناتي</span></button>
+      <button class="nav-item" data-tab="account" onclick="openSoon('حسابي')"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="22" r="10"/><path d="M14 54c3-13 10-20 18-20s15 7 18 20"/></svg><span>حسابي</span></button>
     </nav>
+
   </div>
 
   <div class="overlay" id="jobsOverlay" aria-hidden="true">
@@ -1722,7 +2249,7 @@
     function closePhoneModal(){hideOverlay('phoneOverlay');}
 
     ['jobsOverlay','categoryOverlay','detailOverlay','phoneOverlay'].forEach(id=>{
-      document.getElementById(id).addEventListener('click', function(e){
+      document.getElementById(id)?.addEventListener('click', function(e){
         if(e.target !== this) return;
         if(id==='phoneOverlay') closePhoneModal();
         if(id==='detailOverlay') closeDetailModal();
@@ -1944,7 +2471,7 @@
     }
 
     ['servicesOverlay','serviceCategoryOverlay','serviceDetailOverlay','paymentOverlay'].forEach(id=>{
-      document.getElementById(id).addEventListener('click', function(e){
+      document.getElementById(id)?.addEventListener('click', function(e){
         if(e.target !== this) return;
         if(id==='paymentOverlay') closePaymentModal();
         if(id==='serviceDetailOverlay') closeServiceDetailModal();
