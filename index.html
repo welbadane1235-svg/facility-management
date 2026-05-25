@@ -1622,6 +1622,66 @@
       .neon-icon svg{width:40px!important;height:40px!important}
     }
 
+  
+    /* V28: fix hero rocket/text overlap only */
+    .hero-reference{
+      min-height:300px!important;
+    }
+
+    .hero-reference .hero-rocket{
+      left:-34px!important;
+      top:48px!important;
+      width:132px!important;
+      height:158px!important;
+      opacity:.92!important;
+      z-index:1!important;
+      pointer-events:none!important;
+    }
+
+    .hero-reference .rocket-svg{
+      transform:rotate(-8deg) scale(.92)!important;
+      transform-origin:center!important;
+    }
+
+    .hero-reference .hero-content{
+      z-index:3!important;
+      justify-items:end!important;
+    }
+
+    .hero-reference h2{
+      width:222px!important;
+      max-width:222px!important;
+      margin-right:0!important;
+    }
+
+    .hero-reference p{
+      width:236px!important;
+      max-width:236px!important;
+      margin-right:0!important;
+    }
+
+    .hero-reference .tag{
+      margin-right:0!important;
+    }
+
+    @media(max-width:380px){
+      .hero-reference .hero-rocket{
+        left:-42px!important;
+        top:55px!important;
+        width:118px!important;
+        height:145px!important;
+      }
+      .hero-reference h2{
+        width:210px!important;
+        max-width:210px!important;
+        font-size:27px!important;
+      }
+      .hero-reference p{
+        width:224px!important;
+        max-width:224px!important;
+      }
+    }
+
   </style>
 </head>
 <body>
