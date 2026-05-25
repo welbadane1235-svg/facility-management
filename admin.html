@@ -240,6 +240,8 @@
  }
 
  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-config.js"></script>
 </head>
 <body>
  <section id="loginScreen" class="admin-login">
@@ -250,7 +252,7 @@
  <label class="field"><span>إيميل الإدارة</span><input id="loginEmail" type="email" placeholder="admin@hirex.com"></label>
  <label class="field"><span>كلمة المرور</span><input id="loginPassword" type="password" placeholder="••••••"></label>
  <button class="primary-btn" onclick="loginAdmin()">دخول الإدارة</button>
- <div class="note">الدخول ال الحقيقي لبيانات دخول الإدارة: <b>admin@hirex.com</b> وكلمة المرور <b>1234</b>.</div>
+ <div class="note">الدخول ال الحقيقي ليتم الدخول بحساب الإدارة المصرح له. يجب أن يكون البريد مؤكدًا.</div>
  </div>
  </section>
 
@@ -1094,6 +1096,76 @@ function reportsHtml(){
  <div id="${id}">${safeRows}</div>
  </section>`;
  };
+
+
+    /* V44 Clean Admin Supabase Auth */
+    function hxAdminSupabaseConfigured(){
+      return !!(window.HIREX_SUPABASE_URL && window.HIREX_SUPABASE_ANON_KEY && !String(window.HIREX_SUPABASE_URL).includes('ضع_') && !String(window.HIREX_SUPABASE_ANON_KEY).includes('ضع_'));
+    }
+    function hxAdminGetSupabase(){
+      if(!hxAdminSupabaseConfigured()) return null;
+      if(!window.hirexAdminSupabaseClient){
+        window.hirexAdminSupabaseClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
+      }
+      return window.hirexAdminSupabaseClient;
+    }
+    async function loginAdmin(){
+      const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pass=document.getElementById('loginPassword').value.trim();
+      if(!validEmail(email)) return toast('اكتب إيميل صحيح');
+      const sb = hxAdminGetSupabase();
+      if(!sb){
+        if(email !== ADMIN_EMAIL) return toast('هذا الإيميل غير مصرح له بدخول الإدارة');
+        if(pass !== ADMIN_PASSWORD) return toast('كلمة المرور غير صحيحة');
+        startAdminSession(email);
+        toast('تم دخول لوحة الإدارة');
+        return;
+      }
+      const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+      if(error) return toast('تعذر تسجيل الدخول: ' + error.message);
+      const user = data?.user;
+      if(!user?.email_confirmed_at){
+        await sb.auth.signOut();
+        return toast('البريد غير مؤكد. يجب تأكيد بريد الإدارة أولًا.');
+      }
+      const allowed = (user.user_metadata?.role === 'admin') || email === ADMIN_EMAIL;
+      if(!allowed){
+        await sb.auth.signOut();
+        return toast('هذا الحساب لا يملك صلاحية الإدارة.');
+      }
+      startAdminSession(email);
+      toast('تم دخول لوحة الإدارة');
+    }
+    async function restoreAdminSession(){
+      try{
+        const sb = hxAdminGetSupabase();
+        if(sb){
+          const { data } = await sb.auth.getSession();
+          const user = data?.session?.user;
+          if(user?.email_confirmed_at && ((user.user_metadata?.role === 'admin') || user.email === ADMIN_EMAIL)){
+            startAdminSession(user.email);
+            return;
+          }
+        }
+        const raw=localStorage.getItem('hirex_admin_session');
+        if(!raw) return;
+        const session=JSON.parse(raw);
+        if(session && session.loggedIn && validEmail(session.email) && session.email === ADMIN_EMAIL){
+          startAdminSession(session.email);
+        }
+      }catch(e){
+        localStorage.removeItem('hirex_admin_session');
+      }
+    }
+    async function logoutAdmin(){
+      const sb = hxAdminGetSupabase();
+      if(sb) await sb.auth.signOut();
+      localStorage.removeItem('hirex_admin_session');
+      state.adminEmail='';
+      document.getElementById('adminApp').classList.remove('show');
+      document.getElementById('loginScreen').style.display='grid';
+      toast('تم تسجيل الخروج');
+    }
 
 </script>
 </body>

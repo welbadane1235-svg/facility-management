@@ -2410,7 +2410,25 @@
 .notification-actions{grid-column:1/-1;display:flex;justify-content:flex-end}
  }
 
- </style>
+ 
+    /* V44 Email Verification Auth */
+    .email-auth-window{border-color:rgba(0,234,240,.36)!important;background:radial-gradient(circle at 50% 0%,rgba(0,234,240,.14),transparent 34%),linear-gradient(180deg,rgba(3,20,22,.98),rgba(1,5,6,.99))!important}
+    .email-auth-head{min-height:86px!important;border-bottom:1px solid rgba(0,234,240,.18)!important}
+    .email-auth-icon{background:transparent!important;border:1px solid rgba(0,234,240,.32)!important;color:#00EAF0!important;font-size:15px!important;letter-spacing:-1px;box-shadow:0 0 22px rgba(0,234,240,.16)!important;direction:ltr}
+    .email-auth-body{padding:16px!important}
+    .email-auth-card{border-radius:28px;border:1px solid rgba(0,234,240,.28);background:radial-gradient(circle at 50% 0%,rgba(0,234,240,.12),transparent 34%),linear-gradient(145deg,rgba(3,30,32,.94),rgba(3,9,11,.96));padding:18px;display:grid;gap:13px;box-shadow:0 18px 52px rgba(0,0,0,.45), inset 0 0 24px rgba(0,234,240,.035)}
+    .email-auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .email-auth-tab{min-height:42px;border-radius:15px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:#9fb4b4;font-weight:900;cursor:pointer}
+    .email-auth-tab.active{background:linear-gradient(180deg,#22F0EE,#04B8C4);color:#03120f;border:0}
+    .email-auth-logo{display:grid;justify-items:center;gap:4px;direction:ltr}
+    .email-hrx{color:#00EAF0;font-family:Georgia,serif;font-size:54px;line-height:.82;letter-spacing:-6px;text-shadow:0 0 18px rgba(0,234,240,.72)}
+    .email-hrx span{font-style:italic;display:inline-block;transform:translateX(-5px)}
+    .email-auth-logo small{color:#00EAF0;letter-spacing:7px;font-size:12px;text-shadow:0 0 12px rgba(0,234,240,.72)}
+    #hxEmailAuthHelp{text-align:center;color:#d5e2e2;font-size:14px;line-height:1.55;font-weight:800}
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-config.js"></script>
 </head>
 <body>
  <div class="app">
@@ -4199,6 +4217,36 @@
  </section>
  </div>
 
+
+  <div class="overlay" id="hxEmailAuthOverlay" aria-hidden="true">
+    <section class="window phone email-auth-window" role="dialog" aria-modal="true">
+      <header class="window-head email-auth-head">
+        <div class="win-title">
+          <div class="win-icon email-auth-icon">HRX</div>
+          <div><h2 id="hxEmailAuthTitle">الدخول إلى HireX</h2><p id="hxEmailAuthReason">سجّل الدخول لاستخدام خدمات المنصة</p></div>
+        </div>
+        <button class="close-btn" onclick="hxCloseEmailAuth()">×</button>
+      </header>
+      <div class="window-body email-auth-body">
+        <section class="email-auth-card">
+          <div class="email-auth-tabs">
+            <button type="button" class="email-auth-tab active" data-hx-auth-mode="login" onclick="hxSetEmailAuthMode('login')">دخول</button>
+            <button type="button" class="email-auth-tab" data-hx-auth-mode="signup" onclick="hxSetEmailAuthMode('signup')">إنشاء حساب</button>
+          </div>
+          <div class="email-auth-logo"><div class="email-hrx">HR<span>X</span></div><small>H i R E X</small></div>
+          <p id="hxEmailAuthHelp">استخدم بريدك وكلمة المرور للدخول إلى حسابك.</p>
+          <label class="login-field"><span>البريد الإلكتروني</span><input id="hxEmailAuthEmail" type="email" placeholder="example@email.com" autocomplete="email"></label>
+          <label class="login-field" id="hxEmailAuthNameWrap" style="display:none"><span>الاسم الكامل</span><input id="hxEmailAuthName" placeholder="اسمك أو اسم الشركة"></label>
+          <label class="login-field"><span>كلمة المرور</span><input id="hxEmailAuthPassword" type="password" placeholder="••••••••" autocomplete="current-password"></label>
+          <button type="button" class="login-submit" onclick="hxSubmitEmailAuth()" id="hxEmailAuthSubmit">دخول</button>
+          <button type="button" class="login-secondary" onclick="hxSendPasswordReset()">نسيت كلمة المرور؟</button>
+          <button type="button" class="login-secondary" onclick="hxCloseEmailAuth()">متابعة التصفح</button>
+          <div class="login-note" id="hxEmailAuthStatus">سيتم إرسال رسالة تحقق إلى بريدك عند إنشاء الحساب.</div>
+        </section>
+      </div>
+    </section>
+  </div>
+
 </body>
 </html>`;
  w.document.open();
@@ -4233,7 +4281,8 @@
  phone: '',
  role: 'باحث عن عمل',
  bio: '',
- isLoggedIn: false
+ isLoggedIn: false,
+      emailVerified: false
  };
 
  function openAccountModal(){
@@ -4705,6 +4754,129 @@
  });
 
  window.addEventListener('DOMContentLoaded', syncNotificationsBadge);
+
+
+    /* V44 Clean Email Verification Auth */
+    window.hxAuth = window.hxAuth || { mode:'login', pendingAction:null, pendingReason:'' };
+
+    function hxIsSupabaseConfigured(){
+      return !!(window.HIREX_SUPABASE_URL && window.HIREX_SUPABASE_ANON_KEY && !String(window.HIREX_SUPABASE_URL).includes('ضع_') && !String(window.HIREX_SUPABASE_ANON_KEY).includes('ضع_'));
+    }
+    function hxGetSupabase(){
+      if(!hxIsSupabaseConfigured()) return null;
+      if(!window.hirexSupabaseClient){
+        window.hirexSupabaseClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
+      }
+      return window.hirexSupabaseClient;
+    }
+    function isLoggedIn(){
+      return !!(accountState && accountState.isLoggedIn && accountState.email && accountState.emailVerified);
+    }
+    function requireEmailLogin(reason, callback){
+      if(isLoggedIn()){
+        if(typeof callback === 'function') callback();
+        return true;
+      }
+      window.hxAuth.pendingAction = callback || null;
+      window.hxAuth.pendingReason = reason || 'استخدام الخدمة';
+      const reasonEl = document.getElementById('hxEmailAuthReason');
+      if(reasonEl) reasonEl.textContent = 'سجّل دخولك لاستخدام: ' + window.hxAuth.pendingReason;
+      hxSetEmailAuthMode('login');
+      showOverlay('hxEmailAuthOverlay');
+      setTimeout(()=>document.getElementById('hxEmailAuthEmail')?.focus(), 80);
+      return false;
+    }
+    function hxSetEmailAuthMode(mode){
+      window.hxAuth.mode = mode;
+      document.querySelectorAll('.email-auth-tab').forEach(btn=>btn.classList.toggle('active', btn.dataset.hxAuthMode === mode));
+      const nameWrap = document.getElementById('hxEmailAuthNameWrap');
+      const submit = document.getElementById('hxEmailAuthSubmit');
+      const title = document.getElementById('hxEmailAuthTitle');
+      const help = document.getElementById('hxEmailAuthHelp');
+      if(nameWrap) nameWrap.style.display = mode === 'signup' ? 'grid' : 'none';
+      if(submit) submit.textContent = mode === 'signup' ? 'إنشاء حساب وإرسال التحقق' : 'دخول';
+      if(title) title.textContent = mode === 'signup' ? 'إنشاء حساب HireX' : 'الدخول إلى HireX';
+      if(help) help.textContent = mode === 'signup' ? 'أنشئ حسابك وسيتم إرسال رسالة تحقق إلى بريدك.' : 'استخدم بريدك وكلمة المرور للدخول إلى حسابك.';
+    }
+    function hxCloseEmailAuth(){
+      hideOverlay('hxEmailAuthOverlay');
+      window.hxAuth.pendingAction = null;
+      window.hxAuth.pendingReason = '';
+    }
+    async function hxSubmitEmailAuth(){
+      const email = (document.getElementById('hxEmailAuthEmail')?.value || '').trim().toLowerCase();
+      const password = (document.getElementById('hxEmailAuthPassword')?.value || '').trim();
+      const fullName = (document.getElementById('hxEmailAuthName')?.value || '').trim();
+      const status = document.getElementById('hxEmailAuthStatus');
+      if(!validEmail(email)) return showMiniNotice('اكتب بريد إلكتروني صحيح.');
+      if(password.length < 6) return showMiniNotice('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+      const sb = hxGetSupabase();
+      if(!sb){
+        if(status) status.textContent = 'أدخل رابط Supabase و anon key في auth-config.js لتفعيل إرسال البريد.';
+        return showMiniNotice('إعدادات التحقق غير مكتملة.');
+      }
+      try{
+        if(window.hxAuth.mode === 'signup'){
+          const { error } = await sb.auth.signUp({
+            email, password,
+            options:{ emailRedirectTo: window.HIREX_AUTH_REDIRECT_URL || window.location.href, data:{ full_name: fullName || email.split('@')[0] } }
+          });
+          if(error) throw error;
+          if(status) status.textContent = 'تم إنشاء الحساب. افتح بريدك واضغط رابط التحقق ثم عد وسجل الدخول.';
+          showMiniNotice('تم إرسال رسالة التحقق إلى بريدك.');
+          hxSetEmailAuthMode('login');
+          return;
+        }
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if(error) throw error;
+        const user = data?.user;
+        if(!user) return showMiniNotice('تعذر قراءة بيانات الحساب.');
+        if(!user.email_confirmed_at){
+          if(status) status.textContent = 'البريد غير مؤكد. افتح رسالة التحقق في بريدك أولًا.';
+          showMiniNotice('البريد غير مؤكد.');
+          await sb.auth.signOut();
+          return;
+        }
+        accountState.isLoggedIn = true;
+        accountState.emailVerified = true;
+        accountState.email = user.email;
+        accountState.name = user.user_metadata?.full_name || user.email.split('@')[0];
+        syncAccountUi?.();
+        hideOverlay('hxEmailAuthOverlay');
+        showMiniNotice('تم تسجيل الدخول بنجاح.');
+        const action = window.hxAuth.pendingAction;
+        window.hxAuth.pendingAction = null;
+        window.hxAuth.pendingReason = '';
+        if(typeof action === 'function') setTimeout(action, 120);
+      }catch(err){
+        const message = String(err?.message || err || '');
+        if(message.toLowerCase().includes('email not confirmed')) showMiniNotice('البريد غير مؤكد. افتح رسالة التحقق أولًا.');
+        else showMiniNotice('تعذر إكمال العملية: ' + message);
+      }
+    }
+    async function hxSendPasswordReset(){
+      const email = (document.getElementById('hxEmailAuthEmail')?.value || '').trim().toLowerCase();
+      if(!validEmail(email)) return showMiniNotice('اكتب البريد الإلكتروني أولًا.');
+      const sb = hxGetSupabase();
+      if(!sb) return showMiniNotice('إعدادات التحقق غير مكتملة.');
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.HIREX_AUTH_REDIRECT_URL || window.location.href });
+      if(error) return showMiniNotice('تعذر إرسال رابط الاستعادة: ' + error.message);
+      showMiniNotice('تم إرسال رابط استعادة كلمة المرور.');
+    }
+    async function hxRestoreUserSession(){
+      const sb = hxGetSupabase();
+      if(!sb) return;
+      const { data } = await sb.auth.getSession();
+      const user = data?.session?.user;
+      if(user && user.email_confirmed_at){
+        accountState.isLoggedIn = true;
+        accountState.emailVerified = true;
+        accountState.email = user.email;
+        accountState.name = user.user_metadata?.full_name || user.email.split('@')[0];
+        syncAccountUi?.();
+      }
+    }
+    window.addEventListener('DOMContentLoaded', hxRestoreUserSession);
 
 </script>
 
