@@ -2426,100 +2426,21 @@
     .email-auth-logo small{color:#00EAF0;letter-spacing:7px;font-size:12px;text-shadow:0 0 12px rgba(0,234,240,.72)}
     #hxEmailAuthHelp{text-align:center;color:#d5e2e2;font-size:14px;line-height:1.55;font-weight:800}
 
-  
-
-    /* HireX final hero text alignment fix */
-    .hero{
-      display:grid!important;
-      grid-template-columns:92px minmax(0,1fr)!important;
-      gap:12px!important;
-      align-items:center!important;
-      direction:ltr!important;
-      padding:22px 18px!important;
-      min-height:auto!important;
-    }
-    .hero-art{
-      grid-column:1!important;
-      grid-row:1!important;
-      width:88px!important;
-      height:96px!important;
-      margin:0!important;
-      align-self:start!important;
-      justify-self:start!important;
-      z-index:1!important;
-    }
-    .neon-rocket{
-      font-size:64px!important;
-      transform:rotate(-23deg)!important;
-    }
-    .hero-content{
-      grid-column:2!important;
-      grid-row:1!important;
-      direction:rtl!important;
-      text-align:right!important;
-      width:100%!important;
-      max-width:100%!important;
-      padding:0!important;
-      justify-self:stretch!important;
-      z-index:2!important;
-    }
-    .hero .tag{
-      margin:0 0 10px auto!important;
-      max-width:max-content!important;
-    }
-    .hero h2{
-      padding:0!important;
-      margin:0!important;
-      font-size:27px!important;
-      line-height:1.25!important;
-      letter-spacing:0!important;
-      max-width:100%!important;
-      text-align:right!important;
-    }
-    .hero p{
-      padding:0!important;
-      margin:10px 0 0!important;
-      font-size:14px!important;
-      line-height:1.65!important;
-      max-width:100%!important;
-      text-align:right!important;
-    }
-    .hero-cta{
-      margin:17px 0 0 auto!important;
-      width:min(245px,100%)!important;
-      min-height:52px!important;
-    }
-    @media(max-width:520px){
-      .hero{
-        grid-template-columns:74px minmax(0,1fr)!important;
-        gap:8px!important;
-        padding:18px 14px!important;
-      }
-      .hero-art{
-        width:72px!important;
-        height:84px!important;
-      }
-      .neon-rocket{
-        font-size:54px!important;
-      }
-      .hero h2{
-        font-size:23.5px!important;
-        line-height:1.27!important;
-      }
-      .hero p{
-        font-size:13px!important;
-        line-height:1.6!important;
-      }
-      .hero-cta{
-        width:min(220px,100%)!important;
-        min-height:50px!important;
-        font-size:15px!important;
-      }
-    }
-
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth-config.js"></script>
+
+  <style id="hirex-final-hero-auth-fix">
+    .hero{display:grid !important;grid-template-columns:86px minmax(0,1fr) !important;gap:12px !important;align-items:center !important;direction:ltr !important;min-height:auto !important}
+    .hero .hero-art{grid-column:1 !important;grid-row:1 !important;justify-self:start !important;align-self:start !important;width:82px !important;height:82px !important;margin:0 !important;position:relative !important;inset:auto !important;z-index:1 !important}
+    .hero .neon-rocket{font-size:56px !important;transform:rotate(-22deg) !important}
+    .hero .hero-content{grid-column:2 !important;grid-row:1 !important;direction:rtl !important;text-align:right !important;justify-self:stretch !important;max-width:100% !important;width:100% !important;z-index:2 !important}
+    .hero .tag{margin-inline-start:auto !important;margin-inline-end:0 !important;width:max-content !important}
+    .hero h2{text-align:right !important;padding:0 !important;margin:8px 0 0 !important;font-size:27px !important;line-height:1.25 !important;max-width:100% !important}
+    .hero p{text-align:right !important;padding:0 !important;margin:10px 0 0 !important;font-size:14px !important;line-height:1.65 !important;max-width:100% !important}
+    .hero .hero-cta{margin:18px 0 0 auto !important;width:min(245px,100%) !important}
+    @media(max-width:420px){.hero{grid-template-columns:72px minmax(0,1fr) !important;gap:8px !important;padding:18px 14px !important}.hero .hero-art{width:70px !important;height:70px !important}.hero .neon-rocket{font-size:48px !important}.hero h2{font-size:24px !important;line-height:1.24 !important}.hero p{font-size:13px !important;line-height:1.6 !important}.hero .hero-cta{width:min(220px,100%) !important;min-height:50px !important;font-size:15px !important}}
+  </style>
 </head>
 <body>
  <div class="app">
@@ -5294,5 +5215,43 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
  </section>
  </div>
 
+
+<script id="hirex-final-buttons-auth-fix">
+(function(){
+  var SUPABASE_URL = "https://odfcsexotylhsstybjju.supabase.co";
+  var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kZmNzZXhvdHlsaHNzdHliaWp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNzE2NTYsImV4cCI6MjA5NDk0NzY1Nn0.a-vQqaBNWgsOqH187xewuUDG3s8zYldap2zOSTBd1ns";
+  window.HIREX_SUPABASE_URL = window.HIREX_SUPABASE_URL && !String(window.HIREX_SUPABASE_URL).includes('ضع_') ? window.HIREX_SUPABASE_URL : SUPABASE_URL;
+  window.HIREX_SUPABASE_ANON_KEY = window.HIREX_SUPABASE_ANON_KEY && !String(window.HIREX_SUPABASE_ANON_KEY).includes('ضع_') ? window.HIREX_SUPABASE_ANON_KEY : SUPABASE_KEY;
+  window.HIREX_AUTH_REDIRECT_URL = window.HIREX_AUTH_REDIRECT_URL || (window.location.origin + window.location.pathname);
+  function isVerifiedUser(){return !!(window.accountState && accountState.isLoggedIn && accountState.email && accountState.emailVerified);}
+  function openAuth(reason, mode){
+    try{
+      var reasonEl=document.getElementById('hxEmailAuthReason'); if(reasonEl) reasonEl.textContent=reason||'سجّل الدخول أو أنشئ حسابًا للمتابعة';
+      if(typeof window.hxSetEmailAuthMode==='function') window.hxSetEmailAuthMode(mode||'signup');
+      var overlay=document.getElementById('hxEmailAuthOverlay');
+      if(overlay){ if(typeof window.showOverlay==='function') window.showOverlay('hxEmailAuthOverlay'); else overlay.classList.add('show'); setTimeout(function(){var el=document.getElementById('hxEmailAuthEmail'); if(el) el.focus();},80); return true; }
+      var oldOverlay=document.getElementById('loginGateOverlay');
+      if(oldOverlay){ if(typeof window.showOverlay==='function') window.showOverlay('loginGateOverlay'); else oldOverlay.classList.add('show'); return true; }
+      alert('نافذة التسجيل غير موجودة في الصفحة. أعد رفع ملف index.html من النسخة الأخيرة.'); return false;
+    }catch(err){console.error('open auth error',err); alert('تعذر فتح نافذة التسجيل.'); return false;}
+  }
+  var originalOpenMyAds=window.__openMyAdsModalOriginal||window.openMyAdsModal;
+  window.openMyAdsModal=function(){
+    if(!isVerifiedUser()) return openAuth('ابدأ بإنشاء حسابك أو سجل دخولك لاستخدام خدمات HireX','signup');
+    if(typeof originalOpenMyAds==='function') return originalOpenMyAds.apply(this,arguments);
+    if(typeof window.showOverlay==='function') return window.showOverlay('myAdsOverlay');
+  };
+  window.requireEmailLogin=function(reason,callback){
+    if(isVerifiedUser()){ if(typeof callback==='function') callback(); return true; }
+    window.hxAuth=window.hxAuth||{}; window.hxAuth.pendingAction=callback||null; window.hxAuth.pendingReason=reason||'';
+    openAuth('سجّل دخولك لاستخدام: '+(reason||'الخدمة'),'login'); return false;
+  };
+  document.addEventListener('click',function(e){
+    var startBtn=e.target.closest('.hero-cta,[onclick*="openMyAdsModal"]');
+    if(startBtn){e.preventDefault();e.stopPropagation();window.openMyAdsModal();}
+  },true);
+  window.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.hero-cta,[onclick*="openMyAdsModal"]').forEach(function(btn){btn.setAttribute('type','button');});});
+})();
+</script>
 </body>
 </html>
