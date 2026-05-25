@@ -2041,15 +2041,15 @@
 .bottom-nav{
  pointer-events:auto!important;
  }
-.bottom-nav.nav-item{
+.bottom-nav .nav-item{
  pointer-events:auto!important;
  touch-action:manipulation;
  position:relative;
  z-index:2;
  -webkit-tap-highlight-color:transparent;
  }
-.bottom-nav.nav-item svg,
-.bottom-nav.nav-item span{
+.bottom-nav .nav-item svg,
+.bottom-nav .nav-item span{
  pointer-events:none;
  }
 
@@ -4282,6 +4282,47 @@
   </div>
 
 
+
+
+<script id="hirex-v4-final-nav-fix">
+(function(){
+  function qs(id){return document.getElementById(id);}
+  function show(id){
+    var el=qs(id); if(!el) return false;
+    el.classList.add('show');
+    el.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    return true;
+  }
+  function hide(id){
+    var el=qs(id); if(!el) return;
+    el.classList.remove('show');
+    el.setAttribute('aria-hidden','true');
+  }
+  function closeMain(){['jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay'].forEach(hide);}
+  function active(tab){document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===tab);});}
+  function openTab(tab){
+    if(tab==='home'){closeMain();active('home');try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){} return;}
+    if(tab==='jobs'){closeMain();active('jobs'); if(typeof window.openJobsModal==='function') window.openJobsModal(); else show('jobsOverlay'); active('jobs'); return;}
+    if(tab==='services'){closeMain();active('services'); if(typeof window.openServicesModal==='function') window.openServicesModal(); else show('servicesOverlay'); active('services'); return;}
+    if(tab==='post'){closeMain();active('post'); if(typeof window.openMyAdsModal==='function') window.openMyAdsModal(); else show('myAdsOverlay'); active('post'); return;}
+    if(tab==='account'){closeMain();active('account'); if(typeof window.openAccountModal==='function') window.openAccountModal(); else show('accountOverlay'); active('account'); return;}
+  }
+  window.hirexOpenTab=openTab;
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.bottom-nav .nav-item[data-tab]');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openTab(btn.getAttribute('data-tab'));
+  },true);
+  window.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(btn){btn.setAttribute('type','button');});
+  });
+})();
+</script>
+
 </body>
 </html>`;
  w.document.open();
@@ -4416,7 +4457,7 @@
  }
 
  function safeSetActiveNav(tab){
- document.querySelectorAll('.bottom-nav.nav-item').forEach(item=>{
+ document.querySelectorAll('.bottom-nav .nav-item').forEach(item=>{
  item.classList.toggle('active', item.dataset.tab === tab);
  });
  }
@@ -4472,7 +4513,7 @@
  }
 
  document.addEventListener('click', function(e){
- const navBtn = e.target.closest('.bottom-nav.nav-item[data-tab]');
+ const navBtn = e.target.closest('.bottom-nav .nav-item[data-tab]');
  if(!navBtn) return;
  e.preventDefault();
  e.stopPropagation();
@@ -4480,17 +4521,17 @@
  }, true);
 
  // Prevent duplicate inline actions if old onclick remains anywhere
- document.querySelectorAll('.bottom-nav.nav-item').forEach(btn=>{
+ document.querySelectorAll('.bottom-nav .nav-item').forEach(btn=>{
  btn.setAttribute('type','button');
  });
 
 
  /* V32 final runtime guard: attach bottom nav after DOM is ready */
  window.addEventListener('DOMContentLoaded', function(){
- document.querySelectorAll('.bottom-nav.nav-item').forEach(btn=>{
+ document.querySelectorAll('.bottom-nav .nav-item').forEach(btn=>{
  btn.setAttribute('type','button');
  });
- const accountBtn = document.querySelector('.bottom-nav.nav-item[data-tab="account"]');
+ const accountBtn = document.querySelector('.bottom-nav .nav-item[data-tab="account"]');
  if(accountBtn && !accountBtn.dataset.v32ready){
  accountBtn.dataset.v32ready = '1';
  }
@@ -5363,6 +5404,47 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
   }
   window.hirexUpsertCurrentUserProfile = upsertCurrentUserProfile;
   window.addEventListener('DOMContentLoaded', syncSessionToUi);
+})();
+</script>
+
+
+
+<script id="hirex-v4-final-nav-fix">
+(function(){
+  function qs(id){return document.getElementById(id);}
+  function show(id){
+    var el=qs(id); if(!el) return false;
+    el.classList.add('show');
+    el.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    return true;
+  }
+  function hide(id){
+    var el=qs(id); if(!el) return;
+    el.classList.remove('show');
+    el.setAttribute('aria-hidden','true');
+  }
+  function closeMain(){['jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay'].forEach(hide);}
+  function active(tab){document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===tab);});}
+  function openTab(tab){
+    if(tab==='home'){closeMain();active('home');try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){} return;}
+    if(tab==='jobs'){closeMain();active('jobs'); if(typeof window.openJobsModal==='function') window.openJobsModal(); else show('jobsOverlay'); active('jobs'); return;}
+    if(tab==='services'){closeMain();active('services'); if(typeof window.openServicesModal==='function') window.openServicesModal(); else show('servicesOverlay'); active('services'); return;}
+    if(tab==='post'){closeMain();active('post'); if(typeof window.openMyAdsModal==='function') window.openMyAdsModal(); else show('myAdsOverlay'); active('post'); return;}
+    if(tab==='account'){closeMain();active('account'); if(typeof window.openAccountModal==='function') window.openAccountModal(); else show('accountOverlay'); active('account'); return;}
+  }
+  window.hirexOpenTab=openTab;
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.bottom-nav .nav-item[data-tab]');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openTab(btn.getAttribute('data-tab'));
+  },true);
+  window.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(btn){btn.setAttribute('type','button');});
+  });
 })();
 </script>
 
