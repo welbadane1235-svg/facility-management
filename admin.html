@@ -319,57 +319,15 @@
       tab:'overview',
       adminEmail:'',
       editTarget:null,
-      users:[
-        {id:1,name:'مصطفى عبدالباقي',email:'mustafa@hirex.com',phone:'0500000000',role:'شركة / صاحب عمل',status:'نشط',joined:'اليوم',city:'الرياض',notes:'حساب إدارة تجريبي'},
-        {id:2,name:'مرشح تجريبي',email:'candidate@hirex.com',phone:'0551111111',role:'باحث عن عمل',status:'نشط',joined:'أمس',city:'جدة',notes:'مهتم بوظائف المحاسبة'},
-        {id:3,name:'مقدم خدمة',email:'service@hirex.com',phone:'0552222222',role:'مقدم خدمة',status:'تحت المراجعة',joined:'قبل يومين',city:'الدمام',notes:'خدمة كتابة CV'}
-      ],
-      employees:[
-        {id:1,name:'مدير المنصة',email:'admin@hirex.com',phone:'0500000001',job:'مدير عام',department:'الإدارة',permissions:'كل الصلاحيات',status:'نشط',lastLogin:'اليوم'},
-        {id:2,name:'موظف مراجعة',email:'review@hirex.com',phone:'0500000002',job:'مراجعة إعلانات',department:'التشغيل',permissions:'الإعلانات والخدمات',status:'نشط',lastLogin:'أمس'},
-        {id:3,name:'محاسب المنصة',email:'finance@hirex.com',phone:'0500000003',job:'محاسب',department:'المالية',permissions:'السداد والاشتراكات',status:'نشط',lastLogin:'قبل يومين'},
-        {id:4,name:'دعم العملاء',email:'support@hirex.com',phone:'0500000004',job:'خدمة عملاء',department:'الدعم',permissions:'المستخدمين والرسائل',status:'موقوف',lastLogin:'قبل أسبوع'}
-      ],
-      packages:[
-        {id:1,name:'ATS Basic',target:'باحث عن عمل',price:35,currency:'Xs',duration:'مرة واحدة',features:'صناعة سيرة ATS نصية',status:'نشط',autoActivate:true},
-        {id:2,name:'Candidate Plus',target:'باحث عن عمل',price:49,currency:'ريال',duration:'30 يوم',features:'تمييز الملف + مشاهدة أعلى',status:'نشط',autoActivate:true},
-        {id:3,name:'Company Starter',target:'شركة',price:99,currency:'ريال',duration:'30 يوم',features:'3 إعلانات وظائف + استقبال مرشحين',status:'نشط',autoActivate:true},
-        {id:4,name:'Pro Companies',target:'شركة',price:299,currency:'ريال',duration:'30 يوم',features:'إعلانات أكثر + صدارة + إدارة طلبات',status:'نشط',autoActivate:true},
-        {id:5,name:'Service Provider',target:'مقدم خدمة',price:99,currency:'ريال',duration:'30 يوم',features:'عرض خدمات واستقبال طلبات',status:'نشط',autoActivate:true},
-        {id:6,name:'Growth 300 Xs',target:'الجميع',price:129,currency:'ريال',duration:'رصيد فوري',features:'300 Xs للصدارة والخدمات',status:'نشط',autoActivate:true}
-      ],
-      offers:[
-        {id:1,title:'خصم إطلاق المنصة',code:'LAUNCH30',discount:30,type:'نسبة',appliesTo:'كل الباقات',start:'2026-05-01',end:'2026-06-30',status:'نشط',uses:18},
-        {id:2,title:'خصم الشركات',code:'COMPANY50',discount:50,type:'ريال',appliesTo:'Company Starter, Pro Companies',start:'2026-05-10',end:'2026-06-10',status:'نشط',uses:7},
-        {id:3,title:'خصم ATS',code:'ATS10',discount:10,type:'ريال',appliesTo:'ATS Basic',start:'2026-05-01',end:'2026-05-31',status:'موقوف',uses:4}
-      ],
-      subscribers:[
-        {id:1,user:'شركة تجريبية',email:'company@hirex.com',plan:'Pro Companies',price:299,status:'نشط',start:'2026-05-01',end:'2026-06-01',paid:true,activatedByPayment:'PAY-1001'},
-        {id:2,user:'مرشح تجريبي',email:'candidate@hirex.com',plan:'ATS Plus',price:49,status:'نشط',start:'2026-05-10',end:'2026-06-10',paid:true,activatedByPayment:'PAY-1002'},
-        {id:3,user:'مقدم خدمة',email:'service@hirex.com',plan:'Service Provider',price:99,status:'بانتظار السداد',start:'2026-05-18',end:'2026-06-18',paid:false,activatedByPayment:''}
-      ],
-      payments:[
-        {id:1,payer:'شركة تجريبية',email:'company@hirex.com',amount:299,method:'بطاقة',reason:'اشتراك Pro Companies',packageName:'Pro Companies',status:'مكتمل',date:'2026-05-23',ref:'PAY-1001',notes:'اشتراك شركات شهري'},
-        {id:2,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:49,method:'بطاقة',reason:'صناعة سيرة ATS Plus',packageName:'Candidate Plus',status:'مكتمل',date:'2026-05-23',ref:'PAY-1002',notes:'خدمة ATS'},
-        {id:3,payer:'شركة تجريبية',email:'company@hirex.com',amount:129,method:'بطاقة',reason:'شراء حزمة Xs Growth 300',packageName:'Growth 300 Xs',status:'مكتمل',date:'2026-05-22',ref:'PAY-1003',notes:'شراء عملات'},
-        {id:4,payer:'مقدم خدمة',email:'service@hirex.com',amount:99,method:'تحويل',reason:'اشتراك مقدم خدمة',packageName:'Service Provider',status:'بانتظار التأكيد',date:'2026-05-21',ref:'PAY-1004',notes:'لم يتم التأكيد بعد'},
-        {id:5,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:25,method:'Xs',reason:'تفعيل صدارة 24 ساعة',packageName:'Top 24h',status:'خصم Xs',date:'2026-05-20',ref:'XS-2001',notes:'خصم من المحفظة'}
-      ],
-      ads:[
-        {id:1,title:'محاسب عام',type:'فرصة عمل',owner:'شركة تجريبية',status:'منشور',promoted:true,city:'الرياض',price:0,views:182},
-        {id:2,title:'كتابة سيرة ذاتية',type:'عرض خدمة',owner:'مقدم خدمة',status:'تحت المراجعة',promoted:false,city:'جدة',price:90,views:66},
-        {id:3,title:'باحث عن عمل موارد بشرية',type:'يطلب عمل',owner:'مرشح تجريبي',status:'مسودة',promoted:false,city:'الدمام',price:0,views:24}
-      ],
-      services:[
-        {id:1,title:'طلب تصميم CV',client:'عميل تجريبي',provider:'مقدم خدمة',amount:120,status:'جديد',commission:12,paid:false},
-        {id:2,title:'تدريب مقابلة شخصية',client:'مرشح تجريبي',provider:'مدرب تجريبي',amount:180,status:'مدفوع',commission:18,paid:true},
-        {id:3,title:'خدمة فرز مرشحين',client:'شركة تجريبية',provider:'HireX Team',amount:350,status:'قيد التنفيذ',commission:35,paid:true}
-      ],
-      xs:[
-        {id:1,user:'مصطفى عبدالباقي',type:'شراء حزمة Growth 300',amount:300,price:129,status:'مكتمل',date:'2026-05-23'},
-        {id:2,user:'شركة تجريبية',type:'تفعيل صدارة 7 أيام',amount:-120,price:0,status:'خصم',date:'2026-05-22'},
-        {id:3,user:'مرشح تجريبي',type:'صناعة سيرة ATS',amount:-35,price:0,status:'خصم',date:'2026-05-21'}
-      ]
+      users:[],
+      employees:[],
+      packages:[],
+      offers:[],
+      subscribers:[],
+      payments:[],
+      ads:[],
+      services:[],
+      xs:[]
     };
 
     function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim())}
@@ -382,14 +340,36 @@
       const pass=document.getElementById('loginPassword').value.trim();
       if(!validEmail(email)) return toast('اكتب إيميل صحيح');
       if(pass !== '1234') return toast('كلمة المرور التجريبية 1234');
+      startAdminSession(email);
+      toast('تم دخول لوحة الإدارة');
+    }
+    function startAdminSession(email){
       state.adminEmail=email;
+      localStorage.setItem('hirex_admin_session', JSON.stringify({email, loggedIn:true, time:Date.now()}));
       document.getElementById('adminEmailText').textContent=email;
       document.getElementById('loginScreen').style.display='none';
       document.getElementById('adminApp').classList.add('show');
       render();
-      toast('تم دخول لوحة الإدارة');
     }
-    function logoutAdmin(){document.getElementById('adminApp').classList.remove('show');document.getElementById('loginScreen').style.display='grid';toast('تم تسجيل الخروج')}
+    function restoreAdminSession(){
+      try{
+        const raw=localStorage.getItem('hirex_admin_session');
+        if(!raw) return;
+        const session=JSON.parse(raw);
+        if(session && session.loggedIn && validEmail(session.email)){
+          startAdminSession(session.email);
+        }
+      }catch(e){
+        localStorage.removeItem('hirex_admin_session');
+      }
+    }
+    function logoutAdmin(){
+      localStorage.removeItem('hirex_admin_session');
+      state.adminEmail='';
+      document.getElementById('adminApp').classList.remove('show');
+      document.getElementById('loginScreen').style.display='grid';
+      toast('تم تسجيل الخروج');
+    }
     function setAdminTab(tab){state.tab=tab;render()}
     function refreshDashboard(){render();toast('تم تحديث اللوحة')}
     function backupData(){downloadJson('hirex-admin-backup.json', state);toast('تم تنزيل نسخة البيانات')}
@@ -510,6 +490,9 @@
             ${row('PK','أسعار الباقات',`${state.packages.length} باقة يمكن التحكم بأسعارها`,'فتح',"setAdminTab('packages')")}
             ${row('%','العروض والخصومات',`${state.offers.filter(o=>o.status==='نشط').length} عرض نشط`,'فتح',"setAdminTab('offers')")}
           </div>
+        </section>
+        <section class="admin-sync-note">
+          تم تصفير البيانات التجريبية. الآن لوحة الإدارة جاهزة للبدء ببيانات حقيقية من خلال أزرار الإضافة أو ربط Supabase.
         </section>`;
     }
     function usersHtml(){
@@ -590,7 +573,7 @@ function subscribersHtml(){
         <section class="grid-3">
           <div class="panel"><h3>العروض النشطة</h3><strong class="money">${state.offers.filter(o=>o.status==='نشط').length}</strong><p>كود خصم فعال</p></div>
           <div class="panel"><h3>إجمالي الاستخدام</h3><strong class="money">${state.offers.reduce((s,o)=>s+o.uses,0)}</strong><p>مرة استخدام</p></div>
-          <div class="panel"><h3>أقوى خصم</h3><strong class="money">${Math.max(...state.offers.map(o=>o.discount))}</strong><p>أعلى قيمة خصم</p></div>
+          <div class="panel"><h3>أقوى خصم</h3><strong class="money">${state.offers.length ? Math.max(...state.offers.map(o=>o.discount)) : 0}</strong><p>أعلى قيمة خصم</p></div>
         </section>
         ${tablePanel('العروض والخصومات', `${state.offers.length} عرض`, 'offersList', state.offers.map(o=>`
         <article class="row">
@@ -679,7 +662,7 @@ function reportsHtml(){
       document.getElementById('editModal').classList.add('show');
     }
     function createPayment(){
-      const id=Math.max(...state.payments.map(p=>p.id))+1;
+      const id=(state.payments.length ? Math.max(...state.payments.map(p=>p.id)) : 0)+1;
       const payment={id,payer:val('newPayer')||'مسدد جديد',email:val('newEmail')||'unknown@hirex.com',amount:Number(val('newAmount')||0),method:val('newMethod')||'بطاقة',reason:val('newReason')||'سداد يدوي',packageName:val('newPackage')||inferPackageFromReason(val('newReason')),status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+(1000+id),notes:val('newNotes')};
       state.payments.unshift(payment);
       autoActivatePackageFromPayment(payment);
@@ -755,6 +738,7 @@ function reportsHtml(){
     function filterRows(containerId, value){const q=String(value||'').toLowerCase();document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=row.textContent.toLowerCase().includes(q)?'grid':'none')}
     function filterStatus(containerId, status){document.querySelectorAll(`#${containerId} .row`).forEach(row=>row.style.display=!status || row.textContent.includes(status)?'grid':'none')}
     document.getElementById('loginPassword').addEventListener('keydown', e=>{if(e.key==='Enter')loginAdmin()});
+    window.addEventListener('DOMContentLoaded', restoreAdminSession);
     document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
   </script>
 </body>
