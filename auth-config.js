@@ -1,4 +1,5 @@
 // HireX Auth Configuration
 window.HIREX_SUPABASE_URL = "https://odfcsexotylhsstybjju.supabase.co";
-window.HIREX_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kZmNzZXhvdHlsaHNzdHliaWp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNzE2NTYsImV4cCI6MjA5NDk0NzY1Nn0.a-vQqaBNWgsOqH187xewuUDG3s8zYldap2zOSTBd1ns";
+window.HIREX_SUPABASE_ANON_KEY = "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
 window.HIREX_AUTH_REDIRECT_URL = window.location.origin + window.location.pathname;
+window.HIREX_SUPABASE_ANON_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kZmNzZXhvdHlsaHNzdHliaWp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNzE2NTYsImV4cCI6MjA5NDk0NzY1Nn0.a-vQqaBNWgsOqH187xewuUDG3s8zYldap2zOSTBd1ns";

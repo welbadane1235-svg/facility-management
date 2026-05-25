@@ -2441,6 +2441,32 @@
     .hero .hero-cta{margin:18px 0 0 auto !important;width:min(245px,100%) !important}
     @media(max-width:420px){.hero{grid-template-columns:72px minmax(0,1fr) !important;gap:8px !important;padding:18px 14px !important}.hero .hero-art{width:70px !important;height:70px !important}.hero .neon-rocket{font-size:48px !important}.hero h2{font-size:24px !important;line-height:1.24 !important}.hero p{font-size:13px !important;line-height:1.6 !important}.hero .hero-cta{width:min(220px,100%) !important;min-height:50px !important;font-size:15px !important}}
   </style>
+
+<script>
+  window.HIREX_SUPABASE_URL = "https://odfcsexotylhsstybjju.supabase.co";
+  window.HIREX_SUPABASE_ANON_KEY = "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
+  window.HIREX_SUPABASE_ANON_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kZmNzZXhvdHlsaHNzdHliaWp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNzE2NTYsImV4cCI6MjA5NDk0NzY1Nn0.a-vQqaBNWgsOqH187xewuUDG3s8zYldap2zOSTBd1ns";
+  window.HIREX_AUTH_REDIRECT_URL = window.location.origin + window.location.pathname;
+</script>
+
+
+<style>
+  .hero{grid-template-columns:82px minmax(0,1fr)!important;gap:12px!important;align-items:center!important}
+  .hero-art{grid-column:1!important;width:82px!important;height:82px!important;margin:0!important;align-self:start!important;justify-self:start!important;z-index:0!important;opacity:.88!important}
+  .neon-rocket{font-size:58px!important;transform:rotate(-20deg)!important}
+  .hero-content{grid-column:2!important;text-align:right!important;width:100%!important;max-width:100%!important;z-index:2!important;padding:0!important}
+  .hero h2{text-align:right!important;padding:0!important;margin:0!important;font-size:28px!important;line-height:1.25!important;letter-spacing:0!important}
+  .hero p{text-align:right!important;padding:0!important;margin-top:10px!important;font-size:14px!important;line-height:1.7!important}
+  .hero-cta{margin:18px 0 0 auto!important;width:min(260px,100%)!important}
+  @media(max-width:520px){
+    .hero{grid-template-columns:70px minmax(0,1fr)!important;gap:10px!important;padding:20px 14px!important}
+    .hero-art{width:70px!important;height:70px!important}
+    .neon-rocket{font-size:50px!important}
+    .hero h2{font-size:24px!important;line-height:1.25!important}
+    .hero p{font-size:13.5px!important;line-height:1.65!important}
+  }
+</style>
+
 </head>
 <body>
  <div class="app">
@@ -5253,5 +5279,199 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
   window.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.hero-cta,[onclick*="openMyAdsModal"]').forEach(function(btn){btn.setAttribute('type','button');});});
 })();
 </script>
+
+<script>
+(function(){
+  var PROJECT_URL = "https://odfcsexotylhsstybjju.supabase.co";
+  var PUBLISHABLE_KEY = "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
+
+  window.HIREX_SUPABASE_URL = PROJECT_URL;
+  window.HIREX_SUPABASE_ANON_KEY = PUBLISHABLE_KEY;
+  window.HIREX_AUTH_REDIRECT_URL = window.location.origin + window.location.pathname;
+
+  function sbClient(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.__hirexAuthClient){
+      window.__hirexAuthClient = window.supabase.createClient(PROJECT_URL, PUBLISHABLE_KEY);
+    }
+    return window.__hirexAuthClient;
+  }
+
+  function toast(msg){
+    if(typeof window.showMiniNotice === 'function') window.showMiniNotice(msg);
+    else alert(msg);
+  }
+
+  function valid(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim());
+  }
+
+  function removeOldEmailOnlyModal(){
+    document.querySelectorAll('#loginGateOverlay').forEach(function(el){ el.remove(); });
+  }
+
+  window.hxAuth = window.hxAuth || {mode:'signup', pendingAction:null, pendingReason:''};
+
+  window.hxSetEmailAuthMode = function(mode){
+    window.hxAuth.mode = mode || 'signup';
+    document.querySelectorAll('.email-auth-tab').forEach(function(btn){
+      btn.classList.toggle('active', btn.dataset.hxAuthMode === window.hxAuth.mode);
+    });
+    var nameWrap = document.getElementById('hxEmailAuthNameWrap');
+    var submit = document.getElementById('hxEmailAuthSubmit');
+    var title = document.getElementById('hxEmailAuthTitle');
+    var help = document.getElementById('hxEmailAuthHelp');
+    if(nameWrap) nameWrap.style.display = window.hxAuth.mode === 'signup' ? 'grid' : 'none';
+    if(submit) submit.textContent = window.hxAuth.mode === 'signup' ? 'إنشاء حساب وإرسال التحقق' : 'دخول';
+    if(title) title.textContent = window.hxAuth.mode === 'signup' ? 'إنشاء حساب HireX' : 'الدخول إلى HireX';
+    if(help) help.textContent = window.hxAuth.mode === 'signup' ? 'أنشئ حسابك وسيتم إرسال رسالة تحقق إلى بريدك.' : 'استخدم بريدك وكلمة المرور للدخول إلى حسابك.';
+  };
+
+  function openRealAuth(reason, mode){
+    removeOldEmailOnlyModal();
+    window.hxAuth.pendingReason = reason || '';
+    window.hxSetEmailAuthMode(mode || 'signup');
+    var reasonEl = document.getElementById('hxEmailAuthReason');
+    if(reasonEl) reasonEl.textContent = reason || 'سجّل الدخول أو أنشئ حسابًا للمتابعة';
+    var overlay = document.getElementById('hxEmailAuthOverlay');
+    if(!overlay) return toast('نافذة تسجيل الدخول غير متاحة. أعد رفع ملف index.html كاملًا.');
+    if(typeof window.showOverlay === 'function') window.showOverlay('hxEmailAuthOverlay');
+    else overlay.classList.add('show');
+    setTimeout(function(){
+      var email = document.getElementById('hxEmailAuthEmail');
+      if(email) email.focus();
+    },80);
+    return false;
+  }
+
+  window.hxCloseEmailAuth = function(){
+    if(typeof window.hideOverlay === 'function') window.hideOverlay('hxEmailAuthOverlay');
+    else document.getElementById('hxEmailAuthOverlay')?.classList.remove('show');
+  };
+
+  window.hxSubmitEmailAuth = async function(){
+    var email = (document.getElementById('hxEmailAuthEmail')?.value || '').trim().toLowerCase();
+    var password = (document.getElementById('hxEmailAuthPassword')?.value || '').trim();
+    var fullName = (document.getElementById('hxEmailAuthName')?.value || '').trim();
+    var status = document.getElementById('hxEmailAuthStatus');
+
+    if(!valid(email)) return toast('اكتب بريد إلكتروني صحيح.');
+    if(password.length < 6) return toast('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+
+    var sb = sbClient();
+    if(!sb) return toast('تعذر تحميل خدمة تسجيل الدخول. حدّث الصفحة وحاول مرة أخرى.');
+
+    try{
+      if(window.hxAuth.mode === 'signup'){
+        var res = await sb.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            emailRedirectTo: window.HIREX_AUTH_REDIRECT_URL,
+            data: { full_name: fullName || email.split('@')[0] }
+          }
+        });
+        if(res.error) throw res.error;
+        if(status) status.textContent = 'تم إرسال رسالة التحقق إلى بريدك. افتح البريد واضغط رابط التحقق ثم ارجع وسجل دخول.';
+        toast('تم إرسال رسالة التحقق إلى بريدك.');
+        window.hxSetEmailAuthMode('login');
+        return;
+      }
+
+      var login = await sb.auth.signInWithPassword({ email: email, password: password });
+      if(login.error) throw login.error;
+
+      var user = login.data && login.data.user;
+      if(!user) return toast('تعذر قراءة بيانات الحساب.');
+      if(!user.email_confirmed_at){
+        await sb.auth.signOut();
+        if(status) status.textContent = 'البريد غير مؤكد. افتح رسالة التحقق في بريدك أولًا.';
+        return toast('البريد غير مؤكد. افتح رسالة التحقق أولًا.');
+      }
+
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = true;
+      accountState.emailVerified = true;
+      accountState.email = user.email;
+      accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+      window.hxCloseEmailAuth();
+      toast('تم تسجيل الدخول بنجاح.');
+
+      var action = window.hxAuth.pendingAction;
+      window.hxAuth.pendingAction = null;
+      if(typeof action === 'function') setTimeout(action, 120);
+    }catch(err){
+      var msg = String((err && err.message) || err || '');
+      if(msg.toLowerCase().includes('already registered')) {
+        toast('هذا البريد مسجل. اختر دخول بدل إنشاء حساب.');
+        window.hxSetEmailAuthMode('login');
+      } else if(msg.toLowerCase().includes('invalid login')) {
+        toast('بيانات الدخول غير صحيحة أو البريد لم يتم تأكيده.');
+      } else {
+        toast('تعذر إكمال العملية: ' + msg);
+      }
+    }
+  };
+
+  window.hxSendPasswordReset = async function(){
+    var email = (document.getElementById('hxEmailAuthEmail')?.value || '').trim().toLowerCase();
+    if(!valid(email)) return toast('اكتب البريد الإلكتروني أولًا.');
+    var sb = sbClient();
+    if(!sb) return toast('تعذر تحميل خدمة تسجيل الدخول.');
+    var res = await sb.auth.resetPasswordForEmail(email, {redirectTo: window.HIREX_AUTH_REDIRECT_URL});
+    if(res.error) return toast('تعذر إرسال رابط الاستعادة: ' + res.error.message);
+    toast('تم إرسال رابط استعادة كلمة المرور.');
+  };
+
+  window.requireEmailLogin = function(reason, callback){
+    if(window.accountState && accountState.isLoggedIn && accountState.emailVerified){
+      if(typeof callback === 'function') callback();
+      return true;
+    }
+    window.hxAuth.pendingAction = callback || null;
+    return openRealAuth('سجّل دخولك لاستخدام: ' + (reason || 'الخدمة'), 'signup');
+  };
+
+  var originalOpenMyAds = window.__openMyAdsModalOriginal || window.openMyAdsModal;
+  window.openMyAdsModal = function(){
+    if(!(window.accountState && accountState.isLoggedIn && accountState.emailVerified)){
+      return openRealAuth('ابدأ بإنشاء حسابك أو سجل دخولك لاستخدام خدمات HireX', 'signup');
+    }
+    if(typeof originalOpenMyAds === 'function') return originalOpenMyAds.apply(this, arguments);
+  };
+
+  window.confirmEmailLogin = function(){
+    return openRealAuth('أنشئ حسابك وتحقق من بريدك لاستخدام الخدمات', 'signup');
+  };
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.hero-cta,[onclick*="openMyAdsModal"]');
+    if(btn){
+      e.preventDefault();
+      e.stopPropagation();
+      window.openMyAdsModal();
+    }
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', async function(){
+    removeOldEmailOnlyModal();
+    var sb = sbClient();
+    if(!sb) return;
+    var session = await sb.auth.getSession();
+    var user = session && session.data && session.data.session && session.data.session.user;
+    if(user && user.email_confirmed_at){
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = true;
+      accountState.emailVerified = true;
+      accountState.email = user.email;
+      accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
