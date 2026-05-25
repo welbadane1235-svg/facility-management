@@ -229,7 +229,7 @@
       <label class="field"><span>إيميل الإدارة</span><input id="loginEmail" type="email" placeholder="admin@hirex.com"></label>
       <label class="field"><span>كلمة المرور</span><input id="loginPassword" type="password" placeholder="••••••"></label>
       <button class="primary-btn" onclick="loginAdmin()">دخول الإدارة</button>
-      <div class="note">تجريبيًا: استخدم أي إيميل صحيح وكلمة المرور <b>1234</b>. عند الربط يتم استخدام صلاحيات Supabase.</div>
+      <div class="note">الدخول التجريبي الحقيقي لهذه النسخة: <b>admin@hirex.com</b> وكلمة المرور <b>1234</b>. لا يتم قبول أي إيميل آخر.</div>
     </div>
   </section>
 
@@ -330,16 +330,20 @@
       xs:[]
     };
 
+    const ADMIN_EMAIL = 'admin@hirex.com';
+    const ADMIN_PASSWORD = '1234';
+
     function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim())}
     function safeText(v){return String(v??'').replace(/[<>&]/g, s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}
     function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
     function money(n){return Number(n||0).toLocaleString('en-US')}
 
     function loginAdmin(){
-      const email=document.getElementById('loginEmail').value.trim();
+      const email=document.getElementById('loginEmail').value.trim().toLowerCase();
       const pass=document.getElementById('loginPassword').value.trim();
       if(!validEmail(email)) return toast('اكتب إيميل صحيح');
-      if(pass !== '1234') return toast('كلمة المرور التجريبية 1234');
+      if(email !== ADMIN_EMAIL) return toast('هذا الإيميل غير مصرح له بدخول الإدارة');
+      if(pass !== ADMIN_PASSWORD) return toast('كلمة المرور غير صحيحة');
       startAdminSession(email);
       toast('تم دخول لوحة الإدارة');
     }
@@ -356,7 +360,7 @@
         const raw=localStorage.getItem('hirex_admin_session');
         if(!raw) return;
         const session=JSON.parse(raw);
-        if(session && session.loggedIn && validEmail(session.email)){
+        if(session && session.loggedIn && validEmail(session.email) && session.email === ADMIN_EMAIL){
           startAdminSession(session.email);
         }
       }catch(e){
@@ -601,10 +605,43 @@ function reportsHtml(){
       </section>`;
     }
     function tablePanel(title, count, id, rows){
-      return `<section class="panel"><div class="panel-head"><h3>${safeText(title)}</h3><span>${safeText(count)}</span></div>
-      <div class="table-tools"><input placeholder="بحث..." oninput="filterRows('${id}', this.value)"><select onchange="filterStatus('${id}', this.value)"><option value="">كل الحالات</option><option>نشط</option><option>منشور</option><option>مكتمل</option><option>تحت المراجعة</option><option>بانتظار التأكيد</option><option>بانتظار السداد</option><option>مسودة</option></select></div>
-      <div id="${id}">${rows || '<div class="empty">لا توجد بيانات.</div>'}</div></section>`;
+      const tabMap = {
+        usersList:'users',
+        employeesList:'employees',
+        subsList:'subscribers',
+        paymentsList:'payments',
+        adsList:'ads',
+        servicesList:'services',
+        xsList:'xs',
+        packagesList:'packages',
+        offersList:'offers'
+      };
+      const tab = tabMap[id] || state.tab;
+      const safeRows = rows && String(rows).trim() ? rows : '<div class="empty">لا توجد بيانات حتى الآن. اضغط إضافة + لإدخال أول سجل.</div>';
+      return `<section class="panel">
+        <div class="panel-head">
+          <div><h3>${safeText(title)}</h3><span>${safeText(count)}</span></div>
+          <button type="button" class="small-btn ok" onclick="openAddModal('${tab}')">إضافة +</button>
+        </div>
+        <div class="table-tools">
+          <input placeholder="بحث..." oninput="filterRows('${id}', this.value)">
+          <select onchange="filterStatus('${id}', this.value)">
+            <option value="">كل الحالات</option>
+            <option>نشط</option>
+            <option>منشور</option>
+            <option>مكتمل</option>
+            <option>تحت المراجعة</option>
+            <option>بانتظار التأكيد</option>
+            <option>بانتظار السداد</option>
+            <option>مسودة</option>
+            <option>موقوف</option>
+            <option>مرفوض</option>
+          </select>
+        </div>
+        <div id="${id}">${safeRows}</div>
+      </section>`;
     }
+
     function getCollection(name){return state[name] || []}
     function findItem(collection,id){return getCollection(collection).find(x=>String(x.id)===String(id))}
     function viewItem(collection,id){
