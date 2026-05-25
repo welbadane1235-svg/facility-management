@@ -4162,7 +4162,121 @@
  const html = cloned.innerHTML;
  const printHtml = '<!doctype html><html><head><meta charset="utf-8"><title>ATS CV</title>' +
   '<style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}ul{padding-left:20px}.contact-line{color:#444}</style>' +
-  '</head><body>' + html + '</body></html>';
+  '</head><body>' + html + '
+<script id="hirex-v22-auth-logout-fix">
+/* HireX V22: first-open auth + real logout fix
+   - login wall appears only when the app opens and there is no verified Supabase session
+   - logout clears Supabase session + cached local states, then shows login wall immediately
+*/
+(function(){
+  'use strict';
+
+  function getSb(){
+    try{
+      if(!window.supabase || !window.supabase.createClient || !window.HIREX_SUPABASE_URL || !window.HIREX_SUPABASE_ANON_KEY) return null;
+      if(!window.__hirexV22Client){
+        window.__hirexV22Client = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY, {
+          auth:{ detectSessionInUrl:true, persistSession:true, autoRefreshToken:true }
+        });
+      }
+      return window.__hirexV22Client;
+    }catch(e){ return null; }
+  }
+
+  function clearAuthStorage(){
+    try{
+      var remove=[];
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i) || '';
+        if(k.indexOf('supabase')>-1 || k.indexOf('sb-')===0 || k.indexOf('hirex')>-1 || k.indexOf('account')>-1 || k.indexOf('auth')>-1){
+          remove.push(k);
+        }
+      }
+      remove.forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+    }catch(e){}
+    try{
+      var removeS=[];
+      for(var j=0;j<sessionStorage.length;j++){
+        var sk=sessionStorage.key(j) || '';
+        if(sk.indexOf('supabase')>-1 || sk.indexOf('sb-')===0 || sk.indexOf('hirex')>-1 || sk.indexOf('account')>-1 || sk.indexOf('auth')>-1){
+          removeS.push(sk);
+        }
+      }
+      removeS.forEach(function(k){ try{ sessionStorage.removeItem(k); }catch(e){} });
+    }catch(e){}
+  }
+
+  function resetAccountState(){
+    window.accountState = window.accountState || {};
+    window.accountState.isLoggedIn = false;
+    window.accountState.emailVerified = false;
+    window.accountState.email = '';
+    window.accountState.name = '';
+    window.__hirexFirstAuthUnlocked = false;
+    window.__hirexVerifiedSession = false;
+    try{ if(typeof window.syncAccountUi === 'function') window.syncAccountUi(); }catch(e){}
+  }
+
+  function showFirstLogin(){
+    resetAccountState();
+    document.documentElement.classList.add('hx18-locked');
+    document.body.classList.add('hx18-locked');
+    var wall=document.getElementById('hxFirstAuthWall');
+    if(wall){
+      wall.classList.add('show');
+      var msg=document.getElementById('hx18Message');
+      if(msg){ msg.textContent='تم تسجيل الخروج. يرجى تسجيل الدخول للمتابعة.'; msg.className='hx18-message info'; }
+      var email=document.getElementById('hx18Email');
+      if(email) setTimeout(function(){ email.focus(); },80);
+    }
+  }
+
+  async function realLogout(){
+    var sb=getSb();
+    try{ if(sb && sb.auth) await sb.auth.signOut({ scope:'global' }); }catch(e){ try{ if(sb && sb.auth) await sb.auth.signOut(); }catch(_e){} }
+    clearAuthStorage();
+    showFirstLogin();
+    return false;
+  }
+
+  // Override all old logout functions. This is the important fix.
+  window.accountLogout = realLogout;
+  window.logout = realLogout;
+  window.hirexLogout = realLogout;
+
+  document.addEventListener('click', function(e){
+    var t=e.target && e.target.closest ? e.target.closest('button,a,[onclick],.logout-btn') : null;
+    if(!t) return;
+    var txt=(t.textContent || '').trim();
+    var onclick=String(t.getAttribute('onclick') || '');
+    if(txt.indexOf('تسجيل الخروج')>-1 || onclick.indexOf('accountLogout')>-1 || onclick.indexOf('logout')>-1){
+      e.preventDefault();
+      e.stopPropagation();
+      realLogout();
+    }
+  }, true);
+
+  // If old code tries to unlock using fake local state after logout, restore the wall unless Supabase has a real confirmed user.
+  async function enforceRealSessionOnLoad(){
+    var sb=getSb();
+    if(!sb || !sb.auth) return;
+    try{
+      var res=await sb.auth.getSession();
+      var user=res && res.data && res.data.session && res.data.session.user;
+      var verified=!!(user && user.email && (user.email_confirmed_at || user.confirmed_at));
+      if(!verified){
+        try{ await sb.auth.signOut(); }catch(e){}
+        resetAccountState();
+        var wall=document.getElementById('hxFirstAuthWall');
+        if(wall) wall.classList.add('show');
+      }
+    }catch(e){}
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', enforceRealSessionOnLoad); else enforceRealSessionOnLoad();
+})();
+</script>
+
+</body></html>';
  w.document.open();
  w.document.write(printHtml);
  w.document.close();
@@ -5597,6 +5711,120 @@ html.hx18-locked, body.hx18-locked{overflow:hidden!important;height:100%!importa
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
+
+<script id="hirex-v22-auth-logout-fix">
+/* HireX V22: first-open auth + real logout fix
+   - login wall appears only when the app opens and there is no verified Supabase session
+   - logout clears Supabase session + cached local states, then shows login wall immediately
+*/
+(function(){
+  'use strict';
+
+  function getSb(){
+    try{
+      if(!window.supabase || !window.supabase.createClient || !window.HIREX_SUPABASE_URL || !window.HIREX_SUPABASE_ANON_KEY) return null;
+      if(!window.__hirexV22Client){
+        window.__hirexV22Client = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY, {
+          auth:{ detectSessionInUrl:true, persistSession:true, autoRefreshToken:true }
+        });
+      }
+      return window.__hirexV22Client;
+    }catch(e){ return null; }
+  }
+
+  function clearAuthStorage(){
+    try{
+      var remove=[];
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i) || '';
+        if(k.indexOf('supabase')>-1 || k.indexOf('sb-')===0 || k.indexOf('hirex')>-1 || k.indexOf('account')>-1 || k.indexOf('auth')>-1){
+          remove.push(k);
+        }
+      }
+      remove.forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+    }catch(e){}
+    try{
+      var removeS=[];
+      for(var j=0;j<sessionStorage.length;j++){
+        var sk=sessionStorage.key(j) || '';
+        if(sk.indexOf('supabase')>-1 || sk.indexOf('sb-')===0 || sk.indexOf('hirex')>-1 || sk.indexOf('account')>-1 || sk.indexOf('auth')>-1){
+          removeS.push(sk);
+        }
+      }
+      removeS.forEach(function(k){ try{ sessionStorage.removeItem(k); }catch(e){} });
+    }catch(e){}
+  }
+
+  function resetAccountState(){
+    window.accountState = window.accountState || {};
+    window.accountState.isLoggedIn = false;
+    window.accountState.emailVerified = false;
+    window.accountState.email = '';
+    window.accountState.name = '';
+    window.__hirexFirstAuthUnlocked = false;
+    window.__hirexVerifiedSession = false;
+    try{ if(typeof window.syncAccountUi === 'function') window.syncAccountUi(); }catch(e){}
+  }
+
+  function showFirstLogin(){
+    resetAccountState();
+    document.documentElement.classList.add('hx18-locked');
+    document.body.classList.add('hx18-locked');
+    var wall=document.getElementById('hxFirstAuthWall');
+    if(wall){
+      wall.classList.add('show');
+      var msg=document.getElementById('hx18Message');
+      if(msg){ msg.textContent='تم تسجيل الخروج. يرجى تسجيل الدخول للمتابعة.'; msg.className='hx18-message info'; }
+      var email=document.getElementById('hx18Email');
+      if(email) setTimeout(function(){ email.focus(); },80);
+    }
+  }
+
+  async function realLogout(){
+    var sb=getSb();
+    try{ if(sb && sb.auth) await sb.auth.signOut({ scope:'global' }); }catch(e){ try{ if(sb && sb.auth) await sb.auth.signOut(); }catch(_e){} }
+    clearAuthStorage();
+    showFirstLogin();
+    return false;
+  }
+
+  // Override all old logout functions. This is the important fix.
+  window.accountLogout = realLogout;
+  window.logout = realLogout;
+  window.hirexLogout = realLogout;
+
+  document.addEventListener('click', function(e){
+    var t=e.target && e.target.closest ? e.target.closest('button,a,[onclick],.logout-btn') : null;
+    if(!t) return;
+    var txt=(t.textContent || '').trim();
+    var onclick=String(t.getAttribute('onclick') || '');
+    if(txt.indexOf('تسجيل الخروج')>-1 || onclick.indexOf('accountLogout')>-1 || onclick.indexOf('logout')>-1){
+      e.preventDefault();
+      e.stopPropagation();
+      realLogout();
+    }
+  }, true);
+
+  // If old code tries to unlock using fake local state after logout, restore the wall unless Supabase has a real confirmed user.
+  async function enforceRealSessionOnLoad(){
+    var sb=getSb();
+    if(!sb || !sb.auth) return;
+    try{
+      var res=await sb.auth.getSession();
+      var user=res && res.data && res.data.session && res.data.session.user;
+      var verified=!!(user && user.email && (user.email_confirmed_at || user.confirmed_at));
+      if(!verified){
+        try{ await sb.auth.signOut(); }catch(e){}
+        resetAccountState();
+        var wall=document.getElementById('hxFirstAuthWall');
+        if(wall) wall.classList.add('show');
+      }
+    }catch(e){}
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', enforceRealSessionOnLoad); else enforceRealSessionOnLoad();
 })();
 </script>
 
