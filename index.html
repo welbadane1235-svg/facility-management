@@ -4282,52 +4282,6 @@
   </div>
 
 
-
-<script id="hirex-professional-supabase-sync">
-(function(){
-  function sbClient(){
-    if(!window.supabase || !window.supabase.createClient) return null;
-    if(!window.__hirexProfessionalClient){
-      window.__hirexProfessionalClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
-    }
-    return window.__hirexProfessionalClient;
-  }
-  async function upsertCurrentUserProfile(user){
-    try{
-      if(!user || !user.email) return;
-      var sb = sbClient(); if(!sb) return;
-      await sb.from('hirex_users').upsert({
-        auth_user_id: user.id,
-        email: user.email.toLowerCase(),
-        full_name: (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0],
-        role: (user.user_metadata && user.user_metadata.role) || 'visitor',
-        status: 'active',
-        email_verified: !!user.email_confirmed_at,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'email' });
-    }catch(e){ console.warn('HireX profile sync skipped:', e && e.message ? e.message : e); }
-  }
-  async function syncSessionToUi(){
-    var sb = sbClient(); if(!sb) return;
-    try{
-      var sessionRes = await sb.auth.getSession();
-      var user = sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.user;
-      if(user && user.email_confirmed_at){
-        await upsertCurrentUserProfile(user);
-        window.accountState = window.accountState || {};
-        accountState.isLoggedIn = true;
-        accountState.emailVerified = true;
-        accountState.email = user.email;
-        accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
-        if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
-      }
-    }catch(e){}
-  }
-  window.hirexUpsertCurrentUserProfile = upsertCurrentUserProfile;
-  window.addEventListener('DOMContentLoaded', syncSessionToUi);
-})();
-</script>
-
 </body>
 </html>`;
  w.document.open();
