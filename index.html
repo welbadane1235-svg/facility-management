@@ -745,18 +745,77 @@
       .ats-actions{grid-template-columns:1fr}
     }
 
-  </style>
+  
+
+    /* V24 mobile-first logo integration */
+    body{padding-bottom:calc(104px + env(safe-area-inset-bottom));}
+    .app{width:min(430px,100%);padding:0 12px 0;}
+    .header{padding:14px 0 10px;gap:10px}
+    .brand{gap:10px;align-items:center}
+    .brand-copy{display:grid;gap:3px}
+    .brand-copy h1{font-size:31px;line-height:1;font-weight:900;letter-spacing:.2px}
+    .brand-copy p{margin-top:0;font-size:11px;color:#8FA1A9;font-weight:800}
+    .brand-logo{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;background:transparent!important;box-shadow:none!important;padding:0;overflow:visible}
+    .brand-logo .brand-mark-svg{width:62px;height:62px;display:block;filter:drop-shadow(0 16px 32px rgba(0,229,197,.18));}
+    .hero{min-height:285px;padding:22px 20px 20px;border-radius:28px}
+    .hero-content{max-width:100%;padding-top:10px}
+    .hero h2{font-size:30px;line-height:1.15;padding-left:82px}
+    .hero p{font-size:14px;padding-left:60px}
+    .hero-art{top:16px;left:16px;width:92px;height:92px;border-radius:26px;background:transparent!important;border:1px solid rgba(0,229,197,.16)!important;box-shadow:none!important;transform:none;display:grid;place-items:center;backdrop-filter:blur(10px)}
+    .hero-logo-svg{width:72px;height:72px;display:block;filter:drop-shadow(0 14px 28px rgba(0,229,197,.18));}
+    .promo{grid-template-columns:1fr 64px;min-height:158px;padding:18px 16px;border-radius:26px}
+    .promo h4{font-size:22px}
+    .promo p{font-size:13px}
+    .promo-art,
+    .job-type-icon,
+    .category-icon,
+    .win-icon,
+    .action-icon,
+    .avatar{background:transparent!important;border:1px solid rgba(0,229,197,.15)!important;box-shadow:none!important;color:#A7F3E1!important;backdrop-filter:blur(8px)}
+    .promo-art,.job-type-icon,.category-icon,.win-icon,.action-icon{position:relative;overflow:hidden}
+    .promo-art::before,.job-type-icon::before,.category-icon::before,.win-icon::before,.action-icon::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(0,229,197,.18),transparent 60%);z-index:0}
+    .promo-art > *, .job-type-icon > *, .category-icon > *, .win-icon > *, .action-icon > *{position:relative;z-index:1}
+    .promo-art{width:64px;height:64px;border-radius:22px;font-size:33px}
+    .job-type-icon{width:52px;height:52px;border-radius:18px;font-size:25px}
+    .category-icon{width:44px;height:44px;border-radius:16px;font-size:22px;background:rgba(0,229,197,.03)!important}
+    .win-icon{width:54px;height:54px;border-radius:18px;font-size:23px}
+    .avatar{border-radius:24px;color:#A7F3E1!important}
+    .avatar img{border-radius:24px}
+    .window.phone{width:min(430px,100%)}
+    .window,.window.small{width:min(430px,100%);height:min(92vh,calc(100vh - 18px));border-radius:28px}
+    .window-head{min-height:78px;padding:16px 16px}
+    .win-title h2{font-size:24px}
+    .window-body{padding:16px}
+    .bottom-nav{left:50%;transform:translateX(-50%);width:min(414px,calc(100% - 14px));height:72px;bottom:calc(10px + env(safe-area-inset-bottom));border-radius:24px;grid-template-columns:repeat(5,1fr)}
+    .nav-item{padding:6px;font-size:11px}
+    .nav-item b{font-size:20px}
+    .nav-item.active{margin:5px;border-radius:18px}
+    @media (min-width:521px){.app{width:min(430px,100%)}}
+    @media (max-width:520px){
+      .app{padding:0 10px}
+      .hero{min-height:268px;padding:18px}
+      .hero h2{font-size:28px;padding-left:70px}
+      .hero p{padding-left:0;margin-top:10px}
+      .hero-art{width:82px;height:82px;left:14px;top:14px}
+      .hero-logo-svg{width:64px;height:64px}
+      .section-head{margin:22px 0 10px}
+      .promo{grid-template-columns:1fr 56px;gap:10px;min-height:150px}
+      .promo-art{width:56px;height:56px;font-size:28px}
+      .bottom-nav{width:calc(100% - 12px)}
+    }
+
+</style>
 </head>
 <body>
   <div class="app">
     <header class="header">
       <a class="profile-btn" href="#account">⚙️</a>
-      <div class="brand"><div><h1>Hire<span>X</span></h1><p>بوابة الوظائف والخدمات المهنية</p></div><div class="brand-logo" aria-label="HireX logo"><svg viewBox="0 0 64 64" role="img" aria-hidden="true"><defs><linearGradient id="hxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5C5"/><stop offset="100%" stop-color="#00B8D4"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="20" fill="url(#hxg)"/><rect x="17" y="23" width="30" height="22" rx="7" fill="none" stroke="#081312" stroke-width="3.2"/><path d="M24 23v-3.5c0-2.8 2.2-5 5-5h6c2.8 0 5 2.2 5 5V23" fill="none" stroke="#081312" stroke-width="3.2" stroke-linecap="round"/><path d="M40 19l8-8" stroke="#F5FFFE" stroke-width="4" stroke-linecap="round"/><path d="M48 19l-8-8" stroke="#F5FFFE" stroke-width="4" stroke-linecap="round"/></svg></div></div>
+      <div class="brand"><div class="brand-logo" aria-label="HireX logo"><svg class="brand-mark-svg" viewBox="0 0 64 64" role="img" aria-hidden="true"><defs><linearGradient id="hxBrand" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5C5"/><stop offset="100%" stop-color="#00B8D4"/></linearGradient></defs><rect x="5" y="5" width="54" height="54" rx="18" fill="rgba(0,229,197,.08)" stroke="url(#hxBrand)" stroke-width="2"/><path d="M19 18v28M19 31h11M30 18v28" fill="none" stroke="url(#hxBrand)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M39 20l10 24M49 20L39 44" fill="none" stroke="url(#hxBrand)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47.5" cy="16.5" r="4.5" fill="#00E5C5" opacity=".18"/><path d="M45 14l5 5" stroke="#EFFFFB" stroke-width="2.4" stroke-linecap="round"/><path d="M50 14l-5 5" stroke="#EFFFFB" stroke-width="2.4" stroke-linecap="round"/></svg></div><div class="brand-copy"><h1>Hire<span>X</span></h1><p>منصة وظائف وخدمات مهيأة للموبايل</p></div></div>
     </header>
 
     <main id="home">
       <section class="hero">
-        <div class="hero-art"><span>🚀</span></div>
+        <div class="hero-art"><svg class="hero-logo-svg" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="hxHero" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5C5"/><stop offset="100%" stop-color="#00B8D4"/></linearGradient></defs><rect x="7" y="7" width="50" height="50" rx="18" fill="rgba(0,229,197,.08)" stroke="url(#hxHero)" stroke-width="2.2"/><path d="M19 18v28M19 31h11M30 18v28" fill="none" stroke="url(#hxHero)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M39 20l10 24M49 20L39 44" fill="none" stroke="url(#hxHero)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="hero-content"><div class="tag">الرئيسية · تعرّف على HireX</div><h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2><p>HireX مساحة منظمة للإعلانات المهنية: وظيفة، خدمة، أو سيرة ذاتية تبحث عن فرصة.</p></div>
       </section>
       <div class="section-head"><h3>لماذا HireX؟</h3><span>إعلانات تعريفية</span></div>
@@ -2340,7 +2399,7 @@
         return;
       }
       const w = window.open('', '_blank');
-      w.document.write('<html><head><title>ATS CV</title><style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}</style></head><body>' + preview.innerHTML + '</body></html>');
+      w.document.write('<html><head><title>ATS CV</title><style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}ul{padding-left:20px}section{margin-bottom:16px}strong{display:block;margin-bottom:4px}</style></head><body>' + preview.innerHTML + '</body></html>');
       w.document.close();
       w.focus();
       w.print();
