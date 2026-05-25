@@ -2036,6 +2036,23 @@
       .account-avatar-big{width:72px;height:72px;font-size:24px}
     }
 
+  
+    /* V31 bottom nav clickable fix */
+    .bottom-nav{
+      pointer-events:auto!important;
+    }
+    .bottom-nav .nav-item{
+      pointer-events:auto!important;
+      touch-action:manipulation;
+      position:relative;
+      z-index:2;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .bottom-nav .nav-item svg,
+    .bottom-nav .nav-item span{
+      pointer-events:none;
+    }
+
   </style>
 </head>
 <body>
@@ -2155,11 +2172,11 @@
 
 
     <nav class="bottom-nav">
-      <button class="nav-item active" data-tab="home" onclick="goHome()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 32L32 13l22 19"/><path d="M17 29v24h30V29"/><path d="M26 53V39h12v14"/></svg><span>الرئيسية</span></button>
-      <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5"/><rect x="12" y="24" width="40" height="28" rx="6"/><path d="M12 35h40"/></svg><span>وظائف</span></button>
-      <button class="nav-item" data-tab="services" onclick="openServicesModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 10l8 8-8 8-8-8z"/><path d="M30 18l24 24-8 8-24-24"/><path d="M45 12l7 7-17 17-7-7z"/><path d="M18 43l7 7-5 5h-7v-7z"/></svg><span>خدمات</span></button>
-      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22"/><path d="M32 20v24M20 32h24"/></svg><span>إعلاناتي</span></button>
-      <button class="nav-item" data-tab="account" onclick="openAccountModal()"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="22" r="10"/><path d="M14 54c3-13 10-20 18-20s15 7 18 20"/></svg><span>حسابي</span></button>
+      <button type="button" class="nav-item active" data-tab="home"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 32L32 13l22 19"/><path d="M17 29v24h30V29"/><path d="M26 53V39h12v14"/></svg><span>الرئيسية</span></button>
+      <button type="button" class="nav-item" data-tab="jobs"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5"/><rect x="12" y="24" width="40" height="28" rx="6"/><path d="M12 35h40"/></svg><span>وظائف</span></button>
+      <button type="button" class="nav-item" data-tab="services"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 10l8 8-8 8-8-8z"/><path d="M30 18l24 24-8 8-24-24"/><path d="M45 12l7 7-17 17-7-7z"/><path d="M18 43l7 7-5 5h-7v-7z"/></svg><span>خدمات</span></button>
+      <button type="button" class="nav-item" data-tab="post"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22"/><path d="M32 20v24M20 32h24"/></svg><span>إعلاناتي</span></button>
+      <button type="button" class="nav-item" data-tab="account"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="22" r="10"/><path d="M14 54c3-13 10-20 18-20s15 7 18 20"/></svg><span>حسابي</span></button>
     </nav>
 
   </div>
@@ -3934,6 +3951,91 @@
     document.addEventListener('keydown', function(e){
       if(e.key !== 'Escape') return;
       if(document.getElementById('accountOverlay')?.classList.contains('show')) return closeAccountModal();
+    });
+
+
+    /* V31 robust bottom navigation */
+    function closeAllMainOverlays(){
+      ['jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el){
+          el.classList.remove('show');
+          el.setAttribute('aria-hidden','true');
+          el.style.display = '';
+        }
+      });
+      if(!document.querySelector('.overlay.show')){
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+    function safeSetActiveNav(tab){
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(item=>{
+        item.classList.toggle('active', item.dataset.tab === tab);
+      });
+    }
+
+    function handleBottomNav(tab){
+      try{
+        if(tab === 'home'){
+          closeAllMainOverlays();
+          safeSetActiveNav('home');
+          window.scrollTo({top:0, behavior:'smooth'});
+          return;
+        }
+
+        if(tab === 'jobs'){
+          closeAllMainOverlays();
+          safeSetActiveNav('jobs');
+          if(typeof openJobsModal === 'function') openJobsModal();
+          else showOverlay('jobsOverlay');
+          safeSetActiveNav('jobs');
+          return;
+        }
+
+        if(tab === 'services'){
+          closeAllMainOverlays();
+          safeSetActiveNav('services');
+          if(typeof openServicesModal === 'function') openServicesModal();
+          else showOverlay('servicesOverlay');
+          safeSetActiveNav('services');
+          return;
+        }
+
+        if(tab === 'post'){
+          closeAllMainOverlays();
+          safeSetActiveNav('post');
+          if(typeof openMyAdsModal === 'function') openMyAdsModal();
+          else showOverlay('myAdsOverlay');
+          safeSetActiveNav('post');
+          return;
+        }
+
+        if(tab === 'account'){
+          closeAllMainOverlays();
+          safeSetActiveNav('account');
+          if(typeof openAccountModal === 'function') openAccountModal();
+          else showOverlay('accountOverlay');
+          safeSetActiveNav('account');
+          return;
+        }
+      }catch(err){
+        console.error('Bottom nav error:', err);
+        alert('حدث خطأ في فتح التبويب: ' + tab);
+      }
+    }
+
+    document.addEventListener('click', function(e){
+      const navBtn = e.target.closest('.bottom-nav .nav-item[data-tab]');
+      if(!navBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      handleBottomNav(navBtn.dataset.tab);
+    }, true);
+
+    // Prevent duplicate inline actions if old onclick remains anywhere
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(btn=>{
+      btn.setAttribute('type','button');
     });
 
 </script>
