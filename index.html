@@ -5397,5 +5397,97 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 })();
 </script>
 
+
+
+<script id="hirex-v7-strict-auth-gate">
+(function(){
+  "use strict";
+  var protectedTabs = { post: 'إضافة أو إدارة إعلان', account: 'فتح حسابي', jobs: 'استعراض الوظائف والتقديم', services: 'استعراض الخدمات والطلب' };
+  var actionWords = /(إضافة|اضافة|نشر|حفظ|طلب|تقديم|تواصل|اتصال|واتساب|شراء|ترقية|دفع|إرسال|ارسال|حسابي|إعلاناتي|اعلاناتي|سيرة|ATS|CV|عرض سعر|قدّم|قدم)/i;
+  var safeWords = /(إغلاق|اغلاق|رجوع|عودة|متابعة التصفح|الرئيسية|دخول|إنشاء حساب|انشاء حساب|نسيت كلمة المرور|تحقق|OK|×)/i;
+
+  function isVerified(){
+    try{
+      if(window.accountState && window.accountState.isLoggedIn && window.accountState.email && window.accountState.emailVerified) return true;
+      if(window.hirexIsVerifiedUser && window.hirexIsVerifiedUser()) return true;
+    }catch(e){}
+    return false;
+  }
+  function openLogin(reason, callback){
+    if(isVerified()){
+      if(typeof callback === 'function') callback();
+      return true;
+    }
+    if(typeof window.requireEmailLogin === 'function') return window.requireEmailLogin(reason || 'هذا الإجراء', callback || null);
+    if(typeof window.hirexOpenAuth === 'function') return window.hirexOpenAuth('سجّل دخولك لإكمال: ' + (reason || 'هذا الإجراء'), 'login');
+    alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+    return false;
+  }
+  function runTab(tab){
+    if(typeof window.hirexOpenTab === 'function') return window.hirexOpenTab(tab);
+    var map = {jobs:'jobsOverlay', services:'servicesOverlay', post:'myAdsOverlay', account:'accountOverlay'};
+    var id = map[tab], el = id && document.getElementById(id);
+    if(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open'); }
+  }
+  function textOf(el){ return ((el && (el.innerText || el.textContent)) || '').replace(/\s+/g,' ').trim(); }
+  function isInsideAuth(el){ return !!(el && el.closest && el.closest('#hirexV6AuthOverlay,#hxEmailAuthOverlay,#loginGateOverlay')); }
+  function looksProtected(el){
+    if(!el || !el.closest) return false;
+    if(isInsideAuth(el)) return false;
+    if(el.closest('.bottom-nav .nav-item[data-tab]')) return true;
+    var hit = el.closest('[data-requires-auth="true"], .requires-auth, [data-auth-reason]');
+    if(hit) return true;
+    var btn = el.closest('button,a,[role="button"],.btn,.primary,.secondary,.chip,.card-action');
+    if(!btn) return false;
+    var t = textOf(btn);
+    if(!t || safeWords.test(t)) return false;
+    var onclick = String(btn.getAttribute('onclick') || '');
+    if(/openMyAds|saveCurrentAd|openPhone|openPayment|openPlatformChat|openAts|openXs|Promotion|Apply|Order|Contact/i.test(onclick)) return true;
+    return actionWords.test(t);
+  }
+
+  window.hirexRequireVerifiedAction = openLogin;
+
+  window.addEventListener('click', function(e){
+    if(isVerified()) return;
+    var target = e.target;
+    if(isInsideAuth(target)) return;
+
+    var navBtn = target.closest && target.closest('.bottom-nav .nav-item[data-tab]');
+    if(navBtn){
+      var tab = navBtn.getAttribute('data-tab');
+      if(tab && tab !== 'home'){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        return openLogin(protectedTabs[tab] || 'فتح هذا القسم', function(){ runTab(tab); });
+      }
+      return;
+    }
+
+    if(looksProtected(target)){
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      var reason = target.closest('[data-auth-reason]')?.getAttribute('data-auth-reason') || textOf(target.closest('button,a,[role="button"],.btn,.primary,.secondary')) || 'هذا الإجراء';
+      return openLogin(reason, null);
+    }
+  }, true);
+
+  ['openAccountModal','openMyAdsModal','saveCurrentAd','openPhoneModal','openPaymentModal','openPlatformChat','openPlatformChatV15','openAtsCvBuilder','openXsStore','openPromotionModal'].forEach(function(name){
+    var tries = 0;
+    function patch(){
+      tries++;
+      var fn = window[name];
+      if(typeof fn !== 'function') { if(tries < 20) setTimeout(patch, 100); return; }
+      if(fn.__v7Protected) return;
+      var wrapped = function(){
+        var args = arguments;
+        return openLogin(name === 'openAccountModal' ? 'فتح حسابي' : 'إكمال هذا الإجراء', function(){ fn.apply(window, args); });
+      };
+      wrapped.__v7Protected = true;
+      window[name] = wrapped;
+    }
+    patch();
+  });
+})();
+</script>
+
 </body>
 </html>
