@@ -254,10 +254,13 @@
           <button class="side-tab active" data-tab="overview" onclick="setAdminTab('overview')"><b>⌂</b><span>الرئيسية</span></button>
           <button class="side-tab" data-tab="users" onclick="setAdminTab('users')"><b>US</b><span>المستخدمين</span></button>
           <button class="side-tab" data-tab="subscribers" onclick="setAdminTab('subscribers')"><b>SB</b><span>المشتركين</span></button>
+          <button class="side-tab" data-tab="employees" onclick="setAdminTab('employees')"><b>EM</b><span>الموظفين</span></button>
           <button class="side-tab" data-tab="payments" onclick="setAdminTab('payments')"><b>PY</b><span>السداد</span></button>
           <button class="side-tab" data-tab="ads" onclick="setAdminTab('ads')"><b>AD</b><span>الإعلانات</span></button>
           <button class="side-tab" data-tab="services" onclick="setAdminTab('services')"><b>SV</b><span>الخدمات</span></button>
           <button class="side-tab" data-tab="xs" onclick="setAdminTab('xs')"><b>Xs</b><span>الإكسز</span></button>
+          <button class="side-tab" data-tab="packages" onclick="setAdminTab('packages')"><b>PK</b><span>الباقات</span></button>
+          <button class="side-tab" data-tab="offers" onclick="setAdminTab('offers')"><b>%</b><span>العروض</span></button>
           <button class="side-tab" data-tab="reports" onclick="setAdminTab('reports')"><b>RP</b><span>التقارير</span></button>
         </aside>
 
@@ -321,17 +324,36 @@
         {id:2,name:'مرشح تجريبي',email:'candidate@hirex.com',phone:'0551111111',role:'باحث عن عمل',status:'نشط',joined:'أمس',city:'جدة',notes:'مهتم بوظائف المحاسبة'},
         {id:3,name:'مقدم خدمة',email:'service@hirex.com',phone:'0552222222',role:'مقدم خدمة',status:'تحت المراجعة',joined:'قبل يومين',city:'الدمام',notes:'خدمة كتابة CV'}
       ],
+      employees:[
+        {id:1,name:'مدير المنصة',email:'admin@hirex.com',phone:'0500000001',job:'مدير عام',department:'الإدارة',permissions:'كل الصلاحيات',status:'نشط',lastLogin:'اليوم'},
+        {id:2,name:'موظف مراجعة',email:'review@hirex.com',phone:'0500000002',job:'مراجعة إعلانات',department:'التشغيل',permissions:'الإعلانات والخدمات',status:'نشط',lastLogin:'أمس'},
+        {id:3,name:'محاسب المنصة',email:'finance@hirex.com',phone:'0500000003',job:'محاسب',department:'المالية',permissions:'السداد والاشتراكات',status:'نشط',lastLogin:'قبل يومين'},
+        {id:4,name:'دعم العملاء',email:'support@hirex.com',phone:'0500000004',job:'خدمة عملاء',department:'الدعم',permissions:'المستخدمين والرسائل',status:'موقوف',lastLogin:'قبل أسبوع'}
+      ],
+      packages:[
+        {id:1,name:'ATS Basic',target:'باحث عن عمل',price:35,currency:'Xs',duration:'مرة واحدة',features:'صناعة سيرة ATS نصية',status:'نشط',autoActivate:true},
+        {id:2,name:'Candidate Plus',target:'باحث عن عمل',price:49,currency:'ريال',duration:'30 يوم',features:'تمييز الملف + مشاهدة أعلى',status:'نشط',autoActivate:true},
+        {id:3,name:'Company Starter',target:'شركة',price:99,currency:'ريال',duration:'30 يوم',features:'3 إعلانات وظائف + استقبال مرشحين',status:'نشط',autoActivate:true},
+        {id:4,name:'Pro Companies',target:'شركة',price:299,currency:'ريال',duration:'30 يوم',features:'إعلانات أكثر + صدارة + إدارة طلبات',status:'نشط',autoActivate:true},
+        {id:5,name:'Service Provider',target:'مقدم خدمة',price:99,currency:'ريال',duration:'30 يوم',features:'عرض خدمات واستقبال طلبات',status:'نشط',autoActivate:true},
+        {id:6,name:'Growth 300 Xs',target:'الجميع',price:129,currency:'ريال',duration:'رصيد فوري',features:'300 Xs للصدارة والخدمات',status:'نشط',autoActivate:true}
+      ],
+      offers:[
+        {id:1,title:'خصم إطلاق المنصة',code:'LAUNCH30',discount:30,type:'نسبة',appliesTo:'كل الباقات',start:'2026-05-01',end:'2026-06-30',status:'نشط',uses:18},
+        {id:2,title:'خصم الشركات',code:'COMPANY50',discount:50,type:'ريال',appliesTo:'Company Starter, Pro Companies',start:'2026-05-10',end:'2026-06-10',status:'نشط',uses:7},
+        {id:3,title:'خصم ATS',code:'ATS10',discount:10,type:'ريال',appliesTo:'ATS Basic',start:'2026-05-01',end:'2026-05-31',status:'موقوف',uses:4}
+      ],
       subscribers:[
-        {id:1,user:'شركة تجريبية',email:'company@hirex.com',plan:'Pro Companies',price:299,status:'نشط',start:'2026-05-01',end:'2026-06-01',paid:true},
-        {id:2,user:'مرشح تجريبي',email:'candidate@hirex.com',plan:'ATS Plus',price:49,status:'نشط',start:'2026-05-10',end:'2026-06-10',paid:true},
-        {id:3,user:'مقدم خدمة',email:'service@hirex.com',plan:'Service Provider',price:99,status:'بانتظار السداد',start:'2026-05-18',end:'2026-06-18',paid:false}
+        {id:1,user:'شركة تجريبية',email:'company@hirex.com',plan:'Pro Companies',price:299,status:'نشط',start:'2026-05-01',end:'2026-06-01',paid:true,activatedByPayment:'PAY-1001'},
+        {id:2,user:'مرشح تجريبي',email:'candidate@hirex.com',plan:'ATS Plus',price:49,status:'نشط',start:'2026-05-10',end:'2026-06-10',paid:true,activatedByPayment:'PAY-1002'},
+        {id:3,user:'مقدم خدمة',email:'service@hirex.com',plan:'Service Provider',price:99,status:'بانتظار السداد',start:'2026-05-18',end:'2026-06-18',paid:false,activatedByPayment:''}
       ],
       payments:[
-        {id:1,payer:'شركة تجريبية',email:'company@hirex.com',amount:299,method:'بطاقة',reason:'اشتراك Pro Companies',status:'مكتمل',date:'2026-05-23',ref:'PAY-1001',notes:'اشتراك شركات شهري'},
-        {id:2,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:49,method:'بطاقة',reason:'صناعة سيرة ATS Plus',status:'مكتمل',date:'2026-05-23',ref:'PAY-1002',notes:'خدمة ATS'},
-        {id:3,payer:'شركة تجريبية',email:'company@hirex.com',amount:129,method:'بطاقة',reason:'شراء حزمة Xs Growth 300',status:'مكتمل',date:'2026-05-22',ref:'PAY-1003',notes:'شراء عملات'},
-        {id:4,payer:'مقدم خدمة',email:'service@hirex.com',amount:99,method:'تحويل',reason:'اشتراك مقدم خدمة',status:'بانتظار التأكيد',date:'2026-05-21',ref:'PAY-1004',notes:'لم يتم التأكيد بعد'},
-        {id:5,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:25,method:'Xs',reason:'تفعيل صدارة 24 ساعة',status:'خصم Xs',date:'2026-05-20',ref:'XS-2001',notes:'خصم من المحفظة'}
+        {id:1,payer:'شركة تجريبية',email:'company@hirex.com',amount:299,method:'بطاقة',reason:'اشتراك Pro Companies',packageName:'Pro Companies',status:'مكتمل',date:'2026-05-23',ref:'PAY-1001',notes:'اشتراك شركات شهري'},
+        {id:2,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:49,method:'بطاقة',reason:'صناعة سيرة ATS Plus',packageName:'Candidate Plus',status:'مكتمل',date:'2026-05-23',ref:'PAY-1002',notes:'خدمة ATS'},
+        {id:3,payer:'شركة تجريبية',email:'company@hirex.com',amount:129,method:'بطاقة',reason:'شراء حزمة Xs Growth 300',packageName:'Growth 300 Xs',status:'مكتمل',date:'2026-05-22',ref:'PAY-1003',notes:'شراء عملات'},
+        {id:4,payer:'مقدم خدمة',email:'service@hirex.com',amount:99,method:'تحويل',reason:'اشتراك مقدم خدمة',packageName:'Service Provider',status:'بانتظار التأكيد',date:'2026-05-21',ref:'PAY-1004',notes:'لم يتم التأكيد بعد'},
+        {id:5,payer:'مرشح تجريبي',email:'candidate@hirex.com',amount:25,method:'Xs',reason:'تفعيل صدارة 24 ساعة',packageName:'Top 24h',status:'خصم Xs',date:'2026-05-20',ref:'XS-2001',notes:'خصم من المحفظة'}
       ],
       ads:[
         {id:1,title:'محاسب عام',type:'فرصة عمل',owner:'شركة تجريبية',status:'منشور',promoted:true,city:'الرياض',price:0,views:182},
@@ -406,6 +428,9 @@
         pendingPayments,
         activeSubs,
         pendingAds,
+        employees:state.employees.length,
+        activePackages:state.packages.filter(p=>p.status==='نشط').length,
+        activeOffers:state.offers.filter(o=>o.status==='نشط').length,
         serviceRevenue:state.services.filter(s=>s.paid).reduce((sum,s)=>sum+s.amount,0),
         commission:state.services.filter(s=>s.paid).reduce((sum,s)=>sum+s.commission,0)
       }
@@ -432,12 +457,15 @@
         ads:['إدارة الإعلانات','مراجعة الإعلانات، الصدارة، والنشر.'],
         services:['إدارة الخدمات','طلبات الخدمات والعروض والمدفوعات والعمولة.'],
         xs:['إدارة الإكسز','حركات شراء وخصم Xs وحزم الصدارة.'],
+        employees:['قائمة الموظفين','إدارة موظفي المنصة والصلاحيات.'],
+        packages:['إدارة الباقات','التحكم بأسعار الباقات ومميزاتها والتفعيل التلقائي.'],
+        offers:['العروض والخصومات','إنشاء وتعديل أكواد الخصم والعروض.'],
         reports:['التقارير','ملخصات مالية وتشغيلية قابلة للتصدير.']
       };
       document.getElementById('pageTitle').textContent=titles[state.tab][0];
       document.getElementById('pageDesc').textContent=titles[state.tab][1];
       const box=document.getElementById('adminContent');
-      const views={overview:overviewHtml,users:usersHtml,subscribers:subscribersHtml,payments:paymentsHtml,ads:adsHtml,services:servicesHtml,xs:xsHtml,reports:reportsHtml};
+      const views={overview:overviewHtml,users:usersHtml,subscribers:subscribersHtml,employees:employeesHtml,payments:paymentsHtml,ads:adsHtml,services:servicesHtml,xs:xsHtml,packages:packagesHtml,offers:offersHtml,reports:reportsHtml};
       box.innerHTML=views[state.tab]();
     }
     function statusBadge(status){
@@ -459,6 +487,8 @@
           <div class="panel"><div class="panel-head"><h3>الخدمات والعمولة</h3><span>تشغيلي</span></div>
             <p>إيراد الخدمات المدفوعة: <b class="money">${money(m.serviceRevenue)} ريال</b></p>
             <p>عمولة المنصة: <b class="money">${money(m.commission)} ريال</b></p>
+          <p>الباقات النشطة: <b>${state.packages.filter(p=>p.status==='نشط').length}</b></p>
+          <p>العروض النشطة: <b>${state.offers.filter(o=>o.status==='نشط').length}</b></p>
             <p>طلبات الخدمات: <b>${m.services}</b></p>
           </div>
           <div class="panel"><div class="panel-head"><h3>الاشتراكات</h3><span>فعال</span></div>
@@ -477,6 +507,8 @@
             ${row('PY','سداد ينتظر التأكيد',`${m.pendingPayments} عملية تحتاج مراجعة`,'فتح',"setAdminTab('payments')")}
             ${row('AD','إعلانات تحت المراجعة',`${m.pendingAds} إعلان يحتاج اعتماد`,'مراجعة',"setAdminTab('ads')")}
             ${row('SB','مشتركين بانتظار السداد',`${state.subscribers.filter(s=>s.status==='بانتظار السداد').length} اشتراك`,'فتح',"setAdminTab('subscribers')")}
+            ${row('PK','أسعار الباقات',`${state.packages.length} باقة يمكن التحكم بأسعارها`,'فتح',"setAdminTab('packages')")}
+            ${row('%','العروض والخصومات',`${state.offers.filter(o=>o.status==='نشط').length} عرض نشط`,'فتح',"setAdminTab('offers')")}
           </div>
         </section>`;
     }
@@ -487,7 +519,16 @@
           <div class="row-actions">${statusBadge(u.status)}<button onclick="viewItem('users',${u.id})">عرض</button><button class="ok" onclick="editItem('users',${u.id})">تعديل</button><button class="danger" onclick="blockUser(${u.id})">إيقاف</button></div>
         </article>`).join(''));
     }
-    function subscribersHtml(){
+    
+    function employeesHtml(){
+      return tablePanel('قائمة الموظفين', `${state.employees.length} موظف`, 'employeesList', state.employees.map(e=>`
+        <article class="row">
+          <div class="row-icon">EM</div><div><h4>${safeText(e.name)}</h4><p>${safeText(e.job)} · ${safeText(e.department)} · ${safeText(e.email)} · ${safeText(e.permissions)}</p></div>
+          <div class="row-actions">${statusBadge(e.status)}<button onclick="viewItem('employees',${e.id})">عرض</button><button class="ok" onclick="editItem('employees',${e.id})">تعديل</button><button class="warn" onclick="toggleEmployee(${e.id})">${e.status==='نشط'?'إيقاف':'تفعيل'}</button></div>
+        </article>`).join(''));
+    }
+
+function subscribersHtml(){
       return tablePanel('المشتركين', `${state.subscribers.length} اشتراك`, 'subsList', state.subscribers.map(s=>`
         <article class="row">
           <div class="row-icon">SB</div><div><h4>${safeText(s.user)}</h4><p>${safeText(s.plan)} · ${money(s.price)} ريال · ${safeText(s.start)} إلى ${safeText(s.end)}</p></div>
@@ -529,7 +570,36 @@
           <div class="row-actions">${statusBadge(x.status)}<button onclick="viewItem('xs',${x.id})">تفاصيل</button></div>
         </article>`).join(''));
     }
-    function reportsHtml(){
+    
+    function packagesHtml(){
+      return `
+        <section class="grid-3">
+          <div class="panel"><h3>الباقات النشطة</h3><strong class="money">${state.packages.filter(p=>p.status==='نشط').length}</strong><p>باقة قابلة للبيع</p></div>
+          <div class="panel"><h3>متوسط السعر</h3><strong class="money">${money(Math.round(state.packages.filter(p=>p.currency==='ريال').reduce((s,p)=>s+p.price,0) / Math.max(1,state.packages.filter(p=>p.currency==='ريال').length)))} ريال</strong><p>للباقات المدفوعة</p></div>
+          <div class="panel"><h3>التفعيل التلقائي</h3><strong class="money">${state.packages.filter(p=>p.autoActivate).length}</strong><p>باقة تتفعل بعد الدفع</p></div>
+        </section>
+        ${tablePanel('أسعار الباقات والتحكم', `${state.packages.length} باقة`, 'packagesList', state.packages.map(p=>`
+        <article class="row">
+          <div class="row-icon">PK</div><div><h4>${safeText(p.name)}</h4><p>${safeText(p.target)} · ${money(p.price)} ${safeText(p.currency)} · ${safeText(p.duration)} · ${p.autoActivate?'تفعيل تلقائي':'تفعيل يدوي'}</p></div>
+          <div class="row-actions">${statusBadge(p.status)}<button onclick="viewItem('packages',${p.id})">عرض</button><button class="ok" onclick="editItem('packages',${p.id})">تعديل السعر</button><button class="warn" onclick="togglePackage(${p.id})">${p.status==='نشط'?'إيقاف':'تفعيل'}</button></div>
+        </article>`).join(''))}`;
+    }
+
+    function offersHtml(){
+      return `
+        <section class="grid-3">
+          <div class="panel"><h3>العروض النشطة</h3><strong class="money">${state.offers.filter(o=>o.status==='نشط').length}</strong><p>كود خصم فعال</p></div>
+          <div class="panel"><h3>إجمالي الاستخدام</h3><strong class="money">${state.offers.reduce((s,o)=>s+o.uses,0)}</strong><p>مرة استخدام</p></div>
+          <div class="panel"><h3>أقوى خصم</h3><strong class="money">${Math.max(...state.offers.map(o=>o.discount))}</strong><p>أعلى قيمة خصم</p></div>
+        </section>
+        ${tablePanel('العروض والخصومات', `${state.offers.length} عرض`, 'offersList', state.offers.map(o=>`
+        <article class="row">
+          <div class="row-icon">%</div><div><h4>${safeText(o.title)}</h4><p>الكود: ${safeText(o.code)} · الخصم: ${safeText(o.discount)} ${safeText(o.type)} · يطبق على: ${safeText(o.appliesTo)} · استخدام ${o.uses}</p></div>
+          <div class="row-actions">${statusBadge(o.status)}<button onclick="viewItem('offers',${o.id})">عرض</button><button class="ok" onclick="editItem('offers',${o.id})">تعديل</button><button class="warn" onclick="toggleOffer(${o.id})">${o.status==='نشط'?'إيقاف':'تفعيل'}</button></div>
+        </article>`).join(''))}`;
+    }
+
+function reportsHtml(){
       const m=metrics();
       return `<section class="grid-2">
         <div class="panel"><div class="panel-head"><h3>تقرير مالي سريع</h3><span>مباشر</span></div>
@@ -537,6 +607,8 @@
           <p>عدد المسددين: <b>${m.paidCount}</b></p>
           <p>إيراد الخدمات: <b class="money">${money(m.serviceRevenue)} ريال</b></p>
           <p>عمولة المنصة: <b class="money">${money(m.commission)} ريال</b></p>
+          <p>الباقات النشطة: <b>${state.packages.filter(p=>p.status==='نشط').length}</b></p>
+          <p>العروض النشطة: <b>${state.offers.filter(o=>o.status==='نشط').length}</b></p>
           <button class="primary-btn" onclick="exportAdminReport()">تصدير تقرير JSON</button>
         </div>
         <div class="panel"><div class="panel-head"><h3>ملاحظات الإدارة</h3><span>داخلي</span></div>
@@ -589,8 +661,8 @@
       });
       closeEditModal(); render(); toast('تم حفظ التعديل');
     }
-    function collectionLabel(c){return ({users:'المستخدم',subscribers:'المشترك',payments:'السداد',ads:'الإعلان',services:'الخدمة',xs:'الإكسز'})[c] || c}
-    function fieldLabel(k){return ({id:'الرقم',name:'الاسم',email:'البريد',phone:'الجوال',role:'الدور',status:'الحالة',joined:'تاريخ التسجيل',city:'المدينة',notes:'ملاحظات',user:'المستخدم',plan:'الباقة',price:'السعر',start:'البداية',end:'النهاية',paid:'مسدد',payer:'المسدد',amount:'المبلغ',method:'طريقة السداد',reason:'سبب السداد',date:'التاريخ',ref:'رقم العملية',title:'العنوان',type:'النوع',owner:'صاحب الإعلان',promoted:'بالصدارة',views:'المشاهدات',client:'العميل',provider:'المقدم',commission:'عمولة المنصة'})[k] || k}
+    function collectionLabel(c){return ({users:'المستخدم',subscribers:'المشترك',payments:'السداد',ads:'الإعلان',services:'الخدمة',xs:'الإكسز',employees:'الموظف',packages:'الباقة',offers:'العرض'})[c] || c}
+    function fieldLabel(k){return ({id:'الرقم',name:'الاسم',email:'البريد',phone:'الجوال',role:'الدور',status:'الحالة',joined:'تاريخ التسجيل',city:'المدينة',notes:'ملاحظات',user:'المستخدم',plan:'الباقة',price:'السعر',start:'البداية',end:'النهاية',paid:'مسدد',payer:'المسدد',amount:'المبلغ',method:'طريقة السداد',reason:'سبب السداد',date:'التاريخ',ref:'رقم العملية',title:'العنوان',type:'النوع',owner:'صاحب الإعلان',promoted:'بالصدارة',views:'المشاهدات',client:'العميل',provider:'المقدم',commission:'عمولة المنصة',job:'المسمى الوظيفي',department:'القسم',permissions:'الصلاحيات',lastLogin:'آخر دخول',target:'الفئة المستهدفة',currency:'العملة',duration:'المدة',features:'المميزات',autoActivate:'تفعيل تلقائي',code:'كود الخصم',discount:'قيمة الخصم',appliesTo:'ينطبق على',uses:'عدد الاستخدامات',packageName:'الباقة'})[k] || k}
     function closeModal(){document.getElementById('detailsModal').classList.remove('show')}
     function closeEditModal(){document.getElementById('editModal').classList.remove('show'); state.editTarget=null}
     function openCreateModal(){
@@ -600,21 +672,81 @@
         <label class="field"><span>البريد</span><input id="newEmail"></label>
         <label class="field"><span>المبلغ</span><input id="newAmount" type="number"></label>
         <label class="field"><span>طريقة السداد</span><select id="newMethod"><option>بطاقة</option><option>تحويل</option><option>نقدي</option><option>Xs</option></select></label>
-        <label class="field full"><span>سبب السداد</span><input id="newReason" placeholder="اشتراك / شراء Xs / صدارة / خدمة"></label>
+        <label class="field"><span>الباقة</span><select id="newPackage">${state.packages.map(p=>`<option>${p.name}</option>`).join("")}</select></label>
+        <label class="field"><span>سبب السداد</span><input id="newReason" placeholder="اشتراك / شراء Xs / صدارة / خدمة"></label>
         <label class="field full"><span>ملاحظات</span><textarea id="newNotes"></textarea></label>
       </div><div class="row-actions" style="margin-top:14px"><button class="ok" onclick="createPayment()">حفظ عملية السداد</button><button onclick="closeEditModal()">إلغاء</button></div>`;
       document.getElementById('editModal').classList.add('show');
     }
     function createPayment(){
       const id=Math.max(...state.payments.map(p=>p.id))+1;
-      state.payments.unshift({id,payer:val('newPayer')||'مسدد جديد',email:val('newEmail')||'unknown@hirex.com',amount:Number(val('newAmount')||0),method:val('newMethod')||'بطاقة',reason:val('newReason')||'سداد يدوي',status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+(1000+id),notes:val('newNotes')});
-      closeEditModal(); setAdminTab('payments'); toast('تمت إضافة عملية السداد');
+      const payment={id,payer:val('newPayer')||'مسدد جديد',email:val('newEmail')||'unknown@hirex.com',amount:Number(val('newAmount')||0),method:val('newMethod')||'بطاقة',reason:val('newReason')||'سداد يدوي',packageName:val('newPackage')||inferPackageFromReason(val('newReason')),status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+(1000+id),notes:val('newNotes')};
+      state.payments.unshift(payment);
+      autoActivatePackageFromPayment(payment);
+      closeEditModal(); setAdminTab('payments'); toast('تمت إضافة عملية السداد وتفعيل الباقة');
     }
     function val(id){return (document.getElementById(id)?.value||'').trim()}
+    
+    function inferPackageFromReason(reason){
+      const r=String(reason||'').toLowerCase();
+      const found=state.packages.find(p=>r.includes(String(p.name).toLowerCase()));
+      return found ? found.name : '';
+    }
+    function autoActivatePackageFromPayment(payment){
+      if(!payment || payment.status!=='مكتمل') return;
+      const packageName = payment.packageName || inferPackageFromReason(payment.reason);
+      const pkg = state.packages.find(p=>p.name===packageName || String(payment.reason||'').includes(p.name));
+      if(!pkg || !pkg.autoActivate) return;
+
+      let sub = state.subscribers.find(s=>s.email===payment.email && s.plan===pkg.name);
+      const today = new Date();
+      const start = today.toISOString().slice(0,10);
+      const endDate = new Date(today);
+      endDate.setDate(endDate.getDate() + (pkg.duration.includes('30') ? 30 : 1));
+      const end = pkg.duration.includes('مرة') || pkg.duration.includes('رصيد') ? start : endDate.toISOString().slice(0,10);
+
+      if(sub){
+        sub.status='نشط';
+        sub.paid=true;
+        sub.price=payment.amount;
+        sub.start=start;
+        sub.end=end;
+        sub.activatedByPayment=payment.ref;
+      }else{
+        state.subscribers.unshift({
+          id:Date.now(),
+          user:payment.payer,
+          email:payment.email,
+          plan:pkg.name,
+          price:payment.amount,
+          status:'نشط',
+          start,
+          end,
+          paid:true,
+          activatedByPayment:payment.ref
+        });
+      }
+
+      if(pkg.name.includes('Xs') || payment.reason.includes('Xs')){
+        state.xs.unshift({id:Date.now(),user:payment.payer,type:'شراء '+pkg.name,amount:pkg.name.includes('300')?300:100,price:payment.amount,status:'مكتمل',date:start});
+      }
+    }
+    function toggleEmployee(id){const e=findItem('employees',id); if(e){e.status=e.status==='نشط'?'موقوف':'نشط';render();toast('تم تحديث حالة الموظف')}}
+    function togglePackage(id){const p=findItem('packages',id); if(p){p.status=p.status==='نشط'?'موقوف':'نشط';render();toast('تم تحديث حالة الباقة')}}
+    function toggleOffer(id){const o=findItem('offers',id); if(o){o.status=o.status==='نشط'?'موقوف':'نشط';render();toast('تم تحديث حالة العرض')}}
+
     function approveUser(id){const u=findItem('users',id); if(u){u.status='نشط';render();toast('تم اعتماد المستخدم')}}
     function blockUser(id){const u=findItem('users',id); if(u){u.status='موقوف';render();toast('تم إيقاف المستخدم')}}
     function markSubscriberPaid(id){const s=findItem('subscribers',id); if(s){s.paid=true;s.status='نشط';state.payments.unshift({id:Date.now(),payer:s.user,email:s.email,amount:s.price,method:'بطاقة',reason:'سداد اشتراك '+s.plan,status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+Date.now(),notes:'تم السداد من لوحة الإدارة'});render();toast('تم تسجيل السداد')}}
-    function confirmPayment(id){const p=findItem('payments',id); if(p){p.status='مكتمل';render();toast('تم تأكيد السداد')}}
+    function confirmPayment(id){
+      const p=findItem('payments',id);
+      if(p){
+        p.status='مكتمل';
+        autoActivatePackageFromPayment(p);
+        render();
+        toast('تم تأكيد السداد وتفعيل الباقة تلقائيًا');
+      }
+    }
     function rejectPayment(id){const p=findItem('payments',id); if(p){p.status='مرفوض';render();toast('تم رفض السداد')}}
     function approveAd(id){const a=findItem('ads',id); if(a){a.status='منشور';render();toast('تم نشر الإعلان')}}
     function rejectAd(id){const a=findItem('ads',id); if(a){a.status='مرفوض';render();toast('تم رفض الإعلان')}}
