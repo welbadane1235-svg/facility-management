@@ -4164,7 +4164,334 @@
  doc.open();
  doc.write('<!doctype html><html><head><meta charset="utf-8"><title>ATS CV</title>');
  doc.write('<style>body{font-family:Arial,sans-serif;color:#111;padding:28px;line-height:1.45}h1{font-size:26px}h2{font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;text-transform:uppercase}p,li{font-size:13px}ul{padding-left:20px}section{margin-bottom:16px}strong{display:block;margin-bottom:4px}</style>');
- doc.write('</head><body>' + html + '</body></html>');
+ doc.write('</head><body>' + html + '
+
+<script id="hirex-v9-root-auth-lock">
+(function(){
+  "use strict";
+
+  /*
+    V9 Root Auth Lock
+    الحل الجذري: لا نعتمد على accountState المحلي ولا على تسجيل ديمو.
+    السماح الحقيقي يكون فقط من Supabase Session + email_confirmed_at.
+  */
+
+  var protectedOverlayIds = [
+    'jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay',
+    'atsCvOverlay','xsStoreOverlay','paymentOverlay','platformChatOverlay',
+    'notificationsOverlay','myAdPreviewOverlay','promotionOverlay'
+  ];
+
+  var protectedTabs = {
+    jobs: 'فتح قسم الوظائف',
+    services: 'فتح قسم الخدمات',
+    post: 'إضافة أو إدارة إعلان',
+    account: 'فتح الحساب'
+  };
+
+  var protectedText = /(وظائف|خدمات|إعلاناتي|اعلاناتي|حسابي|إضافة|اضافة|نشر|حفظ|طلب|تقديم|تواصل|اتصال|واتساب|شراء|ترقية|دفع|إرسال|ارسال|سيرة|ATS|CV|عرض سعر|قدّم|قدم|مراسلة|رسالة|الإكسز|Xs|إشعارات|اشعارات)/i;
+  var protectedOnclick = /(openJobsModal|openServicesModal|openMyAdsModal|openAccountModal|saveCurrentAd|openPhoneModal|openPaymentModal|openPlatformChat|openAtsCvBuilder|openXsStore|openPromotionModal|openNotificationsModal|submit|order|apply|contact|pay|save)/i;
+
+  window.__hirexRootVerified = false;
+  window.__hirexRootChecking = true;
+  window.__hirexRootPendingAction = null;
+  window.__hirexRootAuthOpening = false;
+
+  function sb(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.HIREX_SUPABASE_URL || !window.HIREX_SUPABASE_ANON_KEY) return null;
+    if(!window.__hirexRootClient){
+      window.__hirexRootClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
+    }
+    return window.__hirexRootClient;
+  }
+
+  function setLocalLoggedOut(){
+    try{
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = false;
+      accountState.emailVerified = false;
+      if(!accountState.email || accountState.email === 'user@hirex.com') accountState.email = 'user@hirex.com';
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+    }catch(e){}
+  }
+
+  function setLocalLoggedIn(user){
+    try{
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = true;
+      accountState.emailVerified = true;
+      accountState.email = user.email;
+      accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+    }catch(e){}
+  }
+
+  function isVerified(){
+    return window.__hirexRootVerified === true;
+  }
+
+  async function refreshSession(){
+    var client = sb();
+    if(!client){
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      return false;
+    }
+    try{
+      var res = await client.auth.getSession();
+      var user = res && res.data && res.data.session && res.data.session.user;
+      if(user && user.email_confirmed_at){
+        window.__hirexRootVerified = true;
+        window.__hirexRootChecking = false;
+        setLocalLoggedIn(user);
+        return true;
+      }
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      if(user && !user.email_confirmed_at){
+        try{ await client.auth.signOut(); }catch(e){}
+      }
+      return false;
+    }catch(e){
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      return false;
+    }
+  }
+
+  function overlayReason(id){
+    return ({
+      jobsOverlay:'فتح قسم الوظائف',
+      servicesOverlay:'فتح قسم الخدمات',
+      myAdsOverlay:'إضافة أو إدارة إعلان',
+      accountOverlay:'فتح الحساب',
+      atsCvOverlay:'إنشاء سيرة ATS',
+      xsStoreOverlay:'شراء أو استخدام رصيد Xs',
+      paymentOverlay:'الدفع أو إرسال إثبات',
+      platformChatOverlay:'المراسلة داخل المنصة',
+      notificationsOverlay:'فتح الإشعارات',
+      myAdPreviewOverlay:'معاينة أو إدارة الإعلان',
+      promotionOverlay:'ترقية الإعلان'
+    })[id] || 'إكمال هذا الإجراء';
+  }
+
+  function closeProtectedOverlays(){
+    protectedOverlayIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){
+        el.classList.remove('show');
+        el.setAttribute('aria-hidden','true');
+        el.style.display = '';
+      }
+    });
+    try{
+      document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-tab') === 'home');
+      });
+    }catch(e){}
+  }
+
+  function showAuth(reason, callback){
+    if(isVerified()){
+      if(typeof callback === 'function') callback();
+      return true;
+    }
+    window.__hirexRootPendingAction = typeof callback === 'function' ? callback : null;
+    closeProtectedOverlays();
+    window.__hirexRootAuthOpening = true;
+
+    // استخدم نافذة V6 الحقيقية إن وجدت
+    try{
+      if(typeof window.hirexOpenAuth === 'function'){
+        window.hirexOpenAuth('سجّل دخولك وتحقق من بريدك لإكمال: ' + (reason || 'هذا الإجراء'), 'login');
+      }else if(typeof window.requireEmailLogin === 'function'){
+        window.requireEmailLogin(reason || 'هذا الإجراء', function(){});
+      }else{
+        var overlay = document.getElementById('hirexV6AuthOverlay') || document.getElementById('hxEmailAuthOverlay') || document.getElementById('loginGateOverlay');
+        if(overlay){
+          overlay.classList.add('show');
+          overlay.setAttribute('aria-hidden','false');
+          document.body.classList.add('modal-open');
+        }else{
+          alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+        }
+      }
+      var reasonEl = document.getElementById('v6AuthReason') || document.getElementById('hxEmailAuthReason') || document.getElementById('loginGateReason');
+      if(reasonEl) reasonEl.textContent = 'سجّل دخولك وتحقق من بريدك لإكمال: ' + (reason || 'هذا الإجراء');
+      setTimeout(function(){
+        var input = document.getElementById('v6AuthEmail') || document.getElementById('hxEmailAuthEmail') || document.getElementById('loginGateEmail');
+        if(input) input.focus();
+        window.__hirexRootAuthOpening = false;
+      },100);
+    }catch(e){
+      window.__hirexRootAuthOpening = false;
+      alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+    }
+    return false;
+  }
+
+  function runPendingIfReady(){
+    if(!isVerified()) return;
+    var action = window.__hirexRootPendingAction;
+    window.__hirexRootPendingAction = null;
+    if(typeof action === 'function') setTimeout(action, 120);
+  }
+
+  function insideAuth(el){
+    return !!(el && el.closest && el.closest('#hirexV6AuthOverlay,#hxEmailAuthOverlay,#loginGateOverlay'));
+  }
+
+  function textOf(el){
+    return ((el && (el.innerText || el.textContent)) || '').replace(/\s+/g,' ').trim();
+  }
+
+  function getReasonFromTarget(target){
+    if(!target || !target.closest) return '';
+    if(insideAuth(target)) return '';
+
+    var nav = target.closest('.bottom-nav .nav-item[data-tab]');
+    if(nav){
+      var tab = nav.getAttribute('data-tab');
+      if(tab === 'home') return '';
+      return protectedTabs[tab] || 'فتح هذا القسم';
+    }
+
+    var inProtectedOverlay = protectedOverlayIds.some(function(id){
+      var el = document.getElementById(id);
+      return el && el.classList.contains('show') && el.contains(target);
+    });
+    if(inProtectedOverlay) return 'إكمال هذا الإجراء';
+
+    var explicit = target.closest('[data-requires-auth="true"],.requires-auth,[data-auth-reason]');
+    if(explicit) return explicit.getAttribute('data-auth-reason') || textOf(explicit) || 'هذا الإجراء';
+
+    var clickable = target.closest('button,a,[role="button"],.btn,.primary,.secondary,.chip,.card,.ad-card,.service-card,.job-card,.card-action,.my-ad-type-card');
+    if(!clickable) return '';
+
+    var onclick = String(clickable.getAttribute('onclick') || '');
+    var href = String(clickable.getAttribute('href') || '');
+    var t = textOf(clickable);
+
+    // لا تقفل أزرار نافذة الدخول أو الرجوع/الإغلاق
+    if(/^(×|رجوع|عودة|إغلاق|اغلاق|دخول|إنشاء حساب|انشاء حساب|نسيت كلمة المرور|متابعة التصفح)$/i.test(t)) return '';
+
+    if(protectedOnclick.test(onclick) || protectedOnclick.test(href) || protectedText.test(t)) return t || 'هذا الإجراء';
+    return '';
+  }
+
+  function capture(e){
+    if(isVerified()) return;
+    var target = e.target;
+    var reason = getReasonFromTarget(target);
+    if(!reason) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+    return showAuth(reason, null);
+  }
+
+  // هذه هي الطبقة الجذرية: تمنع الضغط قبل أي كود قديم.
+  window.addEventListener('pointerdown', capture, true);
+  window.addEventListener('click', capture, true);
+  document.addEventListener('click', capture, true);
+
+  // إذا فتح كود قديم نافذة محمية رغم المنع، أغلقها فورًا وافتح تسجيل الدخول.
+  function observeOverlays(){
+    protectedOverlayIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el || el.__hirexV9Observed) return;
+      el.__hirexV9Observed = true;
+      var obs = new MutationObserver(function(){
+        if(isVerified()) return;
+        if(window.__hirexRootAuthOpening) return;
+        if(el.classList.contains('show') || el.getAttribute('aria-hidden') === 'false'){
+          el.classList.remove('show');
+          el.setAttribute('aria-hidden','true');
+          showAuth(overlayReason(id), null);
+        }
+      });
+      obs.observe(el, { attributes:true, attributeFilter:['class','style','aria-hidden'] });
+    });
+  }
+
+  function patchFunction(name, reason){
+    var tries = 0;
+    (function patch(){
+      tries++;
+      var fn = window[name];
+      if(typeof fn !== 'function'){
+        if(tries < 80) setTimeout(patch, 100);
+        return;
+      }
+      if(fn.__hirexV9Protected) return;
+      var original = fn;
+      var wrapped = function(){
+        var args = arguments;
+        if(isVerified()) return original.apply(window, args);
+        return showAuth(reason || 'هذا الإجراء', null);
+      };
+      wrapped.__hirexV9Protected = true;
+      window[name] = wrapped;
+    })();
+  }
+
+  function install(){
+    observeOverlays();
+    setLocalLoggedOut();
+    ['openJobsModal','openServicesModal','openMyAdsModal','openAccountModal','saveCurrentAd','openPhoneModal','openPaymentModal','openPlatformChat','openPlatformChatV15','openAtsCvBuilder','openXsStore','openPromotionModal','openNotificationsModal'].forEach(function(name){
+      patchFunction(name, ({
+        openJobsModal:'فتح قسم الوظائف',
+        openServicesModal:'فتح قسم الخدمات',
+        openMyAdsModal:'إضافة أو إدارة إعلان',
+        openAccountModal:'فتح الحساب',
+        saveCurrentAd:'حفظ أو نشر الإعلان',
+        openPhoneModal:'التواصل مع صاحب الإعلان',
+        openPaymentModal:'الدفع أو إرسال إثبات',
+        openPlatformChat:'المراسلة داخل المنصة',
+        openPlatformChatV15:'المراسلة داخل المنصة',
+        openAtsCvBuilder:'إنشاء سيرة ATS',
+        openXsStore:'شراء أو استخدام رصيد Xs',
+        openPromotionModal:'ترقية الإعلان',
+        openNotificationsModal:'فتح الإشعارات'
+      })[name]);
+    });
+  }
+
+  window.hirexIsVerifiedUser = isVerified;
+  window.hirexRequireVerifiedAction = function(reason, callback){ return showAuth(reason, callback); };
+  window.requireEmailLogin = function(reason, callback){ return showAuth(reason, callback); };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    install();
+    refreshSession().then(runPendingIfReady);
+    var client = sb();
+    if(client && client.auth && client.auth.onAuthStateChange){
+      client.auth.onAuthStateChange(function(_event, session){
+        var user = session && session.user;
+        if(user && user.email_confirmed_at){
+          window.__hirexRootVerified = true;
+          setLocalLoggedIn(user);
+          runPendingIfReady();
+        }else{
+          window.__hirexRootVerified = false;
+          setLocalLoggedOut();
+        }
+      });
+    }
+    setInterval(function(){ if(!isVerified()) setLocalLoggedOut(); }, 1000);
+  });
+
+  // احتياط لأن بعض الدوال تتعرف بعد DOMContentLoaded.
+  setTimeout(install, 300);
+  setTimeout(install, 1000);
+})();
+</script>
+
+</body></html>');
  doc.close();
  w.focus();
  setTimeout(() => w.print(), 250);
@@ -5399,241 +5726,259 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 
 
 
-<script id="hirex-v7-strict-auth-gate">
+
+
+<script id="hirex-v9-root-auth-lock">
 (function(){
   "use strict";
-  var protectedTabs = { post: 'إضافة أو إدارة إعلان', account: 'فتح حسابي', jobs: 'استعراض الوظائف والتقديم', services: 'استعراض الخدمات والطلب' };
-  var actionWords = /(إضافة|اضافة|نشر|حفظ|طلب|تقديم|تواصل|اتصال|واتساب|شراء|ترقية|دفع|إرسال|ارسال|حسابي|إعلاناتي|اعلاناتي|سيرة|ATS|CV|عرض سعر|قدّم|قدم)/i;
-  var safeWords = /(إغلاق|اغلاق|رجوع|عودة|متابعة التصفح|الرئيسية|دخول|إنشاء حساب|انشاء حساب|نسيت كلمة المرور|تحقق|OK|×)/i;
 
-  function isVerified(){
-    try{
-      if(window.accountState && window.accountState.isLoggedIn && window.accountState.email && window.accountState.emailVerified) return true;
-      if(window.hirexIsVerifiedUser && window.hirexIsVerifiedUser()) return true;
-    }catch(e){}
-    return false;
-  }
-  function openLogin(reason, callback){
-    if(isVerified()){
-      if(typeof callback === 'function') callback();
-      return true;
-    }
-    if(typeof window.requireEmailLogin === 'function') return window.requireEmailLogin(reason || 'هذا الإجراء', callback || null);
-    if(typeof window.hirexOpenAuth === 'function') return window.hirexOpenAuth('سجّل دخولك لإكمال: ' + (reason || 'هذا الإجراء'), 'login');
-    alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
-    return false;
-  }
-  function runTab(tab){
-    if(typeof window.hirexOpenTab === 'function') return window.hirexOpenTab(tab);
-    var map = {jobs:'jobsOverlay', services:'servicesOverlay', post:'myAdsOverlay', account:'accountOverlay'};
-    var id = map[tab], el = id && document.getElementById(id);
-    if(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open'); }
-  }
-  function textOf(el){ return ((el && (el.innerText || el.textContent)) || '').replace(/\s+/g,' ').trim(); }
-  function isInsideAuth(el){ return !!(el && el.closest && el.closest('#hirexV6AuthOverlay,#hxEmailAuthOverlay,#loginGateOverlay')); }
-  function looksProtected(el){
-    if(!el || !el.closest) return false;
-    if(isInsideAuth(el)) return false;
-    if(el.closest('.bottom-nav .nav-item[data-tab]')) return true;
-    var hit = el.closest('[data-requires-auth="true"], .requires-auth, [data-auth-reason]');
-    if(hit) return true;
-    var btn = el.closest('button,a,[role="button"],.btn,.primary,.secondary,.chip,.card-action');
-    if(!btn) return false;
-    var t = textOf(btn);
-    if(!t || safeWords.test(t)) return false;
-    var onclick = String(btn.getAttribute('onclick') || '');
-    if(/openMyAds|saveCurrentAd|openPhone|openPayment|openPlatformChat|openAts|openXs|Promotion|Apply|Order|Contact/i.test(onclick)) return true;
-    return actionWords.test(t);
-  }
-
-  window.hirexRequireVerifiedAction = openLogin;
-
-  window.addEventListener('click', function(e){
-    if(isVerified()) return;
-    var target = e.target;
-    if(isInsideAuth(target)) return;
-
-    var navBtn = target.closest && target.closest('.bottom-nav .nav-item[data-tab]');
-    if(navBtn){
-      var tab = navBtn.getAttribute('data-tab');
-      if(tab && tab !== 'home'){
-        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-        return openLogin(protectedTabs[tab] || 'فتح هذا القسم', function(){ runTab(tab); });
-      }
-      return;
-    }
-
-    if(looksProtected(target)){
-      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      var reason = target.closest('[data-auth-reason]')?.getAttribute('data-auth-reason') || textOf(target.closest('button,a,[role="button"],.btn,.primary,.secondary')) || 'هذا الإجراء';
-      return openLogin(reason, null);
-    }
-  }, true);
-
-  ['openAccountModal','openMyAdsModal','saveCurrentAd','openPhoneModal','openPaymentModal','openPlatformChat','openPlatformChatV15','openAtsCvBuilder','openXsStore','openPromotionModal'].forEach(function(name){
-    var tries = 0;
-    function patch(){
-      tries++;
-      var fn = window[name];
-      if(typeof fn !== 'function') { if(tries < 20) setTimeout(patch, 100); return; }
-      if(fn.__v7Protected) return;
-      var wrapped = function(){
-        var args = arguments;
-        return openLogin(name === 'openAccountModal' ? 'فتح حسابي' : 'إكمال هذا الإجراء', function(){ fn.apply(window, args); });
-      };
-      wrapped.__v7Protected = true;
-      window[name] = wrapped;
-    }
-    patch();
-  });
-})();
-</script>
-
-
-
-<script id="hirex-v8-absolute-auth-lock">
-(function(){
-  "use strict";
   /*
-    V8 absolute auth lock:
-    - Home is public.
-    - Every other bottom tab/action is blocked before older handlers run.
-    - Uses the real Supabase auth modal (hirexV6AuthOverlay), not old demo login.
+    V9 Root Auth Lock
+    الحل الجذري: لا نعتمد على accountState المحلي ولا على تسجيل ديمو.
+    السماح الحقيقي يكون فقط من Supabase Session + email_confirmed_at.
   */
+
+  var protectedOverlayIds = [
+    'jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay',
+    'atsCvOverlay','xsStoreOverlay','paymentOverlay','platformChatOverlay',
+    'notificationsOverlay','myAdPreviewOverlay','promotionOverlay'
+  ];
+
   var protectedTabs = {
     jobs: 'فتح قسم الوظائف',
     services: 'فتح قسم الخدمات',
     post: 'إضافة أو إدارة إعلان',
     account: 'فتح الحساب'
   };
-  var safeSelector = '#hirexV6AuthOverlay, #hxEmailAuthOverlay, #loginGateOverlay, .close-btn, [data-v6-mode], .email-auth-tab';
-  var safeText = /(الرئيسية|دخول|إنشاء حساب|انشاء حساب|نسيت كلمة المرور|متابعة التصفح|إغلاق|اغلاق|رجوع|عودة|تحقق|OK|×)/i;
-  var protectedText = /(وظائف|خدمات|إعلاناتي|اعلاناتي|حسابي|إضافة|اضافة|نشر|حفظ|طلب|تقديم|تواصل|اتصال|واتساب|شراء|ترقية|دفع|إرسال|ارسال|سيرة|ATS|CV|عرض سعر|قدّم|قدم|مراسلة|رسالة|الإكسز|Xs)/i;
-  var protectedOnclick = /(openJobsModal|openServicesModal|openMyAdsModal|openAccountModal|saveCurrentAd|openPhoneModal|openPaymentModal|openPlatformChat|openAtsCvBuilder|openXsStore|openPromotionModal|openNotificationsModal|confirmEmailLogin|submit|order|apply|contact|pay|save)/i;
 
-  function verified(){
-    try{
-      if(typeof window.hirexIsVerifiedUser === 'function' && window.hirexIsVerifiedUser()) return true;
-      if(window.accountState && window.accountState.isLoggedIn && window.accountState.emailVerified) return true;
-    }catch(e){}
-    return false;
+  var protectedText = /(وظائف|خدمات|إعلاناتي|اعلاناتي|حسابي|إضافة|اضافة|نشر|حفظ|طلب|تقديم|تواصل|اتصال|واتساب|شراء|ترقية|دفع|إرسال|ارسال|سيرة|ATS|CV|عرض سعر|قدّم|قدم|مراسلة|رسالة|الإكسز|Xs|إشعارات|اشعارات)/i;
+  var protectedOnclick = /(openJobsModal|openServicesModal|openMyAdsModal|openAccountModal|saveCurrentAd|openPhoneModal|openPaymentModal|openPlatformChat|openAtsCvBuilder|openXsStore|openPromotionModal|openNotificationsModal|submit|order|apply|contact|pay|save)/i;
+
+  window.__hirexRootVerified = false;
+  window.__hirexRootChecking = true;
+  window.__hirexRootPendingAction = null;
+  window.__hirexRootAuthOpening = false;
+
+  function sb(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.HIREX_SUPABASE_URL || !window.HIREX_SUPABASE_ANON_KEY) return null;
+    if(!window.__hirexRootClient){
+      window.__hirexRootClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
+    }
+    return window.__hirexRootClient;
   }
-  function ensureAuth(){
+
+  function setLocalLoggedOut(){
     try{
-      if(typeof window.hirexOpenAuth === 'function') return true;
-      if(typeof window.ensureAuthModal === 'function') return true;
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = false;
+      accountState.emailVerified = false;
+      if(!accountState.email || accountState.email === 'user@hirex.com') accountState.email = 'user@hirex.com';
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
     }catch(e){}
-    return false;
   }
-  function openAuth(reason, callback){
-    if(verified()){
+
+  function setLocalLoggedIn(user){
+    try{
+      window.accountState = window.accountState || {};
+      accountState.isLoggedIn = true;
+      accountState.emailVerified = true;
+      accountState.email = user.email;
+      accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+      if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+    }catch(e){}
+  }
+
+  function isVerified(){
+    return window.__hirexRootVerified === true;
+  }
+
+  async function refreshSession(){
+    var client = sb();
+    if(!client){
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      return false;
+    }
+    try{
+      var res = await client.auth.getSession();
+      var user = res && res.data && res.data.session && res.data.session.user;
+      if(user && user.email_confirmed_at){
+        window.__hirexRootVerified = true;
+        window.__hirexRootChecking = false;
+        setLocalLoggedIn(user);
+        return true;
+      }
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      if(user && !user.email_confirmed_at){
+        try{ await client.auth.signOut(); }catch(e){}
+      }
+      return false;
+    }catch(e){
+      window.__hirexRootVerified = false;
+      window.__hirexRootChecking = false;
+      setLocalLoggedOut();
+      return false;
+    }
+  }
+
+  function overlayReason(id){
+    return ({
+      jobsOverlay:'فتح قسم الوظائف',
+      servicesOverlay:'فتح قسم الخدمات',
+      myAdsOverlay:'إضافة أو إدارة إعلان',
+      accountOverlay:'فتح الحساب',
+      atsCvOverlay:'إنشاء سيرة ATS',
+      xsStoreOverlay:'شراء أو استخدام رصيد Xs',
+      paymentOverlay:'الدفع أو إرسال إثبات',
+      platformChatOverlay:'المراسلة داخل المنصة',
+      notificationsOverlay:'فتح الإشعارات',
+      myAdPreviewOverlay:'معاينة أو إدارة الإعلان',
+      promotionOverlay:'ترقية الإعلان'
+    })[id] || 'إكمال هذا الإجراء';
+  }
+
+  function closeProtectedOverlays(){
+    protectedOverlayIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){
+        el.classList.remove('show');
+        el.setAttribute('aria-hidden','true');
+        el.style.display = '';
+      }
+    });
+    try{
+      document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-tab') === 'home');
+      });
+    }catch(e){}
+  }
+
+  function showAuth(reason, callback){
+    if(isVerified()){
       if(typeof callback === 'function') callback();
       return true;
     }
+    window.__hirexRootPendingAction = typeof callback === 'function' ? callback : null;
+    closeProtectedOverlays();
+    window.__hirexRootAuthOpening = true;
+
+    // استخدم نافذة V6 الحقيقية إن وجدت
     try{
-      window.__hirexV8PendingAction = callback || null;
-      window.__hirexV8PendingReason = reason || 'إكمال هذا الإجراء';
       if(typeof window.hirexOpenAuth === 'function'){
-        window.hirexOpenAuth('سجّل دخولك لإكمال: ' + window.__hirexV8PendingReason, 'login');
-        return false;
+        window.hirexOpenAuth('سجّل دخولك وتحقق من بريدك لإكمال: ' + (reason || 'هذا الإجراء'), 'login');
+      }else if(typeof window.requireEmailLogin === 'function'){
+        window.requireEmailLogin(reason || 'هذا الإجراء', function(){});
+      }else{
+        var overlay = document.getElementById('hirexV6AuthOverlay') || document.getElementById('hxEmailAuthOverlay') || document.getElementById('loginGateOverlay');
+        if(overlay){
+          overlay.classList.add('show');
+          overlay.setAttribute('aria-hidden','false');
+          document.body.classList.add('modal-open');
+        }else{
+          alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+        }
       }
-      var overlay = document.getElementById('hirexV6AuthOverlay') || document.getElementById('hxEmailAuthOverlay') || document.getElementById('loginGateOverlay');
-      if(overlay){
-        overlay.classList.add('show');
-        overlay.setAttribute('aria-hidden','false');
-        document.body.classList.add('modal-open');
-        var reasonEl = document.getElementById('v6AuthReason') || document.getElementById('hxEmailAuthReason') || document.getElementById('loginGateReason');
-        if(reasonEl) reasonEl.textContent = 'سجّل دخولك لإكمال: ' + window.__hirexV8PendingReason;
-        setTimeout(function(){
-          var input = document.getElementById('v6AuthEmail') || document.getElementById('hxEmailAuthEmail') || document.getElementById('loginGateEmail');
-          if(input) input.focus();
-        },80);
-        return false;
-      }
-    }catch(e){}
-    alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+      var reasonEl = document.getElementById('v6AuthReason') || document.getElementById('hxEmailAuthReason') || document.getElementById('loginGateReason');
+      if(reasonEl) reasonEl.textContent = 'سجّل دخولك وتحقق من بريدك لإكمال: ' + (reason || 'هذا الإجراء');
+      setTimeout(function(){
+        var input = document.getElementById('v6AuthEmail') || document.getElementById('hxEmailAuthEmail') || document.getElementById('loginGateEmail');
+        if(input) input.focus();
+        window.__hirexRootAuthOpening = false;
+      },100);
+    }catch(e){
+      window.__hirexRootAuthOpening = false;
+      alert('يرجى تسجيل الدخول وتأكيد البريد الإلكتروني لإكمال هذا الإجراء.');
+    }
     return false;
   }
 
-  // Replace any older demo gate with strict verified gate.
-  window.requireEmailLogin = function(reason, callback){ return openAuth(reason || 'هذا الإجراء', callback || null); };
-  window.hirexRequireVerifiedAction = window.requireEmailLogin;
-
-  function closeVisibleProtectedOverlays(){
-    ['jobsOverlay','servicesOverlay','myAdsOverlay','accountOverlay','atsCvOverlay','notificationsOverlay'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
-    });
-  }
-  function openRealTab(tab){
-    closeVisibleProtectedOverlays();
-    if(tab === 'jobs'){
-      if(typeof window.openJobsModal === 'function') return window.openJobsModal();
-      var j=document.getElementById('jobsOverlay'); if(j){j.classList.add('show');j.setAttribute('aria-hidden','false');}
-    }
-    if(tab === 'services'){
-      if(typeof window.openServicesModal === 'function') return window.openServicesModal();
-      var s=document.getElementById('servicesOverlay'); if(s){s.classList.add('show');s.setAttribute('aria-hidden','false');}
-    }
-    if(tab === 'post'){
-      if(typeof window.openMyAdsModal === 'function') return window.openMyAdsModal();
-      var m=document.getElementById('myAdsOverlay'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
-    }
-    if(tab === 'account'){
-      if(typeof window.openAccountModal === 'function') return window.openAccountModal();
-      var a=document.getElementById('accountOverlay'); if(a){a.classList.add('show');a.setAttribute('aria-hidden','false');}
-    }
+  function runPendingIfReady(){
+    if(!isVerified()) return;
+    var action = window.__hirexRootPendingAction;
+    window.__hirexRootPendingAction = null;
+    if(typeof action === 'function') setTimeout(action, 120);
   }
 
-  function textOf(el){ return ((el && (el.innerText || el.textContent)) || '').replace(/\s+/g,' ').trim(); }
-  function insideAuth(el){ return !!(el && el.closest && el.closest('#hirexV6AuthOverlay,#hxEmailAuthOverlay,#loginGateOverlay')); }
-  function isSafe(el){
-    if(!el || !el.closest) return false;
-    if(insideAuth(el)) return true;
-    if(el.closest(safeSelector)) return true;
-    var t = textOf(el.closest('button,a,[role="button"],.nav-item,.btn,.primary,.secondary') || el);
-    return !!(t && safeText.test(t) && !protectedText.test(t));
+  function insideAuth(el){
+    return !!(el && el.closest && el.closest('#hirexV6AuthOverlay,#hxEmailAuthOverlay,#loginGateOverlay'));
   }
-  function protectedReason(el){
-    if(!el || !el.closest) return '';
-    var nav = el.closest('.bottom-nav .nav-item[data-tab]');
+
+  function textOf(el){
+    return ((el && (el.innerText || el.textContent)) || '').replace(/\s+/g,' ').trim();
+  }
+
+  function getReasonFromTarget(target){
+    if(!target || !target.closest) return '';
+    if(insideAuth(target)) return '';
+
+    var nav = target.closest('.bottom-nav .nav-item[data-tab]');
     if(nav){
       var tab = nav.getAttribute('data-tab');
       if(tab === 'home') return '';
       return protectedTabs[tab] || 'فتح هذا القسم';
     }
-    var explicit = el.closest('[data-requires-auth="true"],.requires-auth,[data-auth-reason]');
+
+    var inProtectedOverlay = protectedOverlayIds.some(function(id){
+      var el = document.getElementById(id);
+      return el && el.classList.contains('show') && el.contains(target);
+    });
+    if(inProtectedOverlay) return 'إكمال هذا الإجراء';
+
+    var explicit = target.closest('[data-requires-auth="true"],.requires-auth,[data-auth-reason]');
     if(explicit) return explicit.getAttribute('data-auth-reason') || textOf(explicit) || 'هذا الإجراء';
-    var clickable = el.closest('button,a,[role="button"],.btn,.primary,.secondary,.chip,.card,.ad-card,.service-card,.job-card,.card-action');
-    if(!clickable || isSafe(clickable)) return '';
+
+    var clickable = target.closest('button,a,[role="button"],.btn,.primary,.secondary,.chip,.card,.ad-card,.service-card,.job-card,.card-action,.my-ad-type-card');
+    if(!clickable) return '';
+
     var onclick = String(clickable.getAttribute('onclick') || '');
     var href = String(clickable.getAttribute('href') || '');
     var t = textOf(clickable);
+
+    // لا تقفل أزرار نافذة الدخول أو الرجوع/الإغلاق
+    if(/^(×|رجوع|عودة|إغلاق|اغلاق|دخول|إنشاء حساب|انشاء حساب|نسيت كلمة المرور|متابعة التصفح)$/i.test(t)) return '';
+
     if(protectedOnclick.test(onclick) || protectedOnclick.test(href) || protectedText.test(t)) return t || 'هذا الإجراء';
     return '';
   }
 
   function capture(e){
-    if(verified()) return;
+    if(isVerified()) return;
     var target = e.target;
-    if(insideAuth(target)) return;
-    var reason = protectedReason(target);
+    var reason = getReasonFromTarget(target);
     if(!reason) return;
     e.preventDefault();
     e.stopPropagation();
     if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-    var nav = target.closest && target.closest('.bottom-nav .nav-item[data-tab]');
-    if(nav){
-      var tab = nav.getAttribute('data-tab');
-      return openAuth(reason, function(){ openRealTab(tab); });
-    }
-    return openAuth(reason, null);
+    return showAuth(reason, null);
   }
 
-  // Register on window and document in capture mode to beat old inline/document handlers.
+  // هذه هي الطبقة الجذرية: تمنع الضغط قبل أي كود قديم.
+  window.addEventListener('pointerdown', capture, true);
   window.addEventListener('click', capture, true);
   document.addEventListener('click', capture, true);
-  window.addEventListener('pointerdown', capture, true);
+
+  // إذا فتح كود قديم نافذة محمية رغم المنع، أغلقها فورًا وافتح تسجيل الدخول.
+  function observeOverlays(){
+    protectedOverlayIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el || el.__hirexV9Observed) return;
+      el.__hirexV9Observed = true;
+      var obs = new MutationObserver(function(){
+        if(isVerified()) return;
+        if(window.__hirexRootAuthOpening) return;
+        if(el.classList.contains('show') || el.getAttribute('aria-hidden') === 'false'){
+          el.classList.remove('show');
+          el.setAttribute('aria-hidden','true');
+          showAuth(overlayReason(id), null);
+        }
+      });
+      obs.observe(el, { attributes:true, attributeFilter:['class','style','aria-hidden'] });
+    });
+  }
 
   function patchFunction(name, reason){
     var tries = 0;
@@ -5641,38 +5986,70 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
       tries++;
       var fn = window[name];
       if(typeof fn !== 'function'){
-        if(tries < 50) setTimeout(patch, 100);
+        if(tries < 80) setTimeout(patch, 100);
         return;
       }
-      if(fn.__hirexV8Protected) return;
+      if(fn.__hirexV9Protected) return;
       var original = fn;
       var wrapped = function(){
         var args = arguments;
-        return openAuth(reason || 'هذا الإجراء', function(){ original.apply(window, args); });
+        if(isVerified()) return original.apply(window, args);
+        return showAuth(reason || 'هذا الإجراء', null);
       };
-      wrapped.__hirexV8Protected = true;
+      wrapped.__hirexV9Protected = true;
       window[name] = wrapped;
     })();
   }
 
-  patchFunction('openJobsModal','فتح قسم الوظائف');
-  patchFunction('openServicesModal','فتح قسم الخدمات');
-  patchFunction('openMyAdsModal','إضافة أو إدارة إعلان');
-  patchFunction('openAccountModal','فتح الحساب');
-  patchFunction('saveCurrentAd','حفظ أو نشر الإعلان');
-  patchFunction('openPhoneModal','التواصل مع صاحب الإعلان');
-  patchFunction('openPaymentModal','طلب خدمة أو إرسال عرض');
-  patchFunction('openPlatformChat','المراسلة داخل المنصة');
-  patchFunction('openPlatformChatV15','المراسلة داخل المنصة');
-  patchFunction('openAtsCvBuilder','إنشاء سيرة ذاتية ATS');
-  patchFunction('openXsStore','شراء أو استخدام رصيد Xs');
-  patchFunction('openPromotionModal','ترقية الإعلان');
-  patchFunction('openNotificationsModal','فتح الإشعارات');
+  function install(){
+    observeOverlays();
+    setLocalLoggedOut();
+    ['openJobsModal','openServicesModal','openMyAdsModal','openAccountModal','saveCurrentAd','openPhoneModal','openPaymentModal','openPlatformChat','openPlatformChatV15','openAtsCvBuilder','openXsStore','openPromotionModal','openNotificationsModal'].forEach(function(name){
+      patchFunction(name, ({
+        openJobsModal:'فتح قسم الوظائف',
+        openServicesModal:'فتح قسم الخدمات',
+        openMyAdsModal:'إضافة أو إدارة إعلان',
+        openAccountModal:'فتح الحساب',
+        saveCurrentAd:'حفظ أو نشر الإعلان',
+        openPhoneModal:'التواصل مع صاحب الإعلان',
+        openPaymentModal:'الدفع أو إرسال إثبات',
+        openPlatformChat:'المراسلة داخل المنصة',
+        openPlatformChatV15:'المراسلة داخل المنصة',
+        openAtsCvBuilder:'إنشاء سيرة ATS',
+        openXsStore:'شراء أو استخدام رصيد Xs',
+        openPromotionModal:'ترقية الإعلان',
+        openNotificationsModal:'فتح الإشعارات'
+      })[name]);
+    });
+  }
 
-  window.addEventListener('DOMContentLoaded', function(){
-    closeVisibleProtectedOverlays();
-    document.querySelectorAll('.bottom-nav .nav-item[data-tab]').forEach(function(btn){ btn.setAttribute('type','button'); });
+  window.hirexIsVerifiedUser = isVerified;
+  window.hirexRequireVerifiedAction = function(reason, callback){ return showAuth(reason, callback); };
+  window.requireEmailLogin = function(reason, callback){ return showAuth(reason, callback); };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    install();
+    refreshSession().then(runPendingIfReady);
+    var client = sb();
+    if(client && client.auth && client.auth.onAuthStateChange){
+      client.auth.onAuthStateChange(function(_event, session){
+        var user = session && session.user;
+        if(user && user.email_confirmed_at){
+          window.__hirexRootVerified = true;
+          setLocalLoggedIn(user);
+          runPendingIfReady();
+        }else{
+          window.__hirexRootVerified = false;
+          setLocalLoggedOut();
+        }
+      });
+    }
+    setInterval(function(){ if(!isVerified()) setLocalLoggedOut(); }, 1000);
   });
+
+  // احتياط لأن بعض الدوال تتعرف بعد DOMContentLoaded.
+  setTimeout(install, 300);
+  setTimeout(install, 1000);
 })();
 </script>
 
