@@ -2053,6 +2053,149 @@
       pointer-events:none;
     }
 
+  
+    /* V33 Email Login Gate */
+    .login-gate-window{
+      border-color:rgba(0,234,240,.36)!important;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(0,234,240,.14),transparent 34%),
+        linear-gradient(180deg,rgba(3,20,22,.98),rgba(1,5,6,.99))!important;
+    }
+    .login-gate-head{
+      min-height:86px!important;
+      border-bottom:1px solid rgba(0,234,240,.18)!important;
+    }
+    .login-gate-icon{
+      background:transparent!important;
+      border:1px solid rgba(0,234,240,.32)!important;
+      color:#00EAF0!important;
+      font-size:15px!important;
+      letter-spacing:-1px;
+      box-shadow:0 0 22px rgba(0,234,240,.16)!important;
+      direction:ltr;
+    }
+    .login-gate-body{
+      padding:16px!important;
+    }
+    .login-gate-card{
+      border-radius:28px;
+      border:1px solid rgba(0,234,240,.28);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(0,234,240,.12),transparent 34%),
+        linear-gradient(145deg,rgba(3,30,32,.94),rgba(3,9,11,.96));
+      padding:18px;
+      display:grid;
+      gap:13px;
+      box-shadow:0 18px 52px rgba(0,0,0,.45), inset 0 0 24px rgba(0,234,240,.035);
+    }
+    .login-gate-logo{
+      display:grid;
+      justify-items:center;
+      gap:4px;
+      margin-bottom:4px;
+      direction:ltr;
+    }
+    .login-hrx{
+      color:#00EAF0;
+      font-family:Georgia,serif;
+      font-size:54px;
+      line-height:.82;
+      letter-spacing:-6px;
+      text-shadow:0 0 18px rgba(0,234,240,.72);
+    }
+    .login-hrx span{
+      font-style:italic;
+      display:inline-block;
+      transform:translateX(-5px);
+    }
+    .login-gate-logo small{
+      color:#00EAF0;
+      letter-spacing:7px;
+      font-size:12px;
+      text-shadow:0 0 12px rgba(0,234,240,.72);
+    }
+    .login-gate-card h3{
+      text-align:center;
+      font-size:22px;
+      line-height:1.25;
+      font-weight:900;
+      color:#fff;
+    }
+    .login-gate-card p{
+      text-align:center;
+      color:#d5e2e2;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:700;
+    }
+    .login-field{
+      display:grid;
+      gap:6px;
+    }
+    .login-field span{
+      color:#A7F3E1;
+      font-size:12px;
+      font-weight:900;
+    }
+    .login-field input{
+      width:100%;
+      height:50px;
+      border-radius:17px;
+      border:1px solid rgba(0,234,240,.18);
+      background:#061011;
+      color:#fff;
+      padding:0 13px;
+      outline:none;
+      font-family:inherit;
+      font-weight:800;
+      direction:ltr;
+      text-align:left;
+    }
+    .login-field input:focus{
+      border-color:rgba(0,234,240,.55);
+      box-shadow:0 0 0 3px rgba(0,234,240,.08);
+    }
+    .login-submit,
+    .login-secondary{
+      min-height:50px;
+      border-radius:17px;
+      font-family:inherit;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .login-submit{
+      border:0;
+      background:linear-gradient(180deg,#22F0EE,#04B8C4);
+      color:#03120f;
+      box-shadow:0 0 24px rgba(0,234,240,.18);
+    }
+    .login-secondary{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.045);
+      color:#fff;
+    }
+    .login-note{
+      border-radius:16px;
+      border:1px solid rgba(245,200,111,.22);
+      background:rgba(245,200,111,.10);
+      color:#f6e5ba;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:800;
+      text-align:center;
+      line-height:1.5;
+    }
+    .account-status.logged-in{
+      background:rgba(0,234,240,.12)!important;
+      border-color:rgba(0,234,240,.32)!important;
+      color:#00EAF0!important;
+    }
+    .account-status.logged-out{
+      background:rgba(245,200,111,.10)!important;
+      border-color:rgba(245,200,111,.24)!important;
+      color:#f6e5ba!important;
+    }
+
   </style>
 </head>
 <body>
@@ -3763,7 +3906,44 @@
     strong{display:block;margin-bottom:4px}
   </style>
 </head>
-<body>${preview.innerHTML}</body>
+<body>${preview.innerHTML}
+  <div class="overlay" id="loginGateOverlay" aria-hidden="true">
+    <section class="window phone login-gate-window" role="dialog" aria-modal="true">
+      <header class="window-head login-gate-head">
+        <div class="win-title">
+          <div class="win-icon login-gate-icon">HRX</div>
+          <div>
+            <h2>تسجيل الدخول</h2>
+            <p id="loginGateReason">سجّل بإيميلك لاستخدام الخدمة</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeLoginGate()">×</button>
+      </header>
+      <div class="window-body login-gate-body">
+        <section class="login-gate-card">
+          <div class="login-gate-logo">
+            <div class="login-hrx">HR<span>X</span></div>
+            <small>H i R E X</small>
+          </div>
+          <h3>تصفح بحرية، وسجّل عند الاستخدام</h3>
+          <p>يمكنك تصفح الوظائف والخدمات بدون حساب. عند التواصل أو نشر إعلان أو طلب خدمة، نحتاج بريدك لحفظ بياناتك داخل المنصة.</p>
+          <label class="login-field">
+            <span>البريد الإلكتروني</span>
+            <input id="loginGateEmail" type="email" placeholder="example@email.com" autocomplete="email">
+          </label>
+          <label class="login-field">
+            <span>الاسم اختياري</span>
+            <input id="loginGateName" placeholder="اسمك أو اسم الشركة">
+          </label>
+          <button type="button" class="login-submit" onclick="confirmEmailLogin()">الدخول واستخدام الخدمة</button>
+          <button type="button" class="login-secondary" onclick="closeLoginGate()">متابعة التصفح فقط</button>
+          <div class="login-note">لاحقًا سيتم ربطها بتأكيد البريد من Supabase. الآن تعمل كتجربة داخلية آمنة.</div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+</body>
 </html>`;
       w.document.open();
       w.document.write(printHtml);
@@ -3796,7 +3976,8 @@
       email: 'user@hirex.com',
       phone: '',
       role: 'باحث عن عمل',
-      bio: ''
+      bio: '',
+      isLoggedIn: false
     };
 
     function openAccountModal(){
@@ -3974,6 +4155,194 @@
         accountBtn.dataset.v32ready = '1';
       }
     });
+
+
+    /* V33 Email login gate for protected actions */
+    let pendingLoginAction = null;
+    let pendingLoginReason = '';
+
+    function isLoggedIn(){
+      return !!(accountState && accountState.isLoggedIn && accountState.email);
+    }
+
+    function requireEmailLogin(reason, callback){
+      if(isLoggedIn()){
+        if(typeof callback === 'function') callback();
+        return true;
+      }
+      pendingLoginAction = callback || null;
+      pendingLoginReason = reason || 'استخدام الخدمة';
+      const reasonEl = document.getElementById('loginGateReason');
+      if(reasonEl) reasonEl.textContent = 'سجّل بإيميلك من أجل: ' + pendingLoginReason;
+      const emailEl = document.getElementById('loginGateEmail');
+      const nameEl = document.getElementById('loginGateName');
+      if(emailEl && accountState.email && accountState.email !== 'user@hirex.com') emailEl.value = accountState.email;
+      if(nameEl && accountState.name && accountState.name !== 'مستخدم HireX') nameEl.value = accountState.name;
+      showOverlay('loginGateOverlay');
+      setTimeout(()=>document.getElementById('loginGateEmail')?.focus(), 80);
+      return false;
+    }
+
+    function closeLoginGate(){
+      hideOverlay('loginGateOverlay');
+      pendingLoginAction = null;
+      pendingLoginReason = '';
+    }
+
+    function validEmail(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+    }
+
+    function confirmEmailLogin(){
+      const email = (document.getElementById('loginGateEmail')?.value || '').trim();
+      const name = (document.getElementById('loginGateName')?.value || '').trim();
+
+      if(!validEmail(email)){
+        showMiniNotice('اكتب بريد إلكتروني صحيح.');
+        return;
+      }
+
+      accountState.isLoggedIn = true;
+      accountState.email = email;
+      accountState.name = name || email.split('@')[0] || 'مستخدم HireX';
+      if(!accountState.role || accountState.role === 'باحث / مقدم خدمة / صاحب عمل') accountState.role = 'باحث عن عمل';
+
+      hideOverlay('loginGateOverlay');
+      syncAccountUi?.();
+
+      const action = pendingLoginAction;
+      pendingLoginAction = null;
+      pendingLoginReason = '';
+
+      showMiniNotice('تم تسجيل الدخول بالإيميل بنجاح.');
+      if(typeof action === 'function'){
+        setTimeout(action, 120);
+      }
+    }
+
+    document.getElementById('loginGateOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeLoginGate();
+    });
+
+    document.getElementById('loginGateEmail')?.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') confirmEmailLogin();
+    });
+
+    // Extend account state safely
+    if(typeof accountState !== 'undefined' && !('isLoggedIn' in accountState)){
+      accountState.isLoggedIn = false;
+    }
+
+    // Patch account UI sync to show login status
+    if(typeof syncAccountUi === 'function' && !window.__syncAccountUiOriginal){
+      window.__syncAccountUiOriginal = syncAccountUi;
+      syncAccountUi = function(){
+        window.__syncAccountUiOriginal();
+        const status = document.querySelector('#accountOverlay .account-status');
+        if(status){
+          status.textContent = isLoggedIn() ? 'مسجل' : 'زائر';
+          status.classList.toggle('logged-in', isLoggedIn());
+          status.classList.toggle('logged-out', !isLoggedIn());
+        }
+        const logout = document.querySelector('#accountOverlay .logout-btn');
+        if(logout) logout.textContent = isLoggedIn() ? 'تسجيل الخروج' : 'تسجيل الدخول بالإيميل';
+      };
+    }
+
+    // Protected actions: browsing is free, actual use requires email.
+    if(typeof openMyAdsModal === 'function' && !window.__openMyAdsModalOriginal){
+      window.__openMyAdsModalOriginal = openMyAdsModal;
+      openMyAdsModal = function(){
+        return requireEmailLogin('نشر أو إدارة إعلان', function(){
+          window.__openMyAdsModalOriginal();
+        });
+      };
+    }
+
+    if(typeof openAtsCvBuilder === 'function' && !window.__openAtsCvBuilderOriginal){
+      window.__openAtsCvBuilderOriginal = openAtsCvBuilder;
+      openAtsCvBuilder = function(){
+        return requireEmailLogin('صناعة سيرة ذاتية ATS', function(){
+          window.__openAtsCvBuilderOriginal();
+        });
+      };
+    }
+
+    if(typeof openXsStore === 'function' && !window.__openXsStoreOriginal){
+      window.__openXsStoreOriginal = openXsStore;
+      openXsStore = function(){
+        return requireEmailLogin('شراء الإكسز Xs', function(){
+          window.__openXsStoreOriginal();
+        });
+      };
+    }
+
+    if(typeof openPhoneModal === 'function' && !window.__openPhoneModalOriginal){
+      window.__openPhoneModalOriginal = openPhoneModal;
+      openPhoneModal = function(phone){
+        return requireEmailLogin('عرض رقم الجوال والتواصل', function(){
+          window.__openPhoneModalOriginal(phone);
+        });
+      };
+    }
+
+    if(typeof openPaymentModal === 'function' && !window.__openPaymentModalOriginal){
+      window.__openPaymentModalOriginal = openPaymentModal;
+      openPaymentModal = function(id){
+        return requireEmailLogin('طلب خدمة أو تقديم عرض', function(){
+          window.__openPaymentModalOriginal(id);
+        });
+      };
+    }
+
+    if(typeof openPlatformChatV15 === 'function' && !window.__openPlatformChatV15Original){
+      window.__openPlatformChatV15Original = openPlatformChatV15;
+      openPlatformChatV15 = function(serviceId){
+        return requireEmailLogin('المراسلة داخل المنصة', function(){
+          window.__openPlatformChatV15Original(serviceId);
+        });
+      };
+    }
+
+    if(typeof openPlatformChat === 'function' && !window.__openPlatformChatOriginal){
+      window.__openPlatformChatOriginal = openPlatformChat;
+      openPlatformChat = function(serviceId){
+        return requireEmailLogin('المراسلة داخل المنصة', function(){
+          window.__openPlatformChatOriginal(serviceId);
+        });
+      };
+    }
+
+    // Account tab: if visitor, open account page but show login status and allow login button.
+    if(typeof accountLogout === 'function' && !window.__accountLogoutOriginal){
+      window.__accountLogoutOriginal = accountLogout;
+      accountLogout = function(){
+        if(!isLoggedIn()){
+          return requireEmailLogin('تفعيل حسابي', function(){
+            openAccountModal?.();
+          });
+        }
+        if(confirm('هل تريد تسجيل الخروج؟')){
+          accountState.isLoggedIn = false;
+          accountState.email = 'user@hirex.com';
+          accountState.name = 'مستخدم HireX';
+          accountState.phone = '';
+          accountState.role = 'باحث عن عمل';
+          syncAccountUi?.();
+          showMiniNotice('تم تسجيل الخروج.');
+        }
+      };
+    }
+
+    // Direct "save/publish" guard if modal is somehow opened.
+    if(typeof saveCurrentAd === 'function' && !window.__saveCurrentAdOriginal){
+      window.__saveCurrentAdOriginal = saveCurrentAd;
+      saveCurrentAd = function(status){
+        return requireEmailLogin(status === 'published' ? 'نشر إعلان' : 'حفظ مسودة', function(){
+          window.__saveCurrentAdOriginal(status);
+        });
+      };
+    }
 
 </script>
 
@@ -4217,6 +4586,43 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
         </section>
 
         <button type="button" class="logout-btn" onclick="accountLogout()">تسجيل الخروج</button>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="loginGateOverlay" aria-hidden="true">
+    <section class="window phone login-gate-window" role="dialog" aria-modal="true">
+      <header class="window-head login-gate-head">
+        <div class="win-title">
+          <div class="win-icon login-gate-icon">HRX</div>
+          <div>
+            <h2>تسجيل الدخول</h2>
+            <p id="loginGateReason">سجّل بإيميلك لاستخدام الخدمة</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeLoginGate()">×</button>
+      </header>
+      <div class="window-body login-gate-body">
+        <section class="login-gate-card">
+          <div class="login-gate-logo">
+            <div class="login-hrx">HR<span>X</span></div>
+            <small>H i R E X</small>
+          </div>
+          <h3>تصفح بحرية، وسجّل عند الاستخدام</h3>
+          <p>يمكنك تصفح الوظائف والخدمات بدون حساب. عند التواصل أو نشر إعلان أو طلب خدمة، نحتاج بريدك لحفظ بياناتك داخل المنصة.</p>
+          <label class="login-field">
+            <span>البريد الإلكتروني</span>
+            <input id="loginGateEmail" type="email" placeholder="example@email.com" autocomplete="email">
+          </label>
+          <label class="login-field">
+            <span>الاسم اختياري</span>
+            <input id="loginGateName" placeholder="اسمك أو اسم الشركة">
+          </label>
+          <button type="button" class="login-submit" onclick="confirmEmailLogin()">الدخول واستخدام الخدمة</button>
+          <button type="button" class="login-secondary" onclick="closeLoginGate()">متابعة التصفح فقط</button>
+          <div class="login-note">لاحقًا سيتم ربطها بتأكيد البريد من Supabase. الآن تعمل كتجربة داخلية آمنة.</div>
+        </section>
       </div>
     </section>
   </div>
