@@ -2555,7 +2555,7 @@
  <h4>شركات وأصحاب أعمال</h4>
  <p>اعثر على أفضل المواهب أو الخدمات التي تدعم نمو أعمالك بسهولة.</p>
  </div>
- <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 54V18l21-6v42M35 24h15v30M22 25h5M22 35h5M22 45h5M42 34h4M42 44h4M10 54h46"/></svg></div>
+ <div class="promo-art neon-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 54V21l21-6v42M35 24h15v30M22 25h5M22 35h5M22 45h5M42 34h4M42 44h4M10 54h46"/></svg></div>
  </article>
 
  <article class="promo reference-card">
@@ -3811,16 +3811,7 @@
  }
 
  function showMiniNotice(message){
- try{
-   var old = document.getElementById('hirexMiniToast');
-   if(old) old.remove();
-   var t = document.createElement('div');
-   t.id = 'hirexMiniToast';
-   t.textContent = message || '';
-   t.style.cssText = 'position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:2147483646;max-width:calc(100% - 32px);padding:12px 16px;border-radius:16px;border:1px solid rgba(0,234,240,.35);background:rgba(3,20,22,.96);color:#fff;font-weight:900;font-size:13px;box-shadow:0 12px 34px rgba(0,0,0,.45);direction:rtl;text-align:center';
-   document.body.appendChild(t);
-   setTimeout(function(){ try{ t.remove(); }catch(e){} }, 2400);
- }catch(e){ console.log(message); }
+ alert(message);
  }
 
  document.addEventListener('click', function(e){
@@ -5175,15 +5166,202 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 
 
 
+<script id="hirex-v6-professional-auth-gate">
+(function(){
+  "use strict";
+  var pendingAction = null;
+  var pendingReason = "";
+  var authMode = "login";
 
-<!-- Removed old V6 auth gate in V19 to prevent conflicting login alerts -->
+  function qs(id){ return document.getElementById(id); }
+  function notice(msg){ try{ if(typeof window.showMiniNotice === 'function') return window.showMiniNotice(msg); }catch(e){} alert(msg); }
+  function validEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim()); }
+  function sb(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.__hirexV6Client){
+      window.__hirexV6Client = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY);
+    }
+    return window.__hirexV6Client;
+  }
+  function verified(){
+    return !!(window.accountState && accountState.isLoggedIn && accountState.email && accountState.emailVerified);
+  }
+  function syncUser(user){
+    window.accountState = window.accountState || {};
+    accountState.isLoggedIn = true;
+    accountState.emailVerified = !!(user && user.email_confirmed_at);
+    accountState.email = user.email;
+    accountState.name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+    if(typeof window.syncAccountUi === 'function') window.syncAccountUi();
+  }
+  function ensureAuthModal(){
+    var old = qs('hirexV6AuthOverlay');
+    if(old) return old;
+    var overlay = document.createElement('div');
+    overlay.id = 'hirexV6AuthOverlay';
+    overlay.className = 'overlay show-v6-auth';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML = ''+
+      '<section class="window small" role="dialog" aria-modal="true" style="max-width:430px">'+
+      '<header class="window-head"><div class="win-title"><div class="win-icon">🔐</div><div><h2 id="v6AuthTitle">الدخول إلى HireX</h2><p id="v6AuthReason">سجّل دخولك لإكمال الإجراء</p></div></div><button type="button" class="close-btn" id="v6AuthClose">×</button></header>'+
+      '<div class="window-body" style="display:grid;gap:12px">'+
+      '<div class="email-auth-logo"><div class="email-hrx">HRX</div></div>'+
+      '<div class="email-auth-tabs"><button type="button" class="email-auth-tab active" data-v6-mode="login">دخول</button><button type="button" class="email-auth-tab" data-v6-mode="signup">إنشاء حساب</button></div>'+
+      '<label class="form-field" id="v6NameWrap" style="display:none"><span>الاسم الكامل</span><input id="v6AuthName" placeholder="اسمك أو اسم الشركة"></label>'+
+      '<label class="form-field"><span>البريد الإلكتروني</span><input id="v6AuthEmail" type="email" placeholder="example@email.com" autocomplete="email"></label>'+
+      '<label class="form-field"><span>كلمة المرور</span><input id="v6AuthPassword" type="password" placeholder="••••••••" autocomplete="current-password"></label>'+
+      '<button type="button" class="primary" id="v6AuthSubmit">دخول</button>'+
+      '<button type="button" class="secondary" id="v6AuthReset">نسيت كلمة المرور؟</button>'+
+      '<button type="button" class="secondary" id="v6AuthContinue">متابعة التصفح</button>'+
+      '<div class="notice-box" id="v6AuthStatus">يمكنك التصفح بدون حساب، لكن أي إجراء يتطلب حسابًا مؤكدًا بالبريد.</div>'+
+      '</div></section>';
+    document.body.appendChild(overlay);
+    qs('v6AuthClose').onclick = closeAuth;
+    qs('v6AuthContinue').onclick = closeAuth;
+    qs('v6AuthSubmit').onclick = submitAuth;
+    qs('v6AuthReset').onclick = resetPassword;
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeAuth(); });
+    overlay.querySelectorAll('[data-v6-mode]').forEach(function(btn){ btn.addEventListener('click', function(){ setMode(btn.getAttribute('data-v6-mode')); }); });
+    qs('v6AuthPassword').addEventListener('keydown', function(e){ if(e.key === 'Enter') submitAuth(); });
+    return overlay;
+  }
+  function setMode(mode){
+    authMode = mode || 'login';
+    var overlay = ensureAuthModal();
+    overlay.querySelectorAll('[data-v6-mode]').forEach(function(btn){ btn.classList.toggle('active', btn.getAttribute('data-v6-mode') === authMode); });
+    qs('v6NameWrap').style.display = authMode === 'signup' ? 'grid' : 'none';
+    qs('v6AuthSubmit').textContent = authMode === 'signup' ? 'إنشاء حساب وإرسال التحقق' : 'دخول';
+    qs('v6AuthTitle').textContent = authMode === 'signup' ? 'إنشاء حساب HireX' : 'الدخول إلى HireX';
+  }
+  function openAuth(reason, mode){
+    var overlay = ensureAuthModal();
+    pendingReason = reason || 'إكمال هذا الإجراء';
+    qs('v6AuthReason').textContent = pendingReason;
+    qs('v6AuthStatus').textContent = 'يمكنك التصفح بدون حساب، لكن تنفيذ هذا الإجراء يتطلب تسجيل الدخول وتأكيد البريد الإلكتروني.';
+    setMode(mode || 'login');
+    overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    setTimeout(function(){ var el = qs('v6AuthEmail'); if(el) el.focus(); }, 80);
+    return false;
+  }
+  function closeAuth(){
+    var overlay = qs('hirexV6AuthOverlay');
+    if(overlay){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); }
+    if(!document.querySelector('.overlay.show')) document.body.classList.remove('modal-open');
+  }
+  async function submitAuth(){
+    var email = (qs('v6AuthEmail').value || '').trim().toLowerCase();
+    var password = (qs('v6AuthPassword').value || '').trim();
+    var name = (qs('v6AuthName').value || '').trim();
+    var status = qs('v6AuthStatus');
+    if(!validEmail(email)) return notice('اكتب بريد إلكتروني صحيح.');
+    if(password.length < 6) return notice('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+    var client = sb();
+    if(!client) return notice('تعذر تحميل خدمة تسجيل الدخول. تأكد من auth-config.js.');
+    try{
+      if(authMode === 'signup'){
+        var signup = await client.auth.signUp({
+          email: email,
+          password: password,
+          options: { emailRedirectTo: window.HIREX_AUTH_REDIRECT_URL || window.location.href, data: { full_name: name || email.split('@')[0] } }
+        });
+        if(signup.error) throw signup.error;
+        status.textContent = 'تم إنشاء الحساب وإرسال رابط التحقق. افتح بريدك واضغط الرابط، ثم ارجع وسجّل دخول.';
+        notice('تم إرسال رسالة التحقق إلى بريدك.');
+        setMode('login');
+        return;
+      }
+      var login = await client.auth.signInWithPassword({ email: email, password: password });
+      if(login.error) throw login.error;
+      var user = login.data && login.data.user;
+      if(!user) return notice('تعذر قراءة بيانات الحساب.');
+      if(!user.email_confirmed_at){
+        await client.auth.signOut();
+        status.textContent = 'حسابك موجود، لكن البريد غير مؤكد. افتح رسالة التحقق في بريدك أولًا.';
+        return notice('البريد غير مؤكد.');
+      }
+      syncUser(user);
+      closeAuth();
+      notice('تم تسجيل الدخول بنجاح.');
+      var action = pendingAction;
+      pendingAction = null; pendingReason = '';
+      if(typeof action === 'function') setTimeout(action, 120);
+    }catch(err){
+      var msg = String((err && err.message) || err || '');
+      if(msg.toLowerCase().includes('email not confirmed')) notice('البريد غير مؤكد. افتح رسالة التحقق أولًا.');
+      else if(msg.toLowerCase().includes('database error saving new user')) notice('خطأ قاعدة بيانات عند إنشاء المستخدم. شغّل ملف supabase_hirex_schema.sql ثم جرّب.');
+      else notice('تعذر إكمال العملية: ' + msg);
+    }
+  }
+  async function resetPassword(){
+    var email = (qs('v6AuthEmail').value || '').trim().toLowerCase();
+    if(!validEmail(email)) return notice('اكتب البريد الإلكتروني أولًا.');
+    var client = sb(); if(!client) return notice('تعذر تحميل خدمة تسجيل الدخول.');
+    var res = await client.auth.resetPasswordForEmail(email, { redirectTo: window.HIREX_AUTH_REDIRECT_URL || window.location.href });
+    if(res.error) return notice('تعذر إرسال رابط الاستعادة: ' + res.error.message);
+    notice('تم إرسال رابط استعادة كلمة المرور.');
+  }
+  window.hirexIsVerifiedUser = verified;
+  window.hirexOpenAuth = openAuth;
+  window.hirexCloseAuth = closeAuth;
+  window.confirmEmailLogin = function(){ return openAuth('أنشئ حسابك أو سجّل دخولك لاستخدام خدمات HireX', 'signup'); };
+  window.requireEmailLogin = function(reason, callback){
+    if(verified()){ if(typeof callback === 'function') callback(); return true; }
+    pendingAction = callback || null;
+    return openAuth('سجّل دخولك لإكمال: ' + (reason || 'هذا الإجراء'), 'login');
+  };
 
-<script id="hirex-v19-first-login-strict">
-/* HireX V19 Strict First Screen Auth Wall - no entry before confirmed email */
+  function protect(fnName, reason){
+    var original = window['__v6Original_' + fnName] || window[fnName];
+    if(typeof original !== 'function') return;
+    window['__v6Original_' + fnName] = original;
+    window[fnName] = function(){
+      var args = arguments;
+      return window.requireEmailLogin(reason, function(){ original.apply(window, args); });
+    };
+  }
+  function installGuards(){
+    var originalMyAds = window.__openMyAdsModalOriginal || window.openMyAdsModal;
+    if(typeof originalMyAds === 'function'){
+      window.openMyAdsModal = function(){ return window.requireEmailLogin('إضافة أو إدارة إعلان', function(){ originalMyAds.apply(window, arguments); }); };
+    }
+    protect('saveCurrentAd', 'حفظ أو نشر الإعلان');
+    protect('openPhoneModal', 'التواصل مع صاحب الإعلان');
+    protect('openPaymentModal', 'طلب خدمة أو إرسال عرض');
+    protect('openPlatformChat', 'المراسلة داخل المنصة');
+    protect('openPlatformChatV15', 'المراسلة داخل المنصة');
+    protect('openAtsCvBuilder', 'إنشاء سيرة ذاتية ATS');
+    protect('openXsStore', 'شراء أو استخدام رصيد Xs');
+    protect('openPromotionModal', 'ترقية الإعلان');
+  }
+  document.addEventListener('click', function(e){
+    var guarded = e.target.closest('[data-requires-auth="true"], .requires-auth');
+    if(!guarded) return;
+    if(verified()) return;
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    window.requireEmailLogin(guarded.getAttribute('data-auth-reason') || 'هذا الإجراء', null);
+  }, true);
+  window.addEventListener('DOMContentLoaded', async function(){
+    ensureAuthModal();
+    installGuards();
+    var client = sb();
+    if(client){
+      try{
+        var session = await client.auth.getSession();
+        var user = session && session.data && session.data.session && session.data.session.user;
+        if(user && user.email_confirmed_at) syncUser(user);
+      }catch(e){}
+    }
+  });
+  setTimeout(installGuards, 300);
+})();
+</script>
+<script id="hirex-v21-first-open-auth-inline">
+/* HireX V21 First Open Auth Wall - appears only on app open until verified login */
 (function(){
   'use strict';
   var client = null;
-  var verifiedUser = null;
   var state = { mode: 'login', checked: false };
 
   function qs(sel){ return document.querySelector(sel); }
@@ -5206,7 +5384,6 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
   }
 
   function setAccount(user){
-    verifiedUser = user || null;
     window.accountState = window.accountState || {};
     if(user){
       window.accountState.isLoggedIn = true;
@@ -5222,6 +5399,8 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
   }
 
   function lockPage(){
+    window.__hirexFirstAuthUnlocked = false;
+    window.__hirexVerifiedSession = false;
     document.documentElement.classList.add('hx18-locked');
     document.body.classList.add('hx18-locked');
     var wall = qs('#hxFirstAuthWall');
@@ -5230,10 +5409,13 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 
   function unlockPage(user){
     setAccount(user);
+    window.__hirexFirstAuthUnlocked = true;
+    window.__hirexVerifiedSession = true;
     document.documentElement.classList.remove('hx18-locked');
     document.body.classList.remove('hx18-locked');
     var wall = qs('#hxFirstAuthWall');
     if(wall) wall.classList.remove('show');
+    message('تم الدخول بنجاح.', 'success');
   }
 
   function message(txt, type){
@@ -5303,12 +5485,15 @@ html.hx18-locked, body.hx18-locked{overflow:hidden!important;height:100%!importa
           options: { emailRedirectTo: redirectTo(), data: { full_name: fullName || email.split('@')[0] } }
         });
         if(sign.error) throw sign.error;
-        // Strict V19: never open the platform immediately after signup.
-        // The user must open the email confirmation link first, then come back and log in.
+        if(userConfirmed(sign.data && sign.data.user)){
+          unlockPage(sign.data.user);
+          message('تم إنشاء الحساب وتسجيل الدخول.', 'success');
+          return;
+        }
         try{ await c.auth.signOut(); }catch(_e){}
         setAccount(null);
         setMode('login');
-        message('تم إنشاء الحساب وإرسال رابط التحقق. افتح بريدك واضغط الرابط، ثم ارجع وسجّل الدخول. لن يتم فتح المنصة مباشرة بعد إنشاء الحساب.', 'success');
+        message('تم إنشاء الحساب وإرسال رابط التحقق. افتح بريدك واضغط الرابط، ثم ارجع وسجّل الدخول.', 'success');
         return;
       }
       var login = await c.auth.signInWithPassword({ email: email, password: password });
@@ -5375,38 +5560,32 @@ html.hx18-locked, body.hx18-locked{overflow:hidden!important;height:100%!importa
     }catch(_err){ lockPage(); setMode('login'); }
   }
 
-  function isUnlocked(){
-    return !!(verifiedUser || (window.accountState && window.accountState.isLoggedIn && window.accountState.emailVerified));
+  function hasVerifiedSession(){
+    return !!(window.__hirexFirstAuthUnlocked || (window.accountState && window.accountState.isLoggedIn && window.accountState.emailVerified));
   }
 
   function expose(){
+    // تظهر شاشة الدخول فقط عند فتح التطبيق إذا لا توجد جلسة مؤكدة.
+    // بعد الدخول، أي كود قديم يطلب requireEmailLogin لن يعيد فتح شاشة التسجيل.
     window.hirexOpenAuth = function(){
-      if(isUnlocked()) return true;
+      if(hasVerifiedSession()) return true;
       lockPage(); setMode('login'); return false;
     };
-    window.requireEmailLogin = function(reason, callback){
-      if(isUnlocked()){
+    window.requireEmailLogin = function(_reason, callback){
+      if(hasVerifiedSession()){
         if(typeof callback === 'function') setTimeout(callback, 0);
         return true;
       }
-      lockPage(); setMode('login');
-      if(reason) message(String(reason), 'info');
-      return false;
+      lockPage(); setMode('login'); return false;
     };
     window.hirexRequireAuth = window.requireEmailLogin;
     window.hirexRequireVerifiedAction = window.requireEmailLogin;
-    window.hirexAuthV20 = { open: window.hirexOpenAuth, check: checkSession, locked: function(){ return !isUnlocked(); } };
+    window.hirexAuthV21 = { open: window.hirexOpenAuth, check: checkSession, unlocked: hasVerifiedSession };
   }
 
   function init(){
     buildWall();
     expose();
-    document.addEventListener('click', function(ev){
-      if(isUnlocked()) return;
-      if(ev.target && ev.target.closest && ev.target.closest('#hxFirstAuthWall')) return;
-      ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
-      lockPage(); setMode('login');
-    }, true);
     checkSession();
     var c = sb();
     if(c && c.auth && c.auth.onAuthStateChange){
