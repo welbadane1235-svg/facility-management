@@ -804,34 +804,421 @@
       .bottom-nav{width:calc(100% - 12px)}
     }
 
-</style>
+
+    /* V25 approved mobile home implementation */
+    html{background:#030807;}
+    body{
+      padding-bottom:calc(104px + env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at 16% 8%,rgba(0,229,197,.14),transparent 30%),
+        radial-gradient(circle at 88% 18%,rgba(0,184,212,.12),transparent 31%),
+        linear-gradient(180deg,#020606,#061411 45%,#020403);
+    }
+    .app{
+      width:min(430px,100%);
+      padding:0 14px;
+      margin:0 auto;
+    }
+    .header{
+      min-height:104px;
+      padding:14px 0 8px;
+      display:grid;
+      grid-template-columns:52px 1fr 52px;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:40;
+      background:linear-gradient(180deg,rgba(2,6,6,.96),rgba(2,6,6,.68));
+      border-bottom:1px solid rgba(0,229,197,.08);
+    }
+    .profile-btn{
+      grid-column:3;
+      justify-self:end;
+      width:46px;
+      height:46px;
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(0,229,197,.24);
+      color:#dfffee;
+      box-shadow:0 0 22px rgba(0,229,197,.08);
+      font-size:20px;
+    }
+    .brand{
+      grid-column:2;
+      justify-self:center;
+      display:grid;
+      place-items:center;
+      width:154px;
+      height:84px;
+      overflow:hidden;
+    }
+    .brand-image{
+      width:154px;
+      max-height:84px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 0 12px rgba(0,229,197,.45));
+      mix-blend-mode:screen;
+    }
+    .hero{
+      min-height:368px;
+      border-radius:32px;
+      padding:22px 20px;
+      margin-top:10px;
+      background:
+        radial-gradient(circle at 12% 35%,rgba(0,229,197,.16),transparent 34%),
+        radial-gradient(circle at 105% -5%,rgba(0,184,212,.10),transparent 32%),
+        linear-gradient(145deg,rgba(5,22,22,.96),rgba(4,10,13,.96));
+      border:1px solid rgba(0,229,197,.30);
+      box-shadow:0 22px 70px rgba(0,0,0,.50), inset 0 0 60px rgba(0,229,197,.035);
+      display:grid;
+      align-items:center;
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      right:-70px;
+      top:-70px;
+      background:rgba(0,229,197,.10);
+      filter:blur(3px);
+    }
+    .hero-art{
+      position:relative;
+      top:auto;
+      left:auto;
+      width:120px;
+      height:110px;
+      margin-inline-start:0;
+      margin-bottom:8px;
+      border:0!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      transform:none;
+      display:grid;
+      place-items:center;
+      backdrop-filter:none;
+    }
+    .neon-rocket{
+      font-size:82px;
+      line-height:1;
+      filter:drop-shadow(0 0 18px rgba(0,229,197,.75)) drop-shadow(-24px 28px 28px rgba(0,229,197,.25));
+      transform:rotate(-28deg);
+      display:block;
+    }
+    .hero-content{
+      position:relative;
+      z-index:1;
+      max-width:100%;
+      text-align:right;
+    }
+    .hero h2{
+      font-size:33px;
+      line-height:1.23;
+      padding-left:0;
+      margin-top:12px;
+      letter-spacing:-.4px;
+    }
+    .hero h2 span{color:#74FFF2;text-shadow:0 0 16px rgba(0,229,197,.28)}
+    .hero p{
+      padding-left:0;
+      font-size:16px;
+      color:#D7E6E3;
+      margin-top:12px;
+      max-width:100%;
+    }
+    .tag{
+      width:max-content;
+      margin-inline-start:auto;
+      background:rgba(0,229,197,.08);
+      border:1px solid rgba(0,229,197,.26);
+      color:#74FFF2;
+      font-size:13px;
+    }
+    .hero-cta{
+      width:min(310px,100%);
+      margin:22px auto 0;
+      min-height:56px;
+      border:0;
+      border-radius:999px;
+      background:linear-gradient(135deg,#00E5C5,#00B8D4);
+      color:#03120f;
+      font-weight:900;
+      font-size:17px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      cursor:pointer;
+      box-shadow:0 16px 44px rgba(0,229,197,.22);
+    }
+    .hero-cta span{font-size:24px;line-height:1}
+    .discover-title{
+      margin:24px auto 12px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:12px;
+      text-align:center;
+    }
+    .discover-title h3{
+      font-size:22px;
+      font-weight:900;
+      color:#F2F5F7;
+      white-space:nowrap;
+    }
+    .discover-title span{
+      height:1px;
+      background:linear-gradient(90deg,transparent,#00E5C5,transparent);
+      position:relative;
+      display:block;
+    }
+    .discover-title span:after{
+      content:"";
+      position:absolute;
+      top:-3px;
+      left:50%;
+      width:7px;
+      height:7px;
+      transform:translateX(-50%) rotate(45deg);
+      background:#00E5C5;
+      box-shadow:0 0 12px rgba(0,229,197,.8);
+    }
+    .home-feature-stack{gap:12px}
+    .promo{
+      min-height:116px;
+      border-radius:24px;
+      padding:16px 86px 16px 44px;
+      grid-template-columns:1fr;
+      align-items:center;
+      border-color:rgba(0,229,197,.20);
+      background:
+        radial-gradient(circle at 100% 50%,rgba(0,229,197,.13),transparent 34%),
+        linear-gradient(145deg,rgba(5,22,22,.94),rgba(4,10,13,.94));
+      box-shadow:0 14px 38px rgba(0,0,0,.34);
+      position:relative;
+    }
+    .promo:before{display:none}
+    .promo-text{position:relative;z-index:2}
+    .promo-label{
+      color:#57F5E6;
+      font-size:12px;
+      margin-bottom:3px;
+    }
+    .promo h4{
+      font-size:22px;
+      line-height:1.2;
+      margin-bottom:4px;
+    }
+    .promo p{
+      font-size:13.5px;
+      color:#C7D7D4;
+      margin-top:0;
+    }
+    .promo-art{
+      position:absolute!important;
+      right:16px;
+      top:50%;
+      transform:translateY(-50%);
+      width:54px!important;
+      height:54px!important;
+      border:0!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      border-radius:0!important;
+      font-size:44px!important;
+      display:grid!important;
+      place-items:center!important;
+      color:#00E5C5!important;
+      filter:drop-shadow(0 0 13px rgba(0,229,197,.55));
+      backdrop-filter:none!important;
+    }
+    .promo-art::before{display:none!important}
+    .promo-arrow{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      color:#fff;
+      font-size:34px;
+      line-height:1;
+      cursor:pointer;
+      opacity:.92;
+    }
+    .community-card{
+      display:grid;
+      grid-template-columns:72px 1fr;
+      align-items:center;
+      gap:14px;
+      border-radius:26px;
+      padding:18px;
+      margin-top:20px;
+      border-color:rgba(0,229,197,.22);
+      background:
+        radial-gradient(circle at 10% 50%,rgba(0,229,197,.16),transparent 33%),
+        linear-gradient(145deg,rgba(5,22,22,.94),rgba(4,10,13,.94));
+    }
+    .community-icon{
+      width:62px;
+      height:62px;
+      display:grid;
+      place-items:center;
+      font-size:42px;
+      color:#00E5C5;
+      filter:drop-shadow(0 0 14px rgba(0,229,197,.65));
+    }
+    .community-card h3{font-size:21px;color:#74FFF2}
+    .community-card p{margin:4px 0 8px;color:#C7D7D4}
+    .community-card button{
+      border:0;
+      background:transparent;
+      color:#00E5C5;
+      font-weight:900;
+      font-family:inherit;
+      cursor:pointer;
+      font-size:14px;
+      padding:0;
+    }
+    .bottom-nav{
+      width:min(414px,calc(100% - 14px));
+      height:76px;
+      bottom:calc(10px + env(safe-area-inset-bottom));
+      border-radius:26px;
+      background:rgba(5,10,13,.92);
+      border:1px solid rgba(0,229,197,.19);
+      backdrop-filter:blur(18px);
+      box-shadow:0 20px 60px rgba(0,0,0,.70);
+    }
+    .nav-item{
+      font-size:11px;
+      color:#9AA6AD;
+      gap:3px;
+    }
+    .nav-item b{font-size:21px}
+    .nav-item.active{
+      margin:6px;
+      border-radius:22px;
+      color:#fff;
+      background:linear-gradient(135deg,rgba(0,229,197,.24),rgba(0,184,212,.16));
+      border:1px solid rgba(0,229,197,.25);
+      box-shadow:inset 0 0 22px rgba(0,229,197,.07);
+    }
+
+    /* Remove white/light boxes behind icons everywhere */
+    .hero-art,
+    .promo-art,
+    .job-type-icon,
+    .category-icon,
+    .win-icon,
+    .action-icon,
+    .avatar{
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+    .job-type-icon,
+    .category-icon,
+    .win-icon,
+    .action-icon{
+      border:1px solid rgba(0,229,197,.14)!important;
+      color:#A7F3E1!important;
+    }
+    .avatar{border:1px solid rgba(0,229,197,.14)!important;color:#A7F3E1!important}
+
+    @media(max-width:520px){
+      .app{padding:0 10px}
+      .header{min-height:94px}
+      .brand{width:138px;height:74px}
+      .brand-image{width:138px;max-height:74px}
+      .hero{min-height:346px;padding:20px 18px;border-radius:28px}
+      .hero-art{width:104px;height:92px}
+      .neon-rocket{font-size:72px}
+      .hero h2{font-size:29px}
+      .hero p{font-size:15px}
+      .promo{padding:15px 76px 15px 40px}
+      .promo-art{right:14px;width:48px!important;height:48px!important;font-size:38px!important}
+      .bottom-nav{width:calc(100% - 12px)}
+    }
+
+  </style>
 </head>
 <body>
   <div class="app">
     <header class="header">
       <a class="profile-btn" href="#account">⚙️</a>
-      <div class="brand"><div class="brand-logo" aria-label="HireX logo"><svg class="brand-mark-svg" viewBox="0 0 64 64" role="img" aria-hidden="true"><defs><linearGradient id="hxBrand" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5C5"/><stop offset="100%" stop-color="#00B8D4"/></linearGradient></defs><rect x="5" y="5" width="54" height="54" rx="18" fill="rgba(0,229,197,.08)" stroke="url(#hxBrand)" stroke-width="2"/><path d="M19 18v28M19 31h11M30 18v28" fill="none" stroke="url(#hxBrand)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M39 20l10 24M49 20L39 44" fill="none" stroke="url(#hxBrand)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="47.5" cy="16.5" r="4.5" fill="#00E5C5" opacity=".18"/><path d="M45 14l5 5" stroke="#EFFFFB" stroke-width="2.4" stroke-linecap="round"/><path d="M50 14l-5 5" stroke="#EFFFFB" stroke-width="2.4" stroke-linecap="round"/></svg></div><div class="brand-copy"><h1>Hire<span>X</span></h1><p>منصة وظائف وخدمات مهيأة للموبايل</p></div></div>
+      <div class="brand">
+        <img class="brand-image" src="assets/hirex-logo.png" alt="HireX">
+      </div>
     </header>
 
     <main id="home">
       <section class="hero">
-        <div class="hero-art"><svg class="hero-logo-svg" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="hxHero" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5C5"/><stop offset="100%" stop-color="#00B8D4"/></linearGradient></defs><rect x="7" y="7" width="50" height="50" rx="18" fill="rgba(0,229,197,.08)" stroke="url(#hxHero)" stroke-width="2.2"/><path d="M19 18v28M19 31h11M30 18v28" fill="none" stroke="url(#hxHero)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M39 20l10 24M49 20L39 44" fill="none" stroke="url(#hxHero)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="hero-content"><div class="tag">الرئيسية · تعرّف على HireX</div><h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2><p>HireX مساحة منظمة للإعلانات المهنية: وظيفة، خدمة، أو سيرة ذاتية تبحث عن فرصة.</p></div>
+        <div class="hero-art"><span class="neon-rocket">🚀</span></div>
+        <div class="hero-content">
+          <div class="tag">منصة HireX ✨</div>
+          <h2>منصة مهنية تجمع <span>الوظائف والخدمات</span> في تجربة واحدة.</h2>
+          <p>اكتشف فرصك، اعرض خدماتك، وتواصل مع أصحاب الأعمال والعملاء بسهولة وأمان.</p>
+          <button type="button" class="hero-cta" onclick="openMyAdsModal()">ابدأ رحلتك الآن <span>←</span></button>
+        </div>
       </section>
-      <div class="section-head"><h3>لماذا HireX؟</h3><span>إعلانات تعريفية</span></div>
-      <section class="marketing-stack">
-        <article class="promo gold"><div class="promo-text"><div class="promo-label">للباحثين عن عمل</div><h4>حوّل سيرتك إلى إعلان احترافي</h4><p>انشر نفسك بطريقة واضحة داخل القسم المناسب ليصل ملفك لأصحاب العمل.</p></div><div class="promo-art">📄</div></article>
-        <article class="promo blue"><div class="promo-text"><div class="promo-label">للشركات وأصحاب الأعمال</div><h4>أعلن عن وظيفتك بشكل منظم</h4><p>اعرض الفرصة، حدد القسم والمدينة، واستقبل المتقدمين بوضوح.</p></div><div class="promo-art">🏢</div></article>
-        <article class="promo"><div class="promo-text"><div class="promo-label">لمقدمي الخدمات</div><h4>اعرض خبرتك كخدمة مهنية</h4><p>خدمات السيرة الذاتية، التدريب، الاستشارات، والتوظيف في مكان واحد.</p></div><div class="promo-art">🛠️</div></article>
+      <div class="section-head discover-title"><span></span><h3>اكتشف أكثر</h3><span></span></div>
+      <section class="marketing-stack home-feature-stack">
+        <article class="promo gold">
+          <div class="promo-text">
+            <div class="promo-label">للباحثين عن عمل</div>
+            <h4>اعثر على وظيفة تناسبك</h4>
+            <p>تصفح آلاف الفرص الوظيفية الموثوقة في مختلف المجالات.</p>
+          </div>
+          <div class="promo-art">💼</div>
+          <button class="promo-arrow" onclick="openJobsModal()">‹</button>
+        </article>
+        <article class="promo blue">
+          <div class="promo-text">
+            <div class="promo-label">للمحترفين</div>
+            <h4>اعرض خدماتك باحتراف</h4>
+            <p>أنشئ ملفك المهني، قدم خدماتك، ووصل لعملاء يبحثون عن خبراتك.</p>
+          </div>
+          <div class="promo-art">👤</div>
+          <button class="promo-arrow" onclick="openServicesModal()">‹</button>
+        </article>
+        <article class="promo">
+          <div class="promo-text">
+            <div class="promo-label">للشركات وأصحاب الأعمال</div>
+            <h4>شركات وأصحاب أعمال</h4>
+            <p>اعثر على أفضل المواهب أو الخدمات التي تدعم نمو أعمالك بسهولة.</p>
+          </div>
+          <div class="promo-art">🏢</div>
+          <button class="promo-arrow" onclick="openMyAdsModal()">‹</button>
+        </article>
+        <article class="promo">
+          <div class="promo-text">
+            <div class="promo-label">ثقة وأمان</div>
+            <h4>تجربة آمنة وموثوقة</h4>
+            <p>منصة موثوقة وآمنة تضمن لك أفضل تجربة للتوظيف والتعاون.</p>
+          </div>
+          <div class="promo-art">🛡️</div>
+          <button class="promo-arrow" onclick="openSoon('الأمان')">‹</button>
+        </article>
       </section>
-      <section class="story-card"><h3>الرئيسية للتعريف، والتنفيذ في التبويبات</h3><p>عند الضغط على وظائف تظهر نافذة ذكية، وعند اختيار قسم تظهر نافذة نتائج خاصة بالقسم.</p><div class="story-points"><div class="point"><b>1</b> نافذة وظائف عامة</div><div class="point"><b>2</b> نافذة نتائج لكل قسم</div><div class="point"><b>3</b> نافذة تفاصيل لكل إعلان</div></div></section>
+      <section class="story-card community-card">
+        <div class="community-icon">✦</div>
+        <div>
+          <h3>انضم إلى مجتمع HireX</h3>
+          <p>آلاف المحترفين والشركات يثقون بنا كل يوم.</p>
+          <button type="button" onclick="openMyAdsModal()">كن جزءًا من النجاح ‹</button>
+        </div>
+      </section>
     </main>
 
     <nav class="bottom-nav">
       <button class="nav-item active" data-tab="home" onclick="goHome()"><b>🏠</b><span>الرئيسية</span></button>
       <button class="nav-item" data-tab="jobs" onclick="openJobsModal()"><b>💼</b><span>وظائف</span></button>
       <button class="nav-item" data-tab="services" onclick="openServicesModal()"><b>🛠️</b><span>خدمات</span></button>
-      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><b>＋</b><span>إعلاني</span></button>
+      <button class="nav-item" data-tab="post" onclick="openMyAdsModal()"><b>＋</b><span>إعلاناتي</span></button>
       <button class="nav-item" data-tab="account" onclick="openSoon('حسابي')"><b>⚙️</b><span>حسابي</span></button>
     </nav>
   </div>
