@@ -1,0 +1,1 @@
+ضع بيانات Supabase في auth-config.js، فعّل Email Provider و Confirm Email، واضبط Redirect URLs للروابط: / و /admin.html، ثم شغّل supabase_hirex_schema.sql.
