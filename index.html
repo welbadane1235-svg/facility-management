@@ -2196,13 +2196,227 @@
       color:#f6e5ba!important;
     }
 
+  
+    /* V34 Notifications Tab */
+    .notifications-window{
+      width:min(430px,100%)!important;
+      height:min(92vh,calc(100vh - 18px))!important;
+      border-radius:30px!important;
+      border-color:rgba(0,234,240,.34)!important;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(0,234,240,.13),transparent 34%),
+        linear-gradient(180deg,rgba(3,20,22,.98),rgba(1,5,6,.99))!important;
+    }
+    .notifications-head{
+      min-height:86px!important;
+      border-bottom:1px solid rgba(0,234,240,.18)!important;
+      background:rgba(0,234,240,.035)!important;
+    }
+    .notifications-icon{
+      background:transparent!important;
+      border:1px solid rgba(0,234,240,.30)!important;
+      color:#00EAF0!important;
+      box-shadow:0 0 22px rgba(0,234,240,.16)!important;
+    }
+    .notifications-body{
+      display:grid;
+      gap:12px;
+      padding:16px!important;
+    }
+    .notifications-summary{
+      border-radius:26px;
+      border:1px solid rgba(0,234,240,.36);
+      background:
+        radial-gradient(circle at 0% 100%,rgba(0,234,240,.12),transparent 34%),
+        linear-gradient(135deg,rgba(3,32,34,.94),rgba(3,10,12,.96));
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow:0 16px 42px rgba(0,0,0,.40), inset 0 0 22px rgba(0,234,240,.035);
+    }
+    .notifications-summary span{
+      color:#9fb4b4;
+      font-size:12px;
+      font-weight:900;
+      display:block;
+    }
+    .notifications-summary strong{
+      color:#00EAF0;
+      font-size:34px;
+      line-height:1;
+      direction:ltr;
+      text-shadow:0 0 16px rgba(0,234,240,.62);
+    }
+    .notifications-summary button{
+      min-height:42px;
+      border-radius:15px;
+      border:1px solid rgba(0,234,240,.20);
+      background:rgba(0,234,240,.07);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-family:inherit;
+      padding:0 12px;
+    }
+    .notifications-tabs{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+    }
+    .notification-filter{
+      min-height:40px;
+      border-radius:15px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      color:#9fb4b4;
+      font-weight:900;
+      font-family:inherit;
+      cursor:pointer;
+    }
+    .notification-filter.active{
+      background:linear-gradient(180deg,#22F0EE,#04B8C4);
+      color:#03120f;
+      border:0;
+      box-shadow:0 0 18px rgba(0,234,240,.18);
+    }
+    .notifications-list{
+      display:grid;
+      gap:9px;
+    }
+    .notification-item{
+      border-radius:22px;
+      border:1px solid rgba(0,234,240,.18);
+      background:linear-gradient(135deg,rgba(0,234,240,.055),rgba(255,255,255,.025));
+      padding:12px;
+      display:grid;
+      grid-template-columns:44px 1fr auto;
+      gap:10px;
+      align-items:start;
+      position:relative;
+    }
+    .notification-item.unread{
+      border-color:rgba(0,234,240,.40);
+      box-shadow:0 0 20px rgba(0,234,240,.08);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(0,234,240,.12),transparent 34%),
+        linear-gradient(135deg,rgba(0,234,240,.07),rgba(255,255,255,.025));
+    }
+    .notification-dot{
+      position:absolute;
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:#00EAF0;
+      top:12px;
+      left:12px;
+      box-shadow:0 0 12px rgba(0,234,240,.95);
+      display:none;
+    }
+    .notification-item.unread .notification-dot{display:block}
+    .notification-badge{
+      width:42px;
+      height:42px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(0,234,240,.22);
+      background:rgba(0,234,240,.055);
+      color:#00EAF0;
+      font-size:20px;
+      box-shadow:inset 0 0 16px rgba(0,234,240,.05);
+    }
+    .notification-content h3{
+      font-size:15.5px;
+      line-height:1.3;
+      font-weight:900;
+      color:#fff;
+      margin-bottom:2px;
+    }
+    .notification-content p{
+      color:#cdd9d9;
+      font-size:12.5px;
+      line-height:1.45;
+      font-weight:800;
+      margin:0;
+    }
+    .notification-content small{
+      display:block;
+      color:#7e9898;
+      font-size:11px;
+      margin-top:5px;
+      font-weight:900;
+    }
+    .notification-actions{
+      display:grid;
+      gap:6px;
+    }
+    .notification-actions button{
+      width:32px;
+      height:32px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      color:#fff;
+      cursor:pointer;
+      font-family:inherit;
+      display:grid;
+      place-items:center;
+    }
+    .notification-actions button.read-btn{
+      color:#00EAF0;
+      border-color:rgba(0,234,240,.22);
+    }
+    .notification-actions button.delete-btn{
+      color:#ffccd4;
+      border-color:rgba(251,113,133,.22);
+    }
+    .notifications-empty{
+      border-radius:22px;
+      border:1px dashed rgba(255,255,255,.16);
+      padding:20px;
+      color:#9fb4b4;
+      text-align:center;
+      font-weight:900;
+    }
+    .notifications-settings{
+      border-radius:24px;
+      border:1px solid rgba(0,234,240,.18);
+      background:rgba(255,255,255,.035);
+      padding:13px;
+      display:grid;
+      gap:9px;
+    }
+    .notifications-settings h3{
+      font-size:16px;
+      font-weight:900;
+      color:#fff;
+    }
+    .notifications-settings label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#cdd9d9;
+      font-size:12.5px;
+      font-weight:800;
+    }
+    .notifications-settings input{
+      accent-color:#00EAF0;
+    }
+    @media(max-width:380px){
+      .notifications-tabs{grid-template-columns:1fr 1fr}
+      .notification-item{grid-template-columns:40px 1fr}
+      .notification-actions{grid-column:1/-1;display:flex;justify-content:flex-end}
+    }
+
   </style>
 </head>
 <body>
   <div class="app">
 
     <header class="header">
-      <button class="circle-icon notify-btn" type="button" onclick="openSoon('الإشعارات')" aria-label="الإشعارات">
+      <button class="circle-icon notify-btn" type="button" onclick="openNotificationsModal()" aria-label="الإشعارات">
         <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 45h24l-4-6V27c0-8-5-14-8-14s-8 6-8 14v12z"/><path d="M28 49c1 4 7 4 8 0"/></svg>
         <span class="notify-dot"></span>
       </button>
@@ -3943,6 +4157,48 @@
     </section>
   </div>
 
+
+  <div class="overlay" id="notificationsOverlay" aria-hidden="true">
+    <section class="window notifications-window" role="dialog" aria-modal="true">
+      <header class="window-head notifications-head">
+        <div class="win-title">
+          <div class="win-icon notifications-icon">🔔</div>
+          <div>
+            <h2>الإشعارات</h2>
+            <p>طلبات، رسائل، إعلانات، وتنبيهات مهمة</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeNotificationsModal()">×</button>
+      </header>
+
+      <div class="window-body notifications-body">
+        <section class="notifications-summary">
+          <div>
+            <span>غير مقروء</span>
+            <strong id="notificationsUnreadCount">0</strong>
+          </div>
+          <button type="button" onclick="markAllNotificationsRead()">تحديد الكل كمقروء</button>
+        </section>
+
+        <section class="notifications-tabs">
+          <button type="button" class="notification-filter active" data-notification-filter="all">الكل</button>
+          <button type="button" class="notification-filter" data-notification-filter="messages">رسائل</button>
+          <button type="button" class="notification-filter" data-notification-filter="orders">طلبات</button>
+          <button type="button" class="notification-filter" data-notification-filter="system">النظام</button>
+        </section>
+
+        <section id="notificationsList" class="notifications-list"></section>
+
+        <section class="notifications-settings">
+          <h3>إعدادات الإشعارات</h3>
+          <label><input type="checkbox" checked> تنبيهات الرسائل داخل المنصة</label>
+          <label><input type="checkbox" checked> تنبيهات طلبات الخدمات والعروض</label>
+          <label><input type="checkbox" checked> تنبيهات الإكسز والصدارة</label>
+        </section>
+      </div>
+    </section>
+  </div>
+
 </body>
 </html>`;
       w.document.open();
@@ -4344,6 +4600,112 @@
       };
     }
 
+
+    /* V34 Notifications JS */
+    const notificationsState = {
+      filter: 'all',
+      items: [
+        {id:1, type:'messages', icon:'💬', title:'رسالة جديدة داخل المنصة', text:'لديك رسالة تجريبية من أحد مقدمي الخدمات.', time:'الآن', read:false},
+        {id:2, type:'orders', icon:'🧾', title:'طلب خدمة بانتظار المراجعة', text:'تم إنشاء طلب خدمة تجريبي ويمكن متابعته من المحادثات.', time:'قبل 5 دقائق', read:false},
+        {id:3, type:'system', icon:'Xs', title:'محفظة الإكسز جاهزة', text:'يمكنك شراء Xs وتفعيل الصدارة لإعلاناتك.', time:'اليوم', read:true},
+        {id:4, type:'system', icon:'📄', title:'خدمة صناعة السيرة ATS', text:'يمكنك إنشاء سيرة ذاتية ATS من تبويب إعلاناتي أو حسابي.', time:'اليوم', read:true}
+      ]
+    };
+
+    function openNotificationsModal(){
+      return requireEmailLogin('عرض الإشعارات', function(){
+        syncNotificationsBadge();
+        renderNotifications();
+        showOverlay('notificationsOverlay');
+      });
+    }
+
+    function closeNotificationsModal(){
+      hideOverlay('notificationsOverlay');
+      safeSetActiveNav?.('home');
+    }
+
+    function syncNotificationsBadge(){
+      const unread = notificationsState.items.filter(n=>!n.read).length;
+      const countEl = document.getElementById('notificationsUnreadCount');
+      if(countEl) countEl.textContent = unread;
+      const dot = document.querySelector('.notify-dot');
+      if(dot) dot.style.display = unread > 0 ? 'block' : 'none';
+    }
+
+    function renderNotifications(){
+      syncNotificationsBadge();
+
+      document.querySelectorAll('.notification-filter').forEach(btn=>{
+        btn.classList.toggle('active', btn.dataset.notificationFilter === notificationsState.filter);
+      });
+
+      let items = notificationsState.items || [];
+      if(notificationsState.filter !== 'all'){
+        items = items.filter(n=>n.type === notificationsState.filter);
+      }
+
+      const box = document.getElementById('notificationsList');
+      if(!box) return;
+
+      if(!items.length){
+        box.innerHTML = '<div class="notifications-empty">لا توجد إشعارات في هذا التصنيف.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map(n=>`
+        <article class="notification-item ${n.read ? '' : 'unread'}">
+          <span class="notification-dot"></span>
+          <div class="notification-badge">${safeText(n.icon)}</div>
+          <div class="notification-content">
+            <h3>${safeText(n.title)}</h3>
+            <p>${safeText(n.text)}</p>
+            <small>${safeText(n.time)}</small>
+          </div>
+          <div class="notification-actions">
+            <button type="button" class="read-btn" onclick="toggleNotificationRead(${n.id})">${n.read ? '↺' : '✓'}</button>
+            <button type="button" class="delete-btn" onclick="deleteNotification(${n.id})">×</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function toggleNotificationRead(id){
+      const item = notificationsState.items.find(n=>n.id === id);
+      if(!item) return;
+      item.read = !item.read;
+      renderNotifications();
+    }
+
+    function deleteNotification(id){
+      notificationsState.items = notificationsState.items.filter(n=>n.id !== id);
+      renderNotifications();
+    }
+
+    function markAllNotificationsRead(){
+      notificationsState.items.forEach(n=>n.read = true);
+      renderNotifications();
+    }
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('.notification-filter[data-notification-filter]');
+      if(!btn) return;
+      e.preventDefault();
+      notificationsState.filter = btn.dataset.notificationFilter;
+      renderNotifications();
+    });
+
+    document.getElementById('notificationsOverlay')?.addEventListener('click', function(e){
+      if(e.target === this) closeNotificationsModal();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape') return;
+      if(document.getElementById('notificationsOverlay')?.classList.contains('show')) return closeNotificationsModal();
+    });
+
+    window.addEventListener('DOMContentLoaded', syncNotificationsBadge);
+
 </script>
 
   <div class="overlay" id="myAdPreviewOverlay" aria-hidden="true">
@@ -4573,7 +4935,7 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
             <div><strong>محفظة الإكسز</strong><span>شراء وتفعيل الصدارة</span></div>
             <i>‹</i>
           </button>
-          <button type="button" onclick="openSoon('الإشعارات')">
+          <button type="button" onclick="openNotificationsModal()">
             <b>🔔</b>
             <div><strong>الإشعارات</strong><span>طلبات ورسائل وتنبيهات</span></div>
             <i>‹</i>
@@ -4622,6 +4984,48 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
           <button type="button" class="login-submit" onclick="confirmEmailLogin()">الدخول واستخدام الخدمة</button>
           <button type="button" class="login-secondary" onclick="closeLoginGate()">متابعة التصفح فقط</button>
           <div class="login-note">لاحقًا سيتم ربطها بتأكيد البريد من Supabase. الآن تعمل كتجربة داخلية آمنة.</div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="overlay" id="notificationsOverlay" aria-hidden="true">
+    <section class="window notifications-window" role="dialog" aria-modal="true">
+      <header class="window-head notifications-head">
+        <div class="win-title">
+          <div class="win-icon notifications-icon">🔔</div>
+          <div>
+            <h2>الإشعارات</h2>
+            <p>طلبات، رسائل، إعلانات، وتنبيهات مهمة</p>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeNotificationsModal()">×</button>
+      </header>
+
+      <div class="window-body notifications-body">
+        <section class="notifications-summary">
+          <div>
+            <span>غير مقروء</span>
+            <strong id="notificationsUnreadCount">0</strong>
+          </div>
+          <button type="button" onclick="markAllNotificationsRead()">تحديد الكل كمقروء</button>
+        </section>
+
+        <section class="notifications-tabs">
+          <button type="button" class="notification-filter active" data-notification-filter="all">الكل</button>
+          <button type="button" class="notification-filter" data-notification-filter="messages">رسائل</button>
+          <button type="button" class="notification-filter" data-notification-filter="orders">طلبات</button>
+          <button type="button" class="notification-filter" data-notification-filter="system">النظام</button>
+        </section>
+
+        <section id="notificationsList" class="notifications-list"></section>
+
+        <section class="notifications-settings">
+          <h3>إعدادات الإشعارات</h3>
+          <label><input type="checkbox" checked> تنبيهات الرسائل داخل المنصة</label>
+          <label><input type="checkbox" checked> تنبيهات طلبات الخدمات والعروض</label>
+          <label><input type="checkbox" checked> تنبيهات الإكسز والصدارة</label>
         </section>
       </div>
     </section>
