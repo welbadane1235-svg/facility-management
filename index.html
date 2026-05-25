@@ -1682,6 +1682,101 @@
       }
     }
 
+  
+    /* V29: move hero text clearly to the right, keep rocket on the left */
+    .hero-reference{
+      min-height:310px!important;
+      padding:20px 18px!important;
+    }
+
+    .hero-reference .hero-rocket{
+      left:-30px!important;
+      top:52px!important;
+      width:128px!important;
+      height:158px!important;
+      opacity:.88!important;
+      z-index:1!important;
+      pointer-events:none!important;
+    }
+
+    .hero-reference .hero-content{
+      width:278px!important;
+      max-width:278px!important;
+      margin-right:0!important;
+      margin-left:auto!important;
+      padding:0!important;
+      text-align:right!important;
+      justify-items:end!important;
+      align-content:start!important;
+      z-index:4!important;
+    }
+
+    .hero-reference .tag{
+      margin:8px 0 12px auto!important;
+      align-self:end!important;
+    }
+
+    .hero-reference h2{
+      width:278px!important;
+      max-width:278px!important;
+      margin:0!important;
+      padding:0!important;
+      text-align:right!important;
+      font-size:29px!important;
+      line-height:1.15!important;
+      white-space:normal!important;
+    }
+
+    .hero-reference h2 span{
+      display:block!important;
+    }
+
+    .hero-reference p{
+      width:278px!important;
+      max-width:278px!important;
+      margin:13px 0 0!important;
+      padding:0!important;
+      text-align:right!important;
+      font-size:15px!important;
+      line-height:1.55!important;
+    }
+
+    .hero-reference .hero-cta{
+      width:250px!important;
+      margin:18px 0 0 auto!important;
+      min-height:52px!important;
+    }
+
+    @media(max-width:380px){
+      .hero-reference{
+        padding:18px 14px!important;
+      }
+      .hero-reference .hero-rocket{
+        left:-42px!important;
+        top:62px!important;
+        width:112px!important;
+        height:140px!important;
+        opacity:.82!important;
+      }
+      .hero-reference .hero-content{
+        width:250px!important;
+        max-width:250px!important;
+      }
+      .hero-reference h2{
+        width:250px!important;
+        max-width:250px!important;
+        font-size:26px!important;
+      }
+      .hero-reference p{
+        width:250px!important;
+        max-width:250px!important;
+        font-size:14px!important;
+      }
+      .hero-reference .hero-cta{
+        width:228px!important;
+      }
+    }
+
   </style>
 </head>
 <body>
