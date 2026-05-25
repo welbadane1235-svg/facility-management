@@ -3541,6 +3541,13 @@
  const myAdsState = { type:'job', ads: [], editingId:null, filter:'all', xsBalance:0, selectedPackage:null, promotingAdId:null };
 
  function openMyAdsModal(){
+ if(!window.__HX_AUTH_ALLOW_MYADS){
+   const run = function(){ window.__HX_AUTH_ALLOW_MYADS = true; try{ openMyAdsModal(); } finally { window.__HX_AUTH_ALLOW_MYADS = false; } };
+   if(typeof window.hirexAuthV14Require === 'function') return window.hirexAuthV14Require('إدارة إعلاناتي وإضافة إعلان', run);
+   if(typeof window.requireEmailLogin === 'function') return window.requireEmailLogin('إدارة إعلاناتي وإضافة إعلان', run);
+   alert('نظام تسجيل الدخول لم يتم تحميله. تأكد من رفع ملف hirex-auth-engine-v14.js مع index.html');
+   return;
+ }
  setActive('post');
  showOverlay('myAdsOverlay');
  renderMyAdsList();
@@ -4199,6 +4206,13 @@
  };
 
  function openAccountModal(){
+ if(!window.__HX_AUTH_ALLOW_ACCOUNT){
+   const run = function(){ window.__HX_AUTH_ALLOW_ACCOUNT = true; try{ openAccountModal(); } finally { window.__HX_AUTH_ALLOW_ACCOUNT = false; } };
+   if(typeof window.hirexAuthV14Require === 'function') return window.hirexAuthV14Require('فتح حسابي', run);
+   if(typeof window.requireEmailLogin === 'function') return window.requireEmailLogin('فتح حسابي', run);
+   alert('نظام تسجيل الدخول لم يتم تحميله. تأكد من رفع ملف hirex-auth-engine-v14.js مع index.html');
+   return;
+ }
  setActive('account');
  syncAccountUi();
  showOverlay('accountOverlay');
@@ -4328,19 +4342,15 @@
 
  if(tab === 'post'){
  closeAllMainOverlays();
- safeSetActiveNav('post');
  if(typeof openMyAdsModal === 'function') openMyAdsModal();
- else showOverlay('myAdsOverlay');
- safeSetActiveNav('post');
+ else if(typeof window.hirexAuthV14Open === 'function') window.hirexAuthV14Open('إدارة إعلاناتي وإضافة إعلان');
  return;
  }
 
  if(tab === 'account'){
  closeAllMainOverlays();
- safeSetActiveNav('account');
  if(typeof openAccountModal === 'function') openAccountModal();
- else showOverlay('accountOverlay');
- safeSetActiveNav('account');
+ else if(typeof window.hirexAuthV14Open === 'function') window.hirexAuthV14Open('فتح حسابي');
  return;
  }
  }catch(err){
@@ -4860,6 +4870,6 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 
 
 
-<script src="hirex-auth-engine-v13.js?v=13"></script>
+<script src="hirex-auth-engine-v14.js?v=14"></script>
 </body>
 </html>
