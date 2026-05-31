@@ -5318,5 +5318,81 @@ Bachelor of Business Administration - King Saud University - 2020"></textarea></
 })();
 </script>
 
+
+<!-- HIREX V53 USER PROFILE SYNC -->
+<script id="hirex-v53-user-profile-sync">
+(function(){
+  var SUPABASE_URL = window.HIREX_SUPABASE_URL || "https://odfcsexotylhsstybiju.supabase.co";
+  var SUPABASE_KEY = window.HIREX_SUPABASE_ANON_KEY || "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
+
+  function getClient(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.__hirexProfileClient){
+      window.__hirexProfileClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+    return window.__hirexProfileClient;
+  }
+
+  async function saveHirexUser(user, extra){
+    try{
+      if(!user || !user.email) return;
+      var sb = getClient();
+      if(!sb) return;
+
+      var metadata = user.user_metadata || {};
+      var fullName = (extra && extra.fullName) || metadata.full_name || metadata.name || user.email.split("@")[0];
+      var role = (extra && extra.role) || metadata.role || "باحث عن عمل";
+
+      var payload = {
+        auth_user_id: user.id || null,
+        full_name: fullName,
+        email: user.email,
+        phone: metadata.phone || "",
+        role: role,
+        city: metadata.city || "",
+        status: user.email_confirmed_at ? "نشط" : "بانتظار تأكيد البريد",
+        email_verified: !!user.email_confirmed_at,
+        notes: "تم التسجيل من تطبيق HireX",
+        updated_at: new Date().toISOString()
+      };
+
+      var result = await sb.from("hirex_users").upsert(payload, { onConflict: "email" });
+      if(result.error) console.warn("HireX profile sync error:", result.error.message);
+    }catch(err){
+      console.warn("HireX profile sync failed:", err);
+    }
+  }
+
+  window.hirexSaveUserProfile = saveHirexUser;
+
+  async function syncCurrentSession(){
+    var sb = getClient();
+    if(!sb) return;
+    var session = await sb.auth.getSession();
+    var user = session && session.data && session.data.session && session.data.session.user;
+    if(user) await saveHirexUser(user, {role:"باحث عن عمل"});
+  }
+
+  // Save pending profile when user submits sign up, even before email confirmation.
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("#forceAuthSubmit, #hxEmailAuthSubmit");
+    if(!btn) return;
+
+    setTimeout(async function(){
+      var email = (document.getElementById("forceAuthEmail")?.value || document.getElementById("hxEmailAuthEmail")?.value || "").trim().toLowerCase();
+      var fullName = (document.getElementById("forceAuthName")?.value || document.getElementById("hxEmailAuthName")?.value || "").trim();
+      if(email){
+        await saveHirexUser({email:email, user_metadata:{full_name:fullName}, email_confirmed_at:null}, {fullName:fullName || email.split("@")[0], role:"باحث عن عمل"});
+      }
+      await syncCurrentSession();
+    }, 1800);
+  }, true);
+
+  window.addEventListener("DOMContentLoaded", function(){
+    setTimeout(syncCurrentSession, 1200);
+  });
+})();
+</script>
+
 </body>
 </html>

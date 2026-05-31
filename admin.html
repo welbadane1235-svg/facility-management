@@ -1361,5 +1361,100 @@ function reportsHtml(){
 })();
 </script>
 
+
+<!-- HIREX V53 ADMIN USERS SYNC -->
+<script id="hirex-v53-admin-users-sync">
+(function(){
+  var SUPABASE_URL = "https://odfcsexotylhsstybiju.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
+
+  function toastSafe(msg){
+    try {
+      if(typeof window.toast === "function") return window.toast(msg);
+      alert(msg);
+    } catch(e) { alert(msg); }
+  }
+
+  function getClient(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.__hirexAdminUsersClient){
+      window.__hirexAdminUsersClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+    return window.__hirexAdminUsersClient;
+  }
+
+  function mapUser(row, index){
+    return {
+      id: row.id || index + 1,
+      name: row.full_name || row.email || "مستخدم",
+      email: row.email || "",
+      phone: row.phone || "",
+      role: row.role || "مستخدم",
+      status: row.email_verified ? "نشط" : (row.status || "بانتظار تأكيد البريد"),
+      joined: row.created_at ? new Date(row.created_at).toLocaleDateString("ar-SA") : "",
+      city: row.city || "",
+      notes: row.notes || ""
+    };
+  }
+
+  window.loadHirexUsersFromSupabase = async function(){
+    var sb = getClient();
+    if(!sb) return toastSafe("تعذر تحميل اتصال Supabase.");
+
+    var result = await sb.from("hirex_users").select("*").order("created_at", { ascending:false });
+
+    if(result.error){
+      console.warn(result.error);
+      return toastSafe("تعذر تحميل المستخدمين: " + result.error.message);
+    }
+
+    if(!window.state) return;
+    window.state.users = (result.data || []).map(mapUser);
+
+    if(typeof window.render === "function") window.render();
+    toastSafe("تم تحديث قائمة المستخدمين.");
+  };
+
+  window.addEventListener("DOMContentLoaded", function(){
+    setTimeout(function(){
+      var app = document.getElementById("adminApp");
+      if(app && (app.classList.contains("show") || app.style.display === "grid")){
+        window.loadHirexUsersFromSupabase();
+      }
+    }, 1500);
+  });
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-tab='users'], button");
+    if(btn && (btn.getAttribute("data-tab") === "users" || (btn.textContent || "").includes("المستخدمين"))){
+      setTimeout(function(){ window.loadHirexUsersFromSupabase(); }, 300);
+    }
+  }, true);
+
+  var oldRender = window.render;
+  if(typeof oldRender === "function"){
+    window.render = function(){
+      oldRender.apply(this, arguments);
+      try{
+        if(window.state && window.state.tab === "users"){
+          var panel = document.querySelector("#usersList")?.closest(".panel");
+          if(panel && !panel.querySelector(".hirex-refresh-users")){
+            var head = panel.querySelector(".panel-head");
+            if(head){
+              var b = document.createElement("button");
+              b.className = "small-btn ok hirex-refresh-users";
+              b.type = "button";
+              b.textContent = "تحديث من قاعدة البيانات";
+              b.onclick = window.loadHirexUsersFromSupabase;
+              head.appendChild(b);
+            }
+          }
+        }
+      }catch(e){}
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
