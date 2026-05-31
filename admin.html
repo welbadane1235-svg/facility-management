@@ -242,6 +242,12 @@
  </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth-config.js"></script>
+
+<style id="hirex-v51-admin-fix-style">
+  .admin-login-lock{border:1px solid rgba(0,234,240,.22);background:rgba(0,234,240,.06);border-radius:18px;padding:12px;color:#dff;font-weight:800;font-size:12px;line-height:1.7;margin-top:10px}
+  .admin-login-lock b{color:#00EAF0}
+</style>
+
 </head>
 <body>
  <section id="loginScreen" class="admin-login">
@@ -682,7 +688,7 @@ function reportsHtml(){
  document.getElementById('editTitle').textContent='تعديل ' + collectionLabel(collection);
  document.getElementById('editBody').innerHTML=`<div class="form-grid">${Object.entries(item).map(([k,v])=>`
  <label class="field ${String(v).length>60?'full':''}"><span>${safeText(fieldLabel(k))}</span>
- ${(k==='id'||k==='_dbId')?`<input value="${safeText(v)}" disabled>`: inputFor(k,v)}
+ ${k==='id'?`<input value="${safeText(v)}" disabled>`: inputFor(k,v)}
  </label>`).join('')}</div>
  <div class="row-actions" style="margin-top:14px"><button class="ok" onclick="saveEdit()">حفظ التعديل</button><button onclick="closeEditModal()">إلغاء</button></div>`;
  document.getElementById('editModal').classList.add('show');
@@ -1168,186 +1174,5 @@ function reportsHtml(){
     }
 
 </script>
-
-<script id="hirex-professional-admin-db-sync">
-(function(){
-  const DB_TABLE = {
-    users:'hirex_users', employees:'hirex_employees', packages:'hirex_packages', offers:'hirex_offers',
-    subscribers:'hirex_subscriptions', payments:'hirex_payments', ads:'hirex_ads', services:'hirex_services', xs:'hirex_xs_transactions'
-  };
-  const STATUS_TO_DB = {
-    'نشط':'active','موقوف':'blocked','تحت المراجعة':'pending','منشور':'published','مسودة':'draft','مكتمل':'completed','بانتظار التأكيد':'pending','بانتظار السداد':'pending_payment','مرفوض':'rejected','مدفوع':'paid','قيد التنفيذ':'in_progress','معلق':'on_hold','خصم':'deducted','خصم Xs':'xs_deducted','جديد':'new'
-  };
-  const STATUS_FROM_DB = {
-    active:'نشط',blocked:'موقوف',pending:'تحت المراجعة',published:'منشور',draft:'مسودة',completed:'مكتمل',pending_payment:'بانتظار السداد',rejected:'مرفوض',paid:'مدفوع',in_progress:'قيد التنفيذ',on_hold:'معلق',new:'جديد',xs_deducted:'خصم Xs',deducted:'خصم'
-  };
-  function dbStatus(v){ return STATUS_TO_DB[v] || v || 'active'; }
-  function uiStatus(v){ return STATUS_FROM_DB[v] || v || 'نشط'; }
-  function isoDate(v){ return v ? String(v).slice(0,10) : ''; }
-  function durationDays(v){ const m=String(v||'').match(/\d+/); return m?Number(m[0]):30; }
-  function nextClientId(collection){ return (state[collection]||[]).reduce((m,x)=>Math.max(m, Number(x.id)||0), 0) + 1; }
-  function sb(){
-    if(!window.supabase || !window.supabase.createClient) return null;
-    if(!window.__hirexAdminProClient){ window.__hirexAdminProClient = window.supabase.createClient(window.HIREX_SUPABASE_URL, window.HIREX_SUPABASE_ANON_KEY); }
-    return window.__hirexAdminProClient;
-  }
-  function mapFromDb(collection, r, i){
-    const id = i + 1;
-    if(collection==='users') return {id,_dbId:r.id,name:r.full_name||'',email:r.email||'',phone:r.phone||'',role:r.role||'visitor',status:uiStatus(r.status),joined:isoDate(r.created_at)||'اليوم',city:r.city||'',notes:r.notes||'',emailVerified:!!r.email_verified};
-    if(collection==='employees') return {id,_dbId:r.id,name:r.full_name||'',email:r.email||'',phone:r.phone||'',job:r.job_title||'',department:r.department||'',permissions:typeof r.permissions==='object'?JSON.stringify(r.permissions):String(r.permissions||''),status:uiStatus(r.status),lastLogin:r.last_login_at?isoDate(r.last_login_at):'لم يدخل بعد'};
-    if(collection==='packages') return {id,_dbId:r.id,name:r.name||'',target:r.target||'all',price:Number(r.price||0),currency:r.currency||'SAR',duration:r.duration_days?String(r.duration_days)+' يوم':'30 يوم',features:r.features||'',status:uiStatus(r.status),autoActivate:!!r.auto_activate};
-    if(collection==='offers') return {id,_dbId:r.id,title:r.title||'',code:r.code||'',discount:Number(r.discount||0),type:r.discount_type||'percent',appliesTo:r.applies_to||'',start:isoDate(r.starts_at),end:isoDate(r.ends_at),status:uiStatus(r.status),uses:Number(r.uses_count||0)};
-    if(collection==='subscribers') return {id,_dbId:r.id,user:r.user_email||'',email:r.user_email||'',plan:r.package_name||'',price:Number(r.price||0),status:uiStatus(r.status),start:isoDate(r.starts_at),end:isoDate(r.ends_at),paid:!!r.paid,activatedByPayment:r.activated_by_payment_ref||''};
-    if(collection==='payments') return {id,_dbId:r.id,payer:r.payer_name||'',email:r.payer_email||'',amount:Number(r.amount||0),method:r.method||'',reason:r.reason||'',packageName:r.package_name||'',status:uiStatus(r.status),date:isoDate(r.paid_at||r.created_at),ref:r.payment_ref||'',notes:r.notes||''};
-    if(collection==='ads') return {id,_dbId:r.id,title:r.title||'',type:r.ad_type||'',owner:r.owner_name||r.owner_email||'',email:r.owner_email||'',city:r.city||'',status:uiStatus(r.status),promoted:!!r.promoted,price:Number(r.price||0),views:Number(r.views||0),payload:r.payload||{}};
-    if(collection==='services') return {id,_dbId:r.id,title:r.title||'',client:r.client_email||'',provider:r.provider_email||'',amount:Number(r.amount||0),commission:Number(r.commission||0),status:uiStatus(r.status),paid:!!r.paid,payload:r.payload||{}};
-    if(collection==='xs') return {id,_dbId:r.id,user:r.user_email||'',type:r.transaction_type||'',amount:Number(r.amount||0),price:Number(r.price||0),status:uiStatus(r.status),date:isoDate(r.created_at)};
-    return Object.assign({id,_dbId:r.id}, r);
-  }
-  function mapToDb(collection, item){
-    if(collection==='users') return {full_name:item.name||item.full_name||'',email:(item.email||'').toLowerCase(),phone:item.phone||null,role:item.role||'visitor',city:item.city||null,status:dbStatus(item.status),notes:item.notes||null,email_verified:!!item.emailVerified,updated_at:new Date().toISOString()};
-    if(collection==='employees') return {full_name:item.name||'',email:(item.email||'').toLowerCase(),phone:item.phone||null,job_title:item.job||null,department:item.department||null,permissions:{text:item.permissions||''},status:dbStatus(item.status),updated_at:new Date().toISOString()};
-    if(collection==='packages') return {name:item.name||'',target:item.target||'all',price:Number(item.price||0),currency:item.currency||'SAR',duration_days:durationDays(item.duration),features:item.features||null,status:dbStatus(item.status),auto_activate:item.autoActivate!==false,updated_at:new Date().toISOString()};
-    if(collection==='offers') return {title:item.title||'',code:item.code||('OFFER-'+Date.now()),discount:Number(item.discount||0),discount_type:item.type||'percent',applies_to:item.appliesTo||null,starts_at:item.start||null,ends_at:item.end||null,status:dbStatus(item.status),uses_count:Number(item.uses||0)};
-    if(collection==='subscribers') return {user_email:(item.email||item.user||'').toLowerCase(),package_name:item.plan||item.packageName||'',price:Number(item.price||0),status:dbStatus(item.status),starts_at:item.start||null,ends_at:item.end||null,paid:!!item.paid,activated_by_payment_ref:item.activatedByPayment||null,updated_at:new Date().toISOString()};
-    if(collection==='payments') return {payer_name:item.payer||'',payer_email:(item.email||'unknown@hirex.com').toLowerCase(),amount:Number(item.amount||0),method:item.method||'card',reason:item.reason||null,package_name:item.packageName||null,status:dbStatus(item.status),payment_ref:item.ref||('PAY-'+Date.now()),notes:item.notes||null,paid_at:item.status==='مكتمل'?new Date().toISOString():null};
-    if(collection==='ads') return {title:item.title||'',ad_type:item.type||'عام',owner_email:(item.email||'').toLowerCase()||null,owner_name:item.owner||null,city:item.city||null,status:dbStatus(item.status),promoted:!!item.promoted,price:Number(item.price||0),views:Number(item.views||0),payload:item.payload||{},updated_at:new Date().toISOString()};
-    if(collection==='services') return {title:item.title||'',client_email:item.client||null,provider_email:item.provider||null,amount:Number(item.amount||0),commission:Number(item.commission||0),status:dbStatus(item.status),paid:!!item.paid,payload:item.payload||{},updated_at:new Date().toISOString()};
-    if(collection==='xs') return {user_email:(item.email||item.user||'unknown@hirex.com').toLowerCase(),transaction_type:item.type||'manual',amount:Number(item.amount||0),price:Number(item.price||0),status:dbStatus(item.status)};
-    return item;
-  }
-  async function isCurrentUserAdmin(user){
-    if(!user || !user.email) return false;
-    const client=sb(); if(!client) return false;
-    const {data,error}=await client.from('hirex_admins').select('email,role,status').eq('email', user.email.toLowerCase()).eq('status','active').maybeSingle();
-    return !error && !!data;
-  }
-  async function loginAdmin(){
-    const email=document.getElementById('loginEmail').value.trim().toLowerCase();
-    const pass=document.getElementById('loginPassword').value.trim();
-    if(!validEmail(email)) return toast('اكتب إيميل صحيح');
-    const client=sb();
-    if(!client) return toast('إعدادات Supabase غير محملة. تأكد من auth-config.js');
-    const {data,error}=await client.auth.signInWithPassword({email,password:pass});
-    if(error) return toast('تعذر تسجيل الدخول: '+error.message);
-    const user=data && data.user;
-    if(!user || !user.email_confirmed_at){ await client.auth.signOut(); return toast('البريد غير مؤكد. أكد البريد أولًا.'); }
-    if(!(await isCurrentUserAdmin(user))){ await client.auth.signOut(); return toast('هذا الحساب غير موجود في جدول صلاحيات الإدارة hirex_admins'); }
-    startAdminSession(user.email);
-    toast('تم دخول لوحة الإدارة');
-    await hxLoadAllFromSupabase();
-  }
-  async function restoreAdminSession(){
-    try{
-      const client=sb(); if(!client) return;
-      const {data}=await client.auth.getSession();
-      const user=data && data.session && data.session.user;
-      if(user && user.email_confirmed_at && await isCurrentUserAdmin(user)){
-        startAdminSession(user.email);
-        await hxLoadAllFromSupabase();
-      }
-    }catch(e){ console.warn(e); }
-  }
-  async function logoutAdmin(){
-    const client=sb(); if(client) await client.auth.signOut();
-    state.adminEmail='';
-    document.getElementById('adminApp').classList.remove('show');
-    document.getElementById('loginScreen').style.display='grid';
-    toast('تم تسجيل الخروج');
-  }
-  function startAdminSession(email){
-    state.adminEmail=email;
-    document.getElementById('adminEmailText').textContent=email;
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminApp').classList.add('show');
-    render();
-  }
-  async function hxLoadAllFromSupabase(){
-    const client=sb(); if(!client) return;
-    const collections=Object.keys(DB_TABLE);
-    for(const c of collections){
-      const {data,error}=await client.from(DB_TABLE[c]).select('*').order('created_at',{ascending:false});
-      if(error){ console.warn('load '+c, error.message); state[c]=[]; }
-      else state[c]=(data||[]).map((r,i)=>mapFromDb(c,r,i));
-    }
-    render();
-    toast('تم تحديث البيانات من Supabase');
-  }
-  async function hxInsert(collection, item){
-    const client=sb(); if(!client) throw new Error('Supabase غير محمل');
-    const payload=mapToDb(collection,item);
-    const {data,error}=await client.from(DB_TABLE[collection]).insert(payload).select('*').single();
-    if(error) throw error;
-    return mapFromDb(collection,data,0);
-  }
-  async function hxUpdate(collection, item, patch){
-    const client=sb(); if(!client || !item || !item._dbId) return null;
-    const payload=mapToDb(collection, Object.assign({}, item, patch||{}));
-    const {data,error}=await client.from(DB_TABLE[collection]).update(payload).eq('id', item._dbId).select('*').single();
-    if(error) throw error;
-    return mapFromDb(collection,data,0);
-  }
-  async function hxUpdateStatus(collection,id,status,extra){
-    const item=findItem(collection,id); if(!item) return toast('العنصر غير موجود');
-    Object.assign(item, extra||{}, {status});
-    try{ if(item._dbId) await hxUpdate(collection,item); render(); toast('تم تحديث الحالة'); }
-    catch(e){ toast('تعذر الحفظ في Supabase: '+e.message); }
-  }
-  async function saveEdit(){
-    const target=state.editTarget; if(!target) return;
-    const item=findItem(target.collection,target.id); if(!item) return;
-    document.querySelectorAll('#editBody [data-key]').forEach(el=>{
-      const k=el.dataset.key; let val=el.value;
-      if(val==='true') val=true; else if(val==='false') val=false; else if(!Number.isNaN(Number(val)) && val.trim()!=='' && ['price','amount','commission','views','discount','uses'].includes(k)) val=Number(val);
-      item[k]=val;
-    });
-    try{ if(item._dbId) await hxUpdate(target.collection,item); closeEditModal(); await hxLoadAllFromSupabase(); toast('تم حفظ التعديل في Supabase'); }
-    catch(e){ toast('تعذر حفظ التعديل: '+e.message); }
-  }
-  async function hxCreateNewFromModal(collection){
-    const schema = hxAddSchemas[collection];
-    if(!schema) return toast('نوع الإضافة غير معروف');
-    const obj = {id: nextClientId(collection)};
-    let missing = null;
-    document.querySelectorAll('#editBody [data-hx-add-key]').forEach(el=>{
-      const k = el.dataset.hxAddKey;
-      let val = String(el.value ?? '').trim();
-      if(el.dataset.required === '1' && !val && !missing) missing = k;
-      if(['price','amount','commission','views','discount','uses'].includes(k)) val = Number(val || 0);
-      if(val === 'true') val = true;
-      if(val === 'false') val = false;
-      obj[k] = val;
-    });
-    if(missing){ const field=schema.fields.find(f=>f.key===missing); return toast('أكمل الحقل المطلوب: '+(field?.label||missing)); }
-    hxApplyNewDefaults(collection,obj);
-    try{
-      const saved=await hxInsert(collection,obj);
-      state[collection].unshift(Object.assign(saved,{id:nextClientId(collection)}));
-      closeEditModal(); setAdminTab(collection); await hxLoadAllFromSupabase(); toast('تمت الإضافة في Supabase');
-    }catch(e){ toast('تعذر الإضافة: '+e.message); }
-  }
-  async function createPayment(){
-    const payment={id:nextClientId('payments'),payer:val('newPayer')||'مسدد جديد',email:val('newEmail')||'unknown@hirex.com',amount:Number(val('newAmount')||0),method:val('newMethod')||'بطاقة',reason:val('newReason')||'سداد يدوي',packageName:val('newPackage')||inferPackageFromReason(val('newReason')),status:'مكتمل',date:new Date().toISOString().slice(0,10),ref:'PAY-'+Date.now(),notes:val('newNotes')};
-    try{ await hxInsert('payments', payment); closeEditModal(); setAdminTab('payments'); await hxLoadAllFromSupabase(); toast('تمت إضافة عملية السداد وتفعيل الباقة عبر قاعدة البيانات'); }
-    catch(e){ toast('تعذر إضافة السداد: '+e.message); }
-  }
-  async function confirmPayment(id){ return hxUpdateStatus('payments',id,'مكتمل'); }
-  async function rejectPayment(id){ return hxUpdateStatus('payments',id,'مرفوض'); }
-  async function approveAd(id){ return hxUpdateStatus('ads',id,'منشور'); }
-  async function rejectAd(id){ return hxUpdateStatus('ads',id,'مرفوض'); }
-  async function serviceDone(id){ return hxUpdateStatus('services',id,'مكتمل',{paid:true}); }
-  async function serviceHold(id){ return hxUpdateStatus('services',id,'معلق'); }
-  async function approveUser(id){ return hxUpdateStatus('users',id,'نشط'); }
-  async function blockUser(id){ return hxUpdateStatus('users',id,'موقوف'); }
-  async function toggleEmployee(id){ const e=findItem('employees',id); if(e) return hxUpdateStatus('employees',id,e.status==='نشط'?'موقوف':'نشط'); }
-  async function togglePackage(id){ const p=findItem('packages',id); if(p) return hxUpdateStatus('packages',id,p.status==='نشط'?'موقوف':'نشط'); }
-  async function toggleOffer(id){ const o=findItem('offers',id); if(o) return hxUpdateStatus('offers',id,o.status==='نشط'?'موقوف':'نشط'); }
-  async function markSubscriberPaid(id){ const s=findItem('subscribers',id); if(!s) return; return hxUpdateStatus('subscribers',id,'نشط',{paid:true}); }
-  function refreshDashboard(){ hxLoadAllFromSupabase(); }
-  Object.assign(window,{loginAdmin,restoreAdminSession,logoutAdmin,startAdminSession,hxLoadAllFromSupabase,hxCreateNewFromModal,saveEdit,createPayment,confirmPayment,rejectPayment,approveAd,rejectAd,serviceDone,serviceHold,approveUser,blockUser,toggleEmployee,togglePackage,toggleOffer,markSubscriberPaid,refreshDashboard});
-  window.addEventListener('DOMContentLoaded', restoreAdminSession);
-})();
-</script>
-
 </body>
 </html>
