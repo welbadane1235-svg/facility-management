@@ -1174,5 +1174,192 @@ function reportsHtml(){
     }
 
 </script>
+
+<!-- HIREX V52 ADMIN LOCAL FALLBACK -->
+<script id="hirex-v52-admin-fallback">
+(function(){
+  var SUPABASE_URL = "https://odfcsexotylhsstybiju.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_zJnpojEcE7O9kOfrnIt4Iw_9UGzunBH";
+  var ADMIN_EMAIL = "admin@hirex.com";
+  var LOCAL_PASSWORD = "1234";
+
+  window.HIREX_SUPABASE_URL = SUPABASE_URL;
+  window.HIREX_SUPABASE_ANON_KEY = SUPABASE_KEY;
+  window.HIREX_AUTH_REDIRECT_URL = window.location.origin + window.location.pathname;
+
+  function toastSafe(msg){
+    try {
+      if(typeof window.toast === "function") return window.toast(msg);
+      alert(msg);
+    } catch(e) {
+      alert(msg);
+    }
+  }
+
+  function valid(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||"").trim());
+  }
+
+  function supa(){
+    if(!window.supabase || !window.supabase.createClient) return null;
+    if(!window.__hirexAdminV52Client){
+      window.__hirexAdminV52Client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+    return window.__hirexAdminV52Client;
+  }
+
+  function showAdmin(email){
+    if(window.state) window.state.adminEmail = email || ADMIN_EMAIL;
+    var emailText = document.getElementById("adminEmailText");
+    if(emailText) emailText.textContent = email || ADMIN_EMAIL;
+
+    var login = document.getElementById("loginScreen");
+    var app = document.getElementById("adminApp");
+
+    if(login) login.style.display = "none";
+    if(app){
+      app.classList.add("show");
+      app.style.display = "grid";
+    }
+
+    localStorage.setItem("hirex_admin_session", JSON.stringify({
+      email: email || ADMIN_EMAIL,
+      loggedIn: true,
+      time: Date.now(),
+      mode: "admin"
+    }));
+
+    if(typeof window.render === "function") window.render();
+  }
+
+  async function trySupabaseLogin(email, pass){
+    var sb = supa();
+    if(!sb) return false;
+
+    var result = await sb.auth.signInWithPassword({ email: email, password: pass });
+    if(result.error) throw result.error;
+
+    var user = result.data && result.data.user;
+    if(!user) throw new Error("تعذر قراءة حساب الإدارة");
+
+    if(!user.email_confirmed_at){
+      await sb.auth.signOut();
+      throw new Error("بريد الإدارة غير مؤكد. أكد البريد من Supabase أولًا.");
+    }
+
+    if(user.email !== ADMIN_EMAIL && !(user.user_metadata && user.user_metadata.role === "admin")){
+      await sb.auth.signOut();
+      throw new Error("هذا الحساب لا يملك صلاحية الإدارة.");
+    }
+
+    return user.email;
+  }
+
+  window.loginAdmin = async function(){
+    var email = (document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+    var pass = (document.getElementById("loginPassword")?.value || "").trim();
+
+    if(!valid(email)) return toastSafe("اكتب إيميل صحيح.");
+    if(email !== ADMIN_EMAIL) return toastSafe("هذا الإيميل غير مصرح له بدخول الإدارة.");
+
+    try {
+      var realEmail = await trySupabaseLogin(email, pass);
+      if(realEmail){
+        showAdmin(realEmail);
+        return toastSafe("تم دخول لوحة الإدارة.");
+      }
+    } catch(err) {
+      var msg = String((err && err.message) || err || "");
+
+      // Important: allow local admin fallback if Supabase user not created yet.
+      if(
+        msg.toLowerCase().includes("invalid login") ||
+        msg.toLowerCase().includes("invalid credentials") ||
+        msg.toLowerCase().includes("email not confirmed") ||
+        msg.toLowerCase().includes("fetch")
+      ){
+        if(pass === LOCAL_PASSWORD){
+          showAdmin(email);
+          return toastSafe("تم دخول لوحة الإدارة.");
+        }
+        return toastSafe("بيانات دخول الإدارة غير صحيحة.");
+      }
+
+      return toastSafe(msg);
+    }
+
+    // If Supabase not loaded, use local fallback.
+    if(pass === LOCAL_PASSWORD){
+      showAdmin(email);
+      return toastSafe("تم دخول لوحة الإدارة.");
+    }
+
+    return toastSafe("بيانات دخول الإدارة غير صحيحة.");
+  };
+
+  window.restoreAdminSession = async function(){
+    try {
+      var raw = localStorage.getItem("hirex_admin_session");
+      if(raw){
+        var saved = JSON.parse(raw);
+        if(saved && saved.loggedIn && saved.email === ADMIN_EMAIL){
+          showAdmin(saved.email);
+          return;
+        }
+      }
+
+      var sb = supa();
+      if(sb){
+        var session = await sb.auth.getSession();
+        var user = session && session.data && session.data.session && session.data.session.user;
+        if(user && user.email_confirmed_at && (user.email === ADMIN_EMAIL || (user.user_metadata && user.user_metadata.role === "admin"))){
+          showAdmin(user.email);
+        }
+      }
+    } catch(e) {
+      console.warn(e);
+    }
+  };
+
+  window.logoutAdmin = async function(){
+    try {
+      var sb = supa();
+      if(sb) await sb.auth.signOut();
+    } catch(e) {}
+
+    localStorage.removeItem("hirex_admin_session");
+
+    if(window.state) window.state.adminEmail = "";
+
+    var app = document.getElementById("adminApp");
+    var login = document.getElementById("loginScreen");
+
+    if(app){
+      app.classList.remove("show");
+      app.style.display = "none";
+    }
+    if(login) login.style.display = "grid";
+
+    toastSafe("تم تسجيل الخروج.");
+  };
+
+  window.addEventListener("DOMContentLoaded", function(){
+    var note = document.querySelector(".login-note");
+    if(note){
+      note.innerHTML = 'دخول الإدارة: <b>admin@hirex.com</b> / كلمة المرور المحلية: <b>1234</b>';
+    }
+
+    var passInput = document.getElementById("loginPassword");
+    if(passInput){
+      passInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter") window.loginAdmin();
+      });
+    }
+
+    window.restoreAdminSession();
+  });
+})();
+</script>
+
 </body>
 </html>
