@@ -1,5 +1,5 @@
 /*
-  Tasneef ERP API Layer V016
+  Tasneef ERP API Layer V017
   وضع حقيقي:
   - تسجيل دخول عبر Supabase Auth
   - RLS يعمل باستخدام access_token الخاص بالمستخدم
@@ -11,6 +11,7 @@
   const prefix = cfg.STORAGE_PREFIX || 'tasneef_erp_';
   const tokenKey = cfg.AUTH_TOKEN_KEY || 'tasneef_auth_token';
   const refreshKey = cfg.REFRESH_TOKEN_KEY || 'tasneef_refresh_token';
+  let memorySession = {};
 
   const seed = {
     records: [],
@@ -40,7 +41,22 @@
   function apiBase(){ return (cfg.API_BASE_URL || '').replace(/\/$/, ''); }
   function authBase(){ return apiBase().replace('/rest/v1', '/auth/v1'); }
   function isSupabase(){ return (cfg.API_MODE || 'supabase') === 'supabase'; }
-  function hasSession(){ return Boolean(localStorage.getItem(tokenKey)); }
+  function authStore(){ return cfg.AUTH_STORAGE === 'local' ? localStorage : sessionStorage; }
+  function storageGet(name){
+    try{ return authStore().getItem(name) || memorySession[name] || ''; }
+    catch(_err){ return memorySession[name] || ''; }
+  }
+  function storageSet(name, value){
+    memorySession[name] = value;
+    try{ authStore().setItem(name, value); }
+    catch(_err){ throw new Error('تعذر حفظ جلسة الدخول في المتصفح. افتح نافذة خاصة أو امسح بيانات الموقع ثم حاول مرة أخرى.'); }
+  }
+  function storageRemove(name){
+    delete memorySession[name];
+    try{ sessionStorage.removeItem(name); localStorage.removeItem(name); }
+    catch(_err){}
+  }
+  function hasSession(){ return Boolean(storageGet(tokenKey)); }
 
   function readLocal(name){
     const raw = localStorage.getItem(key(name));
@@ -57,7 +73,7 @@
 
   function authHeaders(extra={}){
     const anon = cfg.SUPABASE_ANON_KEY || '';
-    const token = localStorage.getItem(tokenKey) || anon;
+    const token = storageGet(tokenKey) || anon;
     return {
       apikey: anon,
       Authorization: 'Bearer ' + token,
@@ -240,23 +256,57 @@
     }
   }
 
-  async function authRequest(path, body){
-    return request(authBase() + path, {
-      method:'POST',
-      headers:{
-        apikey: cfg.SUPABASE_ANON_KEY || '',
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(body)
-    });
+  function authMessage(message){
+    const msg = String(message || '').toLowerCase();
+    if(msg.includes('email not confirmed')) return 'البريد الإلكتروني غير مؤكد. افتح رسالة التحقق في بريدك ثم حاول الدخول.';
+    if(msg.includes('invalid login')) return 'بيانات الدخول غير صحيحة.';
+    if(msg.includes('user already registered')) return 'هذا البريد مسجل مسبقًا. استخدم تسجيل الدخول أو استرجاع كلمة المرور.';
+    if(msg.includes('rate limit')) return 'تم إرسال عدة طلبات بسرعة. انتظر قليلًا ثم حاول مرة أخرى.';
+    if(msg.includes('password')) return 'تحقق من كلمة المرور. يجب أن تكون مطابقة لشروط Supabase.';
+    return message || 'تعذر تنفيذ العملية.';
+  }
+
+  async function authRequest(path, body, options={}){
+    try{
+      return await request(authBase() + path, {
+        method:options.method || 'POST',
+        headers:{
+          apikey: cfg.SUPABASE_ANON_KEY || '',
+          ...(options.authorized ? {Authorization:'Bearer ' + storageGet(tokenKey)} : {}),
+          'Content-Type':'application/json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+      });
+    }catch(err){
+      throw new Error(authMessage(err.message));
+    }
+  }
+
+  function withRedirect(path){
+    const url = new URL(authBase() + path);
+    url.searchParams.set('redirect_to', cfg.EMAIL_REDIRECT_URL || location.href);
+    return url.href.replace(authBase(), '');
   }
 
   function saveSession(session){
     if(!session?.access_token) return null;
-    localStorage.setItem(tokenKey, session.access_token);
-    if(session.refresh_token) localStorage.setItem(refreshKey, session.refresh_token);
-    localStorage.setItem(prefix + 'user', JSON.stringify(session.user || {}));
+    storageSet(tokenKey, session.access_token);
+    if(session.refresh_token) storageSet(refreshKey, session.refresh_token);
+    storageSet(prefix + 'user', JSON.stringify(session.user || {}));
     return session.user || null;
+  }
+
+  async function getCloudUser(){
+    if(!hasSession()) return null;
+    const user = await request(authBase() + '/user', {
+      method:'GET',
+      headers:{
+        apikey: cfg.SUPABASE_ANON_KEY || '',
+        Authorization:'Bearer ' + storageGet(tokenKey)
+      }
+    });
+    storageSet(prefix + 'user', JSON.stringify(user || {}));
+    return user;
   }
 
   window.TasneefAPI = {
@@ -265,21 +315,40 @@
     auth: {
       isLoggedIn: hasSession,
       user(){
-        try{ return JSON.parse(localStorage.getItem(prefix + 'user') || 'null'); }
+        try{ return JSON.parse(storageGet(prefix + 'user') || 'null'); }
         catch(_err){ return null; }
       },
+      getUser: getCloudUser,
       async login(email, password){
         const session = await authRequest('/token?grant_type=password', {email, password});
-        return saveSession(session);
+        const user = saveSession(session);
+        if(user && user.email_confirmed_at === null){
+          this.logout();
+          throw new Error('البريد الإلكتروني غير مؤكد. افتح رسالة التحقق في بريدك ثم حاول الدخول.');
+        }
+        return user;
       },
       async signup(email, password){
-        const session = await authRequest('/signup', {email, password});
+        const session = await authRequest(withRedirect('/signup'), {email, password, data:{app:'tasneef_erp'}});
         return saveSession(session);
       },
+      async resendVerification(email){
+        return authRequest('/resend', {
+          type:'signup',
+          email,
+          options:{email_redirect_to: cfg.EMAIL_REDIRECT_URL || location.href}
+        });
+      },
+      async recoverPassword(email){
+        return authRequest(withRedirect('/recover'), {email});
+      },
+      async updatePassword(password){
+        return authRequest('/user', {password}, {authorized:true});
+      },
       logout(){
-        localStorage.removeItem(tokenKey);
-        localStorage.removeItem(refreshKey);
-        localStorage.removeItem(prefix + 'user');
+        storageRemove(tokenKey);
+        storageRemove(refreshKey);
+        storageRemove(prefix + 'user');
       }
     },
 

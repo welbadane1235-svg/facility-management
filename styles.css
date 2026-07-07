@@ -1062,3 +1062,10 @@ input,select,textarea{font-family:inherit}
 .auth-actions button{flex:1;min-height:44px;border:0;border-radius:6px;background:#0c7a43;color:#fff;font-weight:800;cursor:pointer}
 .auth-actions .secondary-action{background:#eef5f1;color:#145236;border:1px solid #cfe0d7}
 .auth-error{border:1px solid #f1c7c7;background:#fff3f3;color:#9f2525;border-radius:6px;padding:10px 12px;margin-bottom:14px}
+.auth-success{border:1px solid #bfe5cf;background:#f0fbf5;color:#106138;border-radius:6px;padding:10px 12px;margin-bottom:14px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px}
+.auth-tabs button{min-height:38px;border:1px solid #d9e6df;background:#f8fbf9;color:#496257;border-radius:6px;font-weight:800;cursor:pointer}
+.auth-tabs button.active{background:#0c7a43;color:#fff;border-color:#0c7a43}
+.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.auth-links button{border:0;background:transparent;color:#0c7a43;font-weight:800;cursor:pointer;padding:4px}
+@media(max-width:520px){.auth-actions,.auth-links{display:grid}.auth-card{padding:22px}}

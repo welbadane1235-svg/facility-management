@@ -450,24 +450,52 @@ function toast(message){
   setTimeout(() => t.classList.add('hidden'), 2200);
 }
 
-function renderAuthScreen(message=''){
+let authMode = 'login';
+let lastAuthEmail = '';
+
+function renderAuthScreen(message='', mode=authMode, kind='error'){
   const content = $('#content');
   if(!content) return;
+  authMode = mode;
   document.body.classList.add('auth-mode');
   content.className = 'auth-layout';
+  const isSignup = authMode === 'signup';
+  const isVerify = authMode === 'verify';
+  const isRecover = authMode === 'recover';
+  const title = isSignup ? 'إنشاء حساب' : isVerify ? 'تحقق من بريدك' : isRecover ? 'استرجاع كلمة المرور' : 'تسجيل الدخول';
+  const help = isSignup
+    ? 'سيتم إرسال رابط تحقق إلى بريدك قبل تفعيل الحساب.'
+    : isVerify
+      ? 'فتح رابط التحقق من البريد يفعّل الحساب ثم يمكنك تسجيل الدخول.'
+      : isRecover
+        ? 'اكتب بريدك وسنرسل رابط تغيير كلمة المرور.'
+        : 'ادخل بحسابك السحابي للوصول إلى بيانات النظام.';
   content.innerHTML = `
     <section class="auth-card">
       <img src="tasneef_logo.png" alt="Tasneef Facilities Management" />
-      <h1>تسجيل الدخول</h1>
-      <p>ادخل بحساب Supabase المسجل للوصول إلى بيانات النظام الحقيقية.</p>
-      ${message ? `<div class="auth-error">${escapeHtml(message)}</div>` : ''}
+      <h1>${title}</h1>
+      <p>${help}</p>
+      <div class="auth-tabs">
+        <button class="${authMode === 'login' ? 'active' : ''}" onclick="renderAuthScreen('', 'login')">دخول</button>
+        <button class="${authMode === 'signup' ? 'active' : ''}" onclick="renderAuthScreen('', 'signup')">حساب جديد</button>
+      </div>
+      ${message ? `<div class="${kind === 'success' ? 'auth-success' : 'auth-error'}">${escapeHtml(message)}</div>` : ''}
       <label>البريد الإلكتروني</label>
-      <input id="authEmail" type="email" autocomplete="email" placeholder="name@company.com" />
-      <label>كلمة المرور</label>
-      <input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" />
+      <input id="authEmail" type="email" autocomplete="email" placeholder="name@company.com" value="${escapeHtml(lastAuthEmail)}" />
+      ${isVerify || isRecover ? '' : `
+        <label>كلمة المرور</label>
+        <input id="authPassword" type="password" autocomplete="${isSignup ? 'new-password' : 'current-password'}" placeholder="••••••••" />
+      `}
       <div class="auth-actions">
-        <button onclick="handleLogin()">دخول</button>
-        <button class="secondary-action" onclick="handleSignup()">إنشاء حساب</button>
+        ${isSignup ? '<button onclick="handleSignup()">إنشاء وإرسال التحقق</button>' : ''}
+        ${isVerify ? '<button onclick="handleResendVerification()">إعادة إرسال التحقق</button>' : ''}
+        ${isRecover ? '<button onclick="handleRecoverPassword()">إرسال رابط الاسترجاع</button>' : ''}
+        ${(!isSignup && !isVerify && !isRecover) ? '<button onclick="handleLogin()">دخول</button>' : ''}
+        <button class="secondary-action" onclick="renderAuthScreen('', 'login')">رجوع للدخول</button>
+      </div>
+      <div class="auth-links">
+        <button onclick="renderAuthScreen('', 'recover')">نسيت كلمة المرور؟</button>
+        <button onclick="handleResendVerification()">إعادة إرسال بريد التحقق</button>
       </div>
     </section>
   `;
@@ -476,28 +504,54 @@ function renderAuthScreen(message=''){
 async function handleLogin(){
   const email = $('#authEmail')?.value?.trim();
   const password = $('#authPassword')?.value || '';
-  if(!email || !password) return renderAuthScreen('اكتب البريد وكلمة المرور.');
+  lastAuthEmail = email || lastAuthEmail;
+  if(!email || !password) return renderAuthScreen('اكتب البريد وكلمة المرور.', 'login');
   try{
     await TasneefAPI.auth.login(email, password);
     document.body.classList.remove('auth-mode');
     await initApp();
     toast('تم تسجيل الدخول');
   }catch(err){
-    renderAuthScreen(err.message || 'تعذر تسجيل الدخول.');
+    const msg = err.message || 'تعذر تسجيل الدخول.';
+    renderAuthScreen(msg, msg.includes('غير مؤكد') ? 'verify' : 'login');
   }
 }
 
 async function handleSignup(){
   const email = $('#authEmail')?.value?.trim();
   const password = $('#authPassword')?.value || '';
-  if(!email || password.length < 6) return renderAuthScreen('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+  lastAuthEmail = email || lastAuthEmail;
+  if(!email || password.length < 6) return renderAuthScreen('كلمة المرور يجب أن تكون 6 أحرف على الأقل.', 'signup');
   try{
     await TasneefAPI.auth.signup(email, password);
-    document.body.classList.remove('auth-mode');
-    await initApp();
-    toast('تم إنشاء الحساب');
+    TasneefAPI.auth.logout();
+    renderAuthScreen('تم إنشاء الحساب. أرسلنا رابط التحقق إلى بريدك، افتحه ثم سجل الدخول.', 'verify', 'success');
   }catch(err){
-    renderAuthScreen(err.message || 'تعذر إنشاء الحساب.');
+    renderAuthScreen(err.message || 'تعذر إنشاء الحساب.', 'signup');
+  }
+}
+
+async function handleResendVerification(){
+  const email = $('#authEmail')?.value?.trim() || lastAuthEmail;
+  lastAuthEmail = email || lastAuthEmail;
+  if(!email) return renderAuthScreen('اكتب البريد الإلكتروني أولًا.', 'verify');
+  try{
+    await TasneefAPI.auth.resendVerification(email);
+    renderAuthScreen('تم إرسال رابط تحقق جديد. راجع البريد الوارد أو البريد غير المرغوب.', 'verify', 'success');
+  }catch(err){
+    renderAuthScreen(err.message || 'تعذر إرسال رابط التحقق.', 'verify');
+  }
+}
+
+async function handleRecoverPassword(){
+  const email = $('#authEmail')?.value?.trim() || lastAuthEmail;
+  lastAuthEmail = email || lastAuthEmail;
+  if(!email) return renderAuthScreen('اكتب البريد الإلكتروني أولًا.', 'recover');
+  try{
+    await TasneefAPI.auth.recoverPassword(email);
+    renderAuthScreen('تم إرسال رابط استرجاع كلمة المرور إلى بريدك.', 'login', 'success');
+  }catch(err){
+    renderAuthScreen(err.message || 'تعذر إرسال رابط الاسترجاع.', 'recover');
   }
 }
 
