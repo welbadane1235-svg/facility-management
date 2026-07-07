@@ -481,3 +481,200 @@ async function init(){
 
 document.addEventListener('DOMContentLoaded', init);
 if(document.readyState !== 'loading') init();
+
+
+
+/* V015 Working Filters */
+const TasneefFilterState = {};
+
+function getModuleRows(name){
+  const section = tableSections[name];
+  if(!section) return [];
+  const [action, columns, rows] = section;
+  const normalized = rows.map(r => ({
+    values: r,
+    searchable: r.join(' ').toLowerCase(),
+    status: r[4] || r[3] || '',
+    project: r[2] || r[1] || '',
+    assignee: r[1] || '',
+    date: r[2] || ''
+  }));
+  return normalized;
+}
+
+function getFilterValue(key){
+  return document.querySelector(`[data-filter="${key}"]`)?.value || '';
+}
+
+function workingFilterBar(filters, moduleName=''){
+  const projects = ['','الماجدية 70','الرمز A17','العجلان 30','برج جوديا','المخزن الرئيسي'];
+  const statuses = ['','نشط','مسودة','بانتظار اعتماد','غير مدفوعة','مرحّل','مكتمل','غير معالج','قيد المراجعة'];
+  const assignees = ['','مدير النظام','المحاسب','مدير التشغيل','مسؤول المخزن','المشرف'];
+  return `<div class="module-filterbar working-filterbar" data-module="${escapeHtml(moduleName)}">
+    <div class="module-search"><span>⌕</span><input data-filter="q" placeholder="بحث سريع..." oninput="applyCurrentFilters()" /></div>
+    <select data-filter="status" onchange="applyCurrentFilters()">${statuses.map(x=>`<option value="${x}">${x || 'كل الحالات'}</option>`).join('')}</select>
+    <select data-filter="project" onchange="applyCurrentFilters()">${projects.map(x=>`<option value="${x}">${x || 'كل المشاريع'}</option>`).join('')}</select>
+    <select data-filter="assignee" onchange="applyCurrentFilters()">${assignees.map(x=>`<option value="${x}">${x || 'كل المسؤولين'}</option>`).join('')}</select>
+    <input data-filter="fromDate" type="date" onchange="applyCurrentFilters()" title="من تاريخ" />
+    <input data-filter="toDate" type="date" onchange="applyCurrentFilters()" title="إلى تاريخ" />
+    <button class="filter-chip clear" onclick="resetCurrentFilters()">تصفير</button>
+  </div>`;
+}
+
+function rowMatchesFilter(rowText, status, project, assignee){
+  const q = getFilterValue('q').toLowerCase().trim();
+  const fs = getFilterValue('status');
+  const fp = getFilterValue('project');
+  const fa = getFilterValue('assignee');
+  if(q && !rowText.toLowerCase().includes(q)) return false;
+  if(fs && !status.includes(fs)) return false;
+  if(fp && !project.includes(fp) && !rowText.includes(fp)) return false;
+  if(fa && !assignee.includes(fa) && !rowText.includes(fa)) return false;
+  return true;
+}
+
+function applyCurrentFilters(){
+  const rows = document.querySelectorAll('[data-filter-row="1"]');
+  let visible = 0;
+  rows.forEach(row => {
+    const rowText = row.dataset.search || row.textContent || '';
+    const status = row.dataset.status || '';
+    const project = row.dataset.project || '';
+    const assignee = row.dataset.assignee || '';
+    const ok = rowMatchesFilter(rowText, status, project, assignee);
+    row.style.display = ok ? '' : 'none';
+    if(ok) visible++;
+  });
+  const counter = document.getElementById('filteredCount');
+  if(counter) counter.textContent = visible;
+}
+
+function resetCurrentFilters(){
+  document.querySelectorAll('.working-filterbar [data-filter]').forEach(el => el.value = '');
+  applyCurrentFilters();
+  toast('تم تصفير الفلاتر');
+}
+
+async function renderTablePage(name){
+  const [action, columns, rows] = tableSections[name];
+  const saved = await TasneefAPI.moduleRecords(name);
+  const dynamicRows = saved.map(x => [x.title || x.name || x.id, x.project || '—', x.status || 'مسودة', x.createdAt ? new Date(x.createdAt).toLocaleDateString('ar-SA') : '—', x.total || '0.00 ﷼', 'فتح']);
+  const allRows = [...dynamicRows, ...rows];
+  page('module-layout', `
+    <section class="module-page">
+      <div class="module-header">
+        <div><h1>${name}</h1><p>شاشة احترافية لإدارة ${name} مع فلاتر فعالة وحفظ محلي/سيرفر.</p></div>
+        <button class="module-primary" onclick="openUniversalWindow('${action}','نموذج إنشاء جديد','${name}')">${action}</button>
+      </div>
+      ${workingFilterBar(['الحالة','الفترة','المشروع','المسؤول'], name)}
+      ${statsRow([['إجمالي السجلات', allRows.length], ['المعروضة','<span id="filteredCount">'+allRows.length+'</span>'], ['محفوظة', saved.length], ['آخر تحديث','الآن']])}
+      <div class="pro-table-card"><table class="pro-table"><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${allRows.map(r => {
+        const search = escapeHtml(r.join(' '));
+        const status = escapeHtml(r[4] || r[3] || '');
+        const project = escapeHtml(r[2] || r[1] || '');
+        const assignee = escapeHtml(r[1] || '');
+        return `<tr data-filter-row="1" data-search="${search}" data-status="${status}" data-project="${project}" data-assignee="${assignee}">${r.map((c,i) => `<td>${i === r.length-1 ? `<button class="table-action" onclick="openUniversalWindow('${name} - ${escapeHtml(r[0])}','تفاصيل السجل والحركات والمرفقات','${name}')">${c}</button>` : escapeHtml(c)}</td>`).join('')}</tr>`;
+      }).join('')}</tbody></table></div>
+    </section>
+  `);
+}
+
+function renderAdvancedFilterPage(title, subtitle, action, cardsHtml){
+  page('module-layout', `<section class="module-page">
+    <div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد','${title}')">${action}</button></div>
+    ${workingFilterBar([], title)}
+    ${cardsHtml}
+  </section>`);
+}
+
+function applyCardFilters(){
+  const q = getFilterValue('q').toLowerCase().trim();
+  const status = getFilterValue('status');
+  const project = getFilterValue('project');
+  let visible = 0;
+  document.querySelectorAll('[data-filter-card="1"]').forEach(card=>{
+    const text = (card.dataset.search || card.textContent || '').toLowerCase();
+    const s = card.dataset.status || '';
+    const p = card.dataset.project || '';
+    const ok = (!q || text.includes(q)) && (!status || s.includes(status)) && (!project || p.includes(project) || text.includes(project));
+    card.style.display = ok ? '' : 'none';
+    if(ok) visible++;
+  });
+  const counter = document.getElementById('filteredCount');
+  if(counter) counter.textContent = visible;
+}
+
+async function renderBankAccounts(){
+  const accounts = await TasneefAPI.list('bankAccounts');
+  page('bank-layout', `<section class="bank-page">
+    <div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="openUniversalWindow('أضف حساب بنك','نموذج إضافة حساب بنكي','bankAccounts')">أضف حساب بنك</button></div>
+    ${workingFilterBar([], 'الحسابات البنكية')}
+    <div class="stats-row"><div class="stat-card"><span>الحسابات</span><strong>${accounts.length}</strong></div><div class="stat-card"><span>المعروضة</span><strong><span id="filteredCount">${accounts.length}</span></strong></div><div class="stat-card"><span>إجمالي الدفتر</span><strong>0.00 ﷼</strong></div><div class="stat-card"><span>آخر تحديث</span><strong>الآن</strong></div></div>
+    <div class="bank-cards-wrap">${accounts.map(a => `<article data-filter-row="1" data-search="${escapeHtml([a.name,a.type,a.status].join(' '))}" data-status="${escapeHtml(a.status || 'نشط')}" data-project="" data-assignee="" class="bank-card"><div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.type === 'bank' ? '🏦' : a.type === 'petty_cash' ? '💵' : '💰'}</div><h2>${escapeHtml(a.name)}</h2></div><div class="bank-card-actions"><button class="more-btn">⋮</button><button class="import-btn" onclick="importBankStatement('${a.id}','${escapeHtml(a.name)}')">استيراد كشف حساب</button></div></div><div class="bank-metrics"><div class="metric-row"><strong>${Number(a.bookBalance||0).toFixed(2)} ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>${Number(a.statementBalance||0).toFixed(2)} ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>${(Number(a.bookBalance||0)-Number(a.statementBalance||0)).toFixed(2)} ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div></article>`).join('')}</div>
+  </section>`);
+}
+
+function setInboxFilter(filter){
+  inboxFilter = filter;
+  renderInbox();
+}
+
+function renderInboxList(){
+  const box = $('#smartInboxList');
+  if(!box) return;
+  const query = ($('#inboxSearchInput')?.value || '').trim().toLowerCase();
+  const projectFilter = $('#inboxProjectFilter')?.value || '';
+  const assigneeFilter = $('#inboxAssigneeFilter')?.value || '';
+  const attachmentFilter = $('#inboxAttachmentFilter')?.value || '';
+
+  let list = filterMessages(inboxFilter);
+  if(query){
+    list = list.filter(m => [m.title,m.from,m.type,m.project,m.assignee,m.status].join(' ').toLowerCase().includes(query));
+  }
+  if(projectFilter) list = list.filter(m => (m.project || '').includes(projectFilter));
+  if(assigneeFilter) list = list.filter(m => (m.assignee || '').includes(assigneeFilter));
+  if(attachmentFilter === 'yes') list = list.filter(m => m.attachment && m.attachment !== '—');
+  if(attachmentFilter === 'no') list = list.filter(m => !m.attachment || m.attachment === '—');
+
+  if(!list.length){
+    box.innerHTML = '<div class="empty-inbox-list">لا توجد رسائل مطابقة للفلاتر الحالية</div>';
+    return;
+  }
+  box.innerHTML = list.map(m => `
+    <article class="smart-message-row ${m.id === selectedMessageId ? 'active' : ''}" onclick="selectInboxMessage('${m.id}')">
+      <div class="message-check"><input type="checkbox" onclick="event.stopPropagation()" /></div>
+      <div class="message-main">
+        <div class="message-title-line"><strong>${escapeHtml(m.title)}</strong><span class="priority ${priorityClass(m.priority)}">${escapeHtml(m.priority)}</span></div>
+        <p>${escapeHtml(m.from)} · ${escapeHtml(m.project)}</p>
+        <div class="message-meta"><em class="${statusClass(m.status)}">${escapeHtml(m.status)}</em><span>${escapeHtml(m.type)}</span><span>${escapeHtml(m.time)}</span></div>
+      </div>
+    </article>
+  `).join('');
+}
+
+async function renderInbox(){
+  await loadInbox();
+  page('smart-inbox-layout', `
+    <section class="inbox-detail-panel" id="inboxDetail"></section>
+    <aside class="smart-inbox-panel">
+      <div class="smart-inbox-head">
+        <div><h1>البريد الوارد</h1><p>مركز معالجة ذكي للرسائل والفواتير والكشوف والتكتات والطلبات.</p></div>
+        <button class="refresh" onclick="renderInbox();toast('تم تحديث البريد الوارد')">⟳</button>
+      </div>
+      <div class="smart-inbox-search"><span>⌕</span><input id="inboxSearchInput" placeholder="ابحث في البريد الوارد..." oninput="renderInboxList()" /></div>
+      <div class="inbox-category-tabs">
+        ${['الكل','غير معالج','بانتظار المعالجة','فواتير','كشوف بنكية','تكتات','طلبات مخزن','موافقات','تنبيهات','مؤرشف'].map(t => `<button class="${inboxFilter===t?'active':''}" onclick="setInboxFilter('${t}')">${t}${countBadge(t)}</button>`).join('')}
+      </div>
+      <div class="inbox-filter-row">
+        <select id="inboxProjectFilter" class="mini-filter" onchange="renderInboxList()"><option value="">كل المشاريع</option><option>الماجدية 70</option><option>الرمز A17</option><option>الحساب البنكي</option><option>المخزن الرئيسي</option></select>
+        <select id="inboxAssigneeFilter" class="mini-filter" onchange="renderInboxList()"><option value="">كل المسؤولين</option><option>المحاسب</option><option>مدير التشغيل</option><option>مسؤول المخزن</option><option>المدير</option></select>
+        <select id="inboxAttachmentFilter" class="mini-filter" onchange="renderInboxList()"><option value="">كل المرفقات</option><option value="yes">يوجد مرفق</option><option value="no">بدون مرفق</option></select>
+        <button class="mini-filter" onclick="document.getElementById('inboxProjectFilter').value='';document.getElementById('inboxAssigneeFilter').value='';document.getElementById('inboxAttachmentFilter').value='';renderInboxList();">تصفير</button>
+      </div>
+      <div class="smart-message-list" id="smartInboxList"></div>
+    </aside>
+  `);
+  if(!inboxMessages.some(m => m.id === selectedMessageId) && inboxMessages[0]) selectedMessageId = inboxMessages[0].id;
+  renderInboxList();
+  renderInboxDetail(selectedMessageId);
+}

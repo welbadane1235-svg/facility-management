@@ -1012,3 +1012,35 @@ input,select,textarea{font-family:inherit}
   .main-area{width:100%!important}
   body{overflow:auto!important}
 }
+
+
+
+/* V015 real working filters */
+.working-filterbar select,
+.working-filterbar input[type="date"]{
+  height:40px;
+  border:1px solid #d8dee7;
+  background:#fff;
+  border-radius:10px;
+  color:#344054;
+  font-weight:750;
+  padding:0 12px;
+  min-width:135px;
+}
+.working-filterbar input[type="date"]{
+  direction:ltr;
+  text-align:center;
+}
+.working-filterbar .module-search{
+  min-width:300px;
+}
+.stat-card #filteredCount{
+  font:inherit;
+}
+.inbox-filter-row select.mini-filter{
+  padding:0 8px;
+  outline:0;
+}
+[data-filter-row="1"]{
+  transition:opacity .12s ease, background .12s ease;
+}

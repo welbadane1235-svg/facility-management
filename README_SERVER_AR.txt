@@ -70,3 +70,21 @@ API_BASE_URL: 'https://api.your-domain.com'
 - هذه نسخة واجهة جاهزة للربط، وتعمل فعليًا محليًا.
 - عند ربط السيرفر ستحتاج إضافة تسجيل دخول وصلاحيات Backend.
 - لا تضع مفاتيح سرية داخل الواجهة.
+
+
+## V015 Supabase
+تم تجهيز الاتصال التالي:
+- API_BASE_URL: https://lexsupjvsgjjwxnqxnhq.supabase.co/rest/v1
+- API_MODE: supabase
+
+الجداول المطلوبة:
+- inbox
+- bank_accounts
+- records
+- module_records
+
+شغّل ملف:
+supabase_schema_v015.sql
+
+ملاحظة مهمة:
+السياسات الموجودة في ملف SQL للتجربة فقط. عند التشغيل الحقيقي يجب تقييد RLS حسب المستخدمين والصلاحيات.
