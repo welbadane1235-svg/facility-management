@@ -70,17 +70,14 @@ const tableSections = {
   'سجل النظام': ['تصدير السجل',['الوقت','المستخدم','القسم','العملية','IP','الإجراء'],[['اليوم','مدير النظام','النظام','فتح شاشة','127.0.0.1','عرض']]]
 };
 
-const inboxMessages = [
-  {id:'INB-0001', title:'فاتورة مورد - مواد تنظيف', from:'مورد مواد تنظيف', time:'منذ 12 دقيقة', type:'فاتورة مورد', status:'غير معالج', priority:'متوسطة', assignee:'المحاسب', project:'المخزن الرئيسي', attachment:'invoice_supplier_0001.pdf', suggested:'إنشاء فاتورة مورد وربطها بالمورد والمشروع', body:'وصلت فاتورة مواد تنظيف للمراجعة والاعتماد قبل الصرف.', activity:['تم استلام الرسالة','تم اكتشاف مرفق PDF','تم اقتراح إنشاء فاتورة مورد']},
-  {id:'INB-0002', title:'شكوى عميل - ضعف ضخ المياه', from:'رئيس جمعية الماجدية 70', time:'منذ 28 دقيقة', type:'تكت صيانة', status:'يحتاج إجراء', priority:'عالية', assignee:'مدير التشغيل', project:'الماجدية 70', attachment:'water_issue_photo.jpg', suggested:'إنشاء تكت صيانة وتعيين فني', body:'العميل يفيد بوجود ضعف في ضخ المياه ويطلب الفحص بشكل عاجل.', activity:['تم استلام الشكوى','تم تحديد المشروع: الماجدية 70','الأولوية عالية']},
-  {id:'INB-0003', title:'كشف حساب بنكي - شهر يوليو', from:'البنك', time:'منذ ساعة', type:'كشف بنكي', status:'بانتظار المعالجة', priority:'متوسطة', assignee:'المحاسب', project:'الحساب البنكي', attachment:'bank_statement_july.xlsx', suggested:'استيراد كشف الحساب والبدء بالمطابقة البنكية', body:'كشف حساب بنكي جديد جاهز للاستيراد والمطابقة.', activity:['تم استلام كشف الحساب','تم التعرف على نوع الملف XLSX']},
-  {id:'INB-0004', title:'طلب صرف مواد - الرمز A17', from:'مشرف الموقع', time:'منذ ساعتين', type:'طلب مخزن', status:'غير معالج', priority:'متوسطة', assignee:'مسؤول المخزن', project:'الرمز A17', attachment:'request_items.png', suggested:'إنشاء طلب صرف وربطه بالمشروع', body:'طلب صرف مواد تشغيلية للموقع حسب الاحتياج المرفق.', activity:['تم استلام الطلب','تم ربطه بمشروع الرمز A17']},
-  {id:'INB-0005', title:'اعتماد فاتورة بيع - العجلان 30', from:'النظام', time:'اليوم', type:'موافقة', status:'قيد المراجعة', priority:'منخفضة', assignee:'المدير', project:'العجلان 30', attachment:'—', suggested:'مراجعة الفاتورة واعتمادها أو إرجاعها للمحاسب', body:'فاتورة بيع بانتظار اعتماد المدير قبل الإرسال.', activity:['تم إنشاء الفاتورة','بانتظار اعتماد المدير']},
-  {id:'INB-0006', title:'تنبيه عقد قريب الانتهاء', from:'النظام', time:'أمس', type:'تنبيه', status:'مؤرشف', priority:'عالية', assignee:'مدير التشغيل', project:'مشروع تجريبي', attachment:'—', suggested:'مراجعة العقد والتواصل مع العميل للتجديد', body:'تبقى أقل من 30 يومًا على نهاية أحد العقود.', activity:['تم إنشاء التنبيه','تمت أرشفته']}
-];
+let inboxMessages = [];
 
 function escapeHtml(value){
   return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+}
+
+async function loadInbox(){
+  inboxMessages = await TasneefAPI.list('inbox');
 }
 
 function renderNav(){
@@ -113,7 +110,7 @@ function setSection(name){
   closeModal();
 }
 
-function openSection(name){
+async function openSection(name){
   setSection(name);
   if(name === 'البريد الوارد') return renderInbox();
   if(name === 'لوحة البيانات') return renderDashboard(dashboardTab);
@@ -136,13 +133,14 @@ function page(contentClass, innerHtml){
   content.innerHTML = innerHtml;
 }
 
-function renderInbox(){
+async function renderInbox(){
+  await loadInbox();
   page('smart-inbox-layout', `
     <section class="inbox-detail-panel" id="inboxDetail"></section>
     <aside class="smart-inbox-panel">
       <div class="smart-inbox-head">
         <div><h1>البريد الوارد</h1><p>مركز معالجة ذكي للرسائل والفواتير والكشوف والتكتات والطلبات.</p></div>
-        <button class="refresh" onclick="toast('تم تحديث البريد الوارد')">⟳</button>
+        <button class="refresh" onclick="renderInbox();toast('تم تحديث البريد الوارد')">⟳</button>
       </div>
       <div class="smart-inbox-search"><span>⌕</span><input id="inboxSearchInput" placeholder="ابحث في البريد الوارد..." oninput="renderInboxList()" /></div>
       <div class="inbox-category-tabs">
@@ -157,6 +155,7 @@ function renderInbox(){
       <div class="smart-message-list" id="smartInboxList"></div>
     </aside>
   `);
+  if(!inboxMessages.some(m => m.id === selectedMessageId) && inboxMessages[0]) selectedMessageId = inboxMessages[0].id;
   renderInboxList();
   renderInboxDetail(selectedMessageId);
 }
@@ -202,9 +201,9 @@ function renderInboxList(){
     <article class="smart-message-row ${m.id === selectedMessageId ? 'active' : ''}" onclick="selectInboxMessage('${m.id}')">
       <div class="message-check"><input type="checkbox" onclick="event.stopPropagation()" /></div>
       <div class="message-main">
-        <div class="message-title-line"><strong>${m.title}</strong><span class="priority ${priorityClass(m.priority)}">${m.priority}</span></div>
-        <p>${m.from} · ${m.project}</p>
-        <div class="message-meta"><em class="${statusClass(m.status)}">${m.status}</em><span>${m.type}</span><span>${m.time}</span></div>
+        <div class="message-title-line"><strong>${escapeHtml(m.title)}</strong><span class="priority ${priorityClass(m.priority)}">${escapeHtml(m.priority)}</span></div>
+        <p>${escapeHtml(m.from)} · ${escapeHtml(m.project)}</p>
+        <div class="message-meta"><em class="${statusClass(m.status)}">${escapeHtml(m.status)}</em><span>${escapeHtml(m.type)}</span><span>${escapeHtml(m.time)}</span></div>
       </div>
     </article>
   `).join('');
@@ -226,25 +225,25 @@ function renderInboxDetail(id){
   if(!detail || !m) return;
   detail.innerHTML = `
     <div class="detail-topbar">
-      <div><h2>${m.title}</h2><p>${m.from} · ${m.time}</p></div>
-      <div class="detail-status"><span class="${statusClass(m.status)}">${m.status}</span><button onclick="archiveInboxMessage('${m.id}')">أرشفة</button></div>
+      <div><h2>${escapeHtml(m.title)}</h2><p>${escapeHtml(m.from)} · ${escapeHtml(m.time)}</p></div>
+      <div class="detail-status"><span class="${statusClass(m.status)}">${escapeHtml(m.status)}</span><button onclick="archiveInboxMessage('${m.id}')">أرشفة</button></div>
     </div>
     <div class="inbox-smart-summary">
       <div class="summary-icon">${typeIcon(m.type)}</div>
-      <div><h3>اقتراح النظام</h3><p>${m.suggested}</p></div>
+      <div><h3>اقتراح النظام</h3><p>${escapeHtml(m.suggested)}</p></div>
     </div>
     <div class="detail-grid">
-      <div class="detail-card"><span>نوع الرسالة</span><strong>${m.type}</strong></div>
-      <div class="detail-card"><span>المشروع</span><strong>${m.project}</strong></div>
-      <div class="detail-card"><span>المسؤول</span><strong>${m.assignee}</strong></div>
-      <div class="detail-card"><span>الأولوية</span><strong>${m.priority}</strong></div>
+      <div class="detail-card"><span>نوع الرسالة</span><strong>${escapeHtml(m.type)}</strong></div>
+      <div class="detail-card"><span>المشروع</span><strong>${escapeHtml(m.project)}</strong></div>
+      <div class="detail-card"><span>المسؤول</span><strong>${escapeHtml(m.assignee)}</strong></div>
+      <div class="detail-card"><span>الأولوية</span><strong>${escapeHtml(m.priority)}</strong></div>
     </div>
-    <div class="message-body-card"><h3>محتوى الرسالة</h3><p>${m.body}</p></div>
-    <div class="attachment-card"><div><h3>المرفقات</h3><p>${m.attachment === '—' ? 'لا توجد مرفقات' : m.attachment}</p></div>${m.attachment === '—' ? '' : `<button onclick="toast('فتح المرفق')">عرض المرفق</button>`}</div>
+    <div class="message-body-card"><h3>محتوى الرسالة</h3><p>${escapeHtml(m.body)}</p></div>
+    <div class="attachment-card"><div><h3>المرفقات</h3><p>${m.attachment === '—' ? 'لا توجد مرفقات' : escapeHtml(m.attachment)}</p></div>${m.attachment === '—' ? '' : `<button onclick="toast('فتح المرفق')">عرض المرفق</button>`}</div>
     <div class="inbox-actions">${actionButtons(m)}</div>
     <div class="notes-activity-grid">
-      <div class="internal-notes"><h3>ملاحظات داخلية</h3><textarea placeholder="اكتب ملاحظة للفريق..."></textarea><button onclick="toast('تم حفظ الملاحظة')">إضافة ملاحظة</button></div>
-      <div class="activity-log"><h3>سجل المعالجة</h3>${m.activity.map(a => `<div><span>•</span><p>${a}</p></div>`).join('')}</div>
+      <div class="internal-notes"><h3>ملاحظات داخلية</h3><textarea id="internalNote" placeholder="اكتب ملاحظة للفريق..."></textarea><button onclick="addInboxNote('${m.id}')">إضافة ملاحظة</button></div>
+      <div class="activity-log"><h3>سجل المعالجة</h3>${(m.activity || []).map(a => `<div><span>•</span><p>${escapeHtml(a)}</p></div>`).join('')}</div>
     </div>
   `;
 }
@@ -259,28 +258,43 @@ function actionButtons(m){
   return `<button class="main-action" onclick="openSection('المشاريع')">مراجعة</button>${common}`;
 }
 
-function createFromInbox(id, target){
+async function createFromInbox(id, target){
   const m = getMessage(id);
-  m.status = 'تم التحويل';
-  m.activity.push('تم تحويل الرسالة إلى: ' + target);
+  const activity = [...(m.activity || []), 'تم تحويل الرسالة إلى: ' + target];
+  await TasneefAPI.update('inbox', id, {status:'تم التحويل', activity});
+  await TasneefAPI.saveModuleRecord(target, {title:target + ' من البريد الوارد', sourceInboxId:id, project:m.project, status:'مسودة'});
+  await loadInbox();
   renderInboxList();
   renderInboxDetail(id);
-  openUniversalWindow(target + ' من البريد الوارد', 'تم إنشاء هذا السجل من الرسالة: ' + m.title);
+  openUniversalWindow(target + ' من البريد الوارد', 'تم إنشاء هذا السجل من الرسالة: ' + m.title, target);
 }
 
-function changeInboxStatus(id, status){
+async function changeInboxStatus(id, status){
   const m = getMessage(id);
-  m.status = status;
-  m.activity.push('تم تغيير الحالة إلى: ' + status);
+  const activity = [...(m.activity || []), 'تم تغيير الحالة إلى: ' + status];
+  await TasneefAPI.update('inbox', id, {status, activity});
+  await loadInbox();
   renderInboxList();
   renderInboxDetail(id);
   toast('تم تحديث حالة الرسالة');
 }
 
 function archiveInboxMessage(id){ changeInboxStatus(id, 'مؤرشف'); }
+
+async function addInboxNote(id){
+  const note = $('#internalNote')?.value?.trim();
+  if(!note) return toast('اكتب الملاحظة أولاً');
+  const m = getMessage(id);
+  const activity = [...(m.activity || []), 'ملاحظة: ' + note];
+  await TasneefAPI.update('inbox', id, {activity});
+  await loadInbox();
+  renderInboxDetail(id);
+  toast('تم حفظ الملاحظة');
+}
+
 function assignInboxMessage(id){
   const m = getMessage(id);
-  openUniversalWindow('تعيين مسؤول - ' + m.title, 'اختر المسؤول المناسب لمعالجة هذه الرسالة.');
+  openUniversalWindow('تعيين مسؤول - ' + m.title, 'اختر المسؤول المناسب لمعالجة هذه الرسالة.', 'تعيين مسؤول');
 }
 
 function typeIcon(type){ return type.includes('فاتورة') ? '🧾' : type === 'كشف بنكي' ? '🏦' : type === 'تكت صيانة' ? '🛠' : type === 'طلب مخزن' ? '📦' : type === 'موافقة' ? '✅' : '⚠'; }
@@ -293,14 +307,17 @@ function statusClass(s){
   return 'status-wait';
 }
 
-function renderTablePage(name){
+async function renderTablePage(name){
   const [action, columns, rows] = tableSections[name];
+  const saved = await TasneefAPI.moduleRecords(name);
+  const dynamicRows = saved.map(x => [x.title || x.name || x.id, x.project || '—', x.status || 'مسودة', x.createdAt ? new Date(x.createdAt).toLocaleDateString('ar-SA') : '—', x.total || '0.00 ﷼', 'فتح']);
+  const allRows = [...dynamicRows, ...rows];
   page('module-layout', `
     <section class="module-page">
-      <div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية لإدارة ${name} مع فلاتر ونوافذ ذكية.</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج إنشاء جديد')">${action}</button></div>
+      <div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية لإدارة ${name} مع فلاتر ونوافذ ذكية وحفظ محلي/سيرفر.</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج إنشاء جديد','${name}')">${action}</button></div>
       ${filterBar(['الحالة','الفترة','المشروع','المسؤول'])}
-      ${statsRow([['إجمالي السجلات', rows.length], ['قيد المعالجة','1'], ['مكتمل','0'], ['آخر تحديث','الآن']])}
-      <div class="pro-table-card"><table class="pro-table"><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c,i) => `<td>${i === r.length-1 ? `<button class="table-action" onclick="openUniversalWindow('${name} - ${r[0]}','تفاصيل السجل والحركات والمرفقات')">${c}</button>` : c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+      ${statsRow([['إجمالي السجلات', allRows.length], ['محفوظة', saved.length], ['قيد المعالجة','1'], ['آخر تحديث','الآن']])}
+      <div class="pro-table-card"><table class="pro-table"><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${allRows.map(r => `<tr>${r.map((c,i) => `<td>${i === r.length-1 ? `<button class="table-action" onclick="openUniversalWindow('${name} - ${escapeHtml(r[0])}','تفاصيل السجل والحركات والمرفقات','${name}')">${c}</button>` : escapeHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     </section>
   `);
 }
@@ -351,9 +368,14 @@ function renderCashDashboard(){
     </div><div class="table-grid">${dashTable('أكبر فواتير مبيعات غير مدفوعة',['فاتورة','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مبيعات غير مدفوعة')}${dashTable('أكبر فواتير مشتريات غير مدفوعة',['فاتورة المشتريات','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مشتريات غير مدفوعة')}</div>`;
 }
 
-function renderBankAccounts(){
-  const accounts = [{name:'الحساب البنكي',icon:'🏦'}, {name:'المصروفات النثرية',icon:'💵'}, {name:'الخزينة',icon:'💰'}];
-  page('bank-layout', `<section class="bank-page"><div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="openUniversalWindow('أضف حساب بنك','نموذج إضافة حساب بنكي')">أضف حساب بنك</button></div><div class="bank-cards-wrap">${accounts.map(a => `<article class="bank-card"><div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.icon}</div><h2>${a.name}</h2></div><div class="bank-card-actions"><button class="more-btn">⋮</button><button class="import-btn" onclick="toast('استيراد كشف حساب: ${a.name}')">استيراد كشف حساب</button></div></div><div class="bank-metrics"><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>0.00 ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div></article>`).join('')}</div></section>`);
+async function renderBankAccounts(){
+  const accounts = await TasneefAPI.list('bankAccounts');
+  page('bank-layout', `<section class="bank-page"><div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="openUniversalWindow('أضف حساب بنك','نموذج إضافة حساب بنكي','bankAccounts')">أضف حساب بنك</button></div><div class="bank-cards-wrap">${accounts.map(a => `<article class="bank-card"><div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.type === 'bank' ? '🏦' : a.type === 'petty_cash' ? '💵' : '💰'}</div><h2>${escapeHtml(a.name)}</h2></div><div class="bank-card-actions"><button class="more-btn">⋮</button><button class="import-btn" onclick="importBankStatement('${a.id}','${escapeHtml(a.name)}')">استيراد كشف حساب</button></div></div><div class="bank-metrics"><div class="metric-row"><strong>${Number(a.bookBalance||0).toFixed(2)} ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>${Number(a.statementBalance||0).toFixed(2)} ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>${(Number(a.bookBalance||0)-Number(a.statementBalance||0)).toFixed(2)} ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div></article>`).join('')}</div></section>`);
+}
+
+async function importBankStatement(id, name){
+  await TasneefAPI.importBankStatement(id, 'statement.xlsx');
+  toast('تم استيراد كشف حساب: ' + name);
 }
 
 function renderReports(){
@@ -363,12 +385,12 @@ function renderReports(){
 
 function renderInventory(){
   const items = [['مواد تنظيف','SKU-CLN','المخزن الرئيسي','متاح'],['لمبات ومواد كهرباء','SKU-ELE','المخزن الرئيسي','تحت الحد'],['عدد وأدوات','SKU-TLS','عهدة','متاح']];
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>الأصناف</h1><p>منتجات وخدمات ومخزون مع SKU وباركود وحد أدنى.</p></div><button class="module-primary" onclick="openUniversalWindow('صنف جديد','نموذج صنف مخزون')">صنف جديد</button></div>${filterBar(['المستودع','التصنيف','الحالة','تحت الحد'])}${statsRow([['الأصناف','0'],['تحت الحد','0'],['محجوز','0'],['قيمة المخزون','0.00 ﷼']])}<div class="inventory-grid">${items.map(i => `<article class="inventory-card" onclick="openUniversalWindow('${i[0]}','تفاصيل الصنف وحركات المخزون')"><div class="sku-box">▦</div><h3>${i[0]}</h3><p>${i[1]} · ${i[2]}</p><span class="status-pill">${i[3]}</span><div class="inv-actions"><button onclick="event.stopPropagation();toast('صرف')">صرف</button><button onclick="event.stopPropagation();toast('استلام')">استلام</button><button onclick="event.stopPropagation();toast('تحويل')">تحويل</button></div></article>`).join('')}</div></section>`);
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>الأصناف</h1><p>منتجات وخدمات ومخزون مع SKU وباركود وحد أدنى.</p></div><button class="module-primary" onclick="openUniversalWindow('صنف جديد','نموذج صنف مخزون','الأصناف')">صنف جديد</button></div>${filterBar(['المستودع','التصنيف','الحالة','تحت الحد'])}${statsRow([['الأصناف','0'],['تحت الحد','0'],['محجوز','0'],['قيمة المخزون','0.00 ﷼']])}<div class="inventory-grid">${items.map(i => `<article class="inventory-card" onclick="openUniversalWindow('${i[0]}','تفاصيل الصنف وحركات المخزون','الأصناف')"><div class="sku-box">▦</div><h3>${i[0]}</h3><p>${i[1]} · ${i[2]}</p><span class="status-pill">${i[3]}</span><div class="inv-actions"><button onclick="event.stopPropagation();toast('صرف')">صرف</button><button onclick="event.stopPropagation();toast('استلام')">استلام</button><button onclick="event.stopPropagation();toast('تحويل')">تحويل</button></div></article>`).join('')}</div></section>`);
 }
 
 function renderProjects(){
   const projects = ['الماجدية 70','الرمز A17','العجلان 30','برج جوديا'];
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>المشاريع</h1><p>إدارة عقود المشاريع وربحيتها وتشغيلها.</p></div><button class="module-primary" onclick="openUniversalWindow('مشروع جديد','نموذج مشروع')">مشروع جديد</button></div>${filterBar(['العميل','المشرف','حالة العقد','قريب الانتهاء'])}${statsRow([['مشاريع نشطة','35+'],['قريبة الانتهاء','0'],['تكتات مفتوحة','0'],['ربحية الشهر','0.00 ﷼']])}<div class="project-grid">${projects.map(p => `<article class="project-card" onclick="openUniversalWindow('${p}','تفاصيل المشروع والعقد والتكتات والفواتير')"><h3>${p}</h3><p>مشروع إدارة مرافق · مشرف مسؤول · عقد نشط</p><div class="project-metrics"><span>تكتات: 0</span><span>مصروفات: 0.00 ﷼</span><span>إيرادات: 0.00 ﷼</span></div></article>`).join('')}</div></section>`);
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>المشاريع</h1><p>إدارة عقود المشاريع وربحيتها وتشغيلها.</p></div><button class="module-primary" onclick="openUniversalWindow('مشروع جديد','نموذج مشروع','المشاريع')">مشروع جديد</button></div>${filterBar(['العميل','المشرف','حالة العقد','قريب الانتهاء'])}${statsRow([['مشاريع نشطة','35+'],['قريبة الانتهاء','0'],['تكتات مفتوحة','0'],['ربحية الشهر','0.00 ﷼']])}<div class="project-grid">${projects.map(p => `<article class="project-card" onclick="openUniversalWindow('${p}','تفاصيل المشروع والعقد والتكتات والفواتير','المشاريع')"><h3>${p}</h3><p>مشروع إدارة مرافق · مشرف مسؤول · عقد نشط</p><div class="project-metrics"><span>تكتات: 0</span><span>مصروفات: 0.00 ﷼</span><span>إيرادات: 0.00 ﷼</span></div></article>`).join('')}</div></section>`);
 }
 
 function renderAttendance(){
@@ -376,18 +398,45 @@ function renderAttendance(){
 }
 
 function renderCards(title, subtitle, action, cards){
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد')">${action}</button></div>${filterBar(['النوع','الحالة','القسم'])}<div class="module-card-grid">${cards.map(c => `<article class="module-card" onclick="openUniversalWindow('${c[0]}','${c[1]}')"><h3>${c[0]}</h3><p>${c[1]}</p><span class="status-pill">${c[2]}</span></article>`).join('')}</div></section>`);
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد','${title}')">${action}</button></div>${filterBar(['النوع','الحالة','القسم'])}<div class="module-card-grid">${cards.map(c => `<article class="module-card" onclick="openUniversalWindow('${c[0]}','${c[1]}','${title}')"><h3>${c[0]}</h3><p>${c[1]}</p><span class="status-pill">${c[2]}</span></article>`).join('')}</div></section>`);
 }
 
 function renderFallback(name){
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية مؤقتة لهذا القسم.</p></div><button class="module-primary" onclick="openUniversalWindow('${name} - جديد','نموذج إنشاء جديد')">إضافة جديد</button></div>${filterBar(['الحالة','التاريخ','المسؤول'])}${statsRow([['السجلات','0'],['قيد المعالجة','0'],['مكتمل','0'],['آخر تحديث','الآن']])}<div class="pro-table-card"><table class="pro-table"><thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead><tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openUniversalWindow('${name}','تفاصيل السجل')">فتح</button></td></tr></tbody></table></div></section>`);
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية مؤقتة لهذا القسم.</p></div><button class="module-primary" onclick="openUniversalWindow('${name} - جديد','نموذج إنشاء جديد','${name}')">إضافة جديد</button></div>${filterBar(['الحالة','التاريخ','المسؤول'])}${statsRow([['السجلات','0'],['قيد المعالجة','0'],['مكتمل','0'],['آخر تحديث','الآن']])}<div class="pro-table-card"><table class="pro-table"><thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead><tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openUniversalWindow('${name}','تفاصيل السجل','${name}')">فتح</button></td></tr></tbody></table></div></section>`);
 }
 
-function openUniversalWindow(title, description){
+function openUniversalWindow(title, description, resource){
   const modal = $('#smartModal');
   if(!modal) return;
   modal.classList.remove('hidden');
-  modal.innerHTML = `<div class="modal-head"><h2>${title}</h2><button class="close" onclick="closeModal()">إغلاق</button></div><div class="record-layout"><div class="record-main"><label>اسم السجل</label><input value="${escapeHtml(title)}" /><label>الحالة</label><select><option>نشط</option><option>مسودة</option><option>بانتظار اعتماد</option><option>مكتمل</option></select><label>المشروع / مركز التكلفة</label><select><option>الماجدية 70</option><option>الرمز A17</option><option>العجلان 30</option><option>برج جوديا</option></select><label>الوصف</label><textarea>${escapeHtml(description || '')}</textarea></div><aside class="record-side"><div><strong>الإجراءات السريعة</strong><span>حفظ / اعتماد / طباعة / إرسال</span></div><div><strong>الربط المحاسبي</strong><span>جاهز للقيود والفواتير</span></div><div><strong>المرفقات</strong><span>رفع صور أو ملفات PDF</span></div><div><strong>سجل التدقيق</strong><span>يتم تسجيل كل تعديل</span></div></aside></div><div class="modal-actions"><button class="module-primary" onclick="toast('تم حفظ السجل')">حفظ</button><button class="close" onclick="toast('تم الاعتماد')">اعتماد</button><button class="close" onclick="toast('تم تجهيز الطباعة')">طباعة</button><button class="close" onclick="closeModal()">إلغاء</button></div>`;
+  modal.innerHTML = `<div class="modal-head"><h2>${escapeHtml(title)}</h2><button class="close" onclick="closeModal()">إغلاق</button></div>
+  <div class="record-layout">
+    <div class="record-main">
+      <label>اسم السجل</label><input id="recordName" value="${escapeHtml(title)}" />
+      <label>الحالة</label><select id="recordStatus"><option>نشط</option><option>مسودة</option><option>بانتظار اعتماد</option><option>مكتمل</option></select>
+      <label>المشروع / مركز التكلفة</label><select id="recordProject"><option>الماجدية 70</option><option>الرمز A17</option><option>العجلان 30</option><option>برج جوديا</option></select>
+      <label>الوصف</label><textarea id="recordDescription">${escapeHtml(description || '')}</textarea>
+    </div>
+    <aside class="record-side"><div><strong>الإجراءات السريعة</strong><span>حفظ / اعتماد / طباعة / إرسال</span></div><div><strong>الربط المحاسبي</strong><span>جاهز للقيود والفواتير</span></div><div><strong>المرفقات</strong><span>رفع صور أو ملفات PDF</span></div><div><strong>سجل التدقيق</strong><span>يتم تسجيل كل تعديل</span></div></aside>
+  </div>
+  <div class="modal-actions"><button class="module-primary" onclick="saveUniversalRecord('${escapeHtml(resource || currentSection)}')">حفظ</button><button class="close" onclick="toast('تم الاعتماد')">اعتماد</button><button class="close" onclick="window.print()">طباعة</button><button class="close" onclick="closeModal()">إلغاء</button></div>`;
+}
+
+async function saveUniversalRecord(resource){
+  const data = {
+    title: $('#recordName')?.value || 'سجل',
+    status: $('#recordStatus')?.value || 'مسودة',
+    project: $('#recordProject')?.value || '',
+    description: $('#recordDescription')?.value || ''
+  };
+  if(resource === 'bankAccounts'){
+    await TasneefAPI.create('bankAccounts', {name:data.title, type:'bank', bookBalance:0, statementBalance:0});
+    closeModal(); toast('تم حفظ الحساب البنكي'); renderBankAccounts(); return;
+  }
+  await TasneefAPI.saveModuleRecord(resource || currentSection, data);
+  closeModal();
+  toast('تم الحفظ بنجاح');
+  if(tableSections[currentSection]) renderTablePage(currentSection);
 }
 
 function closeModal(){
@@ -407,9 +456,14 @@ function quickFilter(value){
   if(value && value.trim().length > 1) toast('فلترة: ' + value);
 }
 
-function init(){
+function showAppStatus(){
+  const mode = window.TASNEEF_CONFIG?.API_MODE || 'local';
+  toast(mode === 'server' ? 'متصل بالسيرفر' : 'يعمل بوضع التخزين المحلي - جاهز للربط');
+}
+
+async function init(){
   renderNav();
-  renderInbox();
+  await renderInbox();
   const search = $('#globalSearch');
   if(search){
     search.addEventListener('input', e => {
@@ -422,6 +476,7 @@ function init(){
       search?.focus();
     }
   });
+  setTimeout(showAppStatus, 700);
 }
 
 document.addEventListener('DOMContentLoaded', init);

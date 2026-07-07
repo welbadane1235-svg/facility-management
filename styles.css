@@ -996,3 +996,19 @@ button{cursor:pointer}
 .empty-inbox-list{border:1px dashed #d8dee7;border-radius:14px;min-height:120px;display:grid;place-items:center;color:#98a2b3;font-weight:850}
 @media(max-width:1200px){.smart-inbox-layout{grid-template-columns:1fr}.smart-inbox-panel{order:1;max-height:48vh}.inbox-detail-panel{order:2}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.detail-topbar,.attachment-card{display:grid}.notes-activity-grid,.detail-grid{grid-template-columns:1fr}}
+
+
+
+/* V014 server-ready functionality polish */
+.module-primary:active,.main-action:active,.table-action:active{transform:scale(.98)}
+input,select,textarea{font-family:inherit}
+.toast{z-index:12000!important}
+.pro-table tbody tr.saved-row td{background:#f3fbf8}
+.smart-modal{max-width:1180px}
+.modal-actions .module-primary{min-width:120px}
+.status-pill{white-space:nowrap}
+@media print{
+  .right-sidebar,.top-header,.help-float,.help-label,.module-filterbar,.modal-actions{display:none!important}
+  .main-area{width:100%!important}
+  body{overflow:auto!important}
+}
