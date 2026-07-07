@@ -584,3 +584,66 @@ button{cursor:pointer}
   .module-header,.record-layout{grid-template-columns:1fr;display:grid}
   .stats-row,.module-card-grid,.report-grid,.help-grid,.inventory-grid,.project-grid,.approval-flow,.attendance-board{grid-template-columns:1fr}
 }
+
+
+
+/* V011 modal/window reliability fixes */
+.smart-modal{
+  position:fixed;
+  z-index:9999;
+  inset:50px 360px 50px 50px;
+  background:#fff;
+  border:1px solid #d8dee7;
+  border-radius:18px;
+  box-shadow:0 25px 80px rgba(16,24,40,.22);
+  overflow:auto;
+}
+.smart-modal.hidden{display:none!important}
+.modal-head{
+  min-height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-bottom:1px solid #e4e7ec;
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:2;
+}
+.modal-head h2{margin:0;font-size:22px;color:#101828}
+.close{
+  border:1px solid #d8dee7;
+  background:#fff;
+  color:#344054;
+  border-radius:9px;
+  height:36px;
+  padding:0 14px;
+  font-weight:800;
+}
+.record-layout{display:grid;grid-template-columns:1fr 280px;gap:18px;padding:20px}
+.record-main{display:grid;gap:10px}
+.record-main label{font-weight:900;color:#344054}
+.record-main input,.record-main select,.record-main textarea{
+  width:100%;
+  border:1px solid #d8dee7;
+  border-radius:10px;
+  padding:12px;
+  background:#fff;
+  outline:0;
+}
+.record-main textarea{min-height:120px;resize:vertical}
+.record-side{display:grid;gap:10px;align-content:start}
+.record-side div{
+  border:1px solid #e4e7ec;
+  background:#f8fafc;
+  border-radius:12px;
+  padding:14px;
+}
+.record-side strong{display:block;color:#101828;margin-bottom:6px}
+.record-side span{color:#667085;font-size:14px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-start;padding:0 20px 20px}
+@media(max-width:900px){
+  .smart-modal{inset:20px}
+  .record-layout{grid-template-columns:1fr}
+}

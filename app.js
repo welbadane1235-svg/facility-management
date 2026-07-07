@@ -546,3 +546,140 @@ document.addEventListener('keydown',(e)=>{ if((e.altKey || e.ctrlKey) && e.key.t
 $('#globalSearch').addEventListener('input',(e)=>{ if(e.target.value.trim().length>1) toast('بحث ذكي عن: '+e.target.value); });
 renderNav();
 renderInbox();
+
+
+
+/* V011 Universal Window Fix */
+(function(){
+  const originalOpenSection = window.openSection;
+
+  window.ensureSmartModal = function(){
+    let modal = document.getElementById('smartModal');
+    if(!modal){
+      modal = document.createElement('div');
+      modal.id = 'smartModal';
+      modal.className = 'smart-modal hidden';
+      document.body.appendChild(modal);
+    }
+    return modal;
+  };
+
+  window.openUniversalWindow = function(title, description){
+    const modal = ensureSmartModal();
+    modal.classList.remove('hidden');
+    modal.innerHTML = `
+      <div class="modal-head">
+        <h2>${title}</h2>
+        <button class="close" onclick="closeModal()">إغلاق</button>
+      </div>
+      <div class="record-layout">
+        <div class="record-main">
+          <label>اسم السجل</label>
+          <input value="${title}" />
+          <label>الحالة</label>
+          <select>
+            <option>نشط</option>
+            <option>مسودة</option>
+            <option>بانتظار اعتماد</option>
+            <option>مكتمل</option>
+          </select>
+          <label>المشروع / مركز التكلفة</label>
+          <select>
+            <option>الماجدية 70</option>
+            <option>الرمز A17</option>
+            <option>العجلان 30</option>
+            <option>برج جوديا</option>
+          </select>
+          <label>الوصف</label>
+          <textarea>${description || 'نافذة ذكية مخصصة لهذا القسم، قابلة للربط بالمحاسبة والتشغيل والمرفقات وسجل التدقيق.'}</textarea>
+        </div>
+        <aside class="record-side">
+          <div><strong>الإجراءات السريعة</strong><span>حفظ / اعتماد / طباعة / إرسال</span></div>
+          <div><strong>الربط المحاسبي</strong><span>جاهز للقيود والفواتير</span></div>
+          <div><strong>المرفقات</strong><span>رفع صور أو ملفات PDF</span></div>
+          <div><strong>سجل التدقيق</strong><span>يتم تسجيل كل تعديل</span></div>
+        </aside>
+      </div>
+      <div class="modal-actions">
+        <button class="module-primary" onclick="toast('تم حفظ السجل')">حفظ</button>
+        <button class="close" onclick="toast('تم الاعتماد')">اعتماد</button>
+        <button class="close" onclick="toast('تم تجهيز الطباعة')">طباعة</button>
+        <button class="close" onclick="closeModal()">إلغاء</button>
+      </div>`;
+  };
+
+  window.openRecord = function(name){
+    openUniversalWindow('نافذة ذكية - ' + name, 'تفاصيل السجل والحركات المرتبطة والأثر المحاسبي والمرفقات.');
+  };
+
+  window.openCreateWindow = function(name){
+    openUniversalWindow(name, 'نموذج إنشاء جديد مع قوائم منسدلة وفلاتر وربط تلقائي.');
+  };
+
+  window.openSection = function(name){
+    try{
+      if(typeof originalOpenSection === 'function'){
+        originalOpenSection(name);
+        const content = document.getElementById('content');
+        const modal = document.getElementById('smartModal');
+        const hasContent = content && content.innerHTML && content.innerHTML.trim().length > 20;
+        const hasModal = modal && !modal.classList.contains('hidden');
+        if(hasContent || hasModal) return;
+      }
+    }catch(e){
+      console.warn('Recovered openSection error:', e);
+    }
+
+    const content = document.getElementById('content');
+    if(content){
+      content.className = 'module-layout';
+      content.innerHTML = `
+        <section class="module-page">
+          <div class="module-header">
+            <div>
+              <h1>${name}</h1>
+              <p>تم إنشاء شاشة احترافية مؤقتة لهذا القسم.</p>
+            </div>
+            <button class="module-primary" onclick="openCreateWindow('${name} - سجل جديد')">إضافة جديد</button>
+          </div>
+          <div class="module-filterbar">
+            <div class="module-search"><span>⌕</span><input placeholder="بحث سريع..." /></div>
+            <button class="filter-chip">الحالة <span>⌄</span></button>
+            <button class="filter-chip">التاريخ <span>⌄</span></button>
+            <button class="filter-chip">المسؤول <span>⌄</span></button>
+            <button class="filter-chip clear">تصفير</button>
+          </div>
+          <div class="stats-row">
+            <div class="stat-card"><span>السجلات</span><strong>0</strong></div>
+            <div class="stat-card"><span>قيد المعالجة</span><strong>0</strong></div>
+            <div class="stat-card"><span>مكتمل</span><strong>0</strong></div>
+            <div class="stat-card"><span>آخر تحديث</span><strong>الآن</strong></div>
+          </div>
+          <div class="pro-table-card">
+            <table class="pro-table">
+              <thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead>
+              <tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openRecord('${name}')">فتح</button></td></tr></tbody>
+            </table>
+          </div>
+        </section>`;
+    }
+  };
+
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const text = (btn.textContent || '').trim();
+
+    if(text === 'فتح' && !btn.closest('.modal-head') && !btn.closest('.modal-actions')){
+      const row = btn.closest('tr');
+      const label = row && row.cells && row.cells[0] ? row.cells[0].textContent.trim() : 'سجل';
+      e.preventDefault();
+      openRecord(label || 'سجل');
+    }
+
+    if(['إضافة جديد','جديد','إنشاء','إضافة'].includes(text)){
+      e.preventDefault();
+      openCreateWindow(text);
+    }
+  }, true);
+})();
