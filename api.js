@@ -309,6 +309,21 @@
     return user;
   }
 
+  async function appServerRequest(path, options={}){
+    const res = await fetch(path, {
+      ...options,
+      headers:{
+        'Content-Type':'application/json',
+        Authorization:'Bearer ' + storageGet(tokenKey),
+        ...(options.headers || {})
+      }
+    });
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+    if(!res.ok) throw new Error(data?.error || data?.message || 'تعذر الاتصال بالخادم');
+    return data;
+  }
+
   window.TasneefAPI = {
     uid,
 
@@ -349,6 +364,15 @@
         storageRemove(tokenKey);
         storageRemove(refreshKey);
         storageRemove(prefix + 'user');
+      }
+    },
+
+    admin: {
+      async users(){
+        return appServerRequest('/admin/users');
+      },
+      async inviteUser(data){
+        return appServerRequest('/admin/users/invite', {method:'POST', body:JSON.stringify(data)});
       }
     },
 

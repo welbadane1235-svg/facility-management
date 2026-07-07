@@ -30,6 +30,7 @@ const navData = [
   {group:true, label:'للمطورين', icon:'⌨', children:['API','Webhooks','سجل النظام']},
   {id:'integrations', label:'التكاملات', icon:'⇄'},
   {id:'templates', label:'القوالب', icon:'□'},
+  {id:'users', label:'إدارة المستخدمين', icon:'👤'},
   {id:'help', label:'مركز المساعدة', icon:'?'},
   {id:'en', label:'English', icon:'', language:true}
 ];
@@ -119,6 +120,7 @@ async function openSection(name){
   if(name === 'المشاريع') return renderProjects();
   if(name === 'التكاملات') return renderCards('التكاملات','ربط واتساب، البريد، الفوترة الإلكترونية، والبنوك.', 'تكامل جديد', [['ZATCA','تجهيز للفوترة الإلكترونية والـ QR.','قيد الإعداد'],['WhatsApp','إرسال التقارير والفواتير للعملاء.','قيد الإعداد'],['Bank Feed','استيراد كشوف الحساب البنكية.','قيد الإعداد']]);
   if(name === 'القوالب') return renderCards('القوالب','قوالب PDF ورسائل واتساب وبريد إلكتروني.', 'قالب جديد', [['فاتورة ضريبية','قالب فاتورة بيع PDF.','نشط'],['تقرير عميل','قالب تقرير تشغيل PDF.','نشط'],['رسالة واتساب','قوالب إرسال للعملاء.','نشط']]);
+  if(name === 'إدارة المستخدمين') return renderUserManagement();
   if(name === 'مركز المساعدة') return renderCards('مركز المساعدة','إرشادات استخدام النظام والدعم.', 'طلب دعم', [['بدء استخدام النظام','شرح إعداد الشركة والصلاحيات.','عرض'],['المحاسبة والفواتير','شرح الفواتير والسندات والقيود.','عرض'],['المخزون والعهد','شرح الطلبات والجرد والتحويلات.','عرض']]);
   if(tableSections[name]) return renderTablePage(name);
   return renderFallback(name);
@@ -395,12 +397,66 @@ function renderAttendance(){
   page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>الحضور والانصراف</h1><p>حضور يومي، فلترة شهرية، وتأخير وأوفر تايم.</p></div><button class="module-primary" onclick="toast('تسجيل حضور')">تسجيل حضور</button></div>${filterBar(['الشهر','المشروع','الموظف','الحالة'])}${statsRow([['حضور اليوم','0'],['تأخير','0'],['غياب','0'],['أوفر تايم','0']])}<div class="attendance-board">${['ضمن الوقت','تأخير','خروج مبكر','أوفر تايم','غياب'].map(s => `<div class="attendance-col"><h3>${s}</h3><div class="empty-mini">لا توجد سجلات</div></div>`).join('')}</div></section>`);
 }
 
-function renderCards(title, subtitle, action, cards){
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد','${title}')">${action}</button></div>${filterBar(['النوع','الحالة','القسم'])}<div class="module-card-grid">${cards.map(c => `<article class="module-card" onclick="openUniversalWindow('${c[0]}','${c[1]}','${title}')"><h3>${c[0]}</h3><p>${c[1]}</p><span class="status-pill">${c[2]}</span></article>`).join('')}</div></section>`);
+async function renderCards(title, subtitle, action, cards){
+  const saved = await TasneefAPI.moduleRecords(title);
+  const savedCards = saved.map(x => [x.title || x.id, x.description || 'سجل محفوظ سحابيًا.', x.status || 'مسودة']);
+  const allCards = [...savedCards, ...cards];
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد','${title}')">${action}</button></div>${workingFilterBar(['النوع','الحالة','القسم'], title)}${statsRow([['السجلات', allCards.length],['محفوظة', saved.length],['نشط', allCards.filter(c => c[2] === 'نشط').length],['آخر تحديث','الآن']])}<div class="module-card-grid">${allCards.map(c => `<article class="module-card" data-filter-card="1" data-search="${escapeHtml(c.join(' '))}" data-status="${escapeHtml(c[2])}" data-project="" onclick="openUniversalWindow('${escapeHtml(c[0])}','${escapeHtml(c[1])}','${title}')"><h3>${escapeHtml(c[0])}</h3><p>${escapeHtml(c[1])}</p><span class="status-pill">${escapeHtml(c[2])}</span></article>`).join('')}</div></section>`);
 }
 
-function renderFallback(name){
-  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية مؤقتة لهذا القسم.</p></div><button class="module-primary" onclick="openUniversalWindow('${name} - جديد','نموذج إنشاء جديد','${name}')">إضافة جديد</button></div>${filterBar(['الحالة','التاريخ','المسؤول'])}${statsRow([['السجلات','0'],['قيد المعالجة','0'],['مكتمل','0'],['آخر تحديث','الآن']])}<div class="pro-table-card"><table class="pro-table"><thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead><tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openUniversalWindow('${name}','تفاصيل السجل','${name}')">فتح</button></td></tr></tbody></table></div></section>`);
+async function renderFallback(name){
+  const saved = await TasneefAPI.moduleRecords(name);
+  const rows = saved.length ? saved : [{id:name + '-DEMO', title:name + ' - سجل تجريبي', status:'نشط', project:'الرئيسي', createdAt:new Date().toISOString()}];
+  page('module-layout', `<section class="module-page">
+    <div class="module-header"><div><h1>${name}</h1><p>قسم تشغيلي كامل لإضافة السجلات ومتابعة حالاتها وحفظها سحابيًا.</p></div><button class="module-primary" onclick="openUniversalWindow('${name} - جديد','نموذج إنشاء جديد','${name}')">إضافة جديد</button></div>
+    ${workingFilterBar(['الحالة','التاريخ','المسؤول'], name)}
+    ${statsRow([['السجلات', rows.length],['محفوظة سحابيًا', saved.length],['قيد المعالجة', rows.filter(x => x.status !== 'مكتمل').length],['آخر تحديث','الآن']])}
+    <div class="pro-table-card"><table class="pro-table"><thead><tr><th>السجل</th><th>الحالة</th><th>المشروع</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead><tbody>${rows.map(r => `<tr data-filter-row="1" data-search="${escapeHtml([r.title,r.status,r.project].join(' '))}" data-status="${escapeHtml(r.status || '')}" data-project="${escapeHtml(r.project || '')}" data-assignee=""><td>${escapeHtml(r.title || r.id)}</td><td>${escapeHtml(r.status || 'مسودة')}</td><td>${escapeHtml(r.project || '—')}</td><td>${r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-SA') : 'الآن'}</td><td><button class="table-action" onclick="openUniversalWindow('${escapeHtml(r.title || name)}','${escapeHtml(r.description || 'تفاصيل السجل والحركات والمرفقات')}','${name}')">فتح</button></td></tr>`).join('')}</tbody></table></div>
+  </section>`);
+}
+
+async function renderUserManagement(){
+  page('module-layout', `<section class="module-page">
+    <div class="module-header"><div><h1>إدارة المستخدمين</h1><p>المستخدمون، الأدوار، حالات التحقق، وإرسال دعوات الدخول.</p></div><button class="module-primary" onclick="openUserInviteWindow()">دعوة مستخدم</button></div>
+    ${statsRow([['المستخدمون','...'],['موثقون','...'],['بانتظار التحقق','...'],['الأدوار','مدير / محاسب / مشرف']])}
+    <div class="pro-table-card" id="usersTable"><div class="empty-inbox-list">جاري تحميل المستخدمين...</div></div>
+  </section>`);
+  try{
+    const users = await TasneefAPI.admin.users();
+    const verified = users.filter(u => u.email_confirmed_at).length;
+    document.querySelector('.stats-row').innerHTML = statsRow([['المستخدمون',users.length],['موثقون',verified],['بانتظار التحقق',users.length - verified],['الأدوار','مدير / محاسب / مشرف']]).replace(/^<div class="stats-row">|<\/div>$/g,'');
+    $('#usersTable').innerHTML = `<table class="pro-table"><thead><tr><th>المستخدم</th><th>البريد</th><th>الدور</th><th>التحقق</th><th>آخر دخول</th></tr></thead><tbody>${users.map(u => `<tr><td>${escapeHtml(u.name || u.email || u.id)}</td><td>${escapeHtml(u.email || '—')}</td><td><span class="status-pill">${escapeHtml(u.role || 'user')}</span></td><td>${u.email_confirmed_at ? 'موثق' : 'بانتظار التحقق'}</td><td>${u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('ar-SA') : '—'}</td></tr>`).join('')}</tbody></table>`;
+  }catch(err){
+    $('#usersTable').innerHTML = `<div class="admin-empty"><h3>إدارة المستخدمين تحتاج تشغيل الخادم</h3><p>${escapeHtml(err.message || 'فعّل SUPABASE_SERVICE_ROLE_KEY داخل السيرفر فقط، ثم شغل npm start.')}</p><button class="module-primary" onclick="openUserInviteWindow()">إرسال دعوة عبر البريد</button></div>`;
+  }
+}
+
+function openUserInviteWindow(){
+  const modal = $('#smartModal');
+  if(!modal) return;
+  modal.classList.remove('hidden');
+  modal.innerHTML = `<div class="modal-head"><h2>دعوة مستخدم</h2><button class="close" onclick="closeModal()">إغلاق</button></div>
+  <div class="record-layout"><div class="record-main">
+    <label>البريد الإلكتروني</label><input id="inviteEmail" type="email" placeholder="user@company.com" />
+    <label>الدور</label><select id="inviteRole"><option value="admin">مدير النظام</option><option value="accountant">محاسب</option><option value="operations">مشرف تشغيل</option><option value="viewer">مشاهد</option></select>
+    <label>الاسم</label><input id="inviteName" placeholder="اسم المستخدم" />
+  </div><aside class="record-side"><div><strong>دعوة سحابية</strong><span>سيتم إرسال رابط تحقق من Supabase.</span></div><div><strong>الصلاحيات</strong><span>تُحفظ في جدول profiles.</span></div></aside></div>
+  <div class="modal-actions"><button class="module-primary" onclick="inviteUser()">إرسال الدعوة</button><button class="close" onclick="closeModal()">إلغاء</button></div>`;
+}
+
+async function inviteUser(){
+  const email = $('#inviteEmail')?.value?.trim();
+  const role = $('#inviteRole')?.value || 'viewer';
+  const name = $('#inviteName')?.value?.trim() || '';
+  if(!email) return toast('اكتب البريد الإلكتروني');
+  try{
+    await TasneefAPI.admin.inviteUser({email, role, name});
+    closeModal();
+    toast('تم إرسال الدعوة');
+    renderUserManagement();
+  }catch(err){
+    toast(err.message || 'تعذر إرسال الدعوة');
+  }
 }
 
 function openUniversalWindow(title, description, resource){
@@ -435,6 +491,7 @@ async function saveUniversalRecord(resource){
   closeModal();
   toast('تم الحفظ بنجاح');
   if(tableSections[currentSection]) renderTablePage(currentSection);
+  else openSection(currentSection);
 }
 
 function closeModal(){

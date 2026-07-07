@@ -8,6 +8,9 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.env.PORT || 3000);
 const supabaseRestUrl = (process.env.SUPABASE_REST_URL || '').replace(/\/$/, '');
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+const supabaseAuthUrl = supabaseRestUrl.replace('/rest/v1', '/auth/v1');
 
 const tables = {
   inbox: 'inbox',
@@ -140,6 +143,80 @@ async function proxyApi(req, res, url){
   send(res, upstream.status, text || '{}', {'Content-Type': upstream.headers.get('content-type') || mime['.json']});
 }
 
+async function requireAdmin(req){
+  if(!supabaseRestUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
+    throw new Error('Admin server environment is missing SUPABASE_SERVICE_ROLE_KEY');
+  }
+  const auth = req.headers.authorization || '';
+  if(!auth.startsWith('Bearer ')) throw new Error('Missing user token');
+
+  const userRes = await fetch(`${supabaseAuthUrl}/user`, {
+    headers:{apikey:supabaseAnonKey, Authorization:auth}
+  });
+  const user = await userRes.json();
+  if(!userRes.ok || !user?.id) throw new Error('Invalid user token');
+
+  if(adminEmails.includes(String(user.email || '').toLowerCase())) return user;
+
+  const profileRes = await fetch(`${supabaseRestUrl}/profiles?id=eq.${encodeURIComponent(user.id)}&select=role,email`, {
+    headers:{
+      apikey:supabaseServiceRoleKey,
+      Authorization:`Bearer ${supabaseServiceRoleKey}`
+    }
+  });
+  const profiles = await profileRes.json();
+  const profile = Array.isArray(profiles) ? profiles[0] : null;
+  if(profile?.role !== 'admin') throw new Error('Admin role is required');
+  return user;
+}
+
+async function proxyAdmin(req, res, url){
+  try{
+    await requireAdmin(req);
+    if(url.pathname === '/admin/users' && req.method === 'GET'){
+      const upstream = await fetch(`${supabaseAuthUrl}/admin/users`, {
+        headers:{
+          apikey:supabaseServiceRoleKey,
+          Authorization:`Bearer ${supabaseServiceRoleKey}`
+        }
+      });
+      const data = await upstream.json();
+      const users = (data.users || []).map(u => ({
+        id:u.id,
+        email:u.email,
+        name:u.user_metadata?.name || u.raw_user_meta_data?.name || '',
+        role:u.user_metadata?.role || u.raw_user_meta_data?.role || 'user',
+        email_confirmed_at:u.email_confirmed_at,
+        last_sign_in_at:u.last_sign_in_at,
+        created_at:u.created_at
+      }));
+      return send(res, upstream.status, JSON.stringify(users), {'Content-Type':mime['.json']});
+    }
+
+    if(url.pathname === '/admin/users/invite' && req.method === 'POST'){
+      const body = await bodyJson(req);
+      const upstream = await fetch(`${supabaseAuthUrl}/admin/invite`, {
+        method:'POST',
+        headers:{
+          apikey:supabaseServiceRoleKey,
+          Authorization:`Bearer ${supabaseServiceRoleKey}`,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          email:body.email,
+          data:{name:body.name || '', role:body.role || 'viewer'}
+        })
+      });
+      const text = await upstream.text();
+      return send(res, upstream.status, text || '{}', {'Content-Type': upstream.headers.get('content-type') || mime['.json']});
+    }
+
+    return send(res, 404, JSON.stringify({error:'Unknown admin endpoint'}), {'Content-Type':mime['.json']});
+  }catch(err){
+    return send(res, 403, JSON.stringify({error:err.message || 'Admin access denied'}), {'Content-Type':mime['.json']});
+  }
+}
+
 async function serveStatic(req, res, url){
   let filePath = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
   filePath = normalize(filePath).replace(/^(\.\.[/\\])+/, '');
@@ -155,6 +232,7 @@ createServer(async (req, res) => {
   try{
     const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
     if(url.pathname === '/health') return send(res, 200, JSON.stringify({ok:true}), {'Content-Type':mime['.json']});
+    if(url.pathname.startsWith('/admin/')) return proxyAdmin(req, res, url);
     if(url.pathname.startsWith('/api/')) return proxyApi(req, res, url);
     return serveStatic(req, res, url);
   }catch(err){
