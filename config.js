@@ -7,11 +7,13 @@
   لا تضع service_role key هنا أبدًا.
 */
 window.TASNEEF_CONFIG = {
-  APP_VERSION: 'V015',
+  APP_VERSION: 'V016',
   API_MODE: 'supabase', // local | server | supabase
   API_BASE_URL: 'https://lexsupjvsgjjwxnqxnhq.supabase.co/rest/v1',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxleHN1cGp2c2dqand4bnF4bmhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MTYyMjcsImV4cCI6MjA5ODk5MjIyN30.F9nIfNOQX4uqrEQ06zuzuThm3Bhc2KlofY6SP6ivKNA',
   AUTH_TOKEN_KEY: 'tasneef_auth_token',
+  REFRESH_TOKEN_KEY: 'tasneef_refresh_token',
   STORAGE_PREFIX: 'tasneef_erp_v015_',
-  LOCAL_FALLBACK: true
+  REQUIRE_AUTH: true,
+  LOCAL_FALLBACK: false
 };

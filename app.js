@@ -1,6 +1,4 @@
 
-'use strict';
-
 const $ = (selector) => document.querySelector(selector);
 
 let currentSection = 'البريد الوارد';
@@ -133,7 +131,7 @@ function page(contentClass, innerHtml){
   content.innerHTML = innerHtml;
 }
 
-async function renderInbox(){
+async function renderInboxOld(){
   await loadInbox();
   page('smart-inbox-layout', `
     <section class="inbox-detail-panel" id="inboxDetail"></section>
@@ -180,12 +178,12 @@ function filterMessages(filter){
   return inboxMessages;
 }
 
-function setInboxFilter(filter){
+function setInboxFilterOld(filter){
   inboxFilter = filter;
   renderInbox();
 }
 
-function renderInboxList(){
+function renderInboxListOld(){
   const box = $('#smartInboxList');
   if(!box) return;
   const query = ($('#inboxSearchInput')?.value || '').trim().toLowerCase();
@@ -307,7 +305,7 @@ function statusClass(s){
   return 'status-wait';
 }
 
-async function renderTablePage(name){
+async function renderTablePageOld(name){
   const [action, columns, rows] = tableSections[name];
   const saved = await TasneefAPI.moduleRecords(name);
   const dynamicRows = saved.map(x => [x.title || x.name || x.id, x.project || '—', x.status || 'مسودة', x.createdAt ? new Date(x.createdAt).toLocaleDateString('ar-SA') : '—', x.total || '0.00 ﷼', 'فتح']);
@@ -368,7 +366,7 @@ function renderCashDashboard(){
     </div><div class="table-grid">${dashTable('أكبر فواتير مبيعات غير مدفوعة',['فاتورة','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مبيعات غير مدفوعة')}${dashTable('أكبر فواتير مشتريات غير مدفوعة',['فاتورة المشتريات','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مشتريات غير مدفوعة')}</div>`;
 }
 
-async function renderBankAccounts(){
+async function renderBankAccountsOld(){
   const accounts = await TasneefAPI.list('bankAccounts');
   page('bank-layout', `<section class="bank-page"><div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="openUniversalWindow('أضف حساب بنك','نموذج إضافة حساب بنكي','bankAccounts')">أضف حساب بنك</button></div><div class="bank-cards-wrap">${accounts.map(a => `<article class="bank-card"><div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.type === 'bank' ? '🏦' : a.type === 'petty_cash' ? '💵' : '💰'}</div><h2>${escapeHtml(a.name)}</h2></div><div class="bank-card-actions"><button class="more-btn">⋮</button><button class="import-btn" onclick="importBankStatement('${a.id}','${escapeHtml(a.name)}')">استيراد كشف حساب</button></div></div><div class="bank-metrics"><div class="metric-row"><strong>${Number(a.bookBalance||0).toFixed(2)} ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>${Number(a.statementBalance||0).toFixed(2)} ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>${(Number(a.bookBalance||0)-Number(a.statementBalance||0)).toFixed(2)} ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div></article>`).join('')}</div></section>`);
 }
@@ -452,18 +450,79 @@ function toast(message){
   setTimeout(() => t.classList.add('hidden'), 2200);
 }
 
+function renderAuthScreen(message=''){
+  const content = $('#content');
+  if(!content) return;
+  document.body.classList.add('auth-mode');
+  content.className = 'auth-layout';
+  content.innerHTML = `
+    <section class="auth-card">
+      <img src="tasneef_logo.png" alt="Tasneef Facilities Management" />
+      <h1>تسجيل الدخول</h1>
+      <p>ادخل بحساب Supabase المسجل للوصول إلى بيانات النظام الحقيقية.</p>
+      ${message ? `<div class="auth-error">${escapeHtml(message)}</div>` : ''}
+      <label>البريد الإلكتروني</label>
+      <input id="authEmail" type="email" autocomplete="email" placeholder="name@company.com" />
+      <label>كلمة المرور</label>
+      <input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" />
+      <div class="auth-actions">
+        <button onclick="handleLogin()">دخول</button>
+        <button class="secondary-action" onclick="handleSignup()">إنشاء حساب</button>
+      </div>
+    </section>
+  `;
+}
+
+async function handleLogin(){
+  const email = $('#authEmail')?.value?.trim();
+  const password = $('#authPassword')?.value || '';
+  if(!email || !password) return renderAuthScreen('اكتب البريد وكلمة المرور.');
+  try{
+    await TasneefAPI.auth.login(email, password);
+    document.body.classList.remove('auth-mode');
+    await initApp();
+    toast('تم تسجيل الدخول');
+  }catch(err){
+    renderAuthScreen(err.message || 'تعذر تسجيل الدخول.');
+  }
+}
+
+async function handleSignup(){
+  const email = $('#authEmail')?.value?.trim();
+  const password = $('#authPassword')?.value || '';
+  if(!email || password.length < 6) return renderAuthScreen('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+  try{
+    await TasneefAPI.auth.signup(email, password);
+    document.body.classList.remove('auth-mode');
+    await initApp();
+    toast('تم إنشاء الحساب');
+  }catch(err){
+    renderAuthScreen(err.message || 'تعذر إنشاء الحساب.');
+  }
+}
+
+function logout(){
+  TasneefAPI.auth.logout();
+  renderAuthScreen('تم تسجيل الخروج.');
+}
+
 function quickFilter(value){
   if(value && value.trim().length > 1) toast('فلترة: ' + value);
 }
 
 function showAppStatus(){
   const mode = window.TASNEEF_CONFIG?.API_MODE || 'local';
-  toast(mode === 'server' ? 'متصل بالسيرفر' : 'يعمل بوضع التخزين المحلي - جاهز للربط');
+  toast(mode === 'supabase' ? 'متصل بقاعدة البيانات' : 'يعمل بوضع التخزين المحلي');
 }
 
-async function init(){
+async function initApp(){
   renderNav();
   await renderInbox();
+  const userBox = document.querySelector('.user-box');
+  const user = TasneefAPI.auth.user();
+  if(userBox && user){
+    userBox.innerHTML = `<div class="avatar">FM</div><div><strong>${escapeHtml(user.email || 'مستخدم')}</strong><span>TASNEEF-FM</span></div><button class="tiny-arrow" onclick="logout()">خروج</button>`;
+  }
   const search = $('#globalSearch');
   if(search){
     search.addEventListener('input', e => {
@@ -477,6 +536,14 @@ async function init(){
     }
   });
   setTimeout(showAppStatus, 700);
+}
+
+async function init(){
+  if(window.TASNEEF_CONFIG?.REQUIRE_AUTH !== false && !TasneefAPI.auth.isLoggedIn()){
+    renderAuthScreen();
+    return;
+  }
+  await initApp();
 }
 
 document.addEventListener('DOMContentLoaded', init);

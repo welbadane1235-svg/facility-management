@@ -1,13 +1,16 @@
-
 /*
-  Tasneef ERP API Layer V015
-  - local: يعمل على localStorage
-  - supabase: يحاول قراءة/كتابة Supabase REST ثم يرجع محليًا كاحتياط إذا الجدول غير موجود
-  - server: API خاص لاحقًا
+  Tasneef ERP API Layer V016
+  وضع حقيقي:
+  - تسجيل دخول عبر Supabase Auth
+  - RLS يعمل باستخدام access_token الخاص بالمستخدم
+  - تحويل أسماء الحقول بين الواجهة وقاعدة البيانات
+  - لا يوجد fallback محلي إلا إذا تم تفعيله صراحة من config.js
 */
 (function(){
   const cfg = window.TASNEEF_CONFIG || {};
   const prefix = cfg.STORAGE_PREFIX || 'tasneef_erp_';
+  const tokenKey = cfg.AUTH_TOKEN_KEY || 'tasneef_auth_token';
+  const refreshKey = cfg.REFRESH_TOKEN_KEY || 'tasneef_refresh_token';
 
   const seed = {
     records: [],
@@ -33,6 +36,11 @@
   };
 
   function key(name){ return prefix + name; }
+  function uid(prefix='REC'){ return prefix + '-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase(); }
+  function apiBase(){ return (cfg.API_BASE_URL || '').replace(/\/$/, ''); }
+  function authBase(){ return apiBase().replace('/rest/v1', '/auth/v1'); }
+  function isSupabase(){ return (cfg.API_MODE || 'supabase') === 'supabase'; }
+  function hasSession(){ return Boolean(localStorage.getItem(tokenKey)); }
 
   function readLocal(name){
     const raw = localStorage.getItem(key(name));
@@ -47,45 +55,43 @@
     return value;
   }
 
-  function uid(prefix='REC'){
-    return prefix + '-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
-  }
-
-  function supabaseHeaders(extra={}){
+  function authHeaders(extra={}){
     const anon = cfg.SUPABASE_ANON_KEY || '';
+    const token = localStorage.getItem(tokenKey) || anon;
     return {
-      'apikey': anon,
-      'Authorization': 'Bearer ' + anon,
+      apikey: anon,
+      Authorization: 'Bearer ' + token,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
+      Prefer: 'return=representation',
       ...extra
     };
   }
 
   function supabaseUrl(resource, query='select=*'){
     const table = tableMap[resource] || resource;
-    const base = (cfg.API_BASE_URL || '').replace(/\/$/, '');
-    return base + '/' + table + '?' + query;
+    return apiBase() + '/' + table + '?' + query;
   }
 
-  function normalizeFromSupabase(resource, rows){
+  function fromDb(resource, rows){
     if(!Array.isArray(rows)) return rows;
     if(resource === 'bankAccounts'){
       return rows.map(x => ({
         id: x.id,
         name: x.name,
         type: x.type,
-        bookBalance: Number(x.book_balance ?? x.bookBalance ?? 0),
-        statementBalance: Number(x.statement_balance ?? x.statementBalance ?? 0),
-        status: x.status || 'نشط'
+        bookBalance: Number(x.book_balance ?? 0),
+        statementBalance: Number(x.statement_balance ?? 0),
+        status: x.status || 'نشط',
+        createdAt: x.created_at,
+        updatedAt: x.updated_at
       }));
     }
     if(resource === 'inbox'){
       return rows.map(x => ({
         id: x.id,
         title: x.title,
-        from: x.sender || x.from || '',
-        time: x.time_label || x.time || '',
+        from: x.sender || '',
+        time: x.time_label || '',
         type: x.type,
         status: x.status,
         priority: x.priority,
@@ -94,13 +100,40 @@
         attachment: x.attachment || '—',
         suggested: x.suggested || '',
         body: x.body || '',
-        activity: Array.isArray(x.activity) ? x.activity : (x.activity ? JSON.parse(x.activity) : [])
+        activity: Array.isArray(x.activity) ? x.activity : [],
+        createdAt: x.created_at,
+        updatedAt: x.updated_at
+      }));
+    }
+    if(resource === 'records'){
+      return rows.map(x => ({
+        id: x.id,
+        type: x.type,
+        accountId: x.account_id,
+        fileName: x.file_name,
+        status: x.status,
+        createdAt: x.created_at,
+        updatedAt: x.updated_at
+      }));
+    }
+    if(resource === 'modules'){
+      return rows.map(x => ({
+        id: x.id,
+        module: x.module,
+        title: x.title,
+        status: x.status,
+        project: x.project,
+        description: x.description,
+        total: x.total,
+        sourceInboxId: x.source_inbox_id,
+        createdAt: x.created_at,
+        updatedAt: x.updated_at
       }));
     }
     return rows;
   }
 
-  function normalizeToSupabase(resource, data){
+  function toDb(resource, data){
     if(resource === 'bankAccounts'){
       return {
         id: data.id,
@@ -128,90 +161,135 @@
         activity: data.activity || []
       };
     }
+    if(resource === 'records'){
+      return {
+        id: data.id,
+        type: data.type,
+        account_id: data.accountId || data.account_id || null,
+        file_name: data.fileName || data.file_name || null,
+        status: data.status || 'مسودة'
+      };
+    }
+    if(resource === 'modules'){
+      return {
+        id: data.id,
+        module: data.module,
+        title: data.title || data.name || data.id,
+        status: data.status || 'مسودة',
+        project: data.project || '',
+        description: data.description || '',
+        total: data.total || '0.00 ﷼',
+        source_inbox_id: data.sourceInboxId || data.source_inbox_id || null
+      };
+    }
     return data;
   }
 
-  async function trySupabaseList(resource){
-    const res = await fetch(supabaseUrl(resource), {headers:supabaseHeaders()});
-    if(!res.ok) throw new Error(await res.text());
-    return normalizeFromSupabase(resource, await res.json());
-  }
-
-  async function trySupabaseCreate(resource, data){
-    const payload = normalizeToSupabase(resource, data);
-    const res = await fetch(supabaseUrl(resource), {
-      method:'POST',
-      headers:supabaseHeaders(),
-      body:JSON.stringify(payload)
-    });
-    if(!res.ok) throw new Error(await res.text());
-    const rows = await res.json();
-    return normalizeFromSupabase(resource, rows)[0] || data;
-  }
-
-  async function trySupabaseUpdate(resource, id, data){
-    const payload = normalizeToSupabase(resource, {id, ...data});
-    const table = tableMap[resource] || resource;
-    const base = (cfg.API_BASE_URL || '').replace(/\/$/, '');
-    const res = await fetch(base + '/' + table + '?id=eq.' + encodeURIComponent(id), {
-      method:'PATCH',
-      headers:supabaseHeaders(),
-      body:JSON.stringify(payload)
-    });
-    if(!res.ok) throw new Error(await res.text());
-    const rows = await res.json();
-    return normalizeFromSupabase(resource, rows)[0] || {id, ...data};
-  }
-
-  async function serverRequest(path, options={}){
-    const token = localStorage.getItem(cfg.AUTH_TOKEN_KEY || 'tasneef_auth_token');
-    const res = await fetch((cfg.API_BASE_URL || '') + path, {
-      ...options,
-      headers: {
-        'Content-Type':'application/json',
-        ...(token ? {Authorization:'Bearer ' + token} : {}),
-        ...(options.headers || {})
-      }
-    });
-    if(!res.ok) throw new Error(await res.text());
-    return res.json();
-  }
-
-  function shouldUseSupabase(){
-    return (cfg.API_MODE || 'local') === 'supabase' && cfg.API_BASE_URL && cfg.SUPABASE_ANON_KEY;
-  }
-
-  async function withFallback(resource, action, fallback){
-    try{
-      if(shouldUseSupabase()) return await action();
-      if((cfg.API_MODE || 'local') === 'server') return await action();
-    }catch(err){
-      console.warn('API fallback for', resource, err.message || err);
-      if(!cfg.LOCAL_FALLBACK) throw err;
+  async function request(url, options={}){
+    const res = await fetch(url, options);
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+    if(!res.ok){
+      const message = data?.msg || data?.message || data?.error_description || data?.error || text || 'API error';
+      throw new Error(message);
     }
-    return fallback();
+    return data;
+  }
+
+  async function listDb(resource){
+    return fromDb(resource, await request(supabaseUrl(resource), {headers:authHeaders()}));
+  }
+
+  async function createDb(resource, data){
+    const item = {id:data.id || uid(resource.slice(0,3).toUpperCase()), ...data};
+    const rows = await request(supabaseUrl(resource), {
+      method:'POST',
+      headers:authHeaders(),
+      body:JSON.stringify(toDb(resource, item))
+    });
+    return fromDb(resource, rows)[0] || item;
+  }
+
+  async function updateDb(resource, id, data){
+    const table = tableMap[resource] || resource;
+    const rows = await request(apiBase() + '/' + table + '?id=eq.' + encodeURIComponent(id), {
+      method:'PATCH',
+      headers:authHeaders(),
+      body:JSON.stringify(toDb(resource, {id, ...data}))
+    });
+    return fromDb(resource, rows)[0] || {id, ...data};
+  }
+
+  async function deleteDb(resource, id){
+    const table = tableMap[resource] || resource;
+    await request(apiBase() + '/' + table + '?id=eq.' + encodeURIComponent(id), {
+      method:'DELETE',
+      headers:authHeaders({'Prefer':'return=minimal'})
+    });
+    return {ok:true};
+  }
+
+  async function realOrLocal(resource, action, fallback){
+    if(!isSupabase()) return fallback();
+    if(!hasSession() && cfg.REQUIRE_AUTH !== false) throw new Error('يلزم تسجيل الدخول أولًا');
+    try{
+      return await action();
+    }catch(err){
+      if(cfg.LOCAL_FALLBACK === true) return fallback();
+      throw err;
+    }
+  }
+
+  async function authRequest(path, body){
+    return request(authBase() + path, {
+      method:'POST',
+      headers:{
+        apikey: cfg.SUPABASE_ANON_KEY || '',
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(body)
+    });
+  }
+
+  function saveSession(session){
+    if(!session?.access_token) return null;
+    localStorage.setItem(tokenKey, session.access_token);
+    if(session.refresh_token) localStorage.setItem(refreshKey, session.refresh_token);
+    localStorage.setItem(prefix + 'user', JSON.stringify(session.user || {}));
+    return session.user || null;
   }
 
   window.TasneefAPI = {
     uid,
 
+    auth: {
+      isLoggedIn: hasSession,
+      user(){
+        try{ return JSON.parse(localStorage.getItem(prefix + 'user') || 'null'); }
+        catch(_err){ return null; }
+      },
+      async login(email, password){
+        const session = await authRequest('/token?grant_type=password', {email, password});
+        return saveSession(session);
+      },
+      async signup(email, password){
+        const session = await authRequest('/signup', {email, password});
+        return saveSession(session);
+      },
+      logout(){
+        localStorage.removeItem(tokenKey);
+        localStorage.removeItem(refreshKey);
+        localStorage.removeItem(prefix + 'user');
+      }
+    },
+
     async list(resource){
-      return withFallback(resource,
-        async () => {
-          if(shouldUseSupabase()) return trySupabaseList(resource);
-          return serverRequest('/api/' + resource);
-        },
-        () => readLocal(resource)
-      );
+      return realOrLocal(resource, () => listDb(resource), () => readLocal(resource));
     },
 
     async create(resource, data){
-      return withFallback(resource,
-        async () => {
-          const item = {id:data.id || uid(resource.slice(0,3).toUpperCase()), createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), ...data};
-          if(shouldUseSupabase()) return trySupabaseCreate(resource, item);
-          return serverRequest('/api/' + resource, {method:'POST', body:JSON.stringify(item)});
-        },
+      return realOrLocal(resource,
+        () => createDb(resource, data),
         () => {
           const list = readLocal(resource);
           const item = {id:data.id || uid(resource.slice(0,3).toUpperCase()), createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), ...data};
@@ -223,11 +301,8 @@
     },
 
     async update(resource, id, data){
-      return withFallback(resource,
-        async () => {
-          if(shouldUseSupabase()) return trySupabaseUpdate(resource, id, data);
-          return serverRequest('/api/' + resource + '/' + encodeURIComponent(id), {method:'PUT', body:JSON.stringify(data)});
-        },
+      return realOrLocal(resource,
+        () => updateDb(resource, id, data),
         () => {
           const list = readLocal(resource);
           const idx = list.findIndex(x => x.id === id);
@@ -239,53 +314,44 @@
     },
 
     async remove(resource, id){
-      return withFallback(resource,
-        async () => serverRequest('/api/' + resource + '/' + encodeURIComponent(id), {method:'DELETE'}),
+      return realOrLocal(resource, () => deleteDb(resource, id), () => {
+        const list = readLocal(resource).filter(x => x.id !== id);
+        writeLocal(resource, list);
+        return {ok:true};
+      });
+    },
+
+    async moduleRecords(moduleName){
+      return realOrLocal('modules',
+        async () => {
+          const rows = await request(apiBase() + '/' + tableMap.modules + '?select=*&module=eq.' + encodeURIComponent(moduleName), {headers:authHeaders()});
+          return fromDb('modules', rows);
+        },
         () => {
-          const list = readLocal(resource).filter(x => x.id !== id);
-          writeLocal(resource, list);
-          return {ok:true};
+          const modules = readLocal('modules');
+          return modules[moduleName] || [];
         }
       );
     },
 
-    async moduleRecords(moduleName){
-      if(shouldUseSupabase()){
-        try{
-          const base = (cfg.API_BASE_URL || '').replace(/\/$/, '');
-          const table = tableMap.modules;
-          const res = await fetch(base + '/' + table + '?select=*&module=eq.' + encodeURIComponent(moduleName), {headers:supabaseHeaders()});
-          if(res.ok) return await res.json();
-          throw new Error(await res.text());
-        }catch(err){ if(!cfg.LOCAL_FALLBACK) throw err; }
-      }
-      const modules = readLocal('modules');
-      return modules[moduleName] || [];
-    },
-
     async saveModuleRecord(moduleName, data){
-      const item = {id:data.id || uid('REC'), module:moduleName, createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), ...data};
-      if(shouldUseSupabase()){
-        try{
-          const base = (cfg.API_BASE_URL || '').replace(/\/$/, '');
-          const table = tableMap.modules;
-          const res = await fetch(base + '/' + table + '?select=*', {method:'POST', headers:supabaseHeaders(), body:JSON.stringify(item)});
-          if(res.ok) return (await res.json())[0] || item;
-          throw new Error(await res.text());
-        }catch(err){ if(!cfg.LOCAL_FALLBACK) throw err; }
-      }
-      const modules = readLocal('modules');
-      const list = modules[moduleName] || [];
-      const idx = list.findIndex(x => x.id === item.id);
-      if(idx >= 0) list[idx] = item; else list.unshift(item);
-      modules[moduleName] = list;
-      writeLocal('modules', modules);
-      return item;
+      const item = {id:data.id || uid('REC'), module:moduleName, ...data};
+      return realOrLocal('modules',
+        () => createDb('modules', item),
+        () => {
+          const modules = readLocal('modules');
+          const list = modules[moduleName] || [];
+          const idx = list.findIndex(x => x.id === item.id);
+          if(idx >= 0) list[idx] = item; else list.unshift({...item, createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()});
+          modules[moduleName] = list;
+          writeLocal('modules', modules);
+          return item;
+        }
+      );
     },
 
     async importBankStatement(accountId, fileName='bank-statement.xlsx'){
-      const item = {id:uid('BNK'), type:'bank_statement', accountId, fileName, status:'imported', createdAt:new Date().toISOString()};
-      return this.create('records', item);
+      return this.create('records', {id:uid('BNK'), type:'bank_statement', accountId, fileName, status:'imported'});
     },
 
     reset(){

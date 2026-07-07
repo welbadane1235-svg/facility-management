@@ -1044,3 +1044,21 @@ input,select,textarea{font-family:inherit}
 [data-filter-row="1"]{
   transition:opacity .12s ease, background .12s ease;
 }
+
+/* V016 authenticated app shell */
+.auth-mode .right-sidebar,
+.auth-mode .top-header,
+.auth-mode .help-float,
+.auth-mode .help-label{display:none}
+.auth-mode .main-area{margin:0;width:100%}
+.auth-layout{min-height:100vh;display:grid;place-items:center;background:#f4f7f5;padding:24px}
+.auth-card{width:min(420px,100%);background:#fff;border:1px solid #dfe7e2;border-radius:8px;padding:28px;box-shadow:0 20px 55px rgba(20,50,35,.12)}
+.auth-card img{width:150px;max-height:64px;object-fit:contain;display:block;margin:0 auto 18px}
+.auth-card h1{margin:0 0 8px;font-size:24px;color:#173b2a}
+.auth-card p{margin:0 0 18px;color:#5f6f67;line-height:1.7}
+.auth-card label{display:block;margin:12px 0 6px;color:#31463b;font-weight:700}
+.auth-card input{width:100%;min-height:44px;border:1px solid #ccd9d1;border-radius:6px;padding:0 12px;font:inherit}
+.auth-actions{display:flex;gap:10px;margin-top:18px}
+.auth-actions button{flex:1;min-height:44px;border:0;border-radius:6px;background:#0c7a43;color:#fff;font-weight:800;cursor:pointer}
+.auth-actions .secondary-action{background:#eef5f1;color:#145236;border:1px solid #cfe0d7}
+.auth-error{border:1px solid #f1c7c7;background:#fff3f3;color:#9f2525;border-radius:6px;padding:10px 12px;margin-bottom:14px}
