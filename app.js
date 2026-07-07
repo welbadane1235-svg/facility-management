@@ -683,3 +683,338 @@ renderInbox();
     }
   }, true);
 })();
+
+
+
+/* V012 Smart Inbox Operations Center */
+(function(){
+  const inboxMessages = [
+    {
+      id:'INB-0001',
+      title:'فاتورة مورد - مواد تنظيف',
+      from:'مورد مواد تنظيف',
+      time:'منذ 12 دقيقة',
+      type:'فاتورة مورد',
+      status:'غير معالج',
+      priority:'متوسطة',
+      assignee:'المحاسب',
+      project:'المخزن الرئيسي',
+      attachment:'invoice_supplier_0001.pdf',
+      suggested:'إنشاء فاتورة مورد وربطها بالمورد والمشروع',
+      body:'وصلت فاتورة مواد تنظيف للمراجعة والاعتماد قبل الصرف.',
+      activity:['تم استلام الرسالة','تم اكتشاف مرفق PDF','تم اقتراح إنشاء فاتورة مورد']
+    },
+    {
+      id:'INB-0002',
+      title:'شكوى عميل - ضعف ضخ المياه',
+      from:'رئيس جمعية الماجدية 70',
+      time:'منذ 28 دقيقة',
+      type:'تكت صيانة',
+      status:'يحتاج إجراء',
+      priority:'عالية',
+      assignee:'مدير التشغيل',
+      project:'الماجدية 70',
+      attachment:'water_issue_photo.jpg',
+      suggested:'إنشاء تكت صيانة وتعيين فني',
+      body:'العميل يفيد بوجود ضعف في ضخ المياه ويطلب الفحص بشكل عاجل.',
+      activity:['تم استلام الشكوى','تم تحديد المشروع: الماجدية 70','الأولوية عالية']
+    },
+    {
+      id:'INB-0003',
+      title:'كشف حساب بنكي - شهر يوليو',
+      from:'البنك',
+      time:'منذ ساعة',
+      type:'كشف بنكي',
+      status:'بانتظار المعالجة',
+      priority:'متوسطة',
+      assignee:'المحاسب',
+      project:'الحساب البنكي',
+      attachment:'bank_statement_july.xlsx',
+      suggested:'استيراد كشف الحساب والبدء بالمطابقة البنكية',
+      body:'كشف حساب بنكي جديد جاهز للاستيراد والمطابقة.',
+      activity:['تم استلام كشف الحساب','تم التعرف على نوع الملف XLSX']
+    },
+    {
+      id:'INB-0004',
+      title:'طلب صرف مواد - الرمز A17',
+      from:'مشرف الموقع',
+      time:'منذ ساعتين',
+      type:'طلب مخزن',
+      status:'غير معالج',
+      priority:'متوسطة',
+      assignee:'مسؤول المخزن',
+      project:'الرمز A17',
+      attachment:'request_items.png',
+      suggested:'إنشاء طلب صرف وربطه بالمشروع',
+      body:'طلب صرف مواد تشغيلية للموقع حسب الاحتياج المرفق.',
+      activity:['تم استلام الطلب','تم ربطه بمشروع الرمز A17']
+    },
+    {
+      id:'INB-0005',
+      title:'اعتماد فاتورة بيع - العجلان 30',
+      from:'النظام',
+      time:'اليوم',
+      type:'موافقة',
+      status:'قيد المراجعة',
+      priority:'منخفضة',
+      assignee:'المدير',
+      project:'العجلان 30',
+      attachment:'—',
+      suggested:'مراجعة الفاتورة واعتمادها أو إرجاعها للمحاسب',
+      body:'فاتورة بيع بانتظار اعتماد المدير قبل الإرسال.',
+      activity:['تم إنشاء الفاتورة','بانتظار اعتماد المدير']
+    },
+    {
+      id:'INB-0006',
+      title:'تنبيه عقد قريب الانتهاء',
+      from:'النظام',
+      time:'أمس',
+      type:'تنبيه',
+      status:'مؤرشف',
+      priority:'عالية',
+      assignee:'مدير التشغيل',
+      project:'مشروع تجريبي',
+      attachment:'—',
+      suggested:'مراجعة العقد والتواصل مع العميل للتجديد',
+      body:'تبقى أقل من 30 يومًا على نهاية أحد العقود.',
+      activity:['تم إنشاء التنبيه','تمت أرشفته']
+    }
+  ];
+  let selectedInboxId = inboxMessages[0].id;
+  let currentInboxFilter = 'الكل';
+
+  const oldRenderInbox = window.renderInbox;
+
+  window.renderInbox = function(){
+    currentSection = 'البريد الوارد';
+    if(typeof renderNav === 'function') renderNav();
+    const content = document.getElementById('content');
+    if(!content) return;
+    content.className = 'smart-inbox-layout';
+    content.innerHTML = `
+      <section class="inbox-detail-panel" id="inboxDetail"></section>
+      <aside class="smart-inbox-panel">
+        <div class="smart-inbox-head">
+          <div>
+            <h1>البريد الوارد</h1>
+            <p>مركز معالجة ذكي للرسائل والفواتير والكشوف والتكتات والطلبات.</p>
+          </div>
+          <button class="refresh" onclick="toast('تم تحديث البريد الوارد')">⟳</button>
+        </div>
+
+        <div class="smart-inbox-search">
+          <span>⌕</span>
+          <input id="inboxSearchInput" placeholder="ابحث في البريد الوارد..." oninput="renderInboxList()" />
+        </div>
+
+        <div class="inbox-category-tabs" id="inboxTabs">
+          ${['الكل','غير معالج','بانتظار المعالجة','فواتير','كشوف بنكية','تكتات','طلبات مخزن','موافقات','تنبيهات','مكتمل','مؤرشف'].map(t=>`
+            <button class="${currentInboxFilter===t?'active':''}" onclick="setInboxFilter('${t}')">${t}${inboxCount(t)}</button>
+          `).join('')}
+        </div>
+
+        <div class="inbox-filter-row">
+          <button class="mini-filter">من تاريخ <span>⌄</span></button>
+          <button class="mini-filter">المشروع <span>⌄</span></button>
+          <button class="mini-filter">المسؤول <span>⌄</span></button>
+          <button class="mini-filter">مرفقات <span>⌄</span></button>
+        </div>
+
+        <div class="smart-message-list" id="smartInboxList"></div>
+      </aside>`;
+    renderInboxList();
+    renderInboxDetail(selectedInboxId);
+  };
+
+  function inboxCount(filter){
+    const c = filterInboxMessages(filter).length;
+    if(filter === 'الكل') return ` <span>${inboxMessages.length}</span>`;
+    return c ? ` <span>${c}</span>` : '';
+  }
+
+  function filterInboxMessages(filter=currentInboxFilter){
+    if(filter === 'الكل') return inboxMessages;
+    if(filter === 'غير معالج') return inboxMessages.filter(m=>m.status === 'غير معالج');
+    if(filter === 'بانتظار المعالجة') return inboxMessages.filter(m=>m.status === 'بانتظار المعالجة');
+    if(filter === 'فواتير') return inboxMessages.filter(m=>m.type.includes('فاتورة'));
+    if(filter === 'كشوف بنكية') return inboxMessages.filter(m=>m.type === 'كشف بنكي');
+    if(filter === 'تكتات') return inboxMessages.filter(m=>m.type === 'تكت صيانة');
+    if(filter === 'طلبات مخزن') return inboxMessages.filter(m=>m.type === 'طلب مخزن');
+    if(filter === 'موافقات') return inboxMessages.filter(m=>m.type === 'موافقة');
+    if(filter === 'تنبيهات') return inboxMessages.filter(m=>m.type === 'تنبيه');
+    if(filter === 'مكتمل') return inboxMessages.filter(m=>m.status === 'مكتمل');
+    if(filter === 'مؤرشف') return inboxMessages.filter(m=>m.status === 'مؤرشف');
+    return inboxMessages;
+  }
+
+  window.setInboxFilter = function(filter){
+    currentInboxFilter = filter;
+    renderInbox();
+  };
+
+  window.renderInboxList = function(){
+    const box = document.getElementById('smartInboxList');
+    if(!box) return;
+    const q = (document.getElementById('inboxSearchInput')?.value || '').trim().toLowerCase();
+    let list = filterInboxMessages(currentInboxFilter);
+    if(q){
+      list = list.filter(m => [m.title,m.from,m.type,m.project,m.assignee,m.status].join(' ').toLowerCase().includes(q));
+    }
+    if(!list.length){
+      box.innerHTML = `<div class="empty-inbox-list">لا توجد رسائل مطابقة للفلاتر الحالية</div>`;
+      return;
+    }
+    box.innerHTML = list.map(m=>`
+      <article class="smart-message-row ${m.id===selectedInboxId?'active':''}" onclick="selectInboxMessage('${m.id}')">
+        <div class="message-check"><input type="checkbox" onclick="event.stopPropagation()" /></div>
+        <div class="message-main">
+          <div class="message-title-line">
+            <strong>${m.title}</strong>
+            <span class="priority ${priorityClass(m.priority)}">${m.priority}</span>
+          </div>
+          <p>${m.from} · ${m.project}</p>
+          <div class="message-meta">
+            <em class="${statusClass(m.status)}">${m.status}</em>
+            <span>${m.type}</span>
+            <span>${m.time}</span>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  };
+
+  window.selectInboxMessage = function(id){
+    selectedInboxId = id;
+    renderInboxList();
+    renderInboxDetail(id);
+  };
+
+  function getMessage(id){
+    return inboxMessages.find(m=>m.id===id) || inboxMessages[0];
+  }
+
+  window.renderInboxDetail = function(id){
+    const m = getMessage(id);
+    const detail = document.getElementById('inboxDetail');
+    if(!detail || !m) return;
+    detail.innerHTML = `
+      <div class="detail-topbar">
+        <div>
+          <h2>${m.title}</h2>
+          <p>${m.from} · ${m.time}</p>
+        </div>
+        <div class="detail-status">
+          <span class="${statusClass(m.status)}">${m.status}</span>
+          <button onclick="archiveInboxMessage('${m.id}')">أرشفة</button>
+        </div>
+      </div>
+
+      <div class="inbox-smart-summary">
+        <div class="summary-icon">${typeIcon(m.type)}</div>
+        <div>
+          <h3>اقتراح النظام</h3>
+          <p>${m.suggested}</p>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-card"><span>نوع الرسالة</span><strong>${m.type}</strong></div>
+        <div class="detail-card"><span>المشروع</span><strong>${m.project}</strong></div>
+        <div class="detail-card"><span>المسؤول</span><strong>${m.assignee}</strong></div>
+        <div class="detail-card"><span>الأولوية</span><strong>${m.priority}</strong></div>
+      </div>
+
+      <div class="message-body-card">
+        <h3>محتوى الرسالة</h3>
+        <p>${m.body}</p>
+      </div>
+
+      <div class="attachment-card">
+        <div>
+          <h3>المرفقات</h3>
+          <p>${m.attachment === '—' ? 'لا توجد مرفقات' : m.attachment}</p>
+        </div>
+        ${m.attachment === '—' ? '' : '<button onclick="toast(\\'فتح المرفق\\')">عرض المرفق</button>'}
+      </div>
+
+      <div class="inbox-actions">
+        ${actionButtons(m)}
+      </div>
+
+      <div class="notes-activity-grid">
+        <div class="internal-notes">
+          <h3>ملاحظات داخلية</h3>
+          <textarea placeholder="اكتب ملاحظة للفريق..."></textarea>
+          <button onclick="toast('تم حفظ الملاحظة')">إضافة ملاحظة</button>
+        </div>
+        <div class="activity-log">
+          <h3>سجل المعالجة</h3>
+          ${m.activity.map(a=>`<div><span>•</span><p>${a}</p></div>`).join('')}
+        </div>
+      </div>`;
+  };
+
+  function actionButtons(m){
+    const common = `<button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين مسؤول</button>
+      <button class="secondary-action" onclick="changeInboxStatus('${m.id}','قيد المراجعة')">قيد المراجعة</button>`;
+    if(m.type === 'فاتورة مورد') return `<button class="main-action" onclick="createFromInbox('${m.id}','فاتورة مورد')">إنشاء فاتورة مورد</button><button class="secondary-action" onclick="openSection('الموردين')">ربط بمورد</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
+    if(m.type === 'تكت صيانة') return `<button class="main-action" onclick="createFromInbox('${m.id}','تكت صيانة')">إنشاء تكت</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button><button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين فني</button><button class="secondary-action" onclick="toast('تم تجهيز رد واتساب')">رد واتساب</button>`;
+    if(m.type === 'كشف بنكي') return `<button class="main-action" onclick="createFromInbox('${m.id}','كشف حساب بنكي')">استيراد كشف الحساب</button><button class="secondary-action" onclick="openSection('الحسابات البنكية')">ربط بحساب بنكي</button><button class="secondary-action" onclick="toast('فتح المطابقة البنكية')">مطابقة المدفوعات</button>${common}`;
+    if(m.type === 'طلب مخزن') return `<button class="main-action" onclick="createFromInbox('${m.id}','طلب صرف')">إنشاء طلب صرف</button><button class="secondary-action" onclick="openSection('الأصناف')">فحص المخزون</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
+    if(m.type === 'موافقة') return `<button class="main-action" onclick="changeInboxStatus('${m.id}','مكتمل')">اعتماد</button><button class="secondary-action" onclick="toast('تم إرجاعها للمحاسب')">إرجاع للمحاسب</button><button class="secondary-action" onclick="openSection('فواتير بيع')">فتح الفاتورة</button>`;
+    if(m.type === 'تنبيه') return `<button class="main-action" onclick="openSection('المشاريع')">مراجعة العقد</button><button class="secondary-action" onclick="changeInboxStatus('${m.id}','مكتمل')">تمت المعالجة</button>${common}`;
+    return `<button class="main-action" onclick="createFromInbox('${m.id}','إجراء')">تنفيذ الإجراء</button>${common}`;
+  }
+
+  window.createFromInbox = function(id, target){
+    const m = getMessage(id);
+    m.status = 'تم التحويل';
+    m.activity.push('تم تحويل الرسالة إلى: ' + target);
+    renderInboxList();
+    renderInboxDetail(id);
+    openUniversalWindow(target + ' من البريد الوارد', 'تم إنشاء هذا السجل من الرسالة: ' + m.title);
+  };
+
+  window.changeInboxStatus = function(id, status){
+    const m = getMessage(id);
+    m.status = status;
+    m.activity.push('تم تغيير الحالة إلى: ' + status);
+    renderInboxList();
+    renderInboxDetail(id);
+    toast('تم تحديث حالة الرسالة');
+  };
+
+  window.archiveInboxMessage = function(id){
+    changeInboxStatus(id, 'مؤرشف');
+  };
+
+  window.assignInboxMessage = function(id){
+    const m = getMessage(id);
+    openUniversalWindow('تعيين مسؤول - ' + m.title, 'اختر المسؤول المناسب لمعالجة هذه الرسالة.');
+  };
+
+  function typeIcon(type){
+    if(type.includes('فاتورة')) return '🧾';
+    if(type === 'كشف بنكي') return '🏦';
+    if(type === 'تكت صيانة') return '🛠';
+    if(type === 'طلب مخزن') return '📦';
+    if(type === 'موافقة') return '✅';
+    if(type === 'تنبيه') return '⚠';
+    return '✉';
+  }
+  function priorityClass(p){
+    return p === 'عالية' ? 'high' : p === 'متوسطة' ? 'medium' : 'low';
+  }
+  function statusClass(s){
+    if(s === 'غير معالج' || s === 'يحتاج إجراء') return 'status-open';
+    if(s === 'بانتظار المعالجة' || s === 'قيد المراجعة') return 'status-wait';
+    if(s === 'تم التحويل' || s === 'مكتمل') return 'status-done';
+    if(s === 'مؤرشف') return 'status-archived';
+    return 'status-wait';
+  }
+
+  // Re-render inbox if current page is inbox after patch loads
+  if(currentSection === 'البريد الوارد'){
+    window.renderInbox();
+  }
+})();
