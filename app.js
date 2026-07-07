@@ -11,6 +11,7 @@ const navData = [
   {id:'inbox', label:'البريد الوارد', icon:'✉'},
   {id:'dashboard', label:'لوحة البيانات', icon:'▦'},
   {id:'reports', label:'التقارير', icon:'▥'},
+  {id:'ops-center', label:'مركز التشغيل الميداني', icon:'▣'},
   {group:true, label:'المبيعات', icon:'＄', open:true, children:[
     'عروض أسعار و فواتير مبدئية','فواتير بيع','سندات العملاء','فواتير مجدولة',
     'إشعارات دائنة','فواتير نقدية','إشعارات تسليم','فواتير بيع من الـ API'
@@ -113,6 +114,7 @@ async function openSection(name){
   setSection(name);
   if(name === 'البريد الوارد') return renderInbox();
   if(name === 'لوحة البيانات') return renderDashboard(dashboardTab);
+  if(name === 'مركز التشغيل الميداني') return renderLegacyOperationsCenter();
   if(name === 'الحسابات البنكية') return renderBankAccounts();
   if(name === 'التقارير') return renderReports();
   if(name === 'الحضور') return renderAttendance();
@@ -341,6 +343,34 @@ function renderDashboard(tab){
       ${isPnl ? renderPnlDashboard() : renderCashDashboard()}
     </section>
   `);
+}
+
+const legacyModules = [
+  {id:'admin', title:'لوحة الإدارة', desc:'إدارة التشغيل، الطلبات، العقود، المخزون، المالية، الصلاحيات والتقارير.', page:'legacy_app/admin.html'},
+  {id:'supervisor', title:'بوابة المشرف', desc:'متابعة الفرق الميدانية والطلبات اليومية وتحديث الحالات.', page:'legacy_app/supervisor.html'},
+  {id:'technician', title:'بوابة الفني', desc:'استلام المهام والتذاكر وتسجيل التنفيذ من الجوال.', page:'legacy_app/technician.html'},
+  {id:'client', title:'تقارير العملاء', desc:'إصدار تقارير خدمات العملاء ومرفقات قبل/بعد التنفيذ.', page:'legacy_app/client-report.html'},
+  {id:'login', title:'دخول النظام الميداني', desc:'صفحة الدخول الأصلية للتطبيق الميداني عند الحاجة.', page:'legacy_app/index.html'}
+];
+
+function renderLegacyOperationsCenter(activeId='admin'){
+  const active = legacyModules.find(x => x.id === activeId) || legacyModules[0];
+  page('module-layout ops-layout', `<section class="module-page ops-page">
+    <div class="module-header">
+      <div><h1>مركز التشغيل الميداني</h1><p>تم ربط النسخة التشغيلية الجديدة داخل واجهة ERP بنفس الهوية، ويمكن فتح كل بواباتها من هنا.</p></div>
+      <button class="module-primary" onclick="window.open('${active.page}','_blank')">فتح في نافذة</button>
+    </div>
+    <div class="ops-module-grid">
+      ${legacyModules.map(m => `<article class="ops-module-card ${m.id === active.id ? 'active' : ''}" onclick="renderLegacyOperationsCenter('${m.id}')"><strong>${m.title}</strong><p>${m.desc}</p></article>`).join('')}
+    </div>
+    <div class="ops-frame-shell">
+      <div class="ops-frame-head">
+        <div><strong>${active.title}</strong><span>${active.desc}</span></div>
+        <button class="table-action" onclick="document.getElementById('legacyFrame').contentWindow.location.reload()">تحديث</button>
+      </div>
+      <iframe id="legacyFrame" class="ops-frame" src="${active.page}" title="${active.title}"></iframe>
+    </div>
+  </section>`);
 }
 
 function chartIllustration(type){
