@@ -1,1020 +1,428 @@
 
-const $ = (s)=>document.querySelector(s);
+'use strict';
+
+const $ = (selector) => document.querySelector(selector);
 
 let currentSection = 'البريد الوارد';
 let dashboardTab = 'pnl';
+let inboxFilter = 'الكل';
+let selectedMessageId = 'INB-0001';
 
 const navData = [
-  {id:'start',label:'ابدأ الآن',icon:'🚀'},
-  {id:'inbox',label:'البريد الوارد',icon:'✉'},
-  {id:'dashboard',label:'لوحة البيانات',icon:'▦'},
-  {id:'reports',label:'التقارير',icon:'▥'},
-  {group:true,label:'المبيعات',icon:'＄',open:true,children:[
+  {id:'start', label:'ابدأ الآن', icon:'🚀'},
+  {id:'inbox', label:'البريد الوارد', icon:'✉'},
+  {id:'dashboard', label:'لوحة البيانات', icon:'▦'},
+  {id:'reports', label:'التقارير', icon:'▥'},
+  {group:true, label:'المبيعات', icon:'＄', open:true, children:[
     'عروض أسعار و فواتير مبدئية','فواتير بيع','سندات العملاء','فواتير مجدولة',
     'إشعارات دائنة','فواتير نقدية','إشعارات تسليم','فواتير بيع من الـ API'
   ]},
-  {group:true,label:'المشتريات',icon:'🛒',children:['طلبات الشراء','فواتير الموردين','سندات الصرف','اعتمادات الشراء']},
-  {group:true,label:'العملاء والموردين',icon:'👥',children:['العملاء','الموردين','جهات الاتصال','الأرصدة']},
-  {group:true,label:'الرواتب والموظفين',icon:'♙',children:['الموظفين','الحضور','مسير الرواتب','الأوفر تايم']},
-  {group:true,label:'منتجات، خدمات، مخزون',icon:'▣',children:['الأصناف','طلبات الصرف','العهد','الجرد','التحويلات','طلبات الشراء']},
+  {group:true, label:'المشتريات', icon:'🛒', children:['طلبات الشراء','فواتير الموردين','سندات الصرف','اعتمادات الشراء']},
+  {group:true, label:'العملاء والموردين', icon:'👥', children:['العملاء','الموردين','جهات الاتصال','الأرصدة']},
+  {group:true, label:'الرواتب والموظفين', icon:'♙', children:['الموظفين','الحضور','مسير الرواتب','الأوفر تايم']},
+  {group:true, label:'منتجات، خدمات، مخزون', icon:'▣', children:['الأصناف','طلبات الصرف','العهد','الجرد','التحويلات','طلبات الشراء']},
   {divider:true},
-  {group:true,label:'للمحاسب',icon:'▧',children:['القيود اليومية','دليل الحسابات','ميزان المراجعة','قفل الفترات']},
-  {id:'banks',label:'الحسابات البنكية',icon:'🏦'},
-  {id:'assets',label:'الأصول الثابتة',icon:'▤'},
-  {id:'costcenters',label:'مراكز التكلفة',icon:'◇'},
-  {id:'projects',label:'المشاريع',icon:'▰'},
-  {id:'branches',label:'الفروع',icon:'⌘'},
+  {group:true, label:'للمحاسب', icon:'▧', children:['القيود اليومية','دليل الحسابات','ميزان المراجعة','قفل الفترات']},
+  {id:'banks', label:'الحسابات البنكية', icon:'🏦'},
+  {id:'assets', label:'الأصول الثابتة', icon:'▤'},
+  {id:'costcenters', label:'مراكز التكلفة', icon:'◇'},
+  {id:'projects', label:'المشاريع', icon:'▰'},
+  {id:'branches', label:'الفروع', icon:'⌘'},
   {divider:true},
-  {group:true,label:'للمطورين',icon:'⌨',children:['API','Webhooks','سجل النظام']},
-  {id:'integrations',label:'التكاملات',icon:'⇄'},
-  {id:'templates',label:'القوالب',icon:'□'},
-  {id:'help',label:'مركز المساعدة',icon:'?'}
+  {group:true, label:'للمطورين', icon:'⌨', children:['API','Webhooks','سجل النظام']},
+  {id:'integrations', label:'التكاملات', icon:'⇄'},
+  {id:'templates', label:'القوالب', icon:'□'},
+  {id:'help', label:'مركز المساعدة', icon:'?'},
+  {id:'en', label:'English', icon:'', language:true}
 ];
 
-const sectionConfig = {
-  'ابدأ الآن': {
-    type:'cards', title:'ابدأ الآن', subtitle:'خطوات التشغيل الأولى لإعداد النظام بسرعة.',
-    action:'إكمال الإعداد', stats:[['الشركة','مفعلة'],['المستخدمين','1'],['البيانات الأساسية','جاهزة']],
-    filters:['الشركة','الفرع','حالة الإعداد'],
-    cards:[
-      ['إعداد الشركة','بيانات الشركة، الشعار، الرقم الضريبي، والفروع.','جاهز'],
-      ['إعداد المحاسبة','دليل الحسابات، الضريبة، البنك، والخزينة.','مطلوب'],
-      ['إعداد التشغيل','المشاريع، المشرفين، الفنيين، والمخزون.','مطلوب']
-    ]
-  },
-  'التقارير': {
-    type:'reports', title:'التقارير', subtitle:'مركز التقارير المالية والتشغيلية بصيغة PDF و Excel.',
-    action:'إنشاء تقرير',
-    reports:['تقرير ربح وخسارة','ميزان مراجعة','تقرير ضريبة القيمة المضافة','ربحية المشاريع','تقرير المخزون','تقرير الحضور','مسير الرواتب','تقرير التكتات']
-  },
-  'عروض أسعار و فواتير مبدئية': {
-    type:'table', title:'عروض أسعار و فواتير مبدئية', subtitle:'إدارة العروض وتحويلها إلى فواتير بيع معتمدة.',
-    action:'عرض سعر جديد', filters:['العميل','المشروع','الحالة','من تاريخ','إلى تاريخ'],
-    columns:['الرقم','العميل','المشروع','الإجمالي','الحالة','الإجراء'],
-    rows:[['Q-0001','شركة تجريبية','الماجدية 70','0.00 ﷼','مسودة','فتح'],['Q-0002','عميل نقدي','العجلان 30','0.00 ﷼','بانتظار اعتماد','فتح']]
-  },
-  'فواتير بيع': {
-    type:'table', title:'فواتير بيع', subtitle:'فواتير العملاء الضريبية وربطها بالقيود وسندات القبض.',
-    action:'فاتورة بيع جديدة', filters:['العميل','حالة الدفع','الضريبة','المشروع','الفترة'],
-    columns:['الفاتورة','العميل','تاريخ الاستحقاق','الإجمالي','حالة الدفع','الإجراء'],
-    rows:[['INV-0001','الماجدية 70','2026-07-31','0.00 ﷼','غير مدفوعة','فتح'],['INV-0002','الرمز A17','2026-07-31','0.00 ﷼','مسودة','فتح']]
-  },
-  'سندات العملاء': {
-    type:'table', title:'سندات العملاء', subtitle:'سندات القبض وربط المدفوعات بفواتير العملاء.',
-    action:'سند قبض جديد', filters:['العميل','طريقة الدفع','الحساب البنكي','التاريخ'],
-    columns:['السند','العميل','المبلغ','طريقة الدفع','الحالة','الإجراء'],
-    rows:[['REC-0001','الماجدية 70','0.00 ﷼','تحويل بنكي','مرحّل','فتح']]
-  },
-  'فواتير مجدولة': {
-    type:'table', title:'فواتير مجدولة', subtitle:'جدولة فواتير العقود الشهرية والسنوية تلقائيًا.',
-    action:'جدولة فاتورة', filters:['العقد','المشروع','التكرار','الحالة'],
-    columns:['الجدولة','المشروع','التكرار','تاريخ الفاتورة القادمة','الحالة','الإجراء'],
-    rows:[['SCH-0001','العجلان 30','شهري','2026-08-01','نشط','فتح']]
-  },
-  'إشعارات دائنة': {
-    type:'table', title:'إشعارات دائنة', subtitle:'معالجة الخصومات والاسترجاعات على فواتير العملاء.',
-    action:'إشعار دائن جديد', filters:['العميل','الفاتورة','الحالة','التاريخ'],
-    columns:['الإشعار','العميل','الفاتورة','المبلغ','الحالة','الإجراء'],
-    rows:[['CN-0001','عميل تجريبي','INV-0001','0.00 ﷼','مسودة','فتح']]
-  },
-  'فواتير نقدية': {
-    type:'table', title:'فواتير نقدية', subtitle:'فواتير سريعة للعمليات النقدية والخدمات المباشرة.',
-    action:'فاتورة نقدية', filters:['الفرع','الخزينة','الموظف','التاريخ'],
-    columns:['الفاتورة','الفرع','الخزينة','الإجمالي','الحالة','الإجراء'],
-    rows:[['CASH-0001','الفرع الرئيسي','الخزينة','0.00 ﷼','مدفوعة','فتح']]
-  },
-  'إشعارات تسليم': {
-    type:'table', title:'إشعارات تسليم', subtitle:'تسليم الخدمات أو المواد وربطها بالفواتير والمشاريع.',
-    action:'إشعار تسليم', filters:['العميل','المشروع','الحالة','التاريخ'],
-    columns:['الإشعار','العميل','المشروع','الحالة','المسؤول','الإجراء'],
-    rows:[['DN-0001','الرمز A17','الرمز A17','بانتظار توقيع','المشرف','فتح']]
-  },
-  'فواتير بيع من الـ API': {
-    type:'table', title:'فواتير بيع من الـ API', subtitle:'مراقبة الفواتير الواردة من التكاملات الخارجية.',
-    action:'إعداد API', filters:['المصدر','الحالة','الفترة','العميل'],
-    columns:['المعرف','المصدر','العميل','الحالة','آخر تحديث','الإجراء'],
-    rows:[['API-001','تكامل خارجي','عميل تجريبي','مستلم','اليوم','فتح']]
-  },
-  'طلبات الشراء': {
-    type:'table', title:'طلبات الشراء', subtitle:'طلبات شراء مرتبطة بالمخزون والمشاريع وسير الاعتماد.',
-    action:'طلب شراء جديد', filters:['المورد','المشروع','الحالة','المعتمد'],
-    columns:['الطلب','المورد','المشروع','الإجمالي','الحالة','الإجراء'],
-    rows:[['PO-0001','مورد مواد','المخزن الرئيسي','0.00 ﷼','بانتظار اعتماد','فتح']]
-  },
-  'فواتير الموردين': {
-    type:'table', title:'فواتير الموردين', subtitle:'فواتير المشتريات مع الضريبة وربطها بالمصروفات والمخزون.',
-    action:'فاتورة مورد جديدة', filters:['المورد','حالة الدفع','الضريبة','المشروع'],
-    columns:['الفاتورة','المورد','تاريخ الاستحقاق','الإجمالي','حالة الدفع','الإجراء'],
-    rows:[['BILL-0001','مورد تجريبي','2026-07-31','0.00 ﷼','غير مدفوعة','فتح']]
-  },
-  'سندات الصرف': {
-    type:'table', title:'سندات الصرف', subtitle:'إدارة المدفوعات للموردين والمصروفات والخزينة.',
-    action:'سند صرف جديد', filters:['المورد','الحساب','طريقة الدفع','الفترة'],
-    columns:['السند','المستفيد','المبلغ','الحساب','الحالة','الإجراء'],
-    rows:[['PAY-0001','مورد تجريبي','0.00 ﷼','الحساب البنكي','مرحّل','فتح']]
-  },
-  'اعتمادات الشراء': {
-    type:'approvals', title:'اعتمادات الشراء', subtitle:'سير موافقة مضبوط قبل إنشاء أوامر الشراء أو الصرف.',
-    action:'إعداد الاعتماد'
-  },
-  'العملاء': {
-    type:'table', title:'العملاء', subtitle:'ملفات العملاء، المشاريع، الفواتير، الأرصدة، والمخاطبات.',
-    action:'عميل جديد', filters:['المدينة','الحالة','الرصيد','نوع العميل'],
-    columns:['العميل','الجوال','المشاريع','الرصيد','الحالة','الإجراء'],
-    rows:[['جمعية الماجدية 70','—','1','0.00 ﷼','نشط','فتح'],['جمعية الرمز A17','—','1','0.00 ﷼','نشط','فتح']]
-  },
-  'الموردين': {
-    type:'table', title:'الموردين', subtitle:'إدارة الموردين والفواتير والمدفوعات وأعمار الديون.',
-    action:'مورد جديد', filters:['التصنيف','الحالة','الرصيد','المدينة'],
-    columns:['المورد','التصنيف','الرصيد','آخر فاتورة','الحالة','الإجراء'],
-    rows:[['مورد مواد تنظيف','مواد','0.00 ﷼','—','نشط','فتح']]
-  },
-  'جهات الاتصال': {
-    type:'table', title:'جهات الاتصال', subtitle:'أرقام مسؤولي الجمعيات والعملاء والموردين.',
-    action:'جهة اتصال', filters:['النوع','المدينة','الجهة','الحالة'],
-    columns:['الاسم','الجهة','الجوال','البريد','النوع','الإجراء'],
-    rows:[['رئيس جمعية','الماجدية 70','—','—','عميل','فتح']]
-  },
-  'الأرصدة': {
-    type:'table', title:'الأرصدة', subtitle:'أرصدة العملاء والموردين وأعمار الديون.',
-    action:'تصدير Excel', filters:['النوع','العمر','الرصيد','الفترة'],
-    columns:['الجهة','النوع','الرصيد','0-30 يوم','31-60 يوم','الإجراء'],
-    rows:[['الماجدية 70','عميل','0.00 ﷼','0.00','0.00','فتح']]
-  },
-  'الموظفين': {
-    type:'table', title:'الموظفين', subtitle:'ملفات الموظفين والعمال والفنيين والمشرفين.',
-    action:'موظف جديد', filters:['المشروع','الوظيفة','الحالة','المشرف'],
-    columns:['الموظف','الوظيفة','المشروع','الراتب','الحالة','الإجراء'],
-    rows:[['محمد إبراهيم','مشرف','عدة مشاريع','2300 ﷼','نشط','فتح'],['رؤوف','عامل','العجلان 19','1600 ﷼','نشط','فتح']]
-  },
-  'الحضور': {
-    type:'attendance', title:'الحضور والانصراف', subtitle:'حضور يومي، فلترة شهرية، وتأخير وأوفر تايم.'
-  },
-  'مسير الرواتب': {
-    type:'table', title:'مسير الرواتب', subtitle:'حساب الرواتب مع البدلات والخصومات والأوفر تايم.',
-    action:'إنشاء مسير', filters:['الشهر','المشروع','الحالة','المشرف'],
-    columns:['الشهر','عدد الموظفين','الإجمالي','الخصومات','الصافي','الإجراء'],
-    rows:[['يوليو 2026','0','0.00 ﷼','0.00 ﷼','0.00 ﷼','فتح']]
-  },
-  'الأوفر تايم': {
-    type:'table', title:'الأوفر تايم', subtitle:'اعتماد ساعات العمل الإضافي وربطها بالرواتب.',
-    action:'إضافة أوفر تايم', filters:['الموظف','المشروع','الشهر','الحالة'],
-    columns:['الموظف','التاريخ','الساعات','القيمة','الحالة','الإجراء'],
-    rows:[['فهد','2026-07-01','0','0.00 ﷼','بانتظار اعتماد','فتح']]
-  },
-  'الأصناف': {
-    type:'inventory', title:'الأصناف', subtitle:'منتجات وخدمات ومخزون مع SKU وباركود وحد أدنى.'
-  },
-  'طلبات الصرف': {
-    type:'table', title:'طلبات الصرف', subtitle:'صرف مواد للمشاريع والتكتات والعهد.',
-    action:'طلب صرف', filters:['المشروع','المستودع','الحالة','المستلم'],
-    columns:['الطلب','المشروع','المستلم','الأصناف','الحالة','الإجراء'],
-    rows:[['ISS-0001','الرمز A17','مشرف الموقع','3','بانتظار اعتماد','فتح']]
-  },
-  'العهد': {
-    type:'table', title:'العهد', subtitle:'تتبع العهد على المشرفين والفنيين والعمال.',
-    action:'تسليم عهدة', filters:['الموظف','المشروع','الحالة','الصنف'],
-    columns:['العهدة','الموظف','الصنف','القيمة','الحالة','الإجراء'],
-    rows:[['AST-0001','مازن','جهاز / عدة','0.00 ﷼','مستلمة','فتح']]
-  },
-  'الجرد': {
-    type:'table', title:'الجرد', subtitle:'جلسات الجرد وفروقات الكمية والقيمة.',
-    action:'جلسة جرد', filters:['المستودع','الحالة','التاريخ','المسؤول'],
-    columns:['الجلسة','المستودع','التاريخ','الفروقات','الحالة','الإجراء'],
-    rows:[['CNT-0001','المخزن الرئيسي','اليوم','0','مسودة','فتح']]
-  },
-  'التحويلات': {
-    type:'table', title:'التحويلات', subtitle:'تحويل مواد بين المستودعات والمواقع.',
-    action:'تحويل جديد', filters:['من مستودع','إلى مستودع','الحالة','التاريخ'],
-    columns:['التحويل','من','إلى','الأصناف','الحالة','الإجراء'],
-    rows:[['TR-0001','المخزن الرئيسي','مشروع الرمز','2','بانتظار استلام','فتح']]
-  },
-  'القيود اليومية': {
-    type:'table', title:'القيود اليومية', subtitle:'كل عملية مالية تولد قيدًا محاسبيًا قابلًا للتدقيق.',
-    action:'قيد يدوي', filters:['الفترة','الحساب','المصدر','الحالة'],
-    columns:['القيد','التاريخ','الوصف','مدين','دائن','الإجراء'],
-    rows:[['JE-0001','اليوم','قيد افتتاحي','0.00 ﷼','0.00 ﷼','فتح']]
-  },
-  'دليل الحسابات': {
-    type:'table', title:'دليل الحسابات', subtitle:'الأصول، الخصوم، الإيرادات، المصروفات، الضريبة، والبنوك.',
-    action:'حساب جديد', filters:['نوع الحساب','الأب','الحالة','مستوى الحساب'],
-    columns:['الكود','الحساب','النوع','الرصيد','الحالة','الإجراء'],
-    rows:[['1000','الأصول','أصل','0.00 ﷼','نشط','فتح'],['4000','الإيرادات','إيراد','0.00 ﷼','نشط','فتح']]
-  },
-  'ميزان المراجعة': {
-    type:'table', title:'ميزان المراجعة', subtitle:'أرصدة الحسابات مدينة ودائنة حسب الفترة.',
-    action:'تصدير PDF', filters:['الفترة','من حساب','إلى حساب','مركز تكلفة'],
-    columns:['الحساب','الرصيد الافتتاحي','مدين','دائن','الرصيد','الإجراء'],
-    rows:[['الإيرادات','0.00','0.00','0.00','0.00','عرض']]
-  },
-  'قفل الفترات': {
-    type:'table', title:'قفل الفترات', subtitle:'منع تعديل الفواتير والقيود بعد اعتماد الفترة.',
-    action:'قفل شهر', filters:['السنة','الشهر','الحالة','المسؤول'],
-    columns:['الفترة','الحالة','تاريخ القفل','المسؤول','ملاحظات','الإجراء'],
-    rows:[['يوليو 2026','مفتوحة','—','مدير النظام','—','قفل']]
-  },
-  'الحسابات البنكية': {type:'bank'},
-  'الأصول الثابتة': {
-    type:'table', title:'الأصول الثابتة', subtitle:'الأصول، الإهلاك، الموقع، والعهدة.',
-    action:'أصل جديد', filters:['التصنيف','الموقع','الحالة','المسؤول'],
-    columns:['الأصل','التصنيف','القيمة','الإهلاك','الحالة','الإجراء'],
-    rows:[['سيارة تشغيل','مركبات','0.00 ﷼','0.00 ﷼','نشط','فتح']]
-  },
-  'مراكز التكلفة': {
-    type:'table', title:'مراكز التكلفة', subtitle:'ربط المصروفات والإيرادات بالمشاريع والأقسام.',
-    action:'مركز تكلفة', filters:['النوع','الحالة','الفرع','المسؤول'],
-    columns:['الكود','المركز','النوع','الإيرادات','المصروفات','الإجراء'],
-    rows:[['CC-001','مشاريع التشغيل','مشروع','0.00 ﷼','0.00 ﷼','فتح']]
-  },
-  'المشاريع': {
-    type:'projects', title:'المشاريع', subtitle:'إدارة عقود المشاريع وربحيتها وتشغيلها.'
-  },
-  'الفروع': {
-    type:'table', title:'الفروع', subtitle:'فروع الشركة والمستودعات والخزن المرتبطة بها.',
-    action:'فرع جديد', filters:['المدينة','الحالة','المدير','النشاط'],
-    columns:['الفرع','المدينة','المدير','الحساب البنكي','الحالة','الإجراء'],
-    rows:[['الفرع الرئيسي','الرياض','مدير النظام','الحساب البنكي','نشط','فتح']]
-  },
-  'API': {
-    type:'developer', title:'API', subtitle:'مفاتيح الربط والتكاملات البرمجية.'
-  },
-  'Webhooks': {
-    type:'developer', title:'Webhooks', subtitle:'إرسال الأحداث للأنظمة الخارجية.'
-  },
-  'سجل النظام': {
-    type:'table', title:'سجل النظام', subtitle:'تدقيق العمليات والتعديلات والحذف والدخول.',
-    action:'تصدير السجل', filters:['المستخدم','العملية','الفترة','القسم'],
-    columns:['الوقت','المستخدم','القسم','العملية','IP','الإجراء'],
-    rows:[['اليوم','مدير النظام','النظام','فتح شاشة','127.0.0.1','عرض']]
-  },
-  'التكاملات': {
-    type:'cards', title:'التكاملات', subtitle:'ربط واتساب، البريد، الفوترة الإلكترونية، والبنوك.',
-    action:'تكامل جديد', stats:[['نشط','0'],['بانتظار إعداد','4'],['أخطاء','0']],
-    filters:['النوع','الحالة','المزود'],
-    cards:[['ZATCA','تجهيز للفوترة الإلكترونية والـ QR.','قيد الإعداد'],['WhatsApp','إرسال التقارير والفواتير للعملاء.','قيد الإعداد'],['Bank Feed','استيراد كشوف الحساب البنكية.','قيد الإعداد']]
-  },
-  'القوالب': {
-    type:'cards', title:'القوالب', subtitle:'قوالب PDF ورسائل واتساب وبريد إلكتروني.',
-    action:'قالب جديد', stats:[['PDF','6'],['رسائل','8'],['نشط','14']],
-    filters:['النوع','القسم','الحالة'],
-    cards:[['فاتورة ضريبية','قالب فاتورة بيع PDF.','نشط'],['تقرير عميل','قالب تقرير تشغيل PDF.','نشط'],['رسالة واتساب','قوالب إرسال للعملاء.','نشط']]
-  },
-  'مركز المساعدة': {
-    type:'help', title:'مركز المساعدة', subtitle:'إرشادات استخدام النظام والدعم.'
-  }
+const tableSections = {
+  'عروض أسعار و فواتير مبدئية': ['عرض سعر جديد',['الرقم','العميل','المشروع','الإجمالي','الحالة','الإجراء'],[['Q-0001','جمعية تجريبية','الماجدية 70','0.00 ﷼','مسودة','فتح']]],
+  'فواتير بيع': ['فاتورة بيع جديدة',['الفاتورة','العميل','الاستحقاق','الإجمالي','حالة الدفع','الإجراء'],[['INV-0001','الماجدية 70','2026-07-31','0.00 ﷼','غير مدفوعة','فتح']]],
+  'سندات العملاء': ['سند قبض جديد',['السند','العميل','المبلغ','طريقة الدفع','الحالة','الإجراء'],[['REC-0001','الرمز A17','0.00 ﷼','تحويل بنكي','مرحّل','فتح']]],
+  'فواتير مجدولة': ['جدولة فاتورة',['الجدولة','المشروع','التكرار','تاريخ قادم','الحالة','الإجراء'],[['SCH-0001','العجلان 30','شهري','2026-08-01','نشط','فتح']]],
+  'إشعارات دائنة': ['إشعار دائن',['الإشعار','العميل','الفاتورة','المبلغ','الحالة','الإجراء'],[['CN-0001','عميل تجريبي','INV-0001','0.00 ﷼','مسودة','فتح']]],
+  'فواتير نقدية': ['فاتورة نقدية',['الفاتورة','الفرع','الخزينة','الإجمالي','الحالة','الإجراء'],[['CASH-0001','الرئيسي','الخزينة','0.00 ﷼','مدفوعة','فتح']]],
+  'إشعارات تسليم': ['إشعار تسليم',['الإشعار','العميل','المشروع','الحالة','المسؤول','الإجراء'],[['DN-0001','الرمز A17','الرمز A17','بانتظار توقيع','المشرف','فتح']]],
+  'فواتير بيع من الـ API': ['إعداد API',['المعرف','المصدر','العميل','الحالة','آخر تحديث','الإجراء'],[['API-001','تكامل خارجي','عميل تجريبي','مستلم','اليوم','فتح']]],
+  'طلبات الشراء': ['طلب شراء جديد',['الطلب','المورد','المشروع','الإجمالي','الحالة','الإجراء'],[['PO-0001','مورد مواد','المخزن الرئيسي','0.00 ﷼','بانتظار اعتماد','فتح']]],
+  'فواتير الموردين': ['فاتورة مورد جديدة',['الفاتورة','المورد','الاستحقاق','الإجمالي','حالة الدفع','الإجراء'],[['BILL-0001','مورد تجريبي','2026-07-31','0.00 ﷼','غير مدفوعة','فتح']]],
+  'سندات الصرف': ['سند صرف جديد',['السند','المستفيد','المبلغ','الحساب','الحالة','الإجراء'],[['PAY-0001','مورد تجريبي','0.00 ﷼','الحساب البنكي','مرحّل','فتح']]],
+  'اعتمادات الشراء': ['إعداد اعتماد',['الطلب','المورد','المبلغ','مرحلة الاعتماد','الحالة','الإجراء'],[['APR-0001','مورد تجريبي','0.00 ﷼','مراجعة المحاسب','بانتظار','فتح']]],
+  'العملاء': ['عميل جديد',['العميل','الجوال','المشاريع','الرصيد','الحالة','الإجراء'],[['جمعية الماجدية 70','—','1','0.00 ﷼','نشط','فتح']]],
+  'الموردين': ['مورد جديد',['المورد','التصنيف','الرصيد','آخر فاتورة','الحالة','الإجراء'],[['مورد مواد تنظيف','مواد','0.00 ﷼','—','نشط','فتح']]],
+  'جهات الاتصال': ['جهة اتصال',['الاسم','الجهة','الجوال','البريد','النوع','الإجراء'],[['رئيس جمعية','الماجدية 70','—','—','عميل','فتح']]],
+  'الأرصدة': ['تصدير Excel',['الجهة','النوع','الرصيد','0-30 يوم','31-60 يوم','الإجراء'],[['الماجدية 70','عميل','0.00 ﷼','0.00','0.00','فتح']]],
+  'الموظفين': ['موظف جديد',['الموظف','الوظيفة','المشروع','الراتب','الحالة','الإجراء'],[['محمد إبراهيم','مشرف','عدة مشاريع','2300 ﷼','نشط','فتح']]],
+  'مسير الرواتب': ['إنشاء مسير',['الشهر','عدد الموظفين','الإجمالي','الخصومات','الصافي','الإجراء'],[['يوليو 2026','0','0.00 ﷼','0.00 ﷼','0.00 ﷼','فتح']]],
+  'الأوفر تايم': ['إضافة أوفر تايم',['الموظف','التاريخ','الساعات','القيمة','الحالة','الإجراء'],[['فهد','2026-07-01','0','0.00 ﷼','بانتظار اعتماد','فتح']]],
+  'طلبات الصرف': ['طلب صرف',['الطلب','المشروع','المستلم','الأصناف','الحالة','الإجراء'],[['ISS-0001','الرمز A17','مشرف الموقع','3','بانتظار اعتماد','فتح']]],
+  'العهد': ['تسليم عهدة',['العهدة','الموظف','الصنف','القيمة','الحالة','الإجراء'],[['AST-0001','مازن','عدة','0.00 ﷼','مستلمة','فتح']]],
+  'الجرد': ['جلسة جرد',['الجلسة','المستودع','التاريخ','الفروقات','الحالة','الإجراء'],[['CNT-0001','المخزن الرئيسي','اليوم','0','مسودة','فتح']]],
+  'التحويلات': ['تحويل جديد',['التحويل','من','إلى','الأصناف','الحالة','الإجراء'],[['TR-0001','المخزن الرئيسي','مشروع الرمز','2','بانتظار استلام','فتح']]],
+  'القيود اليومية': ['قيد يدوي',['القيد','التاريخ','الوصف','مدين','دائن','الإجراء'],[['JE-0001','اليوم','قيد افتتاحي','0.00 ﷼','0.00 ﷼','فتح']]],
+  'دليل الحسابات': ['حساب جديد',['الكود','الحساب','النوع','الرصيد','الحالة','الإجراء'],[['1000','الأصول','أصل','0.00 ﷼','نشط','فتح']]],
+  'ميزان المراجعة': ['تصدير PDF',['الحساب','افتتاحي','مدين','دائن','الرصيد','الإجراء'],[['الإيرادات','0.00','0.00','0.00','0.00','عرض']]],
+  'قفل الفترات': ['قفل شهر',['الفترة','الحالة','تاريخ القفل','المسؤول','ملاحظات','الإجراء'],[['يوليو 2026','مفتوحة','—','مدير النظام','—','قفل']]],
+  'الأصول الثابتة': ['أصل جديد',['الأصل','التصنيف','القيمة','الإهلاك','الحالة','الإجراء'],[['سيارة تشغيل','مركبات','0.00 ﷼','0.00 ﷼','نشط','فتح']]],
+  'مراكز التكلفة': ['مركز تكلفة',['الكود','المركز','النوع','الإيرادات','المصروفات','الإجراء'],[['CC-001','مشاريع التشغيل','مشروع','0.00 ﷼','0.00 ﷼','فتح']]],
+  'الفروع': ['فرع جديد',['الفرع','المدينة','المدير','الحساب البنكي','الحالة','الإجراء'],[['الفرع الرئيسي','الرياض','مدير النظام','الحساب البنكي','نشط','فتح']]],
+  'سجل النظام': ['تصدير السجل',['الوقت','المستخدم','القسم','العملية','IP','الإجراء'],[['اليوم','مدير النظام','النظام','فتح شاشة','127.0.0.1','عرض']]]
 };
 
+const inboxMessages = [
+  {id:'INB-0001', title:'فاتورة مورد - مواد تنظيف', from:'مورد مواد تنظيف', time:'منذ 12 دقيقة', type:'فاتورة مورد', status:'غير معالج', priority:'متوسطة', assignee:'المحاسب', project:'المخزن الرئيسي', attachment:'invoice_supplier_0001.pdf', suggested:'إنشاء فاتورة مورد وربطها بالمورد والمشروع', body:'وصلت فاتورة مواد تنظيف للمراجعة والاعتماد قبل الصرف.', activity:['تم استلام الرسالة','تم اكتشاف مرفق PDF','تم اقتراح إنشاء فاتورة مورد']},
+  {id:'INB-0002', title:'شكوى عميل - ضعف ضخ المياه', from:'رئيس جمعية الماجدية 70', time:'منذ 28 دقيقة', type:'تكت صيانة', status:'يحتاج إجراء', priority:'عالية', assignee:'مدير التشغيل', project:'الماجدية 70', attachment:'water_issue_photo.jpg', suggested:'إنشاء تكت صيانة وتعيين فني', body:'العميل يفيد بوجود ضعف في ضخ المياه ويطلب الفحص بشكل عاجل.', activity:['تم استلام الشكوى','تم تحديد المشروع: الماجدية 70','الأولوية عالية']},
+  {id:'INB-0003', title:'كشف حساب بنكي - شهر يوليو', from:'البنك', time:'منذ ساعة', type:'كشف بنكي', status:'بانتظار المعالجة', priority:'متوسطة', assignee:'المحاسب', project:'الحساب البنكي', attachment:'bank_statement_july.xlsx', suggested:'استيراد كشف الحساب والبدء بالمطابقة البنكية', body:'كشف حساب بنكي جديد جاهز للاستيراد والمطابقة.', activity:['تم استلام كشف الحساب','تم التعرف على نوع الملف XLSX']},
+  {id:'INB-0004', title:'طلب صرف مواد - الرمز A17', from:'مشرف الموقع', time:'منذ ساعتين', type:'طلب مخزن', status:'غير معالج', priority:'متوسطة', assignee:'مسؤول المخزن', project:'الرمز A17', attachment:'request_items.png', suggested:'إنشاء طلب صرف وربطه بالمشروع', body:'طلب صرف مواد تشغيلية للموقع حسب الاحتياج المرفق.', activity:['تم استلام الطلب','تم ربطه بمشروع الرمز A17']},
+  {id:'INB-0005', title:'اعتماد فاتورة بيع - العجلان 30', from:'النظام', time:'اليوم', type:'موافقة', status:'قيد المراجعة', priority:'منخفضة', assignee:'المدير', project:'العجلان 30', attachment:'—', suggested:'مراجعة الفاتورة واعتمادها أو إرجاعها للمحاسب', body:'فاتورة بيع بانتظار اعتماد المدير قبل الإرسال.', activity:['تم إنشاء الفاتورة','بانتظار اعتماد المدير']},
+  {id:'INB-0006', title:'تنبيه عقد قريب الانتهاء', from:'النظام', time:'أمس', type:'تنبيه', status:'مؤرشف', priority:'عالية', assignee:'مدير التشغيل', project:'مشروع تجريبي', attachment:'—', suggested:'مراجعة العقد والتواصل مع العميل للتجديد', body:'تبقى أقل من 30 يومًا على نهاية أحد العقود.', activity:['تم إنشاء التنبيه','تمت أرشفته']}
+];
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+}
+
 function renderNav(){
-  $('#nav').innerHTML = navData.map((n)=>{
+  const nav = $('#nav');
+  if(!nav) return;
+  nav.innerHTML = navData.map(n => {
     if(n.divider) return '<div class="nav-divider"></div>';
-    if(n.group) return `<div class="nav-group ${n.open?'open':''}">
-      <button class="nav-group-btn" onclick="toggleGroup(this)">
-        <span class="nav-ico">${n.icon}</span><span>${n.label}</span><span class="chev">‹</span>
-      </button>
-      <div class="sub-menu">${n.children.map(c=>`<button onclick="openSection('${c}')">${c}</button>`).join('')}</div>
-    </div>`;
-    return `<button class="nav-item ${currentSection===n.label?'active':''}" onclick="openSection('${n.label}')">
-      <span class="nav-ico">${n.icon||''}</span><span>${n.label}</span><span></span>
+    if(n.group){
+      return `<div class="nav-group ${n.open ? 'open' : ''}">
+        <button class="nav-group-btn" onclick="toggleGroup(this)">
+          <span class="nav-ico">${n.icon}</span><span>${n.label}</span><span class="chev">‹</span>
+        </button>
+        <div class="sub-menu">${n.children.map(c => `<button onclick="openSection('${escapeHtml(c)}')">${escapeHtml(c)}</button>`).join('')}</div>
+      </div>`;
+    }
+    return `<button class="nav-item ${currentSection === n.label ? 'active' : ''} ${n.language ? 'language' : ''}" onclick="openSection('${escapeHtml(n.label)}')">
+      <span class="nav-ico">${n.icon || ''}</span><span>${n.label}</span><span></span>
     </button>`;
   }).join('');
 }
-function toggleGroup(btn){ btn.parentElement.classList.toggle('open'); }
 
-function openSection(name){
+function toggleGroup(btn){
+  const group = btn.closest('.nav-group');
+  if(group) group.classList.toggle('open');
+}
+
+function setSection(name){
   currentSection = name;
   renderNav();
   closeModal();
+}
+
+function openSection(name){
+  setSection(name);
   if(name === 'البريد الوارد') return renderInbox();
-  if(name === 'لوحة البيانات') return renderDashboard(dashboardTab || 'pnl');
-  const cfg = sectionConfig[name];
-  if(!cfg) return renderGenericPage(name);
-  if(cfg.type === 'bank') return renderBankAccounts();
-  if(cfg.type === 'table') return renderTablePage(cfg);
-  if(cfg.type === 'cards') return renderCardsPage(cfg);
-  if(cfg.type === 'reports') return renderReportsPage(cfg);
-  if(cfg.type === 'approvals') return renderApprovalsPage(cfg);
-  if(cfg.type === 'attendance') return renderAttendancePage(cfg);
-  if(cfg.type === 'inventory') return renderInventoryPage(cfg);
-  if(cfg.type === 'projects') return renderProjectsPage(cfg);
-  if(cfg.type === 'developer') return renderDeveloperPage(cfg);
-  if(cfg.type === 'help') return renderHelpPage(cfg);
-  return renderGenericPage(name);
+  if(name === 'لوحة البيانات') return renderDashboard(dashboardTab);
+  if(name === 'الحسابات البنكية') return renderBankAccounts();
+  if(name === 'التقارير') return renderReports();
+  if(name === 'الحضور') return renderAttendance();
+  if(name === 'الأصناف') return renderInventory();
+  if(name === 'المشاريع') return renderProjects();
+  if(name === 'التكاملات') return renderCards('التكاملات','ربط واتساب، البريد، الفوترة الإلكترونية، والبنوك.', 'تكامل جديد', [['ZATCA','تجهيز للفوترة الإلكترونية والـ QR.','قيد الإعداد'],['WhatsApp','إرسال التقارير والفواتير للعملاء.','قيد الإعداد'],['Bank Feed','استيراد كشوف الحساب البنكية.','قيد الإعداد']]);
+  if(name === 'القوالب') return renderCards('القوالب','قوالب PDF ورسائل واتساب وبريد إلكتروني.', 'قالب جديد', [['فاتورة ضريبية','قالب فاتورة بيع PDF.','نشط'],['تقرير عميل','قالب تقرير تشغيل PDF.','نشط'],['رسالة واتساب','قوالب إرسال للعملاء.','نشط']]);
+  if(name === 'مركز المساعدة') return renderCards('مركز المساعدة','إرشادات استخدام النظام والدعم.', 'طلب دعم', [['بدء استخدام النظام','شرح إعداد الشركة والصلاحيات.','عرض'],['المحاسبة والفواتير','شرح الفواتير والسندات والقيود.','عرض'],['المخزون والعهد','شرح الطلبات والجرد والتحويلات.','عرض']]);
+  if(tableSections[name]) return renderTablePage(name);
+  return renderFallback(name);
 }
 
-function pageShell(cfg, body){
-  $('#content').className = 'module-layout';
-  $('#content').innerHTML = `
-    <section class="module-page">
-      <div class="module-header">
-        <div>
-          <h1>${cfg.title}</h1>
-          <p>${cfg.subtitle || ''}</p>
-        </div>
-        <button class="module-primary" onclick="toast('فتح نافذة: ${cfg.action || 'إجراء جديد'}')">${cfg.action || 'جديد'}</button>
-      </div>
-      ${body}
-    </section>`;
-}
-
-function filterBar(filters=[]){
-  return `<div class="module-filterbar">
-    <div class="module-search"><span>⌕</span><input placeholder="بحث سريع..." oninput="quickFilter(this.value)" /></div>
-    ${filters.map(f=>`<button class="filter-chip">${f} <span>⌄</span></button>`).join('')}
-    <button class="filter-chip clear" onclick="toast('تم تصفير الفلاتر')">تصفير</button>
-  </div>`;
-}
-
-function statsRow(stats=[]){
-  if(!stats.length) return '';
-  return `<div class="stats-row">${stats.map(s=>`<div class="stat-card"><span>${s[0]}</span><strong>${s[1]}</strong></div>`).join('')}</div>`;
-}
-
-function renderTablePage(cfg){
-  pageShell(cfg, `
-    ${filterBar(cfg.filters || [])}
-    ${statsRow(cfg.stats || [['إجمالي السجلات', cfg.rows?.length || 0], ['قيد المعالجة','1'], ['مكتمل','0']])}
-    <div class="pro-table-card">
-      <table class="pro-table">
-        <thead><tr>${cfg.columns.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
-        <tbody>${(cfg.rows||[]).map(r=>`<tr>${r.map((c,i)=>`<td>${i===r.length-1?`<button class="table-action" onclick="openRecord('${cfg.title}')">${c}</button>`:c}</td>`).join('')}</tr>`).join('')}</tbody>
-      </table>
-    </div>`);
-}
-
-function renderCardsPage(cfg){
-  pageShell(cfg, `
-    ${filterBar(cfg.filters || [])}
-    ${statsRow(cfg.stats || [])}
-    <div class="module-card-grid">
-      ${cfg.cards.map(c=>`<article class="module-card" onclick="openRecord('${c[0]}')">
-        <h3>${c[0]}</h3><p>${c[1]}</p><span class="status-pill">${c[2]}</span>
-      </article>`).join('')}
-    </div>`);
-}
-
-function renderReportsPage(cfg){
-  pageShell(cfg, `
-    ${filterBar(['القسم','الفترة','الصيغة','المستخدم'])}
-    <div class="report-grid">
-      ${cfg.reports.map(r=>`<article class="report-card">
-        <div class="report-icon">▤</div><h3>${r}</h3><p>تقرير جاهز للتصدير PDF أو Excel مع فلاتر ذكية.</p>
-        <button onclick="toast('تجهيز تقرير ${r}')">تشغيل التقرير</button>
-      </article>`).join('')}
-    </div>`);
-}
-
-function renderApprovalsPage(cfg){
-  pageShell(cfg, `
-    ${filterBar(['المورد','المشروع','المبلغ','المعتمد'])}
-    <div class="approval-flow">
-      ${['طلب شراء','مراجعة المحاسب','اعتماد المدير','إصدار أمر الشراء','استلام / فاتورة'].map((s,i)=>`
-        <div class="approval-step"><strong>${i+1}</strong><span>${s}</span><em>${i<1?'نشط':'بانتظار'}</em></div>`).join('')}
-    </div>
-    <div class="pro-table-card"><table class="pro-table"><thead><tr><th>الطلب</th><th>المورد</th><th>المبلغ</th><th>المرحلة</th><th>الإجراء</th></tr></thead>
-    <tbody><tr><td>APR-0001</td><td>مورد تجريبي</td><td>0.00 ﷼</td><td>مراجعة</td><td><button class="table-action" onclick="openRecord('اعتماد')">فتح</button></td></tr></tbody></table></div>`);
-}
-
-function renderAttendancePage(cfg){
-  pageShell({...cfg, action:'تسجيل حضور'}, `
-    ${filterBar(['الشهر','المشروع','الموظف','الحالة'])}
-    ${statsRow([['حضور اليوم','0'],['تأخير','0'],['غياب','0'],['أوفر تايم','0']])}
-    <div class="attendance-board">
-      ${['ضمن الوقت','تأخير','خروج مبكر','أوفر تايم','غياب'].map(s=>`<div class="attendance-col"><h3>${s}</h3><div class="empty-mini">لا توجد سجلات</div></div>`).join('')}
-    </div>`);
-}
-
-function renderInventoryPage(cfg){
-  pageShell({...cfg, action:'صنف جديد'}, `
-    ${filterBar(['المستودع','التصنيف','الحالة','تحت الحد','عهدة'])}
-    ${statsRow([['الأصناف','0'],['تحت الحد','0'],['محجوز','0'],['قيمة المخزون','0.00 ﷼']])}
-    <div class="inventory-grid">
-      ${[
-        ['مواد تنظيف','SKU-CLN','المخزن الرئيسي','متاح'],
-        ['لمبات ومواد كهرباء','SKU-ELE','المخزن الرئيسي','تحت الحد'],
-        ['عدد وأدوات','SKU-TLS','عهدة','متاح']
-      ].map(i=>`<article class="inventory-card" onclick="openRecord('${i[0]}')">
-        <div class="sku-box">▦</div><h3>${i[0]}</h3><p>${i[1]} · ${i[2]}</p><span class="status-pill">${i[3]}</span>
-        <div class="inv-actions"><button>صرف</button><button>استلام</button><button>تحويل</button></div>
-      </article>`).join('')}
-    </div>`);
-}
-
-function renderProjectsPage(cfg){
-  pageShell({...cfg, action:'مشروع جديد'}, `
-    ${filterBar(['العميل','المشرف','حالة العقد','قريب الانتهاء'])}
-    ${statsRow([['مشاريع نشطة','35+'],['قريبة الانتهاء','0'],['تكتات مفتوحة','0'],['ربحية الشهر','0.00 ﷼']])}
-    <div class="project-grid">
-      ${['الماجدية 70','الرمز A17','العجلان 30','برج جوديا'].map((p,i)=>`<article class="project-card" onclick="openRecord('${p}')">
-        <h3>${p}</h3><p>مشروع إدارة مرافق · مشرف مسؤول · عقد نشط</p>
-        <div class="project-metrics"><span>تكتات: 0</span><span>مصروفات: 0.00 ﷼</span><span>إيرادات: 0.00 ﷼</span></div>
-      </article>`).join('')}
-    </div>`);
-}
-
-function renderDeveloperPage(cfg){
-  pageShell({...cfg, action:'إضافة مفتاح'}, `
-    ${filterBar(['الحالة','النظام','آخر استخدام'])}
-    <div class="developer-box">
-      <h3>${cfg.title}</h3>
-      <p>${cfg.subtitle}</p>
-      <pre>{
-  "status": "ready",
-  "environment": "prototype",
-  "version": "V010"
-}</pre>
-    </div>`);
-}
-
-function renderHelpPage(cfg){
-  pageShell({...cfg, action:'طلب دعم'}, `
-    <div class="help-grid">
-      ${['بدء استخدام النظام','المحاسبة والفواتير','المخزون والعهد','المشاريع والتكتات','الرواتب والحضور','التكاملات'].map(h=>`<article class="help-card"><h3>${h}</h3><p>شرح مختصر وخطوات عملية لهذا القسم.</p><button onclick="toast('فتح المساعدة')">عرض</button></article>`).join('')}
-    </div>`);
-}
-
-function renderGenericPage(name){
-  renderTablePage({
-    title:name, subtitle:'شاشة احترافية قابلة للتطوير ضمن نظام تصنيف ERP.',
-    action:'إضافة جديد', filters:['الحالة','التاريخ','المسؤول'],
-    columns:['السجل','الحالة','المسؤول','آخر تحديث','الإجراء'],
-    rows:[[name+' - 001','نشط','مدير النظام','اليوم','فتح']]
-  });
+function page(contentClass, innerHtml){
+  const content = $('#content');
+  if(!content) return;
+  content.className = contentClass;
+  content.innerHTML = innerHtml;
 }
 
 function renderInbox(){
-  $('#content').className = 'work-layout';
-  $('#content').innerHTML = `
-    <section class="document-empty">
-      <div class="empty-card">
-        <div class="mail-illustration">
-          <span class="spark s1">✦</span><span class="spark s2">✦</span><span class="spark s3">•</span>
-          <div class="paper"></div><div class="envelope"><div class="flap"></div></div><div class="shadow"></div>
-        </div>
-        <h2>لم يتم اختيار أي مستند</h2>
-        <p>اختر مستندًا من القائمة لرؤية نشاط العميل والبريد الأصلي وملاحظات الفريق.</p>
+  page('smart-inbox-layout', `
+    <section class="inbox-detail-panel" id="inboxDetail"></section>
+    <aside class="smart-inbox-panel">
+      <div class="smart-inbox-head">
+        <div><h1>البريد الوارد</h1><p>مركز معالجة ذكي للرسائل والفواتير والكشوف والتكتات والطلبات.</p></div>
+        <button class="refresh" onclick="toast('تم تحديث البريد الوارد')">⟳</button>
       </div>
-    </section>
-    <aside class="inbox-panel">
-      <div class="inbox-head"><button class="refresh" title="تحديث">⟳</button><h1>البريد الوارد</h1><div class="channel-icons"><span>◉</span><span>✉</span></div></div>
-      <div class="inbox-search"><input placeholder="البحث" /><span>⌕</span></div>
-      <div class="inbox-tabs"><label class="select-all"><input type="checkbox" /></label><button class="active">الكل</button><button>في انتظار المعالجة <span class="count">1</span></button><button>تم</button></div>
-      <article class="message-row active"><input type="checkbox" /><div><strong>مرحبًا بك في صندوق الوارد الخاص بك على تصنيف - ابدأ الآن!</strong><small>منذ 9 دقائق</small><em>غير معالج</em></div></article>
-    </aside>`;
+      <div class="smart-inbox-search"><span>⌕</span><input id="inboxSearchInput" placeholder="ابحث في البريد الوارد..." oninput="renderInboxList()" /></div>
+      <div class="inbox-category-tabs">
+        ${['الكل','غير معالج','بانتظار المعالجة','فواتير','كشوف بنكية','تكتات','طلبات مخزن','موافقات','تنبيهات','مؤرشف'].map(t => `<button class="${inboxFilter===t?'active':''}" onclick="setInboxFilter('${t}')">${t}${countBadge(t)}</button>`).join('')}
+      </div>
+      <div class="inbox-filter-row">
+        <button class="mini-filter">من تاريخ <span>⌄</span></button>
+        <button class="mini-filter">المشروع <span>⌄</span></button>
+        <button class="mini-filter">المسؤول <span>⌄</span></button>
+        <button class="mini-filter">مرفقات <span>⌄</span></button>
+      </div>
+      <div class="smart-message-list" id="smartInboxList"></div>
+    </aside>
+  `);
+  renderInboxList();
+  renderInboxDetail(selectedMessageId);
 }
 
-function renderDashboard(tab='pnl'){
-  dashboardTab = tab;
-  currentSection = 'لوحة البيانات';
-  renderNav();
-  const isPnl = tab === 'pnl';
-  $('#content').className = 'dashboard-layout';
-  $('#content').innerHTML = `
+function countBadge(filter){
+  const count = filterMessages(filter).length;
+  if(filter === 'الكل') return ` <span>${inboxMessages.length}</span>`;
+  return count ? ` <span>${count}</span>` : '';
+}
+
+function filterMessages(filter){
+  if(filter === 'الكل') return inboxMessages;
+  if(filter === 'غير معالج') return inboxMessages.filter(m => m.status === 'غير معالج');
+  if(filter === 'بانتظار المعالجة') return inboxMessages.filter(m => m.status === 'بانتظار المعالجة');
+  if(filter === 'فواتير') return inboxMessages.filter(m => m.type.includes('فاتورة'));
+  if(filter === 'كشوف بنكية') return inboxMessages.filter(m => m.type === 'كشف بنكي');
+  if(filter === 'تكتات') return inboxMessages.filter(m => m.type === 'تكت صيانة');
+  if(filter === 'طلبات مخزن') return inboxMessages.filter(m => m.type === 'طلب مخزن');
+  if(filter === 'موافقات') return inboxMessages.filter(m => m.type === 'موافقة');
+  if(filter === 'تنبيهات') return inboxMessages.filter(m => m.type === 'تنبيه');
+  if(filter === 'مؤرشف') return inboxMessages.filter(m => m.status === 'مؤرشف');
+  return inboxMessages;
+}
+
+function setInboxFilter(filter){
+  inboxFilter = filter;
+  renderInbox();
+}
+
+function renderInboxList(){
+  const box = $('#smartInboxList');
+  if(!box) return;
+  const query = ($('#inboxSearchInput')?.value || '').trim().toLowerCase();
+  let list = filterMessages(inboxFilter);
+  if(query){
+    list = list.filter(m => [m.title,m.from,m.type,m.project,m.assignee,m.status].join(' ').toLowerCase().includes(query));
+  }
+  if(!list.length){
+    box.innerHTML = '<div class="empty-inbox-list">لا توجد رسائل مطابقة للفلاتر الحالية</div>';
+    return;
+  }
+  box.innerHTML = list.map(m => `
+    <article class="smart-message-row ${m.id === selectedMessageId ? 'active' : ''}" onclick="selectInboxMessage('${m.id}')">
+      <div class="message-check"><input type="checkbox" onclick="event.stopPropagation()" /></div>
+      <div class="message-main">
+        <div class="message-title-line"><strong>${m.title}</strong><span class="priority ${priorityClass(m.priority)}">${m.priority}</span></div>
+        <p>${m.from} · ${m.project}</p>
+        <div class="message-meta"><em class="${statusClass(m.status)}">${m.status}</em><span>${m.type}</span><span>${m.time}</span></div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function selectInboxMessage(id){
+  selectedMessageId = id;
+  renderInboxList();
+  renderInboxDetail(id);
+}
+
+function getMessage(id){
+  return inboxMessages.find(m => m.id === id) || inboxMessages[0];
+}
+
+function renderInboxDetail(id){
+  const m = getMessage(id);
+  const detail = $('#inboxDetail');
+  if(!detail || !m) return;
+  detail.innerHTML = `
+    <div class="detail-topbar">
+      <div><h2>${m.title}</h2><p>${m.from} · ${m.time}</p></div>
+      <div class="detail-status"><span class="${statusClass(m.status)}">${m.status}</span><button onclick="archiveInboxMessage('${m.id}')">أرشفة</button></div>
+    </div>
+    <div class="inbox-smart-summary">
+      <div class="summary-icon">${typeIcon(m.type)}</div>
+      <div><h3>اقتراح النظام</h3><p>${m.suggested}</p></div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-card"><span>نوع الرسالة</span><strong>${m.type}</strong></div>
+      <div class="detail-card"><span>المشروع</span><strong>${m.project}</strong></div>
+      <div class="detail-card"><span>المسؤول</span><strong>${m.assignee}</strong></div>
+      <div class="detail-card"><span>الأولوية</span><strong>${m.priority}</strong></div>
+    </div>
+    <div class="message-body-card"><h3>محتوى الرسالة</h3><p>${m.body}</p></div>
+    <div class="attachment-card"><div><h3>المرفقات</h3><p>${m.attachment === '—' ? 'لا توجد مرفقات' : m.attachment}</p></div>${m.attachment === '—' ? '' : `<button onclick="toast('فتح المرفق')">عرض المرفق</button>`}</div>
+    <div class="inbox-actions">${actionButtons(m)}</div>
+    <div class="notes-activity-grid">
+      <div class="internal-notes"><h3>ملاحظات داخلية</h3><textarea placeholder="اكتب ملاحظة للفريق..."></textarea><button onclick="toast('تم حفظ الملاحظة')">إضافة ملاحظة</button></div>
+      <div class="activity-log"><h3>سجل المعالجة</h3>${m.activity.map(a => `<div><span>•</span><p>${a}</p></div>`).join('')}</div>
+    </div>
+  `;
+}
+
+function actionButtons(m){
+  const common = `<button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين مسؤول</button><button class="secondary-action" onclick="changeInboxStatus('${m.id}','قيد المراجعة')">قيد المراجعة</button>`;
+  if(m.type === 'فاتورة مورد') return `<button class="main-action" onclick="createFromInbox('${m.id}','فاتورة مورد')">إنشاء فاتورة مورد</button><button class="secondary-action" onclick="openSection('الموردين')">ربط بمورد</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
+  if(m.type === 'تكت صيانة') return `<button class="main-action" onclick="createFromInbox('${m.id}','تكت صيانة')">إنشاء تكت</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button><button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين فني</button><button class="secondary-action" onclick="toast('تم تجهيز رد واتساب')">رد واتساب</button>`;
+  if(m.type === 'كشف بنكي') return `<button class="main-action" onclick="createFromInbox('${m.id}','كشف حساب بنكي')">استيراد كشف الحساب</button><button class="secondary-action" onclick="openSection('الحسابات البنكية')">ربط بحساب بنكي</button><button class="secondary-action" onclick="toast('فتح المطابقة البنكية')">مطابقة المدفوعات</button>${common}`;
+  if(m.type === 'طلب مخزن') return `<button class="main-action" onclick="createFromInbox('${m.id}','طلب صرف')">إنشاء طلب صرف</button><button class="secondary-action" onclick="openSection('الأصناف')">فحص المخزون</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
+  if(m.type === 'موافقة') return `<button class="main-action" onclick="changeInboxStatus('${m.id}','مكتمل')">اعتماد</button><button class="secondary-action" onclick="toast('تم إرجاعها للمحاسب')">إرجاع للمحاسب</button><button class="secondary-action" onclick="openSection('فواتير بيع')">فتح الفاتورة</button>`;
+  return `<button class="main-action" onclick="openSection('المشاريع')">مراجعة</button>${common}`;
+}
+
+function createFromInbox(id, target){
+  const m = getMessage(id);
+  m.status = 'تم التحويل';
+  m.activity.push('تم تحويل الرسالة إلى: ' + target);
+  renderInboxList();
+  renderInboxDetail(id);
+  openUniversalWindow(target + ' من البريد الوارد', 'تم إنشاء هذا السجل من الرسالة: ' + m.title);
+}
+
+function changeInboxStatus(id, status){
+  const m = getMessage(id);
+  m.status = status;
+  m.activity.push('تم تغيير الحالة إلى: ' + status);
+  renderInboxList();
+  renderInboxDetail(id);
+  toast('تم تحديث حالة الرسالة');
+}
+
+function archiveInboxMessage(id){ changeInboxStatus(id, 'مؤرشف'); }
+function assignInboxMessage(id){
+  const m = getMessage(id);
+  openUniversalWindow('تعيين مسؤول - ' + m.title, 'اختر المسؤول المناسب لمعالجة هذه الرسالة.');
+}
+
+function typeIcon(type){ return type.includes('فاتورة') ? '🧾' : type === 'كشف بنكي' ? '🏦' : type === 'تكت صيانة' ? '🛠' : type === 'طلب مخزن' ? '📦' : type === 'موافقة' ? '✅' : '⚠'; }
+function priorityClass(p){ return p === 'عالية' ? 'high' : p === 'متوسطة' ? 'medium' : 'low'; }
+function statusClass(s){
+  if(s === 'غير معالج' || s === 'يحتاج إجراء') return 'status-open';
+  if(s === 'بانتظار المعالجة' || s === 'قيد المراجعة') return 'status-wait';
+  if(s === 'تم التحويل' || s === 'مكتمل') return 'status-done';
+  if(s === 'مؤرشف') return 'status-archived';
+  return 'status-wait';
+}
+
+function renderTablePage(name){
+  const [action, columns, rows] = tableSections[name];
+  page('module-layout', `
+    <section class="module-page">
+      <div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية لإدارة ${name} مع فلاتر ونوافذ ذكية.</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج إنشاء جديد')">${action}</button></div>
+      ${filterBar(['الحالة','الفترة','المشروع','المسؤول'])}
+      ${statsRow([['إجمالي السجلات', rows.length], ['قيد المعالجة','1'], ['مكتمل','0'], ['آخر تحديث','الآن']])}
+      <div class="pro-table-card"><table class="pro-table"><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c,i) => `<td>${i === r.length-1 ? `<button class="table-action" onclick="openUniversalWindow('${name} - ${r[0]}','تفاصيل السجل والحركات والمرفقات')">${c}</button>` : c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    </section>
+  `);
+}
+
+function filterBar(filters){
+  return `<div class="module-filterbar"><div class="module-search"><span>⌕</span><input placeholder="بحث سريع..." oninput="quickFilter(this.value)" /></div>${filters.map(f => `<button class="filter-chip">${f} <span>⌄</span></button>`).join('')}<button class="filter-chip clear" onclick="toast('تم تصفير الفلاتر')">تصفير</button></div>`;
+}
+
+function statsRow(stats){
+  return `<div class="stats-row">${stats.map(s => `<div class="stat-card"><span>${s[0]}</span><strong>${s[1]}</strong></div>`).join('')}</div>`;
+}
+
+function renderDashboard(tab){
+  dashboardTab = tab || 'pnl';
+  const isPnl = dashboardTab === 'pnl';
+  page('dashboard-layout', `
     <section class="dashboard-page">
       <div class="page-title-row"><h1>لوحة البيانات</h1></div>
       <div class="dash-tabs"><button class="${isPnl?'active':''}" onclick="renderDashboard('pnl')">الأرباح والخسائر</button><button class="${!isPnl?'active':''}" onclick="renderDashboard('cash')">التدفق النقدي</button></div>
       <div class="dash-filter-row"><button class="filter-pill"><span>📅</span> آخر 6 أشهر</button><button class="filter-pill">يناير-يوليو 2026 <span>⌄</span></button><button class="filter-pill">عرض حسب الشهر <span>⌄</span></button></div>
       ${isPnl ? renderPnlDashboard() : renderCashDashboard()}
-    </section>`;
+    </section>
+  `);
 }
 
-function chartIllustration(type='bars'){
-  return `<div class="chart-illustration ${type}">
-    <span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="bar b4"></span><span class="bar b5"></span><span class="bar b6"></span>
-    <svg viewBox="0 0 240 90" aria-hidden="true"><polyline points="8,76 45,50 78,58 112,28 145,54 182,35 226,48" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="112" cy="28" r="5" fill="currentColor"/><circle cx="182" cy="35" r="5" fill="currentColor"/></svg>
-  </div>`;
+function chartIllustration(type){
+  return `<div class="chart-illustration ${type || 'bars'}"><span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="bar b4"></span><span class="bar b5"></span><span class="bar b6"></span><svg viewBox="0 0 240 90"><polyline points="8,76 45,50 78,58 112,28 145,54 182,35 226,48" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="112" cy="28" r="5" fill="currentColor"/><circle cx="182" cy="35" r="5" fill="currentColor"/></svg></div>`;
 }
+
 function emptyTableIcon(){ return `<div class="empty-doc"><span>▧</span><i>×</i></div>`; }
+
+function dashTable(title, cols, emptyText){
+  return `<article class="dash-table-card"><div class="table-card-head"><h3>${title}</h3><button onclick="toast('فتح القائمة الكاملة')">عرض ‹</button></div><table class="dash-table"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody><tr><td colspan="${cols.length}" class="empty-cell">${emptyTableIcon()}<p>${emptyText}</p></td></tr></tbody></table></article>`;
+}
+
 function renderPnlDashboard(){
   return `<div class="analytics-grid">
     <article class="analytics-card"><h2>الإيرادات والأرباح والخسائر</h2>${chartIllustration('bars')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو أنشئ بعض الفواتير لعرض<br>بعض البيانات</p><button class="primary-green" onclick="openSection('فواتير بيع')">أنشئ فاتورة</button></article>
     <article class="analytics-card"><h2>مجمل الربح</h2>${chartIllustration('bars')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو أنشئ بعض الفواتير لعرض<br>بعض البيانات</p><button class="primary-green" onclick="openSection('فواتير بيع')">أنشئ فاتورة</button></article>
-  </div>
-  <div class="table-grid">${dashboardTable('أكبر فواتير مبيعات متأخرة', ['فاتورة','أيام متأخرة','الرصيد'], 'لا توجد فواتير مبيعات متأخرة')}${dashboardTable('أكبر فواتير مشتريات متأخرة', ['فاتورة المشتريات','أيام متأخرة','الرصيد'], 'لا توجد فواتير مشتريات متأخرة')}</div>`;
+  </div><div class="table-grid">${dashTable('أكبر فواتير مبيعات متأخرة',['فاتورة','أيام متأخرة','الرصيد'],'لا توجد فواتير مبيعات متأخرة')}${dashTable('أكبر فواتير مشتريات متأخرة',['فاتورة المشتريات','أيام متأخرة','الرصيد'],'لا توجد فواتير مشتريات متأخرة')}</div>`;
 }
+
 function renderCashDashboard(){
   return `<h2 class="section-title">نظرة نقدية عامة - حسابات بنك</h2>
-  <div class="analytics-grid">
-    <article class="analytics-card"><h2>الرصيد بحسب كشف الحساب</h2>${chartIllustration('line')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو قم باستيراد كشف الحساب<br>لعرض بعض البيانات</p><button class="primary-green" onclick="openSection('الحسابات البنكية')">قم باستيراد كشف الحساب</button></article>
-    <article class="analytics-card"><h2>التدفق النقدي بحسب كشف الحساب</h2>${chartIllustration('cash')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو قم باستيراد كشف الحساب<br>لعرض بعض البيانات</p><button class="primary-green" onclick="openSection('الحسابات البنكية')">قم باستيراد كشف الحساب</button></article>
-  </div>
-  <div class="table-grid">${dashboardTable('أكبر فواتير مبيعات غير مدفوعة', ['فاتورة','تاريخ الاستحقاق','الرصيد'], 'لا توجد فواتير مبيعات غير مدفوعة')}${dashboardTable('أكبر فواتير مشتريات غير مدفوعة', ['فاتورة المشتريات','تاريخ الاستحقاق','الرصيد'], 'لا توجد فواتير مشتريات غير مدفوعة')}</div>`;
-}
-function dashboardTable(title, cols, emptyText){
-  return `<article class="dash-table-card"><div class="table-card-head"><h3>${title}</h3><button onclick="toast('فتح القائمة الكاملة')">عرض ‹</button></div><table class="dash-table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody><tr><td colspan="${cols.length}" class="empty-cell">${emptyTableIcon()}<p>${emptyText}</p></td></tr></tbody></table></article>`;
+    <div class="analytics-grid">
+      <article class="analytics-card"><h2>الرصيد بحسب كشف الحساب</h2>${chartIllustration('line')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو قم باستيراد كشف الحساب<br>لعرض بعض البيانات</p><button class="primary-green" onclick="openSection('الحسابات البنكية')">قم باستيراد كشف الحساب</button></article>
+      <article class="analytics-card"><h2>التدفق النقدي بحسب كشف الحساب</h2>${chartIllustration('cash')}<p>لا توجد بيانات للعرض ضمن الفترة الزمنية المختارة<br>قم بتعديل الفترة الزمنية أو قم باستيراد كشف الحساب<br>لعرض بعض البيانات</p><button class="primary-green" onclick="openSection('الحسابات البنكية')">قم باستيراد كشف الحساب</button></article>
+    </div><div class="table-grid">${dashTable('أكبر فواتير مبيعات غير مدفوعة',['فاتورة','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مبيعات غير مدفوعة')}${dashTable('أكبر فواتير مشتريات غير مدفوعة',['فاتورة المشتريات','تاريخ الاستحقاق','الرصيد'],'لا توجد فواتير مشتريات غير مدفوعة')}</div>`;
 }
 
-const bankAccountsData = [{name:'الحساب البنكي', icon:'🏦'}, {name:'المصروفات النثرية', icon:'💵'}, {name:'الخزينة', icon:'💰'}];
 function renderBankAccounts(){
-  $('#content').className = 'bank-layout';
-  $('#content').innerHTML = `
-    <section class="bank-page">
-      <div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="toast('فتح نافذة إضافة حساب بنك')">أضف حساب بنك</button></div>
-      <div class="bank-cards-wrap">${bankAccountsData.map(a => bankCard(a)).join('')}</div>
-    </section>`;
-}
-function bankCard(a){
-  return `<article class="bank-card">
-    <div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.icon}</div><h2>${a.name}</h2></div><div class="bank-card-actions"><button class="more-btn" title="المزيد">⋮</button><button class="import-btn" onclick="toast('استيراد كشف حساب: ${a.name}')">استيراد كشف حساب</button></div></div>
-    <div class="bank-metrics"><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>0.00 ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div>
-  </article>`;
+  const accounts = [{name:'الحساب البنكي',icon:'🏦'}, {name:'المصروفات النثرية',icon:'💵'}, {name:'الخزينة',icon:'💰'}];
+  page('bank-layout', `<section class="bank-page"><div class="page-title-row bank-title-row"><h1>الحسابات البنكية</h1><button class="add-bank-btn" onclick="openUniversalWindow('أضف حساب بنك','نموذج إضافة حساب بنكي')">أضف حساب بنك</button></div><div class="bank-cards-wrap">${accounts.map(a => `<article class="bank-card"><div class="bank-card-top"><div class="bank-card-title-wrap"><div class="account-icon">${a.icon}</div><h2>${a.name}</h2></div><div class="bank-card-actions"><button class="more-btn">⋮</button><button class="import-btn" onclick="toast('استيراد كشف حساب: ${a.name}')">استيراد كشف حساب</button></div></div><div class="bank-metrics"><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد الدفتر</span></div><div class="metric-row"><strong>0.00 ﷼</strong><span>رصيد كشف الحساب</span></div><div class="metric-row metric-total"><strong>0.00 ﷼</strong><span>الفرق <em class="ok-badge">متوازن</em></span></div></div></article>`).join('')}</div></section>`);
 }
 
-function openRecord(name){
+function renderReports(){
+  const reports = ['تقرير ربح وخسارة','ميزان مراجعة','تقرير ضريبة القيمة المضافة','ربحية المشاريع','تقرير المخزون','تقرير الحضور','مسير الرواتب','تقرير التكتات'];
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>التقارير</h1><p>مركز التقارير المالية والتشغيلية بصيغة PDF و Excel.</p></div><button class="module-primary" onclick="toast('إنشاء تقرير')">إنشاء تقرير</button></div>${filterBar(['القسم','الفترة','الصيغة','المستخدم'])}<div class="report-grid">${reports.map(r => `<article class="report-card"><div class="report-icon">▤</div><h3>${r}</h3><p>تقرير جاهز للتصدير مع فلاتر ذكية.</p><button onclick="toast('تجهيز تقرير ${r}')">تشغيل التقرير</button></article>`).join('')}</div></section>`);
+}
+
+function renderInventory(){
+  const items = [['مواد تنظيف','SKU-CLN','المخزن الرئيسي','متاح'],['لمبات ومواد كهرباء','SKU-ELE','المخزن الرئيسي','تحت الحد'],['عدد وأدوات','SKU-TLS','عهدة','متاح']];
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>الأصناف</h1><p>منتجات وخدمات ومخزون مع SKU وباركود وحد أدنى.</p></div><button class="module-primary" onclick="openUniversalWindow('صنف جديد','نموذج صنف مخزون')">صنف جديد</button></div>${filterBar(['المستودع','التصنيف','الحالة','تحت الحد'])}${statsRow([['الأصناف','0'],['تحت الحد','0'],['محجوز','0'],['قيمة المخزون','0.00 ﷼']])}<div class="inventory-grid">${items.map(i => `<article class="inventory-card" onclick="openUniversalWindow('${i[0]}','تفاصيل الصنف وحركات المخزون')"><div class="sku-box">▦</div><h3>${i[0]}</h3><p>${i[1]} · ${i[2]}</p><span class="status-pill">${i[3]}</span><div class="inv-actions"><button onclick="event.stopPropagation();toast('صرف')">صرف</button><button onclick="event.stopPropagation();toast('استلام')">استلام</button><button onclick="event.stopPropagation();toast('تحويل')">تحويل</button></div></article>`).join('')}</div></section>`);
+}
+
+function renderProjects(){
+  const projects = ['الماجدية 70','الرمز A17','العجلان 30','برج جوديا'];
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>المشاريع</h1><p>إدارة عقود المشاريع وربحيتها وتشغيلها.</p></div><button class="module-primary" onclick="openUniversalWindow('مشروع جديد','نموذج مشروع')">مشروع جديد</button></div>${filterBar(['العميل','المشرف','حالة العقد','قريب الانتهاء'])}${statsRow([['مشاريع نشطة','35+'],['قريبة الانتهاء','0'],['تكتات مفتوحة','0'],['ربحية الشهر','0.00 ﷼']])}<div class="project-grid">${projects.map(p => `<article class="project-card" onclick="openUniversalWindow('${p}','تفاصيل المشروع والعقد والتكتات والفواتير')"><h3>${p}</h3><p>مشروع إدارة مرافق · مشرف مسؤول · عقد نشط</p><div class="project-metrics"><span>تكتات: 0</span><span>مصروفات: 0.00 ﷼</span><span>إيرادات: 0.00 ﷼</span></div></article>`).join('')}</div></section>`);
+}
+
+function renderAttendance(){
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>الحضور والانصراف</h1><p>حضور يومي، فلترة شهرية، وتأخير وأوفر تايم.</p></div><button class="module-primary" onclick="toast('تسجيل حضور')">تسجيل حضور</button></div>${filterBar(['الشهر','المشروع','الموظف','الحالة'])}${statsRow([['حضور اليوم','0'],['تأخير','0'],['غياب','0'],['أوفر تايم','0']])}<div class="attendance-board">${['ضمن الوقت','تأخير','خروج مبكر','أوفر تايم','غياب'].map(s => `<div class="attendance-col"><h3>${s}</h3><div class="empty-mini">لا توجد سجلات</div></div>`).join('')}</div></section>`);
+}
+
+function renderCards(title, subtitle, action, cards){
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${title}</h1><p>${subtitle}</p></div><button class="module-primary" onclick="openUniversalWindow('${action}','نموذج جديد')">${action}</button></div>${filterBar(['النوع','الحالة','القسم'])}<div class="module-card-grid">${cards.map(c => `<article class="module-card" onclick="openUniversalWindow('${c[0]}','${c[1]}')"><h3>${c[0]}</h3><p>${c[1]}</p><span class="status-pill">${c[2]}</span></article>`).join('')}</div></section>`);
+}
+
+function renderFallback(name){
+  page('module-layout', `<section class="module-page"><div class="module-header"><div><h1>${name}</h1><p>شاشة احترافية مؤقتة لهذا القسم.</p></div><button class="module-primary" onclick="openUniversalWindow('${name} - جديد','نموذج إنشاء جديد')">إضافة جديد</button></div>${filterBar(['الحالة','التاريخ','المسؤول'])}${statsRow([['السجلات','0'],['قيد المعالجة','0'],['مكتمل','0'],['آخر تحديث','الآن']])}<div class="pro-table-card"><table class="pro-table"><thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead><tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openUniversalWindow('${name}','تفاصيل السجل')">فتح</button></td></tr></tbody></table></div></section>`);
+}
+
+function openUniversalWindow(title, description){
   const modal = $('#smartModal');
+  if(!modal) return;
   modal.classList.remove('hidden');
-  modal.innerHTML = `<div class="modal-head"><h2>نافذة ذكية - ${name}</h2><button class="close" onclick="closeModal()">إغلاق</button></div>
-    <div class="record-layout">
-      <div class="record-main">
-        <label>الاسم / الرقم</label><input value="${name}" />
-        <label>الحالة</label><select><option>نشط</option><option>مسودة</option><option>بانتظار اعتماد</option><option>مكتمل</option></select>
-        <label>المشروع / مركز التكلفة</label><select><option>الماجدية 70</option><option>الرمز A17</option><option>العجلان 30</option></select>
-        <label>ملاحظات</label><textarea>نافذة ذكية تعرض البيانات والمرفقات والحركات المرتبطة.</textarea>
-      </div>
-      <aside class="record-side">
-        <div><strong>الأثر المحاسبي</strong><span>جاهز للربط</span></div>
-        <div><strong>المرفقات</strong><span>0 ملفات</span></div>
-        <div><strong>سجل التدقيق</strong><span>آخر تحديث الآن</span></div>
-      </aside>
-    </div>
-    <div class="modal-actions"><button class="module-primary" onclick="toast('تم الحفظ')">حفظ</button><button class="close" onclick="closeModal()">إلغاء</button></div>`;
+  modal.innerHTML = `<div class="modal-head"><h2>${title}</h2><button class="close" onclick="closeModal()">إغلاق</button></div><div class="record-layout"><div class="record-main"><label>اسم السجل</label><input value="${escapeHtml(title)}" /><label>الحالة</label><select><option>نشط</option><option>مسودة</option><option>بانتظار اعتماد</option><option>مكتمل</option></select><label>المشروع / مركز التكلفة</label><select><option>الماجدية 70</option><option>الرمز A17</option><option>العجلان 30</option><option>برج جوديا</option></select><label>الوصف</label><textarea>${escapeHtml(description || '')}</textarea></div><aside class="record-side"><div><strong>الإجراءات السريعة</strong><span>حفظ / اعتماد / طباعة / إرسال</span></div><div><strong>الربط المحاسبي</strong><span>جاهز للقيود والفواتير</span></div><div><strong>المرفقات</strong><span>رفع صور أو ملفات PDF</span></div><div><strong>سجل التدقيق</strong><span>يتم تسجيل كل تعديل</span></div></aside></div><div class="modal-actions"><button class="module-primary" onclick="toast('تم حفظ السجل')">حفظ</button><button class="close" onclick="toast('تم الاعتماد')">اعتماد</button><button class="close" onclick="toast('تم تجهيز الطباعة')">طباعة</button><button class="close" onclick="closeModal()">إلغاء</button></div>`;
 }
-function closeModal(){ $('#smartModal').classList.add('hidden'); }
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2400); }
-function quickFilter(value){ if(value && value.length>1) toast('فلترة: '+value); }
 
-document.addEventListener('keydown',(e)=>{ if((e.altKey || e.ctrlKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); $('#globalSearch').focus(); }});
-$('#globalSearch').addEventListener('input',(e)=>{ if(e.target.value.trim().length>1) toast('بحث ذكي عن: '+e.target.value); });
-renderNav();
-renderInbox();
+function closeModal(){
+  const modal = $('#smartModal');
+  if(modal) modal.classList.add('hidden');
+}
 
+function toast(message){
+  const t = $('#toast');
+  if(!t) return;
+  t.textContent = message;
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 2200);
+}
 
+function quickFilter(value){
+  if(value && value.trim().length > 1) toast('فلترة: ' + value);
+}
 
-/* V011 Universal Window Fix */
-(function(){
-  const originalOpenSection = window.openSection;
-
-  window.ensureSmartModal = function(){
-    let modal = document.getElementById('smartModal');
-    if(!modal){
-      modal = document.createElement('div');
-      modal.id = 'smartModal';
-      modal.className = 'smart-modal hidden';
-      document.body.appendChild(modal);
-    }
-    return modal;
-  };
-
-  window.openUniversalWindow = function(title, description){
-    const modal = ensureSmartModal();
-    modal.classList.remove('hidden');
-    modal.innerHTML = `
-      <div class="modal-head">
-        <h2>${title}</h2>
-        <button class="close" onclick="closeModal()">إغلاق</button>
-      </div>
-      <div class="record-layout">
-        <div class="record-main">
-          <label>اسم السجل</label>
-          <input value="${title}" />
-          <label>الحالة</label>
-          <select>
-            <option>نشط</option>
-            <option>مسودة</option>
-            <option>بانتظار اعتماد</option>
-            <option>مكتمل</option>
-          </select>
-          <label>المشروع / مركز التكلفة</label>
-          <select>
-            <option>الماجدية 70</option>
-            <option>الرمز A17</option>
-            <option>العجلان 30</option>
-            <option>برج جوديا</option>
-          </select>
-          <label>الوصف</label>
-          <textarea>${description || 'نافذة ذكية مخصصة لهذا القسم، قابلة للربط بالمحاسبة والتشغيل والمرفقات وسجل التدقيق.'}</textarea>
-        </div>
-        <aside class="record-side">
-          <div><strong>الإجراءات السريعة</strong><span>حفظ / اعتماد / طباعة / إرسال</span></div>
-          <div><strong>الربط المحاسبي</strong><span>جاهز للقيود والفواتير</span></div>
-          <div><strong>المرفقات</strong><span>رفع صور أو ملفات PDF</span></div>
-          <div><strong>سجل التدقيق</strong><span>يتم تسجيل كل تعديل</span></div>
-        </aside>
-      </div>
-      <div class="modal-actions">
-        <button class="module-primary" onclick="toast('تم حفظ السجل')">حفظ</button>
-        <button class="close" onclick="toast('تم الاعتماد')">اعتماد</button>
-        <button class="close" onclick="toast('تم تجهيز الطباعة')">طباعة</button>
-        <button class="close" onclick="closeModal()">إلغاء</button>
-      </div>`;
-  };
-
-  window.openRecord = function(name){
-    openUniversalWindow('نافذة ذكية - ' + name, 'تفاصيل السجل والحركات المرتبطة والأثر المحاسبي والمرفقات.');
-  };
-
-  window.openCreateWindow = function(name){
-    openUniversalWindow(name, 'نموذج إنشاء جديد مع قوائم منسدلة وفلاتر وربط تلقائي.');
-  };
-
-  window.openSection = function(name){
-    try{
-      if(typeof originalOpenSection === 'function'){
-        originalOpenSection(name);
-        const content = document.getElementById('content');
-        const modal = document.getElementById('smartModal');
-        const hasContent = content && content.innerHTML && content.innerHTML.trim().length > 20;
-        const hasModal = modal && !modal.classList.contains('hidden');
-        if(hasContent || hasModal) return;
-      }
-    }catch(e){
-      console.warn('Recovered openSection error:', e);
-    }
-
-    const content = document.getElementById('content');
-    if(content){
-      content.className = 'module-layout';
-      content.innerHTML = `
-        <section class="module-page">
-          <div class="module-header">
-            <div>
-              <h1>${name}</h1>
-              <p>تم إنشاء شاشة احترافية مؤقتة لهذا القسم.</p>
-            </div>
-            <button class="module-primary" onclick="openCreateWindow('${name} - سجل جديد')">إضافة جديد</button>
-          </div>
-          <div class="module-filterbar">
-            <div class="module-search"><span>⌕</span><input placeholder="بحث سريع..." /></div>
-            <button class="filter-chip">الحالة <span>⌄</span></button>
-            <button class="filter-chip">التاريخ <span>⌄</span></button>
-            <button class="filter-chip">المسؤول <span>⌄</span></button>
-            <button class="filter-chip clear">تصفير</button>
-          </div>
-          <div class="stats-row">
-            <div class="stat-card"><span>السجلات</span><strong>0</strong></div>
-            <div class="stat-card"><span>قيد المعالجة</span><strong>0</strong></div>
-            <div class="stat-card"><span>مكتمل</span><strong>0</strong></div>
-            <div class="stat-card"><span>آخر تحديث</span><strong>الآن</strong></div>
-          </div>
-          <div class="pro-table-card">
-            <table class="pro-table">
-              <thead><tr><th>السجل</th><th>الحالة</th><th>المسؤول</th><th>آخر تحديث</th><th>الإجراء</th></tr></thead>
-              <tbody><tr><td>${name} - نموذج</td><td>نشط</td><td>مدير النظام</td><td>الآن</td><td><button class="table-action" onclick="openRecord('${name}')">فتح</button></td></tr></tbody>
-            </table>
-          </div>
-        </section>`;
-    }
-  };
-
-  document.addEventListener('click', function(e){
-    const btn = e.target.closest('button');
-    if(!btn) return;
-    const text = (btn.textContent || '').trim();
-
-    if(text === 'فتح' && !btn.closest('.modal-head') && !btn.closest('.modal-actions')){
-      const row = btn.closest('tr');
-      const label = row && row.cells && row.cells[0] ? row.cells[0].textContent.trim() : 'سجل';
+function init(){
+  renderNav();
+  renderInbox();
+  const search = $('#globalSearch');
+  if(search){
+    search.addEventListener('input', e => {
+      if(e.target.value.trim().length > 1) toast('بحث ذكي عن: ' + e.target.value);
+    });
+  }
+  document.addEventListener('keydown', e => {
+    if((e.ctrlKey || e.altKey) && e.key.toLowerCase() === 'k'){
       e.preventDefault();
-      openRecord(label || 'سجل');
+      search?.focus();
     }
+  });
+}
 
-    if(['إضافة جديد','جديد','إنشاء','إضافة'].includes(text)){
-      e.preventDefault();
-      openCreateWindow(text);
-    }
-  }, true);
-})();
-
-
-
-/* V012 Smart Inbox Operations Center */
-(function(){
-  const inboxMessages = [
-    {
-      id:'INB-0001',
-      title:'فاتورة مورد - مواد تنظيف',
-      from:'مورد مواد تنظيف',
-      time:'منذ 12 دقيقة',
-      type:'فاتورة مورد',
-      status:'غير معالج',
-      priority:'متوسطة',
-      assignee:'المحاسب',
-      project:'المخزن الرئيسي',
-      attachment:'invoice_supplier_0001.pdf',
-      suggested:'إنشاء فاتورة مورد وربطها بالمورد والمشروع',
-      body:'وصلت فاتورة مواد تنظيف للمراجعة والاعتماد قبل الصرف.',
-      activity:['تم استلام الرسالة','تم اكتشاف مرفق PDF','تم اقتراح إنشاء فاتورة مورد']
-    },
-    {
-      id:'INB-0002',
-      title:'شكوى عميل - ضعف ضخ المياه',
-      from:'رئيس جمعية الماجدية 70',
-      time:'منذ 28 دقيقة',
-      type:'تكت صيانة',
-      status:'يحتاج إجراء',
-      priority:'عالية',
-      assignee:'مدير التشغيل',
-      project:'الماجدية 70',
-      attachment:'water_issue_photo.jpg',
-      suggested:'إنشاء تكت صيانة وتعيين فني',
-      body:'العميل يفيد بوجود ضعف في ضخ المياه ويطلب الفحص بشكل عاجل.',
-      activity:['تم استلام الشكوى','تم تحديد المشروع: الماجدية 70','الأولوية عالية']
-    },
-    {
-      id:'INB-0003',
-      title:'كشف حساب بنكي - شهر يوليو',
-      from:'البنك',
-      time:'منذ ساعة',
-      type:'كشف بنكي',
-      status:'بانتظار المعالجة',
-      priority:'متوسطة',
-      assignee:'المحاسب',
-      project:'الحساب البنكي',
-      attachment:'bank_statement_july.xlsx',
-      suggested:'استيراد كشف الحساب والبدء بالمطابقة البنكية',
-      body:'كشف حساب بنكي جديد جاهز للاستيراد والمطابقة.',
-      activity:['تم استلام كشف الحساب','تم التعرف على نوع الملف XLSX']
-    },
-    {
-      id:'INB-0004',
-      title:'طلب صرف مواد - الرمز A17',
-      from:'مشرف الموقع',
-      time:'منذ ساعتين',
-      type:'طلب مخزن',
-      status:'غير معالج',
-      priority:'متوسطة',
-      assignee:'مسؤول المخزن',
-      project:'الرمز A17',
-      attachment:'request_items.png',
-      suggested:'إنشاء طلب صرف وربطه بالمشروع',
-      body:'طلب صرف مواد تشغيلية للموقع حسب الاحتياج المرفق.',
-      activity:['تم استلام الطلب','تم ربطه بمشروع الرمز A17']
-    },
-    {
-      id:'INB-0005',
-      title:'اعتماد فاتورة بيع - العجلان 30',
-      from:'النظام',
-      time:'اليوم',
-      type:'موافقة',
-      status:'قيد المراجعة',
-      priority:'منخفضة',
-      assignee:'المدير',
-      project:'العجلان 30',
-      attachment:'—',
-      suggested:'مراجعة الفاتورة واعتمادها أو إرجاعها للمحاسب',
-      body:'فاتورة بيع بانتظار اعتماد المدير قبل الإرسال.',
-      activity:['تم إنشاء الفاتورة','بانتظار اعتماد المدير']
-    },
-    {
-      id:'INB-0006',
-      title:'تنبيه عقد قريب الانتهاء',
-      from:'النظام',
-      time:'أمس',
-      type:'تنبيه',
-      status:'مؤرشف',
-      priority:'عالية',
-      assignee:'مدير التشغيل',
-      project:'مشروع تجريبي',
-      attachment:'—',
-      suggested:'مراجعة العقد والتواصل مع العميل للتجديد',
-      body:'تبقى أقل من 30 يومًا على نهاية أحد العقود.',
-      activity:['تم إنشاء التنبيه','تمت أرشفته']
-    }
-  ];
-  let selectedInboxId = inboxMessages[0].id;
-  let currentInboxFilter = 'الكل';
-
-  const oldRenderInbox = window.renderInbox;
-
-  window.renderInbox = function(){
-    currentSection = 'البريد الوارد';
-    if(typeof renderNav === 'function') renderNav();
-    const content = document.getElementById('content');
-    if(!content) return;
-    content.className = 'smart-inbox-layout';
-    content.innerHTML = `
-      <section class="inbox-detail-panel" id="inboxDetail"></section>
-      <aside class="smart-inbox-panel">
-        <div class="smart-inbox-head">
-          <div>
-            <h1>البريد الوارد</h1>
-            <p>مركز معالجة ذكي للرسائل والفواتير والكشوف والتكتات والطلبات.</p>
-          </div>
-          <button class="refresh" onclick="toast('تم تحديث البريد الوارد')">⟳</button>
-        </div>
-
-        <div class="smart-inbox-search">
-          <span>⌕</span>
-          <input id="inboxSearchInput" placeholder="ابحث في البريد الوارد..." oninput="renderInboxList()" />
-        </div>
-
-        <div class="inbox-category-tabs" id="inboxTabs">
-          ${['الكل','غير معالج','بانتظار المعالجة','فواتير','كشوف بنكية','تكتات','طلبات مخزن','موافقات','تنبيهات','مكتمل','مؤرشف'].map(t=>`
-            <button class="${currentInboxFilter===t?'active':''}" onclick="setInboxFilter('${t}')">${t}${inboxCount(t)}</button>
-          `).join('')}
-        </div>
-
-        <div class="inbox-filter-row">
-          <button class="mini-filter">من تاريخ <span>⌄</span></button>
-          <button class="mini-filter">المشروع <span>⌄</span></button>
-          <button class="mini-filter">المسؤول <span>⌄</span></button>
-          <button class="mini-filter">مرفقات <span>⌄</span></button>
-        </div>
-
-        <div class="smart-message-list" id="smartInboxList"></div>
-      </aside>`;
-    renderInboxList();
-    renderInboxDetail(selectedInboxId);
-  };
-
-  function inboxCount(filter){
-    const c = filterInboxMessages(filter).length;
-    if(filter === 'الكل') return ` <span>${inboxMessages.length}</span>`;
-    return c ? ` <span>${c}</span>` : '';
-  }
-
-  function filterInboxMessages(filter=currentInboxFilter){
-    if(filter === 'الكل') return inboxMessages;
-    if(filter === 'غير معالج') return inboxMessages.filter(m=>m.status === 'غير معالج');
-    if(filter === 'بانتظار المعالجة') return inboxMessages.filter(m=>m.status === 'بانتظار المعالجة');
-    if(filter === 'فواتير') return inboxMessages.filter(m=>m.type.includes('فاتورة'));
-    if(filter === 'كشوف بنكية') return inboxMessages.filter(m=>m.type === 'كشف بنكي');
-    if(filter === 'تكتات') return inboxMessages.filter(m=>m.type === 'تكت صيانة');
-    if(filter === 'طلبات مخزن') return inboxMessages.filter(m=>m.type === 'طلب مخزن');
-    if(filter === 'موافقات') return inboxMessages.filter(m=>m.type === 'موافقة');
-    if(filter === 'تنبيهات') return inboxMessages.filter(m=>m.type === 'تنبيه');
-    if(filter === 'مكتمل') return inboxMessages.filter(m=>m.status === 'مكتمل');
-    if(filter === 'مؤرشف') return inboxMessages.filter(m=>m.status === 'مؤرشف');
-    return inboxMessages;
-  }
-
-  window.setInboxFilter = function(filter){
-    currentInboxFilter = filter;
-    renderInbox();
-  };
-
-  window.renderInboxList = function(){
-    const box = document.getElementById('smartInboxList');
-    if(!box) return;
-    const q = (document.getElementById('inboxSearchInput')?.value || '').trim().toLowerCase();
-    let list = filterInboxMessages(currentInboxFilter);
-    if(q){
-      list = list.filter(m => [m.title,m.from,m.type,m.project,m.assignee,m.status].join(' ').toLowerCase().includes(q));
-    }
-    if(!list.length){
-      box.innerHTML = `<div class="empty-inbox-list">لا توجد رسائل مطابقة للفلاتر الحالية</div>`;
-      return;
-    }
-    box.innerHTML = list.map(m=>`
-      <article class="smart-message-row ${m.id===selectedInboxId?'active':''}" onclick="selectInboxMessage('${m.id}')">
-        <div class="message-check"><input type="checkbox" onclick="event.stopPropagation()" /></div>
-        <div class="message-main">
-          <div class="message-title-line">
-            <strong>${m.title}</strong>
-            <span class="priority ${priorityClass(m.priority)}">${m.priority}</span>
-          </div>
-          <p>${m.from} · ${m.project}</p>
-          <div class="message-meta">
-            <em class="${statusClass(m.status)}">${m.status}</em>
-            <span>${m.type}</span>
-            <span>${m.time}</span>
-          </div>
-        </div>
-      </article>
-    `).join('');
-  };
-
-  window.selectInboxMessage = function(id){
-    selectedInboxId = id;
-    renderInboxList();
-    renderInboxDetail(id);
-  };
-
-  function getMessage(id){
-    return inboxMessages.find(m=>m.id===id) || inboxMessages[0];
-  }
-
-  window.renderInboxDetail = function(id){
-    const m = getMessage(id);
-    const detail = document.getElementById('inboxDetail');
-    if(!detail || !m) return;
-    detail.innerHTML = `
-      <div class="detail-topbar">
-        <div>
-          <h2>${m.title}</h2>
-          <p>${m.from} · ${m.time}</p>
-        </div>
-        <div class="detail-status">
-          <span class="${statusClass(m.status)}">${m.status}</span>
-          <button onclick="archiveInboxMessage('${m.id}')">أرشفة</button>
-        </div>
-      </div>
-
-      <div class="inbox-smart-summary">
-        <div class="summary-icon">${typeIcon(m.type)}</div>
-        <div>
-          <h3>اقتراح النظام</h3>
-          <p>${m.suggested}</p>
-        </div>
-      </div>
-
-      <div class="detail-grid">
-        <div class="detail-card"><span>نوع الرسالة</span><strong>${m.type}</strong></div>
-        <div class="detail-card"><span>المشروع</span><strong>${m.project}</strong></div>
-        <div class="detail-card"><span>المسؤول</span><strong>${m.assignee}</strong></div>
-        <div class="detail-card"><span>الأولوية</span><strong>${m.priority}</strong></div>
-      </div>
-
-      <div class="message-body-card">
-        <h3>محتوى الرسالة</h3>
-        <p>${m.body}</p>
-      </div>
-
-      <div class="attachment-card">
-        <div>
-          <h3>المرفقات</h3>
-          <p>${m.attachment === '—' ? 'لا توجد مرفقات' : m.attachment}</p>
-        </div>
-        ${m.attachment === '—' ? '' : '<button onclick="toast(\\'فتح المرفق\\')">عرض المرفق</button>'}
-      </div>
-
-      <div class="inbox-actions">
-        ${actionButtons(m)}
-      </div>
-
-      <div class="notes-activity-grid">
-        <div class="internal-notes">
-          <h3>ملاحظات داخلية</h3>
-          <textarea placeholder="اكتب ملاحظة للفريق..."></textarea>
-          <button onclick="toast('تم حفظ الملاحظة')">إضافة ملاحظة</button>
-        </div>
-        <div class="activity-log">
-          <h3>سجل المعالجة</h3>
-          ${m.activity.map(a=>`<div><span>•</span><p>${a}</p></div>`).join('')}
-        </div>
-      </div>`;
-  };
-
-  function actionButtons(m){
-    const common = `<button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين مسؤول</button>
-      <button class="secondary-action" onclick="changeInboxStatus('${m.id}','قيد المراجعة')">قيد المراجعة</button>`;
-    if(m.type === 'فاتورة مورد') return `<button class="main-action" onclick="createFromInbox('${m.id}','فاتورة مورد')">إنشاء فاتورة مورد</button><button class="secondary-action" onclick="openSection('الموردين')">ربط بمورد</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
-    if(m.type === 'تكت صيانة') return `<button class="main-action" onclick="createFromInbox('${m.id}','تكت صيانة')">إنشاء تكت</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button><button class="secondary-action" onclick="assignInboxMessage('${m.id}')">تعيين فني</button><button class="secondary-action" onclick="toast('تم تجهيز رد واتساب')">رد واتساب</button>`;
-    if(m.type === 'كشف بنكي') return `<button class="main-action" onclick="createFromInbox('${m.id}','كشف حساب بنكي')">استيراد كشف الحساب</button><button class="secondary-action" onclick="openSection('الحسابات البنكية')">ربط بحساب بنكي</button><button class="secondary-action" onclick="toast('فتح المطابقة البنكية')">مطابقة المدفوعات</button>${common}`;
-    if(m.type === 'طلب مخزن') return `<button class="main-action" onclick="createFromInbox('${m.id}','طلب صرف')">إنشاء طلب صرف</button><button class="secondary-action" onclick="openSection('الأصناف')">فحص المخزون</button><button class="secondary-action" onclick="openSection('المشاريع')">ربط بمشروع</button>${common}`;
-    if(m.type === 'موافقة') return `<button class="main-action" onclick="changeInboxStatus('${m.id}','مكتمل')">اعتماد</button><button class="secondary-action" onclick="toast('تم إرجاعها للمحاسب')">إرجاع للمحاسب</button><button class="secondary-action" onclick="openSection('فواتير بيع')">فتح الفاتورة</button>`;
-    if(m.type === 'تنبيه') return `<button class="main-action" onclick="openSection('المشاريع')">مراجعة العقد</button><button class="secondary-action" onclick="changeInboxStatus('${m.id}','مكتمل')">تمت المعالجة</button>${common}`;
-    return `<button class="main-action" onclick="createFromInbox('${m.id}','إجراء')">تنفيذ الإجراء</button>${common}`;
-  }
-
-  window.createFromInbox = function(id, target){
-    const m = getMessage(id);
-    m.status = 'تم التحويل';
-    m.activity.push('تم تحويل الرسالة إلى: ' + target);
-    renderInboxList();
-    renderInboxDetail(id);
-    openUniversalWindow(target + ' من البريد الوارد', 'تم إنشاء هذا السجل من الرسالة: ' + m.title);
-  };
-
-  window.changeInboxStatus = function(id, status){
-    const m = getMessage(id);
-    m.status = status;
-    m.activity.push('تم تغيير الحالة إلى: ' + status);
-    renderInboxList();
-    renderInboxDetail(id);
-    toast('تم تحديث حالة الرسالة');
-  };
-
-  window.archiveInboxMessage = function(id){
-    changeInboxStatus(id, 'مؤرشف');
-  };
-
-  window.assignInboxMessage = function(id){
-    const m = getMessage(id);
-    openUniversalWindow('تعيين مسؤول - ' + m.title, 'اختر المسؤول المناسب لمعالجة هذه الرسالة.');
-  };
-
-  function typeIcon(type){
-    if(type.includes('فاتورة')) return '🧾';
-    if(type === 'كشف بنكي') return '🏦';
-    if(type === 'تكت صيانة') return '🛠';
-    if(type === 'طلب مخزن') return '📦';
-    if(type === 'موافقة') return '✅';
-    if(type === 'تنبيه') return '⚠';
-    return '✉';
-  }
-  function priorityClass(p){
-    return p === 'عالية' ? 'high' : p === 'متوسطة' ? 'medium' : 'low';
-  }
-  function statusClass(s){
-    if(s === 'غير معالج' || s === 'يحتاج إجراء') return 'status-open';
-    if(s === 'بانتظار المعالجة' || s === 'قيد المراجعة') return 'status-wait';
-    if(s === 'تم التحويل' || s === 'مكتمل') return 'status-done';
-    if(s === 'مؤرشف') return 'status-archived';
-    return 'status-wait';
-  }
-
-  // Re-render inbox if current page is inbox after patch loads
-  if(currentSection === 'البريد الوارد'){
-    window.renderInbox();
-  }
-})();
+document.addEventListener('DOMContentLoaded', init);
+if(document.readyState !== 'loading') init();
