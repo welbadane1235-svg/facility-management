@@ -29,7 +29,14 @@
   function nameWithoutCode(v){return S(v).replace(/TS-\d+\s*-\s*/i,'').replace(/TS-\d+/ig,'').replace(/[()（）]/g,'').trim();}
   function linkActiveInMonth(a, month){const r=monthRange(month); const st=S(a.start_date||a.from_date||'0000-01-01').slice(0,10); const en=S(a.end_date||a.to_date||'9999-12-31').slice(0,10); if(en && en<r.from) return false; if(st && st>=r.to) return false; const mk=S(a.month_key||a.month||''); return !mk || mk===month || (st<r.to && (!en || en>=r.from));}
   function projectSupervisorId(p){return S(p?.supervisor_id||p?.current_supervisor_id||p?.app_supervisor_id||p?.manager_id||'')}
-  function forcedType(name, raw){const n=norm(name); if(dailyNames.some(x=>n.includes(norm(x)))) return 'زيارة يومية'; if(fullNames.some(x=>n.includes(norm(x)))) return 'دوام كامل'; const t=norm(raw||''); return (t.includes('دوام')||t.includes('full')||t.includes('permanent')||t.includes('fixed')||t.includes('24'))?'دوام كامل':'زيارة يومية';}
+  function forcedType(name, raw){
+    // المصدر الرسمي لنوع المشروع هو قسم المشاريع فقط.
+    // لا نستخدم اسم المشروع ولا التوزيع لتحديد النوع، حتى لا يتحول مشروع دوام كامل إلى زيارة يومية أو العكس.
+    const t=norm(raw||'');
+    if(t.includes('دوام')||t.includes('full')||t.includes('permanent')||t.includes('fixed')||t.includes('24')||t.includes('كامل')||t.includes('دائم')) return 'دوام كامل';
+    if(t.includes('visit')||t.includes('daily')||t.includes('زياره')||t.includes('زيارة')) return 'زيارة يومية';
+    return 'زيارة يومية';
+  }
   function actualMinutes(l){
     const saved=N(l.duration_minutes||l.actual_minutes||l.minutes||l.total_minutes||l.work_minutes||l.actual_duration_minutes||0); if(saved>0) return saved;
     const ci=l.check_in||l.checkin_at||l.in_time||l.start_time||l.created_at; const co=l.check_out||l.checkout_at||l.out_time||l.end_time;
