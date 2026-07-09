@@ -1,7 +1,7 @@
 /* V403 clean monthly times - approved version: reads other months from time_logs and worker names/codes from workers section */
 (function(){
   'use strict';
-  const VERSION='403'; // approved same-version hotfix: worker codes for all months
+  const VERSION='403'; // approved hotfix: monthly project type + distribution supervisor priority
   const JUNE_URL='monthly_times_june_2026_v401.json?v=403-' + Date.now();
   let JUNE_DATA=[];
   let DYNAMIC_DATA=[];
@@ -15,7 +15,7 @@
   const minsText=m=>{m=Math.round(N(m)); const h=Math.floor(m/60), mm=m%60; if(!h) return mm+' دقيقة'; if(!mm) return h+' ساعة'; return h+' ساعة و '+mm+' دقيقة';};
   const pct=v=>{const n=N(v); return (Math.round(n*10)/10).toString().replace(/\.0$/,'')+'%';};
   const isFull=r=>S(r.projectType).includes('دوام');
-  const fullNames=['وجود الياسمين','الرمز 17 a','الرمز a17','الرمز','العجلان ريفيرا 19','العجلان 19','الماجدية 88','صفاء 28','صفاء 65','العجلان 30','مكين 37','برج جوديا صباح'];
+  const fullNames=['وجود الياسمين','الرمز 17 a','الرمز a17','الرمز','العجلان ريفيرا 19','العجلان 19','الماجدية 88','الماجدية 70','صفاء 28','صفاء 65','العجلان 30','مكين 37','برج جوديا صباح'];
   const dailyNames=['الشعلان 50','الشعلان 51'];
   function selectedMonth(){return $('mc401Month')?.value || new Date().toISOString().slice(0,7);}
   function monthRange(m){const from=m+'-01'; const d=new Date(from+'T00:00:00'); d.setMonth(d.getMonth()+1); const to=d.toISOString().slice(0,10); return {from,to,fromIso:from+'T00:00:00',toIso:to+'T00:00:00'};}
@@ -77,7 +77,7 @@
     const r=monthRange(month);
 
     // نقرأ فقط بيانات الشهر المطلوب حتى لا نضغط على السيرفر.
-    const [projects,users,workers,employees,monthLinks,monthlyDistribution,distributionView,assignments,logs1,logs2]=await Promise.all([
+    const [projects,users,workers,employees,monthLinks,monthlyDistribution,distributionView,monthlyProjectSettings,assignments,logs1,logs2]=await Promise.all([
       safe(sb.from('projects').select('*').limit(5000)),
       safe(sb.from('app_users').select('*').limit(3000)),
       safe(sb.from('workers').select('*').limit(6000)),
@@ -85,6 +85,7 @@
       safe(sb.from('worker_project_links_v386').select('*').limit(20000)),
       safe(sb.from('monthly_distribution').select('*').eq('month_key',month).limit(20000)),
       safe(sb.from('monthly_distribution_view').select('*').eq('month_key',month).limit(20000)),
+      safe(sb.from('project_monthly_settings_v387').select('*').eq('month_key',month).limit(10000)),
       safe(sb.from('worker_project_assignments').select('*').limit(20000)),
       safe(sb.from('time_logs').select('*').gte('check_in',r.fromIso).lt('check_in',r.toIso).limit(20000)),
       safe(sb.from('time_logs').select('*').gte('log_date',r.from).lt('log_date',r.to).limit(20000))
@@ -96,6 +97,14 @@
 
     const pById=new Map(projects.map(p=>[S(p.id),p]));
     const pByName=new Map(projects.map(p=>[norm(projectName(p)),p]));
+    const monthlyByProjectId=new Map();
+    const monthlyByProjectName=new Map();
+    (monthlyProjectSettings||[]).forEach(ms=>{
+      const pid=S(ms.project_id||ms.projectId||'');
+      const pname=S(ms.project_name||ms.projectName||ms.project||'');
+      if(pid) monthlyByProjectId.set(pid,ms);
+      if(pname) monthlyByProjectName.set(norm(pname),ms);
+    });
     const uById=new Map(users.map(u=>[S(u.id),u]));
     const wById=new Map(workers.map(w=>[S(w.id),w]));
     const empByCode=new Map();
@@ -183,10 +192,25 @@
       const links=linksForProject(pid,pname);
       const x=links.find(a=>S(a.supervisor_name)&&S(a.supervisor_name)!=='-') || links.find(a=>S(a.supervisor_employee_code));
       if(x){return x.supervisor_name || displayFromCodeAndName(x.supervisor_employee_code,x.supervisor_name) || '-';}
+      const monthlySup=supervisorFromMonthlySetting(pid,pname); if(monthlySup) return monthlySup;
       const sid=projectSupervisorId(p); const sup=sid?uById.get(S(sid)):null;
       return supervisorDisplay(sup?userName(sup):S(p?.supervisor_name||'-'));
     }
     function supervisorDisplay(raw){const n=nameWithoutCode(raw); return employeeDisplayByName(n,empByName) || S(raw||'-');}
+    function monthlySettingForProject(pid,pname){return monthlyByProjectId.get(S(pid)) || monthlyByProjectName.get(norm(pname)) || null;}
+    function projectTypeForProject(pid,pname,p){
+      const ms=monthlySettingForProject(pid,pname);
+      const raw=ms ? (ms.operation_type||ms.project_type||ms.type||ms.work_type||ms.status_type||'') : '';
+      return forcedType(pname, raw || p?.operation_type || p?.project_type || p?.type || p?.work_type || '');
+    }
+    function supervisorFromMonthlySetting(pid,pname){
+      const ms=monthlySettingForProject(pid,pname); if(!ms) return '';
+      const sc=S(ms.supervisor_employee_code||ms.supervisor_code||'');
+      const sn=S(ms.supervisor_name||ms.supervisor||'');
+      if(sc||sn) return displayFromCodeAndName(sc,sn) || sn || sc;
+      const sid=S(ms.supervisor_id||''); const u=sid?uById.get(sid):null;
+      return u?supervisorDisplay(userName(u)):'';
+    }
     function workersForProject(pid,pname){
       const names=new Map();
       linksForProject(pid,pname).forEach(a=>{const n=a.worker_name||displayFromCodeAndName(a.worker_employee_code,a.worker_name); if(n) names.set(norm(n),n);});
@@ -217,7 +241,7 @@
       const name=projectName(p);
       const k=S(pid)||norm(name);
       if(!rowsByProject.has(k)){
-        rowsByProject.set(k,{month,projectId:pid,projectName:name,projectType:forcedType(name,p.operation_type||p.project_type||p.type),supervisorId:projectSupervisorId(p),supervisorName:supervisorForProject(pid,name,p),workers:workersForProject(pid,name),workerCodes:[],totalMinutes:0,requiredDailyMinutes:requiredFromProject(p),requiredMinutes:0,logsCount:0});
+        rowsByProject.set(k,{month,projectId:pid,projectName:name,projectType:projectTypeForProject(pid,name,p),supervisorId:projectSupervisorId(p),supervisorName:supervisorForProject(pid,name,p),workers:workersForProject(pid,name),workerCodes:[],totalMinutes:0,requiredDailyMinutes:requiredFromProject(p),requiredMinutes:0,logsCount:0});
       }
       const row=rowsByProject.get(k); row.totalMinutes+=actualMinutes(l); row.requiredMinutes+=N(l.required_minutes||l.required_daily_minutes||0); row.logsCount+=1;
     });
