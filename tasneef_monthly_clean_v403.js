@@ -199,9 +199,10 @@
     function supervisorDisplay(raw){const n=nameWithoutCode(raw); return employeeDisplayByName(n,empByName) || S(raw||'-');}
     function monthlySettingForProject(pid,pname){return monthlyByProjectId.get(S(pid)) || monthlyByProjectName.get(norm(pname)) || null;}
     function projectTypeForProject(pid,pname,p){
-      const ms=monthlySettingForProject(pid,pname);
-      const raw=ms ? (ms.operation_type||ms.project_type||ms.type||ms.work_type||ms.status_type||'') : '';
-      return forcedType(pname, raw || p?.operation_type || p?.project_type || p?.type || p?.work_type || '');
+      // المصدر الرسمي لنوع المشروع هو قسم المشاريع فقط.
+      // التوزيع يستخدم فقط لربط المشرف والعمال ولا يغير نوع المشروع.
+      const raw = p?.operation_type || p?.project_type || p?.type || p?.work_type || p?.visit_type_default || '';
+      return forcedType(pname, raw);
     }
     function supervisorFromMonthlySetting(pid,pname){
       const ms=monthlySettingForProject(pid,pname); if(!ms) return '';
