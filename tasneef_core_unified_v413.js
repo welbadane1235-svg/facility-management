@@ -6,7 +6,7 @@
   if(window.__tasneefCoreUnifiedV413) return;
   window.__tasneefCoreUnifiedV413 = true;
 
-  const VERSION='418';
+  const VERSION='419';
   const S=v=>String(v??'').trim();
   const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
   const $=id=>document.getElementById(id);
@@ -17,7 +17,7 @@
   const prevMonth=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7);};
   const monthEnd=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()+1); d.setDate(0); return d.toISOString().slice(0,10);};
 
-  const state={workers:[],projects:[],dist:{},loaded:false,tab:'distribution',selected:new Map(),selectedProjects:new Set()};
+  const state={workers:[],projects:[],dist:{},att:{},loaded:false,tab:'distribution',selected:new Map(),selectedProjects:new Set()};
 
   function client(){const c=sb(); if(!c) showMsg('لا يوجد اتصال Supabase في الصفحة.', true); return c;}
   async function safe(label, p){try{const r=await p; if(r?.error){console.warn(label,r.error); return {data:[],error:r.error};} return r;}catch(e){console.warn(label,e); return {data:[],error:e};}}
@@ -28,6 +28,9 @@
   function workerDisplay(w){const c=workerCode(w), n=workerName(w); return c && !n.includes(c) ? `${c} - ${n}` : n;}
   function workerStartDate(w){return S(w.work_start_date||w.hire_date||w.employment_start_date||w.start_work_date||w.start_date||'');}
   function workerEndDate(w){return S(w.work_end_date||w.employment_end_date||w.termination_date||w.end_work_date||w.end_date||'');}
+  function workerBasicSalary(w){return N(w.basic_salary||w.base_salary||w.salary||w.main_salary||0);}
+  function workerAllowances(w){return N(w.allowances||w.allowance||w.salary_allowance||w.total_allowances||w.benefits||w.extra_allowance||0);}
+  function workerTotalSalary(w){const t=N(w.total_salary||w.salary_total||w.total||w.gross_salary||0); return t || (workerBasicSalary(w)+workerAllowances(w));}
   function isSupervisor(w){return /مشرف|supervisor/i.test(workerRole(w));}
   function isWorker(w){return !/مشرف|supervisor/i.test(workerRole(w));}
   function projectId(p){return S(p.project_id||p.id||'');}
@@ -73,11 +76,13 @@
           <button data-tab="workers" type="button">العمال والموظفين</button>
           <button data-tab="projects" type="button">المشاريع</button>
           <button data-tab="distribution" type="button" class="active">التوزيع</button>
+          <button data-tab="attendance" type="button">الحضور والغياب</button>
         </div>
         <div class="cu413-actions"><button id="cu413Reload" type="button">تحديث من السيرفر</button><button class="light" id="cu413Print" type="button">طباعة التوزيع</button></div>
         <div id="cu413WorkersTab" class="cu413-tab hidden"></div>
         <div id="cu413ProjectsTab" class="cu413-tab hidden"></div>
         <div id="cu413DistributionTab" class="cu413-tab"></div>
+        <div id="cu413AttendanceTab" class="cu413-tab hidden"></div>
       </div>`;
     main.appendChild(sec);
     document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
@@ -94,7 +99,7 @@
   }
 
   function showMsg(t,err){const el=$('cu413Msg'); if(el){el.textContent=t; el.className='cu413-msg '+(err?'err':'');}}
-  function setTab(tab){state.tab=tab; document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); ['workers','projects','distribution'].forEach(t=>$('cu413'+cap(t)+'Tab')?.classList.toggle('hidden', t!==tab)); render();}
+  function setTab(tab){state.tab=tab; document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); ['workers','projects','distribution','attendance'].forEach(t=>$('cu413'+cap(t)+'Tab')?.classList.toggle('hidden', t!==tab)); render();}
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
   async function loadWorkers(force){
@@ -129,15 +134,16 @@
   }
 
   function render(){
-    renderWorkersTab(); renderProjectsTab(); renderDistributionTab();
+    renderWorkersTab(); renderProjectsTab(); renderDistributionTab(); renderAttendanceTab();
   }
   function renderWorkersTab(){
     const box=$('cu413WorkersTab'); if(!box) return;
     const q=norm($('cu413WorkerSearch')?.value||'');
     const rows=state.workers.filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));
-    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة / تعديل عامل أو موظف</h3><div class="cu413-form"><input type="hidden" id="cu413WEditMode"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><div class="cu413-two"><div><label>تاريخ بداية العمل</label><input id="cu413WStartDate" type="date"></div><div><label>تاريخ نهاية العمل</label><input id="cu413WEndDate" type="date"></div></div><label>الراتب الأساسي</label><input id="cu413WSalary" type="number"><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearWorkerForm()">تفريغ</button></div></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small><small>بداية العمل: ${esc(workerStartDate(w)||'-')} | نهاية العمل: ${esc(workerEndDate(w)||'-')}</small></div><div style="display:flex;gap:6px;align-items:center"><small>${esc(S(w.iqama_number||w.national_id||''))}</small><button type="button" class="light" onclick="tasneefCoreUnifiedV413.editWorker('${esc(workerCode(w))}')">تعديل</button></div></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة / تعديل عامل أو موظف</h3><div class="cu413-form"><input type="hidden" id="cu413WEditMode"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><div class="cu413-two"><div><label>تاريخ بداية العمل</label><input id="cu413WStartDate" type="date"></div><div><label>تاريخ نهاية العمل</label><input id="cu413WEndDate" type="date"></div></div><div class="cu413-two"><div><label>الراتب الأساسي</label><input id="cu413WSalary" type="number" oninput="tasneefCoreUnifiedV413.calcWorkerTotal()"></div><div><label>البدلات</label><input id="cu413WAllowance" type="number" oninput="tasneefCoreUnifiedV413.calcWorkerTotal()"></div></div><label>الإجمالي</label><input id="cu413WTotal" type="number" readonly><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearWorkerForm()">تفريغ</button></div></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small><small>بداية العمل: ${esc(workerStartDate(w)||'-')} | نهاية العمل: ${esc(workerEndDate(w)||'-')}</small><small>الراتب الأساسي: ${workerBasicSalary(w).toLocaleString('en-US')} | البدلات: ${workerAllowances(w).toLocaleString('en-US')} | الإجمالي: ${workerTotalSalary(w).toLocaleString('en-US')}</small></div><div style="display:flex;gap:6px;align-items:center"><small>${esc(S(w.iqama_number||w.national_id||''))}</small><button type="button" class="light" onclick="tasneefCoreUnifiedV413.editWorker('${esc(workerCode(w))}')">تعديل</button></div></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
     $('cu413WorkerSearch')?.addEventListener('input', renderWorkersTab);
   }
+  function calcWorkerTotal(){const t=N($('cu413WSalary')?.value)+N($('cu413WAllowance')?.value); if($('cu413WTotal')) $('cu413WTotal').value=t||'';}
   function projectViewMonth(){
     return $('cu413ProjectsMonth')?.value || $('cu413Month')?.value || todayMonth();
   }
@@ -256,13 +262,13 @@
 
   async function saveWorker(){
     const c=client(); if(!c)return; const code=S($('cu413WCode')?.value), name=S($('cu413WName')?.value); if(!code||!name){showMsg('أدخل كود واسم العامل.',true);return;}
-    const row={employee_code:code, app_name:name, job_title:S($('cu413WRole')?.value||'عامل'), iqama_number:S($('cu413WIqama')?.value||''), work_start_date:S($('cu413WStartDate')?.value||'')||null, work_end_date:S($('cu413WEndDate')?.value||'')||null, basic_salary:N($('cu413WSalary')?.value), status:'active'};
+    const row={employee_code:code, app_name:name, job_title:S($('cu413WRole')?.value||'عامل'), iqama_number:S($('cu413WIqama')?.value||''), work_start_date:S($('cu413WStartDate')?.value||'')||null, work_end_date:S($('cu413WEndDate')?.value||'')||null, basic_salary:N($('cu413WSalary')?.value), allowances:N($('cu413WAllowance')?.value), total_salary:N($('cu413WSalary')?.value)+N($('cu413WAllowance')?.value), status:'active'};
     let r=await c.from('employees_master_v386').upsert(row,{onConflict:'employee_code'}).select();
-    if(r.error){ r=await c.from('workers').upsert({id:code, name:name, status:'active'}).select(); }
+    if(r.error){ r=await c.from('workers').upsert({id:code, name:name, basic_salary:N($('cu413WSalary')?.value), allowances:N($('cu413WAllowance')?.value), total_salary:N($('cu413WSalary')?.value)+N($('cu413WAllowance')?.value), status:'active'}).select(); }
     if(r.error){showMsg('تعذر حفظ العامل: '+r.error.message,true);return;} state.workers=[]; await reload(true); clearWorkerForm(); showMsg('تم حفظ العامل.');
   }
-  function clearWorkerForm(){['cu413WEditMode','cu413WCode','cu413WName','cu413WIqama','cu413WStartDate','cu413WEndDate','cu413WSalary'].forEach(id=>{const el=$(id); if(el) el.value='';}); const r=$('cu413WRole'); if(r) r.value='عامل';}
-  function editWorker(code){const w=state.workers.find(x=>workerCode(x)===code); if(!w)return; setTab('workers'); setTimeout(()=>{if($('cu413WEditMode')) $('cu413WEditMode').value=code; if($('cu413WCode')) $('cu413WCode').value=workerCode(w); if($('cu413WName')) $('cu413WName').value=workerName(w); if($('cu413WRole')) $('cu413WRole').value=workerRole(w)||'عامل'; if($('cu413WIqama')) $('cu413WIqama').value=S(w.iqama_number||w.national_id||''); if($('cu413WStartDate')) $('cu413WStartDate').value=workerStartDate(w); if($('cu413WEndDate')) $('cu413WEndDate').value=workerEndDate(w); if($('cu413WSalary')) $('cu413WSalary').value=N(w.basic_salary||w.base_salary||w.salary||0)||'';},60);}
+  function clearWorkerForm(){['cu413WEditMode','cu413WCode','cu413WName','cu413WIqama','cu413WStartDate','cu413WEndDate','cu413WSalary','cu413WAllowance','cu413WTotal'].forEach(id=>{const el=$(id); if(el) el.value='';}); const r=$('cu413WRole'); if(r) r.value='عامل';}
+  function editWorker(code){const w=state.workers.find(x=>workerCode(x)===code); if(!w)return; setTab('workers'); setTimeout(()=>{if($('cu413WEditMode')) $('cu413WEditMode').value=code; if($('cu413WCode')) $('cu413WCode').value=workerCode(w); if($('cu413WName')) $('cu413WName').value=workerName(w); if($('cu413WRole')) $('cu413WRole').value=workerRole(w)||'عامل'; if($('cu413WIqama')) $('cu413WIqama').value=S(w.iqama_number||w.national_id||''); if($('cu413WStartDate')) $('cu413WStartDate').value=workerStartDate(w); if($('cu413WEndDate')) $('cu413WEndDate').value=workerEndDate(w); if($('cu413WSalary')) $('cu413WSalary').value=workerBasicSalary(w)||''; if($('cu413WAllowance')) $('cu413WAllowance').value=workerAllowances(w)||''; calcWorkerTotal();},60);}
   function clearProjectForm(){['cu413PId','cu413PName','cu413PReq','cu413PBuildings','cu413PUnits'].forEach(id=>{const el=$(id); if(el) el.value='';}); const t=$('cu413PType'); if(t)t.value='daily_visit'; const s=$('cu413PStatus'); if(s)s.value='active'; const sp=$('cu413PSupervisor'); if(sp)sp.value='';}
   function editProject(pid){const p=state.projects.find(x=>projectId(x)===S(pid)); if(!p)return; setTab('projects'); setTimeout(()=>{if($('cu413PId')) $('cu413PId').value=projectId(p); if($('cu413PName')) $('cu413PName').value=projectName(p); if($('cu413PType')) $('cu413PType').value=(projectType(p)==='دوام كامل'?'full_time':'daily_visit'); if($('cu413PReq')) $('cu413PReq').value=projectRequired(p)||''; if($('cu413PBuildings')) $('cu413PBuildings').value=projectBuildings(p)||''; if($('cu413PUnits')) $('cu413PUnits').value=projectUnits(p)||''; if($('cu413PStatus')) $('cu413PStatus').value=S(p.status||p.state||'active'); if($('cu413PSupervisor')) $('cu413PSupervisor').value=projectSupervisorCode(p);},60);}
   function editDistribution(pid){setTab('distribution'); setTimeout(()=>{state.selectedProjects.clear(); state.selectedProjects.add(S(pid)); renderPickProjects(); hydrateProjectSelection(); const m=$('cu413Month')?.value||todayMonth(); const rows=(state.dist[m]||[]).filter(r=>S(r.project_id)===S(pid)); const first=rows[0]||{}; const sup=$('cu413Sup'); if(sup) sup.value=S(first.supervisor_employee_code||''); renderSelected();},80);}
@@ -296,10 +302,84 @@
     const rows=(old.data||[]).map(({id,created_at,updated_at,...r})=>({...r,month_key:m,start_date:m+'-01',end_date:monthEnd(m)}));
     const res=await c.from('monthly_distribution').upsert(rows,{onConflict:'month_key,project_id,worker_employee_code'}).select(); if(res.error){showMsg('تعذر النسخ: '+res.error.message,true);return;} delete state.dist[m]; await loadDistribution(true); renderDistBox(); showMsg('تم نسخ توزيع الشهر السابق.');
   }
+
+  function attendanceDate(){return $('cu413AttDate')?.value || new Date().toISOString().slice(0,10);}
+  function attendanceMonth(){return attendanceDate().slice(0,7);}
+  function attKey(r){return [S(r.worker_employee_code||r.worker_code||r.employee_code),S(r.project_id),S(r.attendance_date||r.date),S(r.shift_name||'default')].join('||');}
+  async function loadAttendance(date, force){
+    const c=client(); if(!c)return [];
+    const d=date||attendanceDate(); if(state.att[d]&&!force) return state.att[d];
+    const r=await safe('attendance', c.from('attendance').select('*').eq('attendance_date',d).limit(10000));
+    state.att[d]=r.data||[]; return state.att[d];
+  }
+  function attendanceRows(){
+    const d=attendanceDate(), m=d.slice(0,7), fs=$('cu413AttSup')?.value||'', fp=$('cu413AttProject')?.value||'';
+    const dist=(state.dist[m]||[]).filter(r=>(!fs||S(r.supervisor_employee_code)===fs||S(r.supervisor_name)===fs)&&(!fp||S(r.project_id)===fp));
+    const att=state.att[d]||[]; const amap=new Map(att.map(a=>[attKey(a),a]));
+    const seen=new Set();
+    return dist.filter(r=>{
+      const k=[S(r.worker_employee_code||r.worker_code||r.employee_code),S(r.project_id),S(d),S(r.shift_name||'default')].join('||');
+      if(seen.has(k)) return false; seen.add(k); return true;
+    }).map(r=>{
+      const k=[S(r.worker_employee_code||r.worker_code||r.employee_code),S(r.project_id),S(d),S(r.shift_name||'default')].join('||');
+      return {dist:r, att:amap.get(k)||null};
+    });
+  }
+  async function renderAttendanceTab(){
+    const box=$('cu413AttendanceTab'); if(!box) return;
+    const d=$('cu413AttDate')?.value || new Date().toISOString().slice(0,10);
+    if(!$('cu413AttDate')){
+      box.innerHTML=`<div class="cu413-card"><h3>الحضور والغياب المرتبط بالتوزيع</h3><div class="cu413-two"><div><label>التاريخ</label><input type="date" id="cu413AttDate" value="${esc(d)}"></div><div><label>المشرف</label><select id="cu413AttSup"><option value="">كل المشرفين</option></select></div></div><div class="cu413-two"><div><label>المشروع</label><select id="cu413AttProject"><option value="">كل المشاريع</option></select></div><div style="display:flex;align-items:end;gap:8px"><button type="button" onclick="tasneefCoreUnifiedV413.refreshAttendance()">تحديث الحضور</button></div></div><div id="cu413AttBox" class="cu413-list" style="max-height:65vh;margin-top:10px"></div></div>`;
+      $('cu413AttDate')?.addEventListener('change',()=>refreshAttendance());
+      $('cu413AttSup')?.addEventListener('change',()=>renderAttendanceBox());
+      $('cu413AttProject')?.addEventListener('change',()=>renderAttendanceBox());
+    }
+    await refreshAttendance(false);
+  }
+  function fillAttendanceFilters(){
+    const m=attendanceMonth(); const rows=state.dist[m]||[];
+    const sup=$('cu413AttSup'), pr=$('cu413AttProject');
+    if(sup){const cur=sup.value; const vals=[...new Map(rows.map(r=>[S(r.supervisor_employee_code||r.supervisor_name), S(r.supervisor_name||r.supervisor_employee_code)]).filter(x=>x[0])).entries()]; sup.innerHTML='<option value="">كل المشرفين</option>'+vals.map(([v,n])=>`<option value="${esc(v)}">${esc(n)}</option>`).join(''); sup.value=cur;}
+    if(pr){const cur=pr.value; const vals=[...new Map(rows.map(r=>[S(r.project_id), S(r.project_name||r.project_id)]).filter(x=>x[0])).entries()]; pr.innerHTML='<option value="">كل المشاريع</option>'+vals.map(([v,n])=>`<option value="${esc(v)}">${esc(n)}</option>`).join(''); pr.value=cur;}
+  }
+  async function refreshAttendance(force=true){
+    const d=attendanceDate(), m=d.slice(0,7);
+    if($('cu413Month')) $('cu413Month').value=m;
+    await loadDistribution(force);
+    await loadAttendance(d,force);
+    fillAttendanceFilters(); renderAttendanceBox();
+  }
+  function renderAttendanceBox(){
+    const box=$('cu413AttBox'); if(!box) return;
+    const rows=attendanceRows();
+    const counts={present:0,absent:0,leave:0,sick:0,mission:0,weekly_off:0,late:0,early_leave:0};
+    rows.forEach(x=>{const st=S(x.att?.status||''); if(counts[st]!=null) counts[st]++;});
+    box.innerHTML=`<div class="cu413-kpis"><div class="cu413-kpi"><small>الموزعين</small><b>${rows.length}</b></div><div class="cu413-kpi"><small>حاضر</small><b>${counts.present}</b></div><div class="cu413-kpi"><small>غائب</small><b>${counts.absent}</b></div><div class="cu413-kpi"><small>إجازات/أخرى</small><b>${counts.leave+counts.sick+counts.mission+counts.weekly_off}</b></div></div>`+
+    (rows.map(({dist,att},i)=>{
+      const c=S(dist.worker_employee_code||dist.worker_code||dist.employee_code); const pid=S(dist.project_id); const sh=S(dist.shift_name||'default'); const st=S(att?.status||'present'); const red=st==='absent'?'background:#fff1f1;border-color:#efb4b4':'';
+      return `<div class="cu413-row" style="${red}"><div style="flex:1"><b>${esc(c+' - '+S(dist.worker_name||dist.worker_display_name||''))}</b><small>المشروع: ${esc(S(dist.project_name||pid))} | المشرف: ${esc(S(dist.supervisor_name||dist.supervisor_employee_code||'-'))}</small><small>الوردية: ${esc(sh)}</small></div><div style="display:grid;grid-template-columns:150px 120px 120px 1fr 90px;gap:6px;align-items:center;min-width:650px"><select id="cu413AttStatus_${i}"><option value="present" ${st==='present'?'selected':''}>حاضر</option><option value="absent" ${st==='absent'?'selected':''}>غائب</option><option value="leave" ${st==='leave'?'selected':''}>إجازة</option><option value="sick" ${st==='sick'?'selected':''}>مرضي</option><option value="mission" ${st==='mission'?'selected':''}>مأمورية</option><option value="weekly_off" ${st==='weekly_off'?'selected':''}>راحة أسبوعية</option><option value="late" ${st==='late'?'selected':''}>متأخر</option><option value="early_leave" ${st==='early_leave'?'selected':''}>خروج مبكر</option></select><input id="cu413AttIn_${i}" type="time" value="${esc(S(att?.check_in_time||att?.check_in||'').slice(0,5))}"><input id="cu413AttOut_${i}" type="time" value="${esc(S(att?.check_out_time||att?.check_out||'').slice(0,5))}"><input id="cu413AttNotes_${i}" placeholder="ملاحظات" value="${esc(S(att?.notes||''))}"><button type="button" onclick="tasneefCoreUnifiedV413.saveAttendanceRow(${i})">حفظ</button></div></div>`;
+    }).join('') || '<div class="cu413-row">لا يوجد عمال موزعين لهذا التاريخ. اربط العمال أولاً من التوزيع.</div>');
+    window.__cu413AttendanceRows=rows;
+  }
+  async function saveAttendanceRow(i){
+    const c=client(); if(!c)return; const item=(window.__cu413AttendanceRows||[])[i]; if(!item){showMsg('لم يتم العثور على السطر.',true);return;}
+    const d=attendanceDate(), r=item.dist, existing=item.att||{};
+    const row={attendance_date:d, month_key:d.slice(0,7), worker_employee_code:S(r.worker_employee_code||r.worker_code||r.employee_code), worker_name:S(r.worker_name||r.worker_display_name||''), project_id:S(r.project_id), project_name:S(r.project_name||''), supervisor_employee_code:S(r.supervisor_employee_code||''), supervisor_name:S(r.supervisor_name||''), shift_name:S(r.shift_name||'default'), status:S($('cu413AttStatus_'+i)?.value||'present'), check_in_time:S($('cu413AttIn_'+i)?.value||'')||null, check_out_time:S($('cu413AttOut_'+i)?.value||'')||null, notes:S($('cu413AttNotes_'+i)?.value||''), source:'core_unified_v419'};
+    let res;
+    if(existing.id){res=await c.from('attendance').update(row).eq('id',existing.id).select();}
+    else {
+      const found=await safe('attendance-find', c.from('attendance').select('*').eq('attendance_date',d).eq('worker_employee_code',row.worker_employee_code).eq('project_id',row.project_id).eq('shift_name',row.shift_name).limit(1));
+      if((found.data||[])[0]?.id) res=await c.from('attendance').update(row).eq('id',found.data[0].id).select();
+      else res=await c.from('attendance').insert(row).select();
+    }
+    if(res?.error){showMsg('تعذر حفظ الحضور: '+res.error.message,true);return;}
+    delete state.att[d]; await loadAttendance(d,true); renderAttendanceBox(); showMsg('تم حفظ الحضور بدون حذف أي بيانات.');
+  }
+
   function printDistribution(){window.print();}
 
   async function init(){installCss(); installNav(); installSection(); await reload(false); setTab(state.tab||'distribution');}
-  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,saveQuickDistribution,copyPreviousMonth,toggleWorker,toggleProject,selectVisibleProjects,selectVisibleWorkers,clearDistributionSelection,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab,openProjectDistribution,refreshProjectsMonthDistribution};
+  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,saveQuickDistribution,copyPreviousMonth,toggleWorker,toggleProject,selectVisibleProjects,selectVisibleWorkers,clearDistributionSelection,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab,openProjectDistribution,refreshProjectsMonthDistribution,calcWorkerTotal,renderAttendanceTab,refreshAttendance,saveAttendanceRow};
   document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1200));
   setInterval(installNav,2000);
 })();
