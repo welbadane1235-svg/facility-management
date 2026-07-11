@@ -6,7 +6,7 @@
   if(window.__tasneefCoreUnifiedV413) return;
   window.__tasneefCoreUnifiedV413 = true;
 
-  const VERSION='416';
+  const VERSION='417';
   const S=v=>String(v??'').trim();
   const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
   const $=id=>document.getElementById(id);
@@ -17,7 +17,7 @@
   const prevMonth=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7);};
   const monthEnd=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()+1); d.setDate(0); return d.toISOString().slice(0,10);};
 
-  const state={workers:[],projects:[],dist:{},loaded:false,tab:'distribution',selected:new Map()};
+  const state={workers:[],projects:[],dist:{},loaded:false,tab:'distribution',selected:new Map(),selectedProjects:new Set()};
 
   function client(){const c=sb(); if(!c) showMsg('لا يوجد اتصال Supabase في الصفحة.', true); return c;}
   async function safe(label, p){try{const r=await p; if(r?.error){console.warn(label,r.error); return {data:[],error:r.error};} return r;}catch(e){console.warn(label,e); return {data:[],error:e};}}
@@ -89,7 +89,7 @@
     if($('cu413Css')) return;
     const st=document.createElement('style'); st.id='cu413Css';
     st.textContent=`
-      .cu413-root{display:flex;flex-direction:column;gap:14px}.cu413-hero{background:linear-gradient(135deg,#084f40,#126a58);color:#fff;border-radius:24px;padding:22px;display:flex;justify-content:space-between;align-items:center}.cu413-hero h2{margin:0 0 6px}.cu413-hero p{margin:0;color:#e9f6f2;line-height:1.8}.cu413-hero span{background:white;color:#084f40;border-radius:999px;padding:8px 14px;font-weight:900}.cu413-msg{padding:10px 12px;border-radius:14px;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;font-weight:800}.cu413-msg.err{background:#fde8e8;color:#9d2222;border-color:#efc3c3}.cu413-tabs,.cu413-actions{display:flex;gap:8px;flex-wrap:wrap}.cu413-tabs button,.cu413-actions button{border:0;border-radius:12px;padding:10px 14px;background:#eef8f5;color:#0A4033;font-weight:900;cursor:pointer}.cu413-tabs button.active,.cu413-actions button:not(.light){background:#0A4033;color:#fff}.cu413-grid{display:grid;grid-template-columns:390px 1fr;gap:14px}.cu413-card{background:#fff;border:1px solid #dce6e2;border-radius:20px;padding:16px}.cu413-card h3{margin:0 0 12px;color:#0A4033}.cu413-form{display:grid;gap:9px}.cu413-form label{font-size:12px;color:#0A4033;font-weight:900}.cu413-form input,.cu413-form select,.cu413-form textarea{width:100%;border:1px solid #dce6e2;border-radius:12px;padding:10px}.cu413-list{max-height:60vh;overflow:auto;border:1px solid #edf1ef;border-radius:14px;background:#fbfdfc;padding:8px}.cu413-row{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1px solid #edf1ef;border-radius:12px;padding:9px;margin-bottom:7px;align-items:center}.cu413-row b{color:#0A4033}.cu413-row small{display:block;color:#60706a;margin-top:3px}.cu413-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}.cu413-kpi{background:#fff;border:1px solid #dce6e2;border-radius:14px;padding:10px;text-align:center}.cu413-kpi b{display:block;font-size:22px;color:#0A4033}.cu413-worker-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:300px;overflow:auto;border:1px solid #dce6e2;border-radius:14px;padding:8px;background:#fbfdfc}.cu413-worker{background:#fff;border:1px solid #dce6e2;color:#10231d;border-radius:12px;padding:9px;text-align:right}.cu413-worker.on{background:#0A4033;color:#fff}.cu413-chip{display:inline-flex;gap:5px;align-items:center;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;border-radius:999px;padding:6px 9px;margin:3px;font-weight:800}.cu413-chip button{background:#b83232;color:white;border:0;border-radius:50%;width:18px;height:18px;padding:0}.cu413-dist-card{background:#fff;border:1px solid #dce6e2;border-radius:16px;padding:12px;margin-bottom:10px}.cu413-dist-card h4{margin:0;color:#0A4033}.cu413-dist-head{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #edf1ef;padding-bottom:8px;margin-bottom:8px}.cu413-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:900px){.cu413-grid,.cu413-two,.cu413-kpis{grid-template-columns:1fr}.cu413-worker-pick{grid-template-columns:1fr}}@media print{body *{visibility:hidden!important}#coreUnified,#coreUnified *{visibility:visible!important}#coreUnified{position:absolute;inset:0}.cu413-tabs,.cu413-actions,.cu413-form{display:none!important}.side{display:none!important}@page{size:A4 landscape;margin:10mm}}`;
+      .cu413-root{display:flex;flex-direction:column;gap:14px}.cu413-hero{background:linear-gradient(135deg,#084f40,#126a58);color:#fff;border-radius:24px;padding:22px;display:flex;justify-content:space-between;align-items:center}.cu413-hero h2{margin:0 0 6px}.cu413-hero p{margin:0;color:#e9f6f2;line-height:1.8}.cu413-hero span{background:white;color:#084f40;border-radius:999px;padding:8px 14px;font-weight:900}.cu413-msg{padding:10px 12px;border-radius:14px;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;font-weight:800}.cu413-msg.err{background:#fde8e8;color:#9d2222;border-color:#efc3c3}.cu413-tabs,.cu413-actions{display:flex;gap:8px;flex-wrap:wrap}.cu413-tabs button,.cu413-actions button{border:0;border-radius:12px;padding:10px 14px;background:#eef8f5;color:#0A4033;font-weight:900;cursor:pointer}.cu413-tabs button.active,.cu413-actions button:not(.light){background:#0A4033;color:#fff}.cu413-grid{display:grid;grid-template-columns:390px 1fr;gap:14px}.cu413-card{background:#fff;border:1px solid #dce6e2;border-radius:20px;padding:16px}.cu413-card h3{margin:0 0 12px;color:#0A4033}.cu413-form{display:grid;gap:9px}.cu413-form label{font-size:12px;color:#0A4033;font-weight:900}.cu413-form input,.cu413-form select,.cu413-form textarea{width:100%;border:1px solid #dce6e2;border-radius:12px;padding:10px}.cu413-list{max-height:60vh;overflow:auto;border:1px solid #edf1ef;border-radius:14px;background:#fbfdfc;padding:8px}.cu413-row{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1px solid #edf1ef;border-radius:12px;padding:9px;margin-bottom:7px;align-items:center}.cu413-row b{color:#0A4033}.cu413-row small{display:block;color:#60706a;margin-top:3px}.cu413-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}.cu413-kpi{background:#fff;border:1px solid #dce6e2;border-radius:14px;padding:10px;text-align:center}.cu413-kpi b{display:block;font-size:22px;color:#0A4033}.cu413-worker-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:300px;overflow:auto;border:1px solid #dce6e2;border-radius:14px;padding:8px;background:#fbfdfc}.cu413-project-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:260px;overflow:auto;border:1px solid #dce6e2;border-radius:14px;padding:8px;background:#fbfdfc}.cu413-worker{background:#fff;border:1px solid #dce6e2;color:#10231d;border-radius:12px;padding:9px;text-align:right}.cu413-worker.on{background:#0A4033;color:#fff}.cu413-chip{display:inline-flex;gap:5px;align-items:center;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;border-radius:999px;padding:6px 9px;margin:3px;font-weight:800}.cu413-chip button{background:#b83232;color:white;border:0;border-radius:50%;width:18px;height:18px;padding:0}.cu413-dist-card{background:#fff;border:1px solid #dce6e2;border-radius:16px;padding:12px;margin-bottom:10px}.cu413-dist-card h4{margin:0;color:#0A4033}.cu413-dist-head{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #edf1ef;padding-bottom:8px;margin-bottom:8px}.cu413-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:900px){.cu413-grid,.cu413-two,.cu413-kpis{grid-template-columns:1fr}.cu413-worker-pick{grid-template-columns:1fr}}@media print{body *{visibility:hidden!important}#coreUnified,#coreUnified *{visibility:visible!important}#coreUnified{position:absolute;inset:0}.cu413-tabs,.cu413-actions,.cu413-form{display:none!important}.side{display:none!important}@page{size:A4 landscape;margin:10mm}}`;
     document.head.appendChild(st);
   }
 
@@ -156,23 +156,38 @@
   function renderDistributionTab(){
     const box=$('cu413DistributionTab'); if(!box) return;
     const m=$('cu413Month')?.value||todayMonth();
-    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>توزيع شهر</h3><div class="cu413-form"><label>الشهر</label><input type="month" id="cu413Month" value="${esc(m)}"><label>المشرف</label><select id="cu413Sup"></select><label>المشروع</label><select id="cu413Project"></select><label>بحث عن عامل</label><input id="cu413PickSearch" placeholder="اسم العامل أو الكود"><div id="cu413WorkerPick" class="cu413-worker-pick"></div><label>المختارون</label><div id="cu413Selected" class="cu413-list" style="max-height:120px"></div><button type="button" onclick="tasneefCoreUnifiedV413.saveDistribution()">حفظ التوزيع</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.copyPreviousMonth()">نسخ الشهر السابق</button></div></div><div class="cu413-card"><h3>توزيع الشهر</h3><div class="cu413-two"><select id="cu413FilterSup"><option value="">كل المشرفين</option></select><select id="cu413FilterProject"><option value="">كل المشاريع</option></select></div><div id="cu413DistBox" class="cu413-list"></div></div></div>`;
-    fillSelects(); renderPickWorkers(); renderSelected(); renderDistBox();
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>توزيع سريع بضغطة زر</h3><div class="cu413-form"><label>الشهر</label><input type="month" id="cu413Month" value="${esc(m)}"><label>المشرف</label><select id="cu413Sup"></select><div class="cu413-two"><div><label>بحث عن مشروع</label><input id="cu413ProjectSearchPick" placeholder="اسم المشروع أو النوع"></div><div><label>بحث عن عامل</label><input id="cu413PickSearch" placeholder="اسم العامل أو الكود"></div></div><div class="cu413-two"><div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>المشاريع</b><button type="button" class="light" onclick="tasneefCoreUnifiedV413.selectVisibleProjects()">تحديد المشاريع الظاهرة</button></div><div id="cu413ProjectPick" class="cu413-project-pick"></div></div><div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>العمال</b><button type="button" class="light" onclick="tasneefCoreUnifiedV413.selectVisibleWorkers()">تحديد العمال الظاهرين</button></div><div id="cu413WorkerPick" class="cu413-worker-pick"></div></div></div><label>المحدد</label><div id="cu413Selected" class="cu413-list" style="max-height:140px"></div><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveQuickDistribution()">ربط المحدد</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearDistributionSelection()">مسح الاختيار</button></div><button type="button" class="light" onclick="tasneefCoreUnifiedV413.copyPreviousMonth()">نسخ الشهر السابق</button></div></div><div class="cu413-card"><h3>توزيع الشهر</h3><div class="cu413-two"><select id="cu413FilterSup"><option value="">كل المشرفين</option></select><select id="cu413FilterProject"><option value="">كل المشاريع</option></select></div><div id="cu413DistBox" class="cu413-list"></div></div></div>`;
+    fillSelects(); renderPickProjects(); renderPickWorkers(); renderSelected(); renderDistBox();
     ['cu413Month'].forEach(id=>$(id)?.addEventListener('change',async()=>{await loadDistribution(true); fillSelects(); renderDistBox();}));
-    ['cu413Project'].forEach(id=>$(id)?.addEventListener('change', hydrateProjectSelection));
+    ['cu413ProjectSearchPick'].forEach(id=>$(id)?.addEventListener('input', renderPickProjects));
     ['cu413PickSearch'].forEach(id=>$(id)?.addEventListener('input', renderPickWorkers));
     ['cu413FilterSup','cu413FilterProject'].forEach(id=>$(id)?.addEventListener('change', renderDistBox));
   }
+  function visibleProjects(){const q=norm($('cu413ProjectSearchPick')?.value||''); return state.projects.filter(statusActive).filter(p=>!q||norm(projectName(p)+' '+projectType(p)+' '+projectSupervisorName(p)).includes(q));}
+  function visibleWorkers(){const q=norm($('cu413PickSearch')?.value||''); return state.workers.filter(w=>isWorker(w)).filter(statusActive).filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));}
+  function renderPickProjects(){
+    const box=$('cu413ProjectPick'); if(!box) return;
+    const rows=visibleProjects();
+    box.innerHTML=rows.map(p=>`<button type="button" class="cu413-worker ${state.selectedProjects.has(projectId(p))?'on':''}" onclick="tasneefCoreUnifiedV413.toggleProject('${esc(projectId(p))}')"><b>${esc(projectName(p))}</b><small>${esc(projectType(p))}</small></button>`).join('')||'<div class="cu413-row">لا توجد مشاريع</div>';
+  }
   function renderPickWorkers(){
     const box=$('cu413WorkerPick'); if(!box) return;
-    const q=norm($('cu413PickSearch')?.value||'');
-    const rows=state.workers.filter(w=>isWorker(w)).filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));
+    const rows=visibleWorkers();
     box.innerHTML=rows.map(w=>`<button type="button" class="cu413-worker ${state.selected.has(workerCode(w))?'on':''}" onclick="tasneefCoreUnifiedV413.toggleWorker('${esc(workerCode(w))}')"><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small></button>`).join('')||'<div class="cu413-row">لا يوجد عمال</div>';
   }
-  function renderSelected(){const box=$('cu413Selected'); if(!box) return; box.innerHTML=[...state.selected.values()].map(w=>`<span class="cu413-chip">${esc(workerDisplay(w))}<button onclick="tasneefCoreUnifiedV413.toggleWorker('${esc(workerCode(w))}')" type="button">×</button></span>`).join('')||'<small>لم يتم اختيار عمال</small>';}
+  function renderSelected(){
+    const box=$('cu413Selected'); if(!box) return;
+    const projects=[...state.selectedProjects].map(pid=>state.projects.find(p=>projectId(p)===pid)).filter(Boolean);
+    const workers=[...state.selected.values()];
+    box.innerHTML=`<div><b>المشاريع المحددة: ${projects.length}</b><br>${projects.map(p=>`<span class="cu413-chip">${esc(projectName(p))}<button onclick="tasneefCoreUnifiedV413.toggleProject('${esc(projectId(p))}')" type="button">×</button></span>`).join('')||'<small>لم يتم اختيار مشاريع</small>'}</div><div style="margin-top:8px"><b>العمال المحددون: ${workers.length}</b><br>${workers.map(w=>`<span class="cu413-chip">${esc(workerDisplay(w))}<button onclick="tasneefCoreUnifiedV413.toggleWorker('${esc(workerCode(w))}')" type="button">×</button></span>`).join('')||'<small>لم يتم اختيار عمال</small>'}</div>`;
+  }
+  function toggleProject(pid){ if(state.selectedProjects.has(pid)) state.selectedProjects.delete(pid); else state.selectedProjects.add(pid); renderPickProjects(); renderSelected(); }
   function toggleWorker(code){const w=state.workers.find(x=>workerCode(x)===code); if(!w)return; if(state.selected.has(code)) state.selected.delete(code); else state.selected.set(code,w); renderPickWorkers(); renderSelected();}
+  function selectVisibleProjects(){visibleProjects().forEach(p=>state.selectedProjects.add(projectId(p))); renderPickProjects(); renderSelected();}
+  function selectVisibleWorkers(){visibleWorkers().forEach(w=>state.selected.set(workerCode(w),w)); renderPickWorkers(); renderSelected();}
+  function clearDistributionSelection(){state.selected.clear(); state.selectedProjects.clear(); renderPickProjects(); renderPickWorkers(); renderSelected();}
   function hydrateProjectSelection(){
-    const m=$('cu413Month')?.value||todayMonth(), pid=$('cu413Project')?.value||'';
+    const m=$('cu413Month')?.value||todayMonth(), pid=[...state.selectedProjects][0]||'';
     state.selected.clear();
     (state.dist[m]||[]).filter(r=>S(r.project_id)===S(pid)).forEach(r=>{const c=S(r.worker_employee_code||r.worker_code); const w=state.workers.find(x=>workerCode(x)===c)||{employee_code:c,app_name:S(r.worker_name||r.worker_display_name||c),job_title:'عامل'}; if(c) state.selected.set(c,w);});
     renderPickWorkers(); renderSelected();
@@ -196,7 +211,7 @@
   function editWorker(code){const w=state.workers.find(x=>workerCode(x)===code); if(!w)return; setTab('workers'); setTimeout(()=>{if($('cu413WEditMode')) $('cu413WEditMode').value=code; if($('cu413WCode')) $('cu413WCode').value=workerCode(w); if($('cu413WName')) $('cu413WName').value=workerName(w); if($('cu413WRole')) $('cu413WRole').value=workerRole(w)||'عامل'; if($('cu413WIqama')) $('cu413WIqama').value=S(w.iqama_number||w.national_id||''); if($('cu413WStartDate')) $('cu413WStartDate').value=workerStartDate(w); if($('cu413WEndDate')) $('cu413WEndDate').value=workerEndDate(w); if($('cu413WSalary')) $('cu413WSalary').value=N(w.basic_salary||w.base_salary||w.salary||0)||'';},60);}
   function clearProjectForm(){['cu413PId','cu413PName','cu413PReq','cu413PBuildings','cu413PUnits'].forEach(id=>{const el=$(id); if(el) el.value='';}); const t=$('cu413PType'); if(t)t.value='daily_visit'; const s=$('cu413PStatus'); if(s)s.value='active'; const sp=$('cu413PSupervisor'); if(sp)sp.value='';}
   function editProject(pid){const p=state.projects.find(x=>projectId(x)===S(pid)); if(!p)return; setTab('projects'); setTimeout(()=>{if($('cu413PId')) $('cu413PId').value=projectId(p); if($('cu413PName')) $('cu413PName').value=projectName(p); if($('cu413PType')) $('cu413PType').value=(projectType(p)==='دوام كامل'?'full_time':'daily_visit'); if($('cu413PReq')) $('cu413PReq').value=projectRequired(p)||''; if($('cu413PBuildings')) $('cu413PBuildings').value=projectBuildings(p)||''; if($('cu413PUnits')) $('cu413PUnits').value=projectUnits(p)||''; if($('cu413PStatus')) $('cu413PStatus').value=S(p.status||p.state||'active'); if($('cu413PSupervisor')) $('cu413PSupervisor').value=projectSupervisorCode(p);},60);}
-  function editDistribution(pid){setTab('distribution'); setTimeout(()=>{const p=$('cu413Project'); if(p){p.value=S(pid); hydrateProjectSelection();} const m=$('cu413Month')?.value||todayMonth(); const rows=(state.dist[m]||[]).filter(r=>S(r.project_id)===S(pid)); const first=rows[0]||{}; const sup=$('cu413Sup'); if(sup) sup.value=S(first.supervisor_employee_code||'');},80);}
+  function editDistribution(pid){setTab('distribution'); setTimeout(()=>{state.selectedProjects.clear(); state.selectedProjects.add(S(pid)); renderPickProjects(); hydrateProjectSelection(); const m=$('cu413Month')?.value||todayMonth(); const rows=(state.dist[m]||[]).filter(r=>S(r.project_id)===S(pid)); const first=rows[0]||{}; const sup=$('cu413Sup'); if(sup) sup.value=S(first.supervisor_employee_code||''); renderSelected();},80);}
   async function saveProject(){
     const c=client(); if(!c)return; const name=S($('cu413PName')?.value); if(!name){showMsg('أدخل اسم المشروع.',true);return;}
     const pid=S($('cu413PId')?.value||'');
@@ -205,14 +220,22 @@
     if(pid) r=await c.from('projects').update(row).eq('id',pid).select(); else r=await c.from('projects').insert(row).select();
     if(r.error){showMsg('تعذر حفظ المشروع: '+r.error.message,true);return;} state.projects=[]; await reload(true); clearProjectForm(); showMsg('تم حفظ المشروع.');
   }
-  async function saveDistribution(){
-    const c=client(); if(!c)return; const m=$('cu413Month')?.value||todayMonth(), supCode=$('cu413Sup')?.value, pid=$('cu413Project')?.value; const p=state.projects.find(x=>projectId(x)===S(pid)); const sup=state.workers.find(x=>workerCode(x)===S(supCode));
-    if(!m||!sup||!p){showMsg('اختر الشهر والمشرف والمشروع.',true);return;} const chosen=[...state.selected.values()]; if(!chosen.length){showMsg('اختر العمال.',true);return;}
-    const existing=await safe('existing distribution', c.from('monthly_distribution').select('id,worker_employee_code').eq('month_key',m).eq('project_id',pid).limit(10000));
-    const keep=new Set(chosen.map(workerCode)); const del=(existing.data||[]).filter(r=>!keep.has(S(r.worker_employee_code))).map(r=>r.id).filter(Boolean); if(del.length) await safe('delete removed distribution', c.from('monthly_distribution').delete().in('id',del));
-    const rows=chosen.map(w=>({month_key:m, supervisor_employee_code:workerCode(sup), supervisor_name:workerName(sup), project_id:pid, project_name:projectName(p), worker_employee_code:workerCode(w), worker_name:workerName(w), role_type:workerRole(w)||'عامل', shift_name:'default', required_minutes:projectRequired(p), start_date:m+'-01', end_date:null, status:'active'}));
-    const r=await c.from('monthly_distribution').upsert(rows,{onConflict:'month_key,project_id,worker_employee_code'}).select(); if(r.error){showMsg('تعذر حفظ التوزيع: '+r.error.message,true);return;} delete state.dist[m]; await loadDistribution(true); fillSelects(); renderDistBox(); showMsg('تم حفظ التوزيع.');
+  async function saveQuickDistribution(){
+    const c=client(); if(!c)return;
+    const m=$('cu413Month')?.value||todayMonth(), supCode=$('cu413Sup')?.value;
+    const sup=state.workers.find(x=>workerCode(x)===S(supCode));
+    const projects=[...state.selectedProjects].map(pid=>state.projects.find(p=>projectId(p)===pid)).filter(Boolean);
+    const chosen=[...state.selected.values()];
+    if(!m||!sup){showMsg('اختر الشهر والمشرف.',true);return;}
+    if(!projects.length){showMsg('اختر مشروعًا واحدًا على الأقل.',true);return;}
+    if(!chosen.length){showMsg('اختر عاملًا واحدًا على الأقل.',true);return;}
+    const rows=[];
+    projects.forEach(p=>chosen.forEach(w=>rows.push({month_key:m, supervisor_employee_code:workerCode(sup), supervisor_name:workerName(sup), project_id:projectId(p), project_name:projectName(p), worker_employee_code:workerCode(w), worker_name:workerName(w), role_type:workerRole(w)||'عامل', shift_name:'default', required_minutes:projectRequired(p), start_date:m+'-01', end_date:null, status:'active'})));
+    const r=await c.from('monthly_distribution').upsert(rows,{onConflict:'month_key,project_id,worker_employee_code'}).select();
+    if(r.error){showMsg('تعذر حفظ التوزيع: '+r.error.message,true);return;}
+    delete state.dist[m]; await loadDistribution(true); fillSelects(); renderDistBox(); showMsg('تم ربط '+chosen.length+' عامل مع '+projects.length+' مشروع بنجاح.');
   }
+  async function saveDistribution(){ return saveQuickDistribution(); }
   async function copyPreviousMonth(){
     const c=client(); if(!c)return; const m=$('cu413Month')?.value||todayMonth(), pm=prevMonth(m); if(!confirm('نسخ توزيع '+pm+' إلى '+m+'؟'))return;
     const old=await safe('previous dist', c.from('monthly_distribution').select('*').eq('month_key',pm).limit(10000)); if(!(old.data||[]).length){showMsg('لا يوجد توزيع في الشهر السابق.',true);return;}
@@ -222,7 +245,7 @@
   function printDistribution(){window.print();}
 
   async function init(){installCss(); installNav(); installSection(); await reload(false); setTab(state.tab||'distribution');}
-  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,copyPreviousMonth,toggleWorker,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab};
+  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,saveQuickDistribution,copyPreviousMonth,toggleWorker,toggleProject,selectVisibleProjects,selectVisibleWorkers,clearDistributionSelection,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab};
   document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1200));
   setInterval(installNav,2000);
 })();
