@@ -1,0 +1,214 @@
+/* Tasneef Core Unified V413
+   بداية إعادة بناء الأقسام الأساسية بدون حذف بيانات.
+   القاعدة: العمال من جدول العمال/الموظفين، المشاريع من projects، التوزيع من monthly_distribution. */
+(function(){
+  'use strict';
+  if(window.__tasneefCoreUnifiedV413) return;
+  window.__tasneefCoreUnifiedV413 = true;
+
+  const VERSION='413';
+  const S=v=>String(v??'').trim();
+  const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
+  const $=id=>document.getElementById(id);
+  const esc=v=>S(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const norm=v=>S(v).replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[\u064B-\u0652]/g,'').replace(/\s+/g,' ').toLowerCase();
+  const sb=()=>window.sb || window.supabaseClient || null;
+  const todayMonth=()=>new Date().toISOString().slice(0,7);
+  const prevMonth=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7);};
+  const monthEnd=m=>{const d=new Date((m||todayMonth())+'-01T00:00:00'); d.setMonth(d.getMonth()+1); d.setDate(0); return d.toISOString().slice(0,10);};
+
+  const state={workers:[],projects:[],dist:{},loaded:false,tab:'distribution',selected:new Map()};
+
+  function client(){const c=sb(); if(!c) showMsg('لا يوجد اتصال Supabase في الصفحة.', true); return c;}
+  async function safe(label, p){try{const r=await p; if(r?.error){console.warn(label,r.error); return {data:[],error:r.error};} return r;}catch(e){console.warn(label,e); return {data:[],error:e};}}
+
+  function workerCode(w){return S(w.worker_code||w.employee_code||w.code||w.emp_code||w.id||'');}
+  function workerName(w){return S(w.worker_name||w.app_name||w.name||w.full_name||w.iqama_name||workerCode(w));}
+  function workerRole(w){return S(w.job_title||w.role_type||w.position||w.job||w.profession||'عامل');}
+  function workerDisplay(w){const c=workerCode(w), n=workerName(w); return c && !n.includes(c) ? `${c} - ${n}` : n;}
+  function isSupervisor(w){return /مشرف|supervisor/i.test(workerRole(w));}
+  function isWorker(w){return !/مشرف|supervisor/i.test(workerRole(w));}
+  function projectId(p){return S(p.project_id||p.id||'');}
+  function projectName(p){return S(p.project_name||p.name||p.title||projectId(p));}
+  function projectTypeRaw(p){return S(p.operation_type||p.project_type||p.work_type||p.type||p.service_type||'daily_visit');}
+  function projectType(p){const t=norm(projectTypeRaw(p)); return (t.includes('دوام')||t.includes('كامل')||t.includes('دائم')||t.includes('full')||t.includes('permanent')||t==='full_time')?'دوام كامل':'زيارة يومية';}
+  function statusActive(x){const st=norm(x?.status||x?.state||x?.active_status||'active'); return !(x?.deleted_at||x?.is_deleted===true||['deleted','archived','inactive','محذوف','موقوف','منتهي'].includes(st));}
+
+  function installNav(){
+    const side=document.querySelector('.side'); if(!side) return;
+    if(document.querySelector('[data-page="coreUnified"]')) return;
+    const btn=document.createElement('button');
+    btn.className='nav'; btn.type='button'; btn.dataset.page='coreUnified'; btn.textContent='النظام الموحد';
+    btn.onclick=function(){ if(window.showPage){ showPage('coreUnified', this); } else { showCorePage(this); } setTimeout(init,40); return false; };
+    const after=[...side.querySelectorAll('button.nav')].find(b=>/المشاريع/.test(b.textContent||''));
+    if(after) after.insertAdjacentElement('afterend', btn); else side.appendChild(btn);
+  }
+
+  function showCorePage(btn){
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    $('coreUnified')?.classList.remove('hidden');
+    document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+    btn?.classList.add('active');
+  }
+
+  function installSection(){
+    if($('coreUnified')) return;
+    const main=document.querySelector('main.content') || document.querySelector('main') || document.body;
+    const sec=document.createElement('section'); sec.id='coreUnified'; sec.className='page hidden';
+    sec.innerHTML=`
+      <div class="cu413-root">
+        <div class="cu413-hero">
+          <div><h2>النظام الموحد V${VERSION}</h2><p>بداية إعادة بناء العمال والمشاريع والتوزيع من الصفر بدون حذف البيانات القديمة. العمال من قسم العمال، نوع المشروع من قسم المشاريع، والربط من التوزيع.</p></div>
+          <span>V${VERSION}</span>
+        </div>
+        <div id="cu413Msg" class="cu413-msg">جاهز</div>
+        <div class="cu413-tabs">
+          <button data-tab="workers" type="button">العمال والموظفين</button>
+          <button data-tab="projects" type="button">المشاريع</button>
+          <button data-tab="distribution" type="button" class="active">التوزيع</button>
+        </div>
+        <div class="cu413-actions"><button id="cu413Reload" type="button">تحديث من السيرفر</button><button class="light" id="cu413Print" type="button">طباعة التوزيع</button></div>
+        <div id="cu413WorkersTab" class="cu413-tab hidden"></div>
+        <div id="cu413ProjectsTab" class="cu413-tab hidden"></div>
+        <div id="cu413DistributionTab" class="cu413-tab"></div>
+      </div>`;
+    main.appendChild(sec);
+    document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+    $('cu413Reload')?.addEventListener('click',()=>reload(true));
+    $('cu413Print')?.addEventListener('click',printDistribution);
+  }
+
+  function installCss(){
+    if($('cu413Css')) return;
+    const st=document.createElement('style'); st.id='cu413Css';
+    st.textContent=`
+      .cu413-root{display:flex;flex-direction:column;gap:14px}.cu413-hero{background:linear-gradient(135deg,#084f40,#126a58);color:#fff;border-radius:24px;padding:22px;display:flex;justify-content:space-between;align-items:center}.cu413-hero h2{margin:0 0 6px}.cu413-hero p{margin:0;color:#e9f6f2;line-height:1.8}.cu413-hero span{background:white;color:#084f40;border-radius:999px;padding:8px 14px;font-weight:900}.cu413-msg{padding:10px 12px;border-radius:14px;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;font-weight:800}.cu413-msg.err{background:#fde8e8;color:#9d2222;border-color:#efc3c3}.cu413-tabs,.cu413-actions{display:flex;gap:8px;flex-wrap:wrap}.cu413-tabs button,.cu413-actions button{border:0;border-radius:12px;padding:10px 14px;background:#eef8f5;color:#0A4033;font-weight:900;cursor:pointer}.cu413-tabs button.active,.cu413-actions button:not(.light){background:#0A4033;color:#fff}.cu413-grid{display:grid;grid-template-columns:390px 1fr;gap:14px}.cu413-card{background:#fff;border:1px solid #dce6e2;border-radius:20px;padding:16px}.cu413-card h3{margin:0 0 12px;color:#0A4033}.cu413-form{display:grid;gap:9px}.cu413-form label{font-size:12px;color:#0A4033;font-weight:900}.cu413-form input,.cu413-form select,.cu413-form textarea{width:100%;border:1px solid #dce6e2;border-radius:12px;padding:10px}.cu413-list{max-height:60vh;overflow:auto;border:1px solid #edf1ef;border-radius:14px;background:#fbfdfc;padding:8px}.cu413-row{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1px solid #edf1ef;border-radius:12px;padding:9px;margin-bottom:7px;align-items:center}.cu413-row b{color:#0A4033}.cu413-row small{display:block;color:#60706a;margin-top:3px}.cu413-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}.cu413-kpi{background:#fff;border:1px solid #dce6e2;border-radius:14px;padding:10px;text-align:center}.cu413-kpi b{display:block;font-size:22px;color:#0A4033}.cu413-worker-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:300px;overflow:auto;border:1px solid #dce6e2;border-radius:14px;padding:8px;background:#fbfdfc}.cu413-worker{background:#fff;border:1px solid #dce6e2;color:#10231d;border-radius:12px;padding:9px;text-align:right}.cu413-worker.on{background:#0A4033;color:#fff}.cu413-chip{display:inline-flex;gap:5px;align-items:center;background:#eef8f5;border:1px solid #cfe2dc;color:#0A4033;border-radius:999px;padding:6px 9px;margin:3px;font-weight:800}.cu413-chip button{background:#b83232;color:white;border:0;border-radius:50%;width:18px;height:18px;padding:0}.cu413-dist-card{background:#fff;border:1px solid #dce6e2;border-radius:16px;padding:12px;margin-bottom:10px}.cu413-dist-card h4{margin:0;color:#0A4033}.cu413-dist-head{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #edf1ef;padding-bottom:8px;margin-bottom:8px}.cu413-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:900px){.cu413-grid,.cu413-two,.cu413-kpis{grid-template-columns:1fr}.cu413-worker-pick{grid-template-columns:1fr}}@media print{body *{visibility:hidden!important}#coreUnified,#coreUnified *{visibility:visible!important}#coreUnified{position:absolute;inset:0}.cu413-tabs,.cu413-actions,.cu413-form{display:none!important}.side{display:none!important}@page{size:A4 landscape;margin:10mm}}`;
+    document.head.appendChild(st);
+  }
+
+  function showMsg(t,err){const el=$('cu413Msg'); if(el){el.textContent=t; el.className='cu413-msg '+(err?'err':'');}}
+  function setTab(tab){state.tab=tab; document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); ['workers','projects','distribution'].forEach(t=>$('cu413'+cap(t)+'Tab')?.classList.toggle('hidden', t!==tab)); render();}
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+  async function loadWorkers(force){
+    if(state.workers.length&&!force) return state.workers;
+    const c=client(); if(!c) return [];
+    let r=await safe('employees_master_v386', c.from('employees_master_v386').select('*').limit(5000));
+    if(r.error || !Array.isArray(r.data) || !r.data.length){ r=await safe('workers', c.from('workers').select('*').limit(5000)); }
+    state.workers=(r.data||[]).filter(statusActive).sort((a,b)=>workerDisplay(a).localeCompare(workerDisplay(b),'ar'));
+    return state.workers;
+  }
+  async function loadProjects(force){
+    if(state.projects.length&&!force) return state.projects;
+    const c=client(); if(!c) return [];
+    const r=await safe('projects', c.from('projects').select('*').limit(5000));
+    state.projects=(r.data||[]).filter(statusActive).sort((a,b)=>projectName(a).localeCompare(projectName(b),'ar'));
+    return state.projects;
+  }
+  async function loadDistribution(force){
+    const m=$('cu413Month')?.value||todayMonth();
+    if(state.dist[m]&&!force) return state.dist[m];
+    const c=client(); if(!c) return [];
+    let r=await safe('monthly_distribution_view', c.from('monthly_distribution_view').select('*').eq('month_key',m).limit(10000));
+    if(r.error){ r=await safe('monthly_distribution', c.from('monthly_distribution').select('*').eq('month_key',m).limit(10000)); }
+    state.dist[m]=r.data||[];
+    return state.dist[m];
+  }
+  async function reload(force){
+    showMsg('جاري تحميل البيانات من السيرفر...');
+    await Promise.all([loadWorkers(force), loadProjects(force)]);
+    await loadDistribution(force);
+    fillSelects(); render(); showMsg('تم تحميل البيانات من السيرفر بدون كاش.');
+  }
+
+  function render(){
+    renderWorkersTab(); renderProjectsTab(); renderDistributionTab();
+  }
+  function renderWorkersTab(){
+    const box=$('cu413WorkersTab'); if(!box) return;
+    const q=norm($('cu413WorkerSearch')?.value||'');
+    const rows=state.workers.filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة عامل / موظف</h3><div class="cu413-form"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><label>الراتب الأساسي</label><input id="cu413WSalary" type="number"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small></div><small>${esc(S(w.iqama_number||w.national_id||''))}</small></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
+    $('cu413WorkerSearch')?.addEventListener('input', renderWorkersTab);
+  }
+  function renderProjectsTab(){
+    const box=$('cu413ProjectsTab'); if(!box) return;
+    const q=norm($('cu413ProjectSearch')?.value||'');
+    const rows=state.projects.filter(p=>!q||norm(projectName(p)+' '+projectType(p)).includes(q));
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة مشروع</h3><div class="cu413-form"><label>اسم المشروع</label><input id="cu413PName" placeholder="اسم المشروع"><label>نوع المشروع</label><select id="cu413PType"><option value="daily_visit">زيارة يومية</option><option value="full_time">دوام كامل</option></select><label>الوقت المطلوب يوميًا بالدقائق</label><input id="cu413PReq" type="number" placeholder="مثال 480"><label>الحالة</label><select id="cu413PStatus"><option value="active">نشط</option><option value="inactive">موقوف</option></select><button type="button" onclick="tasneefCoreUnifiedV413.saveProject()">حفظ المشروع</button></div></div><div class="cu413-card"><h3>قائمة المشاريع</h3><input id="cu413ProjectSearch" placeholder="بحث" value="${esc($('cu413ProjectSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.projects.length}</b></div><div class="cu413-kpi"><small>دوام كامل</small><b>${state.projects.filter(p=>projectType(p)==='دوام كامل').length}</b></div><div class="cu413-kpi"><small>زيارة يومية</small><b>${state.projects.filter(p=>projectType(p)!=='دوام كامل').length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(p=>`<div class="cu413-row"><div><b>${esc(projectName(p))}</b><small>${esc(projectType(p))}</small></div><small>${esc(projectId(p))}</small></div>`).join('')||'<div class="cu413-row">لا توجد مشاريع</div>'}</div></div></div>`;
+    $('cu413ProjectSearch')?.addEventListener('input', renderProjectsTab);
+  }
+  function fillSelects(){
+    const month=$('cu413Month'); if(month&&!month.value) month.value=todayMonth();
+    const sup=$('cu413Sup'), pr=$('cu413Project');
+    if(sup){const cur=sup.value; const sups=state.workers.filter(isSupervisor); sup.innerHTML='<option value="">اختر المشرف</option>'+sups.map(w=>`<option value="${esc(workerCode(w))}">${esc(workerDisplay(w))}</option>`).join(''); sup.value=cur;}
+    if(pr){const cur=pr.value; pr.innerHTML='<option value="">اختر المشروع</option>'+state.projects.map(p=>`<option value="${esc(projectId(p))}">${esc(projectName(p))} - ${esc(projectType(p))}</option>`).join(''); pr.value=cur;}
+    ['cu413FilterSup','cu413FilterProject'].forEach(id=>{const el=$(id); if(!el) return; const cur=el.value; if(id.includes('Sup')){const names=[...new Set((state.dist[$('cu413Month')?.value||todayMonth()]||[]).map(r=>S(r.supervisor_name||r.supervisor_display_name)).filter(Boolean))]; el.innerHTML='<option value="">كل المشرفين</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');}else{const names=[...new Set((state.dist[$('cu413Month')?.value||todayMonth()]||[]).map(r=>S(r.project_name||r.project_display_name)).filter(Boolean))]; el.innerHTML='<option value="">كل المشاريع</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');} el.value=cur;});
+  }
+  function renderDistributionTab(){
+    const box=$('cu413DistributionTab'); if(!box) return;
+    const m=$('cu413Month')?.value||todayMonth();
+    const rows=state.dist[m]||[];
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>توزيع شهر</h3><div class="cu413-form"><label>الشهر</label><input type="month" id="cu413Month" value="${esc(m)}"><label>المشرف</label><select id="cu413Sup"></select><label>المشروع</label><select id="cu413Project"></select><div class="cu413-two"><div><label>بداية الدوام</label><input id="cu413Start" type="time"></div><div><label>نهاية الدوام</label><input id="cu413End" type="time"></div></div><label>بحث عن عامل</label><input id="cu413PickSearch" placeholder="اسم العامل أو الكود"><div id="cu413WorkerPick" class="cu413-worker-pick"></div><label>المختارون</label><div id="cu413Selected" class="cu413-list" style="max-height:120px"></div><button type="button" onclick="tasneefCoreUnifiedV413.saveDistribution()">حفظ التوزيع</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.copyPreviousMonth()">نسخ الشهر السابق</button></div></div><div class="cu413-card"><h3>توزيع الشهر</h3><div class="cu413-two"><select id="cu413FilterSup"><option value="">كل المشرفين</option></select><select id="cu413FilterProject"><option value="">كل المشاريع</option></select></div><div id="cu413DistBox" class="cu413-list"></div></div></div>`;
+    fillSelects(); renderPickWorkers(); renderSelected(); renderDistBox();
+    ['cu413Month'].forEach(id=>$(id)?.addEventListener('change',async()=>{await loadDistribution(true); fillSelects(); renderDistBox();}));
+    ['cu413Project'].forEach(id=>$(id)?.addEventListener('change', hydrateProjectSelection));
+    ['cu413PickSearch'].forEach(id=>$(id)?.addEventListener('input', renderPickWorkers));
+    ['cu413FilterSup','cu413FilterProject'].forEach(id=>$(id)?.addEventListener('change', renderDistBox));
+  }
+  function renderPickWorkers(){
+    const box=$('cu413WorkerPick'); if(!box) return;
+    const q=norm($('cu413PickSearch')?.value||'');
+    const rows=state.workers.filter(w=>isWorker(w)).filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));
+    box.innerHTML=rows.map(w=>`<button type="button" class="cu413-worker ${state.selected.has(workerCode(w))?'on':''}" onclick="tasneefCoreUnifiedV413.toggleWorker('${esc(workerCode(w))}')"><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small></button>`).join('')||'<div class="cu413-row">لا يوجد عمال</div>';
+  }
+  function renderSelected(){const box=$('cu413Selected'); if(!box) return; box.innerHTML=[...state.selected.values()].map(w=>`<span class="cu413-chip">${esc(workerDisplay(w))}<button onclick="tasneefCoreUnifiedV413.toggleWorker('${esc(workerCode(w))}')" type="button">×</button></span>`).join('')||'<small>لم يتم اختيار عمال</small>';}
+  function toggleWorker(code){const w=state.workers.find(x=>workerCode(x)===code); if(!w)return; if(state.selected.has(code)) state.selected.delete(code); else state.selected.set(code,w); renderPickWorkers(); renderSelected();}
+  function hydrateProjectSelection(){
+    const m=$('cu413Month')?.value||todayMonth(), pid=$('cu413Project')?.value||'';
+    state.selected.clear();
+    (state.dist[m]||[]).filter(r=>S(r.project_id)===S(pid)).forEach(r=>{const c=S(r.worker_employee_code||r.worker_code); const w=state.workers.find(x=>workerCode(x)===c)||{employee_code:c,app_name:S(r.worker_name||r.worker_display_name||c),job_title:'عامل'}; if(c) state.selected.set(c,w);});
+    renderPickWorkers(); renderSelected();
+  }
+  function renderDistBox(){
+    const box=$('cu413DistBox'); if(!box) return;
+    const m=$('cu413Month')?.value||todayMonth(), fs=$('cu413FilterSup')?.value||'', fp=$('cu413FilterProject')?.value||'';
+    let rows=state.dist[m]||[]; rows=rows.filter(r=>(!fs||S(r.supervisor_name||r.supervisor_display_name)===fs)&&(!fp||S(r.project_name||r.project_display_name)===fp));
+    const groups=new Map(); rows.forEach(r=>{const k=S(r.supervisor_name||r.supervisor_display_name||r.supervisor_employee_code||'-')+'||'+S(r.project_name||r.project_display_name||r.project_id||'-'); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(r);});
+    box.innerHTML=[...groups.entries()].map(([k,list])=>{const [sup,proj]=k.split('||'); return `<div class="cu413-dist-card"><div class="cu413-dist-head"><div><h4>${esc(proj)}</h4><small>${esc(sup)}</small></div><b>${list.length} عامل</b></div>${list.map(r=>`<span class="cu413-chip">${esc(S(r.worker_display_name||((r.worker_employee_code||'')+' - '+(r.worker_name||''))))}</span>`).join('')}</div>`}).join('')||'<div class="cu413-row">لا يوجد توزيع لهذا الشهر</div>';
+  }
+
+  async function saveWorker(){
+    const c=client(); if(!c)return; const code=S($('cu413WCode')?.value), name=S($('cu413WName')?.value); if(!code||!name){showMsg('أدخل كود واسم العامل.',true);return;}
+    const row={employee_code:code, app_name:name, job_title:S($('cu413WRole')?.value||'عامل'), iqama_number:S($('cu413WIqama')?.value||''), basic_salary:N($('cu413WSalary')?.value), status:'active'};
+    let r=await c.from('employees_master_v386').upsert(row,{onConflict:'employee_code'}).select();
+    if(r.error){ r=await c.from('workers').upsert({id:code, name:name, status:'active'}).select(); }
+    if(r.error){showMsg('تعذر حفظ العامل: '+r.error.message,true);return;} state.workers=[]; await reload(true); showMsg('تم حفظ العامل.');
+  }
+  async function saveProject(){
+    const c=client(); if(!c)return; const name=S($('cu413PName')?.value); if(!name){showMsg('أدخل اسم المشروع.',true);return;}
+    const row={name, operation_type:S($('cu413PType')?.value||'daily_visit'), required_daily_minutes:N($('cu413PReq')?.value), status:S($('cu413PStatus')?.value||'active')};
+    const r=await c.from('projects').insert(row).select();
+    if(r.error){showMsg('تعذر حفظ المشروع: '+r.error.message,true);return;} state.projects=[]; await reload(true); showMsg('تم حفظ المشروع.');
+  }
+  async function saveDistribution(){
+    const c=client(); if(!c)return; const m=$('cu413Month')?.value||todayMonth(), supCode=$('cu413Sup')?.value, pid=$('cu413Project')?.value; const p=state.projects.find(x=>projectId(x)===S(pid)); const sup=state.workers.find(x=>workerCode(x)===S(supCode));
+    if(!m||!sup||!p){showMsg('اختر الشهر والمشرف والمشروع.',true);return;} const chosen=[...state.selected.values()]; if(!chosen.length){showMsg('اختر العمال.',true);return;}
+    const existing=await safe('existing distribution', c.from('monthly_distribution').select('id,worker_employee_code').eq('month_key',m).eq('project_id',pid).limit(10000));
+    const keep=new Set(chosen.map(workerCode)); const del=(existing.data||[]).filter(r=>!keep.has(S(r.worker_employee_code))).map(r=>r.id).filter(Boolean); if(del.length) await safe('delete removed distribution', c.from('monthly_distribution').delete().in('id',del));
+    const rows=chosen.map(w=>({month_key:m, supervisor_employee_code:workerCode(sup), supervisor_name:workerName(sup), project_id:pid, project_name:projectName(p), worker_employee_code:workerCode(w), worker_name:workerName(w), role_type:workerRole(w)||'عامل', shift_name:'default', work_start_time:S($('cu413Start')?.value||''), work_end_time:S($('cu413End')?.value||''), required_minutes:N($('cu413Required')?.value||0), start_date:m+'-01', end_date:null, status:'active'}));
+    const r=await c.from('monthly_distribution').upsert(rows,{onConflict:'month_key,project_id,worker_employee_code'}).select(); if(r.error){showMsg('تعذر حفظ التوزيع: '+r.error.message,true);return;} delete state.dist[m]; await loadDistribution(true); fillSelects(); renderDistBox(); showMsg('تم حفظ التوزيع.');
+  }
+  async function copyPreviousMonth(){
+    const c=client(); if(!c)return; const m=$('cu413Month')?.value||todayMonth(), pm=prevMonth(m); if(!confirm('نسخ توزيع '+pm+' إلى '+m+'؟'))return;
+    const old=await safe('previous dist', c.from('monthly_distribution').select('*').eq('month_key',pm).limit(10000)); if(!(old.data||[]).length){showMsg('لا يوجد توزيع في الشهر السابق.',true);return;}
+    const rows=(old.data||[]).map(({id,created_at,updated_at,...r})=>({...r,month_key:m,start_date:m+'-01',end_date:monthEnd(m)}));
+    const res=await c.from('monthly_distribution').upsert(rows,{onConflict:'month_key,project_id,worker_employee_code'}).select(); if(res.error){showMsg('تعذر النسخ: '+res.error.message,true);return;} delete state.dist[m]; await loadDistribution(true); renderDistBox(); showMsg('تم نسخ توزيع الشهر السابق.');
+  }
+  function printDistribution(){window.print();}
+
+  async function init(){installCss(); installNav(); installSection(); await reload(false); setTab(state.tab||'distribution');}
+  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,copyPreviousMonth,toggleWorker,printDistribution};
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1200));
+  setInterval(installNav,2000);
+})();
