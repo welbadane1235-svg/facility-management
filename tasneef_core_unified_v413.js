@@ -6,7 +6,7 @@
   if(window.__tasneefCoreUnifiedV413) return;
   window.__tasneefCoreUnifiedV413 = true;
 
-  const VERSION='413';
+  const VERSION='415';
   const S=v=>String(v??'').trim();
   const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
   const $=id=>document.getElementById(id);
@@ -26,6 +26,8 @@
   function workerName(w){return S(w.worker_name||w.app_name||w.name||w.full_name||w.iqama_name||workerCode(w));}
   function workerRole(w){return S(w.job_title||w.role_type||w.position||w.job||w.profession||'عامل');}
   function workerDisplay(w){const c=workerCode(w), n=workerName(w); return c && !n.includes(c) ? `${c} - ${n}` : n;}
+  function workerStartDate(w){return S(w.work_start_date||w.hire_date||w.employment_start_date||w.start_work_date||w.start_date||'');}
+  function workerEndDate(w){return S(w.work_end_date||w.employment_end_date||w.termination_date||w.end_work_date||w.end_date||'');}
   function isSupervisor(w){return /مشرف|supervisor/i.test(workerRole(w));}
   function isWorker(w){return !/مشرف|supervisor/i.test(workerRole(w));}
   function projectId(p){return S(p.project_id||p.id||'');}
@@ -128,7 +130,7 @@
     const box=$('cu413WorkersTab'); if(!box) return;
     const q=norm($('cu413WorkerSearch')?.value||'');
     const rows=state.workers.filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));
-    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة عامل / موظف</h3><div class="cu413-form"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><label>الراتب الأساسي</label><input id="cu413WSalary" type="number"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small></div><small>${esc(S(w.iqama_number||w.national_id||''))}</small></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة عامل / موظف</h3><div class="cu413-form"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><div class="cu413-two"><div><label>تاريخ بداية العمل</label><input id="cu413WStartDate" type="date"></div><div><label>تاريخ نهاية العمل</label><input id="cu413WEndDate" type="date"></div></div><label>الراتب الأساسي</label><input id="cu413WSalary" type="number"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small><small>بداية العمل: ${esc(workerStartDate(w)||'-')} | نهاية العمل: ${esc(workerEndDate(w)||'-')}</small></div><small>${esc(S(w.iqama_number||w.national_id||''))}</small></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
     $('cu413WorkerSearch')?.addEventListener('input', renderWorkersTab);
   }
   function renderProjectsTab(){
@@ -180,7 +182,7 @@
 
   async function saveWorker(){
     const c=client(); if(!c)return; const code=S($('cu413WCode')?.value), name=S($('cu413WName')?.value); if(!code||!name){showMsg('أدخل كود واسم العامل.',true);return;}
-    const row={employee_code:code, app_name:name, job_title:S($('cu413WRole')?.value||'عامل'), iqama_number:S($('cu413WIqama')?.value||''), basic_salary:N($('cu413WSalary')?.value), status:'active'};
+    const row={employee_code:code, app_name:name, job_title:S($('cu413WRole')?.value||'عامل'), iqama_number:S($('cu413WIqama')?.value||''), work_start_date:S($('cu413WStartDate')?.value||'')||null, work_end_date:S($('cu413WEndDate')?.value||'')||null, basic_salary:N($('cu413WSalary')?.value), status:'active'};
     let r=await c.from('employees_master_v386').upsert(row,{onConflict:'employee_code'}).select();
     if(r.error){ r=await c.from('workers').upsert({id:code, name:name, status:'active'}).select(); }
     if(r.error){showMsg('تعذر حفظ العامل: '+r.error.message,true);return;} state.workers=[]; await reload(true); showMsg('تم حفظ العامل.');
