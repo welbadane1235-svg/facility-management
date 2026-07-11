@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const BUILD='V430 اعتماد النسخة الحالية - الحضور والتوزيع من النظام الموحد';
+  const BUILD='V443 ثابت - الحضور من التوزيع الموحد فقط';
   const S=v=>String(v??'').trim();
   const N=v=>Number(v)||0;
   const $=id=>document.getElementById(id);
@@ -88,6 +88,21 @@
     });
     return [...m.values()].sort((a,b)=>distSupName(a).localeCompare(distSupName(b),'ar')||distName(a).localeCompare(distName(b),'ar'));
   }
+
+  function isInactiveValue(v){const x=norm(v);return ['deleted','inactive','stopped','stop','محذوف','موقوف','غير نشط','غيرنشط','منتهي','ended'].includes(x) || v===false || v==='false';}
+  function recordInactive(o){if(!o)return false; return isInactiveValue(o.status)||isInactiveValue(o.state)||isInactiveValue(o.active)||isInactiveValue(o.is_active)||isInactiveValue(o.enabled);}
+  function codeOf(o){return S(o.employee_code||o.worker_employee_code||o.worker_code||o.code||o.id_code||'');}
+  function nameOf(o){return S(o.app_name||o.name||o.full_name||o.employee_name||o.worker_name||o.worker_identity||o.username||'');}
+  function findRef(list, code, name){code=norm(code);name=norm(name);return (list||[]).find(x=>{const xc=norm(codeOf(x)); const xn=norm(nameOf(x)); return (code&&xc&&code===xc)||(name&&xn&&name===xn);});}
+  function distributionRowActive(r, workers, projects, users){
+    if(isInactiveValue(r.status)||isInactiveValue(r.state)) return false;
+    const w=findRef(workers, distCode(r), distName(r)); if(w && recordInactive(w)) return false;
+    const p=(projects||[]).find(x=>S(x.id)===distProjectId(r) || norm(x.name||x.project_name||x.title)===norm(distProject(r))); if(p && recordInactive(p)) return false;
+    const sup=findRef(workers, distSupCode(r), distSupName(r)); if(sup && recordInactive(sup)) return false;
+    const u=(users||[]).find(x=>norm(x.full_name||x.name||x.username)===norm(distSupName(r)) || S(x.id)===distSupCode(r)); if(u && recordInactive(u)) return false;
+    return true;
+  }
+
   function workerNameFromOldId(id){
     const w=(state.workers||[]).find(x=>S(x.id)===S(id));
     return S(w?.name||w?.full_name||w?.worker_name||w?.worker_identity||w?.app_name||'');
@@ -137,15 +152,19 @@
   async function load(month,force){
     const c=client(); if(!c){msg('Supabase غير جاهز',true);return;}
     if(!force && state.month===month)return;
-    const [dr,ar,wr,er]=await Promise.all([
+    const [dr,ar,wr,er,pr,ur]=await Promise.all([
       safe('monthly_distribution unified', c.from('monthly_distribution').select('*').eq('month_key',month).limit(50000)),
       // نجلب الحضور القديم والجديد بدون فلتر attendance_date لأن بعض السجلات القديمة محفوظة في date أو created_at.
       safe('attendance all legacy', c.from('attendance').select('*').limit(50000)),
       safe('workers legacy', c.from('workers').select('*').limit(50000)),
-      safe('employees master', c.from('employees_master_v386').select('*').limit(50000))
+      safe('employees master', c.from('employees_master_v386').select('*').limit(50000)),
+      safe('projects active filter', c.from('projects').select('*').limit(50000)),
+      safe('app users active filter', c.from('app_users').select('*').limit(50000))
     ]);
     const emps=(er.data||[]).map(x=>Object.assign({},x,{name:S(x.app_name||x.name||x.full_name||x.employee_name),employee_code:S(x.employee_code||x.worker_employee_code||x.code)}));
-    state={dist:mergeDistribution(dr.data||[]),att:ar.data||[],workers:[...(wr.data||[]),...emps],month};
+    const allWorkers=[...(wr.data||[]),...emps];
+    const activeDist=(dr.data||[]).filter(r=>distributionRowActive(r, allWorkers, pr.data||[], ur.data||[]));
+    state={dist:mergeDistribution(activeDist),att:ar.data||[],workers:allWorkers,month};
   }
   function nextMonth(m){const y=N(m.slice(0,4)),mo=N(m.slice(5,7));const d=new Date(y,mo,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
   function currentRows(){const f=filters(); return state.dist.filter(r=>(!f.sup||distSupCode(r)===f.sup||distSupName(r)===f.sup)&&(!f.project||((r.__projectIds||[]).includes(f.project)||distProjectId(r)===f.project))&&(!f.search||norm(distName(r)).includes(f.search)||norm(distCode(r)).includes(f.search)||norm((r.__projects||[]).join(' ')).includes(f.search)));}
