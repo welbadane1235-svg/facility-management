@@ -6,7 +6,7 @@
   if(window.__tasneefCoreUnifiedV413) return;
   window.__tasneefCoreUnifiedV413 = true;
 
-  const VERSION='417';
+  const VERSION='418';
   const S=v=>String(v??'').trim();
   const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
   const $=id=>document.getElementById(id);
@@ -138,13 +138,67 @@
     box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة / تعديل عامل أو موظف</h3><div class="cu413-form"><input type="hidden" id="cu413WEditMode"><label>كود العامل</label><input id="cu413WCode" placeholder="TS-57"><label>اسم العامل في التطبيق</label><input id="cu413WName" placeholder="اسم العامل"><label>الوظيفة</label><select id="cu413WRole"><option>عامل</option><option>مشرف</option><option>فني</option><option>حارس</option></select><label>رقم الإقامة</label><input id="cu413WIqama"><div class="cu413-two"><div><label>تاريخ بداية العمل</label><input id="cu413WStartDate" type="date"></div><div><label>تاريخ نهاية العمل</label><input id="cu413WEndDate" type="date"></div></div><label>الراتب الأساسي</label><input id="cu413WSalary" type="number"><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveWorker()">حفظ العامل</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearWorkerForm()">تفريغ</button></div></div></div><div class="cu413-card"><h3>قائمة العمال والموظفين</h3><input id="cu413WorkerSearch" placeholder="بحث" value="${esc($('cu413WorkerSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.workers.length}</b></div><div class="cu413-kpi"><small>مشرفين</small><b>${state.workers.filter(isSupervisor).length}</b></div><div class="cu413-kpi"><small>عمال</small><b>${state.workers.filter(isWorker).length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(w=>`<div class="cu413-row"><div><b>${esc(workerDisplay(w))}</b><small>${esc(workerRole(w))}</small><small>بداية العمل: ${esc(workerStartDate(w)||'-')} | نهاية العمل: ${esc(workerEndDate(w)||'-')}</small></div><div style="display:flex;gap:6px;align-items:center"><small>${esc(S(w.iqama_number||w.national_id||''))}</small><button type="button" class="light" onclick="tasneefCoreUnifiedV413.editWorker('${esc(workerCode(w))}')">تعديل</button></div></div>`).join('')||'<div class="cu413-row">لا توجد بيانات</div>'}</div></div></div>`;
     $('cu413WorkerSearch')?.addEventListener('input', renderWorkersTab);
   }
+  function projectViewMonth(){
+    return $('cu413ProjectsMonth')?.value || $('cu413Month')?.value || todayMonth();
+  }
+  function distProjectId(r){return S(r.project_id||r.projectId||r.project_key||'');}
+  function distSupervisorName(r){return S(r.supervisor_display_name||r.supervisor_name||r.supervisor_employee_code||'-');}
+  function distWorkerDisplay(r){
+    const c=S(r.worker_employee_code||r.worker_code||r.employee_code||'');
+    const n=S(r.worker_display_name||r.worker_name||r.app_name||r.name||c);
+    if(c && n && !n.includes(c)) return c+' - '+n;
+    return n||c||'-';
+  }
+  function projectDistributionRows(pid, m){
+    const id=S(pid), rows=state.dist[m]||[];
+    return rows.filter(r=>S(distProjectId(r))===id || norm(S(r.project_name||r.project_display_name))===norm(projectName(state.projects.find(p=>projectId(p)===id)||{})));
+  }
+  function projectDistributionSummary(p){
+    const m=projectViewMonth();
+    const rows=projectDistributionRows(projectId(p), m);
+    const sup=[...new Set(rows.map(distSupervisorName).filter(Boolean))];
+    const workers=[...new Set(rows.map(distWorkerDisplay).filter(Boolean))];
+    return {month:m, rows, sup, workers};
+  }
+  async function refreshProjectsMonthDistribution(){
+    const m=projectViewMonth();
+    if($('cu413Month')) $('cu413Month').value=m;
+    await loadDistribution(true);
+    renderProjectsTab();
+  }
+  function openProjectDistribution(pid){
+    setTab('distribution');
+    setTimeout(async()=>{
+      const m=projectViewMonth();
+      if($('cu413Month')) $('cu413Month').value=m;
+      await loadDistribution(true);
+      state.selectedProjects.clear();
+      state.selectedProjects.add(S(pid));
+      const rows=projectDistributionRows(pid,m);
+      const first=rows[0]||{};
+      if($('cu413Sup')) $('cu413Sup').value=S(first.supervisor_employee_code||'');
+      state.selected.clear();
+      rows.forEach(r=>{
+        const c=S(r.worker_employee_code||r.worker_code||r.employee_code||'');
+        if(!c) return;
+        const w=state.workers.find(x=>workerCode(x)===c)||{employee_code:c,app_name:S(r.worker_name||r.worker_display_name||c),job_title:'عامل'};
+        state.selected.set(c,w);
+      });
+      renderPickProjects(); renderPickWorkers(); renderSelected(); renderDistBox();
+    },80);
+  }
   function renderProjectsTab(){
     const box=$('cu413ProjectsTab'); if(!box) return;
     const q=norm($('cu413ProjectSearch')?.value||'');
-    const rows=state.projects.filter(p=>!q||norm(projectName(p)+' '+projectType(p)+' '+projectSupervisorName(p)).includes(q));
+    const m=$('cu413ProjectsMonth')?.value || $('cu413Month')?.value || todayMonth();
+    const rows=state.projects.filter(p=>{
+      const d=projectDistributionSummary(p);
+      return !q || norm(projectName(p)+' '+projectType(p)+' '+projectSupervisorName(p)+' '+d.sup.join(' ')+' '+d.workers.join(' ')).includes(q);
+    });
     const supOptions=state.workers.filter(isSupervisor).map(w=>`<option value="${esc(workerCode(w))}">${esc(workerDisplay(w))}</option>`).join('');
-    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة / تعديل مشروع</h3><div class="cu413-form"><input type="hidden" id="cu413PId"><label>اسم المشروع</label><input id="cu413PName" placeholder="اسم المشروع"><label>نوع المشروع</label><select id="cu413PType"><option value="daily_visit">زيارة يومية</option><option value="full_time">دوام كامل</option></select><div class="cu413-two"><div><label>الوقت المطلوب / المستغرق بالدقائق</label><input id="cu413PReq" type="number" placeholder="مثال 480"></div><div><label>المشرف من السيرفر</label><select id="cu413PSupervisor"><option value="">بدون مشرف</option>${supOptions}</select></div></div><div class="cu413-two"><div><label>عدد العمائر</label><input id="cu413PBuildings" type="number" min="0" placeholder="0"></div><div><label>عدد الشقق</label><input id="cu413PUnits" type="number" min="0" placeholder="0"></div></div><label>الحالة</label><select id="cu413PStatus"><option value="active">نشط</option><option value="inactive">موقوف</option></select><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveProject()">حفظ المشروع</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearProjectForm()">تفريغ</button></div></div></div><div class="cu413-card"><h3>قائمة المشاريع</h3><input id="cu413ProjectSearch" placeholder="بحث" value="${esc($('cu413ProjectSearch')?.value||'')}"><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.projects.length}</b></div><div class="cu413-kpi"><small>دوام كامل</small><b>${state.projects.filter(p=>projectType(p)==='دوام كامل').length}</b></div><div class="cu413-kpi"><small>زيارة يومية</small><b>${state.projects.filter(p=>projectType(p)!=='دوام كامل').length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(p=>`<div class="cu413-row"><div><b>${esc(projectName(p))}</b><small>${esc(projectType(p))} | الوقت: ${projectRequired(p).toLocaleString('en-US')} د | العمائر: ${projectBuildings(p)} | الشقق: ${projectUnits(p)}</small><small>المشرف: ${esc(projectSupervisorName(p))}</small></div><div style="display:flex;gap:6px;align-items:center"><small>${esc(projectId(p))}</small><button type="button" class="light" onclick="tasneefCoreUnifiedV413.editProject('${esc(projectId(p))}')">تعديل</button></div></div>`).join('')||'<div class="cu413-row">لا توجد مشاريع</div>'}</div></div></div>`;
+    box.innerHTML=`<div class="cu413-grid"><div class="cu413-card"><h3>إضافة / تعديل مشروع</h3><div class="cu413-form"><input type="hidden" id="cu413PId"><label>اسم المشروع</label><input id="cu413PName" placeholder="اسم المشروع"><label>نوع المشروع</label><select id="cu413PType"><option value="daily_visit">زيارة يومية</option><option value="full_time">دوام كامل</option></select><div class="cu413-two"><div><label>الوقت المطلوب / المستغرق بالدقائق</label><input id="cu413PReq" type="number" placeholder="مثال 480"></div><div><label>المشرف من السيرفر</label><select id="cu413PSupervisor"><option value="">بدون مشرف</option>${supOptions}</select></div></div><div class="cu413-two"><div><label>عدد العمائر</label><input id="cu413PBuildings" type="number" min="0" placeholder="0"></div><div><label>عدد الشقق</label><input id="cu413PUnits" type="number" min="0" placeholder="0"></div></div><label>الحالة</label><select id="cu413PStatus"><option value="active">نشط</option><option value="inactive">موقوف</option></select><div class="cu413-two"><button type="button" onclick="tasneefCoreUnifiedV413.saveProject()">حفظ المشروع</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.clearProjectForm()">تفريغ</button></div></div></div><div class="cu413-card"><h3>قائمة المشاريع + التوزيع</h3><div class="cu413-two"><div><label>شهر عرض التوزيع</label><input type="month" id="cu413ProjectsMonth" value="${esc(m)}"></div><div><label>بحث</label><input id="cu413ProjectSearch" placeholder="بحث باسم المشروع أو المشرف أو العامل" value="${esc($('cu413ProjectSearch')?.value||'')}"></div></div><div class="cu413-kpis"><div class="cu413-kpi"><small>الإجمالي</small><b>${state.projects.length}</b></div><div class="cu413-kpi"><small>دوام كامل</small><b>${state.projects.filter(p=>projectType(p)==='دوام كامل').length}</b></div><div class="cu413-kpi"><small>زيارة يومية</small><b>${state.projects.filter(p=>projectType(p)!=='دوام كامل').length}</b></div><div class="cu413-kpi"><small>المعروض</small><b>${rows.length}</b></div></div><div class="cu413-list">${rows.map(p=>{const d=projectDistributionSummary(p); return `<div class="cu413-row"><div style="flex:1"><b>${esc(projectName(p))}</b><small>${esc(projectType(p))} | الوقت: ${projectRequired(p).toLocaleString('en-US')} د | العمائر: ${projectBuildings(p)} | الشقق: ${projectUnits(p)}</small><small>المشرف الافتراضي في المشروع: ${esc(projectSupervisorName(p))}</small><small><b>توزيع شهر ${esc(d.month)}:</b> المشرف: ${esc(d.sup.join('، ')||'-')} | عدد العمال: ${d.workers.length}</small><div>${d.workers.slice(0,8).map(w=>`<span class="cu413-chip">${esc(w)}</span>`).join('')}${d.workers.length>8?`<span class="cu413-chip">+${d.workers.length-8}</span>`:''}</div></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><small>${esc(projectId(p))}</small><button type="button" class="light" onclick="tasneefCoreUnifiedV413.editProject('${esc(projectId(p))}')">تعديل المشروع</button><button type="button" class="light" onclick="tasneefCoreUnifiedV413.openProjectDistribution('${esc(projectId(p))}')">تعديل التوزيع</button></div></div>`}).join('')||'<div class="cu413-row">لا توجد مشاريع</div>'}</div></div></div>`;
     $('cu413ProjectSearch')?.addEventListener('input', renderProjectsTab);
+    $('cu413ProjectsMonth')?.addEventListener('change', refreshProjectsMonthDistribution);
   }
   function fillSelects(){
     const month=$('cu413Month'); if(month&&!month.value) month.value=todayMonth();
@@ -245,7 +299,7 @@
   function printDistribution(){window.print();}
 
   async function init(){installCss(); installNav(); installSection(); await reload(false); setTab(state.tab||'distribution');}
-  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,saveQuickDistribution,copyPreviousMonth,toggleWorker,toggleProject,selectVisibleProjects,selectVisibleWorkers,clearDistributionSelection,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab};
+  window.tasneefCoreUnifiedV413={init,reload,saveWorker,saveProject,saveDistribution,saveQuickDistribution,copyPreviousMonth,toggleWorker,toggleProject,selectVisibleProjects,selectVisibleWorkers,clearDistributionSelection,printDistribution,editWorker,clearWorkerForm,editProject,clearProjectForm,editDistribution,renderWorkersTab,renderProjectsTab,openProjectDistribution,refreshProjectsMonthDistribution};
   document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1200));
   setInterval(installNav,2000);
 })();
