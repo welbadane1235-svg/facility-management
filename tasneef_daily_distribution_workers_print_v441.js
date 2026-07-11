@@ -3,7 +3,7 @@
   'use strict';
   if(window.__tasneefDailyDistributionWorkersPrintV441) return;
   window.__tasneefDailyDistributionWorkersPrintV441 = true;
-  const VERSION='V441';
+  const VERSION='V442 ثابت';
   const S=v=>String(v??'').trim();
   const N=v=>Number(v)||0;
   const $=id=>document.getElementById(id);
@@ -14,6 +14,7 @@
   const dailyMonth=()=>dailyDate().slice(0,7);
   const statusAbsent=v=>['absent','غائب','غياب','غ'].includes(norm(v));
   const statusPresent=v=>['present','حاضر','حضور','ح'].includes(norm(v));
+  const isActive=x=>!(x?.deleted_at||x?.is_deleted===true||x?.active===false||x?.is_active===false||['deleted','archived','inactive','stopped','ended','disabled','محذوف','موقوف','متوقف','منتهي','غير نشط','غيرنشط'].includes(norm(x?.status||x?.state||x?.active_status||'active')));
   const cache={dist:{},attendance:{},workers:null,projects:null};
 
   function css(){
@@ -39,11 +40,11 @@
       if(!rows.length) rows=await safe(c.from('employees_master').select('*').limit(10000));
       if(!rows.length) rows=await safe(c.from('workers').select('*').limit(10000));
     }
-    cache.workers=rows||[]; return cache.workers;
+    cache.workers=(rows||[]).filter(isActive); return cache.workers;
   }
   async function loadProjects(){
     if(cache.projects) return cache.projects;
-    const c=window.sb; cache.projects=c?await safe(c.from('projects').select('*').limit(10000)):[];
+    const c=window.sb; cache.projects=c?(await safe(c.from('projects').select('*').limit(10000))).filter(isActive):[];
     return cache.projects;
   }
   function empCode(e){return S(e.employee_code||e.code||e.emp_code||e.worker_code||e.id_code||e.employee_id||e.id)}
@@ -61,7 +62,6 @@
     const c=window.sb; let rows=[];
     if(c){
       rows=await safe(c.from('monthly_distribution').select('*').eq('month_key',month).limit(30000));
-      if(!rows.length) rows=await safe(c.from('monthly_distribution_view').select('*').eq('month_key',month).limit(30000));
     }
     rows=(rows||[]).filter(r=>!['deleted','inactive','ended','محذوف','موقوف'].includes(norm(r.status||''))).map(r=>{
       const pid=S(r.project_id||r.projectId||'');
@@ -179,7 +179,7 @@
       const el=$(id); if(el && el.dataset.td441!=='1'){
         el.dataset.td441='1';
         const ev=id==='dailySearch'?'input':'change';
-        el.addEventListener(ev,()=>{cache.attendance={}; setTimeout(decorateDailyRows,80); setTimeout(decorateDailyRows,400);});
+        el.addEventListener(ev,()=>{cache.attendance={}; if(id==='dailyDate'||id==='dailyProject'||id==='dailySupervisor'){cache.dist={};} setTimeout(decorateDailyRows,80); setTimeout(decorateDailyRows,400); setTimeout(decorateDailyRows,900);});
       }
     });
   }
@@ -219,6 +219,7 @@
   document.addEventListener('DOMContentLoaded',()=>setTimeout(install,900));
   window.addEventListener('load',()=>setTimeout(install,1200));
   [1800,3000,5000,8000].forEach(t=>setTimeout(install,t));
-  setInterval(()=>{wrapRender(); bindFilters(); patchPrint();},2000);
+  try{new MutationObserver(()=>{const body=$('logsBody'); if(body && !body.dataset.td441Decorating){ body.dataset.td441Decorating='1'; setTimeout(()=>{decorateDailyRows().finally(()=>{delete body.dataset.td441Decorating;});},120); }}).observe(document.body,{childList:true,subtree:true});}catch(_){}
+  setInterval(()=>{wrapRender(); bindFilters(); patchPrint();},5000);
   window.tasneefDailyDistributionWorkersPrintV441={install,decorateDailyRows,reload:function(){cache.dist={};cache.attendance={};cache.workers=null;cache.projects=null;return install();}};
 })();

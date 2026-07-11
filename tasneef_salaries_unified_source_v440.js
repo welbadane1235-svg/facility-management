@@ -3,7 +3,7 @@
   // V440: كشف الرواتب يلتزم بالتوزيع الموحد كما هو: المشرف ثم عماله، بدون نقل عامل لمكان غير مكانه.
   if(window.__tasneefSalariesUnifiedV440) return;
   window.__tasneefSalariesUnifiedV440=true;
-  const VERSION='V440 رواتب حسب التوزيع المعتمد';
+  const VERSION='V442 رواتب ثابتة من التوزيع';
   const $=id=>document.getElementById(id);
   const S=v=>String(v??'').trim();
   const N=v=>Number(String(v??'').replace(/,/g,''))||0;
@@ -14,7 +14,7 @@
   const daysInMonth=m=>{const [y,mo]=S(m).split('-').map(Number);return new Date(y,mo,0).getDate()||30};
   const monthEnd=m=>{const [y,mo]=S(m).split('-').map(Number);const d=new Date(y,mo,0);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
   const norm=s=>S(s).toLowerCase().replace(/[إأآا]/g,'ا').replace(/[ىي]/g,'ي').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[\u200e\u200f]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim();
-  const active=x=>!['deleted','inactive','stopped','ended','محذوف','موقوف','غير نشط'].includes(norm(x));
+  const active=x=>!['deleted','archived','inactive','stopped','ended','disabled','محذوف','موقوف','متوقف','منتهي','غير نشط','غيرنشط'].includes(norm(x));
   const isPresent=s=>['present','حاضر','حضور','ح','p'].includes(norm(s));
   const isAbsent=s=>['absent','غائب','غياب','غ','a'].includes(norm(s));
   let st={workers:[],dist:[],attendance:[],projects:[],saved:[],rows:[]};
@@ -55,7 +55,8 @@
   function daysBetween(a,b,m){a=clamp(a,m)||monthStart(m); b=clamp(b,m)||monthEnd(m); if(b<a){const t=a;a=b;b=t} return Math.max(0,Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000)+1)}
   function savedFor(code,month){const c=codeNorm(code); const nid=String(numericEntityId({employee_ts_id:c},0)); return (st.saved||[]).find(s=>S(s.salary_month).slice(0,7)===month && (codeNorm(s.employee_ts_id||s.employee_code)===c || String(s.entity_id)===nid))||{};}
 
-  function distMonth(month){return (st.dist||[]).filter(d=>S(d.month_key||d.month||d.salary_month||'').slice(0,7)===month && active(d.status||'active'));}
+  function projectActiveById(pid){const p=projectById(pid); return !p.id || active(p.status||p.state||p.active_status||'active');}
+  function distMonth(month){return (st.dist||[]).filter(d=>S(d.month_key||d.month||d.salary_month||'').slice(0,7)===month && active(d.status||'active') && projectActiveById(distProjectId(d)));}
   function distWorkerCode(d){return codeNorm(d.worker_employee_code||d.employee_code||d.worker_code||d.worker_id||'');}
   function distSupervisorCode(d){return codeNorm(d.supervisor_employee_code||d.supervisor_code||d.supervisor_worker_code||d.supervisor_id||'');}
   function distProjectId(d){return S(d.project_id||d.project_code||d.project||'');}
