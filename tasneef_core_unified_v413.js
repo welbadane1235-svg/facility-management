@@ -6,7 +6,7 @@
   if(window.__tasneefCoreUnifiedV413) return;
   window.__tasneefCoreUnifiedV413 = true;
 
-  const VERSION='420';
+  const VERSION='436';
   const S=v=>String(v??'').trim();
   const N=v=>{const n=Number(v||0);return Number.isFinite(n)?n:0};
   const $=id=>document.getElementById(id);
@@ -77,6 +77,7 @@
           <button data-tab="projects" type="button">المشاريع</button>
           <button data-tab="distribution" type="button" class="active">التوزيع</button>
           <button data-tab="attendance" type="button">الحضور والغياب</button>
+          <button data-tab="salaries" type="button">الرواتب</button>
         </div>
         <div class="cu413-actions"><button id="cu413Reload" type="button">تحديث من السيرفر</button><button class="light" id="cu413Print" type="button">طباعة التوزيع</button></div>
         <div id="cu413WorkersTab" class="cu413-tab hidden"></div>
@@ -99,7 +100,7 @@
   }
 
   function showMsg(t,err){const el=$('cu413Msg'); if(el){el.textContent=t; el.className='cu413-msg '+(err?'err':'');}}
-  function setTab(tab){state.tab=tab; document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); ['workers','projects','distribution','attendance'].forEach(t=>$('cu413'+cap(t)+'Tab')?.classList.toggle('hidden', t!==tab)); render();}
+  function setTab(tab){state.tab=tab; document.querySelectorAll('#coreUnified [data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); ['workers','projects','distribution','attendance','salaries'].forEach(t=>$('cu413'+cap(t)+'Tab')?.classList.toggle('hidden', t!==tab)); render();}
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
   async function loadWorkers(force){
@@ -114,7 +115,7 @@
     if(state.projects.length&&!force) return state.projects;
     const c=client(); if(!c) return [];
     const r=await safe('projects', c.from('projects').select('*').limit(5000));
-    state.projects=(r.data||[]).filter(statusActive).sort((a,b)=>projectName(a).localeCompare(projectName(b),'ar'));
+    state.projects=(r.data||[]).filter(p=>!(p?.deleted_at||p?.is_deleted===true)).sort((a,b)=>projectName(a).localeCompare(projectName(b),'ar'));
     return state.projects;
   }
   async function loadDistribution(force){
@@ -223,7 +224,7 @@
     ['cu413PickSearch'].forEach(id=>$(id)?.addEventListener('input', renderPickWorkers));
     ['cu413FilterSup','cu413FilterProject'].forEach(id=>$(id)?.addEventListener('change', renderDistBox));
   }
-  function visibleProjects(){const q=norm($('cu413ProjectSearchPick')?.value||''); return state.projects.filter(statusActive).filter(p=>!q||norm(projectName(p)+' '+projectType(p)+' '+projectSupervisorName(p)).includes(q));}
+  function visibleProjects(){const q=norm($('cu413ProjectSearchPick')?.value||''); return state.projects.filter(p=>!(p?.deleted_at||p?.is_deleted===true)).filter(p=>!q||norm(projectName(p)+' '+projectType(p)+' '+projectSupervisorName(p)).includes(q));}
   function visibleWorkers(){const q=norm($('cu413PickSearch')?.value||''); return state.workers.filter(w=>isWorker(w)).filter(statusActive).filter(w=>!q||norm(workerDisplay(w)+' '+workerRole(w)).includes(q));}
   function renderPickProjects(){
     const box=$('cu413ProjectPick'); if(!box) return;
